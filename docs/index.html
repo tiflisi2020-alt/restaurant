@@ -1181,31 +1181,6 @@ footer {
   letter-spacing: 0.05em;
 }
 
-/* ===== PRINT MENU BUTTON ===== */
-.print-menu-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1.2rem;
-  border: 1.5px solid var(--border);
-  background: transparent;
-  color: var(--muted);
-  font-family: 'Raleway', sans-serif;
-  font-size: 0.68rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-left: auto;
-  border-radius: 2px;
-}
-
-.print-menu-btn:hover {
-  border-color: var(--teal);
-  color: var(--teal);
-}
-
 .menu-top-bar {
   display: flex;
   align-items: center;
@@ -2144,12 +2119,8 @@ tr.admin-row-flash td {
         </div>
       </aside>
     </div>
-    <p style="text-align:center;margin-top:1.25rem;">
-      <button type="button" class="print-menu-btn" onclick="printMenu()" data-i18n="print_menu">მენიუს დაბეჭდვა</button>
-    </p>
   </div>
 </section>
-<div id="print-menu-overlay" style="display:none" aria-hidden="true"></div>
 
 <!-- RESERVATION -->
 <section id="reservation">
@@ -2549,7 +2520,6 @@ tr.admin-row-flash td {
   </div>
 </div>
 
-<!-- PRINT MENU OVERLAY (hidden on screen, shown only on print) -->
 <!-- FOOTER -->
 <footer id="contact">
   <div class="container">
@@ -2630,7 +2600,7 @@ const TXT = {
     ab1_title:'ნამდვილი ქართული', ab1_text:'ტრადიციული რეცეპტები<br>თანამედროვე მიწოდებით',
     ab2_title:'Josper ღუმელი', ab2_text:'სპეციალური კერძები ხის ნახშირზე<br>და მაყალზე',
     ab3_title:'სახლის ღვინო', ab3_text:'ქართული ნეკტარი პირდაპირ<br>კახეთიდან',
-    menu_label:'ჩვენი მენიუ', menu_title:'კერძები & <em>სასმელები</em>', print_menu:'მენიუს დაბეჭდვა',
+    menu_label:'ჩვენი მენიუ', menu_title:'კერძები & <em>სასმელები</em>',
     res_label:'ჯავშანი', res_title:'მაგიდის<br><em>დაჯავშნა</em>',
     res_desc:'აღმოაჩინეთ ტიფლისის არისტოკრატიული შარმი ბათუმის ისტორიულ ნაწილში. გორგასლის 18/110-ში ტრადიციული ქართული გემოები თანამედროვე ხელოვნებად იქცევა. გვეწვიეთ და შეიგრძენით ნამდვილი ქალაქური ნადიმი, სადაც ყოველი დეტალი თქვენს განწყობაზე ზრუნავს.',
     res_legend:'„ლეგენდის თანახმად, ნადირობისას მეფე ვახტანგ გორგასლის მიმინო ცხელ წყაროში ჩავარდა. სწორედ ამ მაცოცხლებელი წყლების სიახლოვეს მეფემ ქალაქის გაშენება ბრძანა და მას სახელი „თბილი" (თბილისი) უწოდა. დღეს რესტორანი „ტიფლისი" ამ ისტორიულ მემკვიდრეობას გორგასლის ქუჩაზე აცოცხლებს — იქ, სადაც სტუმართმოყვარეობა ისეთივე მუდმივია, როგორც ჩვენი დედაქალაქის ისტორია."',
@@ -2655,7 +2625,7 @@ const TXT = {
     ab1_title:'Authentic Georgian', ab1_text:'Traditional recipes<br>with a modern touch',
     ab2_title:'Josper Oven', ab2_text:'Special dishes on charcoal<br>and open fire',
     ab3_title:'House Wine', ab3_text:'Georgian nectar straight<br>from Kakheti',
-    menu_label:'Our Menu', menu_title:'Dishes & <em>Drinks</em>', print_menu:'Print Menu',
+    menu_label:'Our Menu', menu_title:'Dishes & <em>Drinks</em>',
     res_label:'Reservation', res_title:'Table<br><em>Booking</em>',
     res_desc:'Discover the aristocratic charm of Tiflisi in the historic heart of Batumi. At Gorgasali 18/110, traditional Georgian flavors become modern art. Visit us and experience a genuine city feast where every detail cares for your mood.',
     res_legend:'"According to legend, while hunting, King Vakhtang Gorgasali\'s falcon fell into a hot spring. Near these life-giving waters, the king ordered a city to be built and named it \"Tbili\" (Tbilisi). Today, Restaurant Tiflisi brings this historic heritage to life on Gorgasali Street — where hospitality is as eternal as the history of our capital."',
@@ -2680,7 +2650,7 @@ const TXT = {
     ab1_title:'Настоящая грузинская', ab1_text:'Традиционные рецепты<br>в современном исполнении',
     ab2_title:'Печь Josper', ab2_text:'Особые блюда на древесном угле<br>и открытом огне',
     ab3_title:'Домашнее вино', ab3_text:'Грузинский нектар прямо<br>из Кахетии',
-    menu_label:'Наше меню', menu_title:'Блюда & <em>напитки</em>', print_menu:'Распечатать меню',
+    menu_label:'Наше меню', menu_title:'Блюда & <em>напитки</em>',
     res_label:'Резервация', res_title:'Бронирование<br><em>стола</em>',
     res_desc:'Откройте для себя аристократическое очарование Тифлиси в историческом центре Батуми. На Горгасали 18/110 традиционные грузинские вкусы превращаются в современное искусство. Приходите и ощутите настоящий городской пир, где каждая деталь заботится о вашем настроении.',
     res_legend:'«По легенде, во время охоты сокол царя Вахтанга Горгасали упал в горячий источник. Именно у этих живительных вод царь повелел основать город и назвал его «Тбили» (Тбилиси). Сегодня ресторан «Тифлиси» воплощает это историческое наследие на улице Горгасали — там, где гостеприимство столь же вечно, как история нашей столицы.»',
@@ -4260,48 +4230,6 @@ function adminResetData() {
     if (e.target === this) closeAdmin();
   });
 })();
-
-// ===== PRINT MENU =====
-function printMenu() {
-  const overlay = g('print-menu-overlay');
-  if (!overlay) return;
-  const printLang = lang;
-  let catsHTML = '';
-  CATS.forEach(cat => {
-    const items = MENU.filter(m => m.cat === cat.id);
-    if (!items.length) return;
-    const itemsHTML = items.map(m =>
-      `<div class="pm-item">
-        <span class="pm-item-name">${m[printLang]}</span>
-        <span class="pm-item-dots"></span>
-        <span class="pm-item-price">&#8382;${m.p % 1 === 0 ? m.p : m.p.toFixed(2)}</span>
-      </div>`
-    ).join('');
-    catsHTML += `<div class="pm-cat"><div class="pm-cat-title">${cat[printLang]}</div>${itemsHTML}</div>`;
-  });
-  overlay.innerHTML = `
-    <div class="pm-header">
-      <div class="pm-brand">
-        <div class="pm-brand-name">რესტორანი <span>ტიფლისი</span></div>
-        <div class="pm-brand-sub">ქართული სამზარეულო · ბათუმი</div>
-      </div>
-      <div class="pm-contact">
-        ვ.გორგასალის ქ. 18/110, ბათუმი<br>
-        +995 568 76 76 38<br>
-        ყოველდღე 10:00 — 24:00
-      </div>
-    </div>
-    <div class="pm-body">${catsHTML}</div>
-    <div class="pm-footer">
-      <span class="pm-footer-text">ფასები მოიცავს დღგ-ს · ალერგიის შემთხვევაში მიმართეთ სერვისს</span>
-      <span class="pm-footer-gold">რესტორანი ტიფლისი &copy; ${new Date().getFullYear()}</span>
-    </div>`;
-  overlay.style.display = 'block';
-  setTimeout(() => {
-    window.print();
-    setTimeout(() => { overlay.style.display = 'none'; }, 500);
-  }, 300);
-}
 
 // ===== MAP =====
 async function loadMapTables() {
