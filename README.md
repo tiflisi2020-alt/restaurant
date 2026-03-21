@@ -24,6 +24,16 @@ Open: `http://127.0.0.1:3000/`
 
 If an empty `web-server` folder remains in your user directory, you can delete it manually.
 
+## GitHub Pages (static preview)
+
+GitHub Pages **does not run** `server.js`. This repo includes a **`docs/`** copy of `public/` for static hosting.
+
+1. After changing files in **`public/`**, run: **`npm run sync-docs`** (updates `docs/`).
+2. On GitHub: **Settings → Pages → Build and deployment → Branch: `main` → Folder: `/docs`** → Save.
+3. Site URL: **`https://tiflisi2020-alt.github.io/restaurant/`** (may take 1–2 minutes after push).
+
+Full booking + admin on a real server still needs **Node** (e.g. Railway, Render) or local `npm start`.
+
 ## Upload to GitHub
 
 Remote is already set to **`https://github.com/tiflisi2020-alt/restaurant.git`**.
