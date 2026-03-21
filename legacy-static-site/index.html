@@ -1,0 +1,3316 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>რესტორანი ტიფლისი — მენიუ & რეზერვაცია</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #f5f0e6;
+  --warm: #ede8dc;
+  --card: #fffdf8;
+  --teal: #3d9b93;
+  --teal-dark: #2d7870;
+  --teal-light: rgba(61,155,147,0.12);
+  --brick: #c2613a;
+  --brick-dark: #a04e2e;
+  --gold: #d4a843;
+  --ink: #2c2010;
+  --mid: #6b5a48;
+  --muted: #9a8878;
+  --border: #e0d8c4;
+  --dark: #2c2010;
+  --terracotta: #c2613a;
+  --forest: #2c2010;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: 'Raleway', sans-serif;
+  font-weight: 400;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ===== HERO ===== */
+.hero {
+  position: relative;
+  height: 100vh;
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--ink);
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('https://raw.githubusercontent.com/tiflisi2020-alt/restaurant/main/Hero%20section.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  animation: bgPulse 8s ease-in-out infinite alternate;
+}
+
+.hero-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(44,32,16,0.55) 0%, rgba(44,32,16,0.45) 50%, rgba(44,32,16,0.75) 100%);
+}
+
+@keyframes bgPulse {
+  0% { opacity: 1; }
+  100% { opacity: 0.9; }
+}
+
+.hero-pattern {
+  position: absolute;
+  inset: 0;
+  background: transparent;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 2rem;
+}
+
+.hero-eyebrow {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.2s forwards;
+}
+
+.hero-title {
+  font-family: 'Lora', serif;
+  font-size: clamp(3rem, 8vw, 6.5rem);
+  font-weight: 400;
+  line-height: 1.05;
+  color: var(--cream);
+  margin-bottom: 0.75rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.4s forwards;
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.hero-subtitle {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(245,240,230,0.45);
+  margin-bottom: 2.5rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.6s forwards;
+}
+
+.hero-divider {
+  width: 50px;
+  height: 2px;
+  background: var(--teal);
+  margin: 0 auto 2.5rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.7s forwards;
+  border-radius: 2px;
+}
+
+.hero-cta {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.9s forwards;
+}
+
+.btn-primary {
+  padding: 0.85rem 2.5rem;
+  background: var(--teal);
+  color: white;
+  border: none;
+  border-radius: 2px;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-primary:hover {
+  background: var(--teal-dark);
+  transform: translateY(-2px);
+}
+
+.btn-outline {
+  padding: 0.85rem 2.5rem;
+  background: transparent;
+  color: var(--cream);
+  border: 1.5px solid rgba(245,240,230,0.3);
+  border-radius: 2px;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-outline:hover {
+  border-color: var(--teal);
+  color: var(--teal);
+  transform: translateY(-2px);
+}
+
+.hero-scroll {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 1.2s forwards;
+}
+
+.hero-scroll span {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: rgba(245,240,230,0.35);
+  text-transform: uppercase;
+}
+
+.scroll-line {
+  width: 1px;
+  height: 36px;
+  background: linear-gradient(to bottom, var(--teal), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== NAV ===== */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 0.5rem 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.4s;
+}
+
+nav.scrolled {
+  background: rgba(44,32,16,0.96);
+  backdrop-filter: blur(12px);
+  padding: 0.6rem 3rem;
+  border-bottom: 1px solid rgba(61,155,147,0.2);
+}
+
+.nav-logo {
+  font-family: 'Lora', serif;
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--cream);
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+}
+
+.nav-logo span { color: var(--gold); font-style: italic; }
+
+.nav-links {
+  display: flex;
+  gap: 2.5rem;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: rgba(245,240,230,0.6);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--teal); }
+
+.nav-reserve {
+  padding: 0.55rem 1.4rem;
+  border: 1.5px solid rgba(61,155,147,0.5);
+  color: var(--teal);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  cursor: pointer;
+  background: transparent;
+  border-radius: 2px;
+  font-family: 'Raleway', sans-serif;
+  transition: all 0.3s;
+  text-decoration: none;
+}
+
+.nav-reserve:hover {
+  background: var(--teal);
+  color: white;
+}
+
+/* ===== SECTION LAYOUT ===== */
+section { padding: 6rem 0; }
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.section-label {
+  font-size: 0.62rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--teal);
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  font-family: 'Raleway', sans-serif;
+}
+
+.section-title {
+  font-family: 'Lora', serif;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--ink);
+  margin-bottom: 0.75rem;
+}
+
+.section-title em {
+  font-style: italic;
+  color: var(--brick);
+}
+
+.section-rule {
+  width: 50px;
+  height: 2px;
+  background: var(--teal);
+  margin-bottom: 2rem;
+  border-radius: 2px;
+}
+
+/* ===== ABOUT STRIP ===== */
+.about-strip {
+  background: var(--ink);
+  padding: 3rem 0;
+}
+
+.about-strip .container {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 1px;
+  background: rgba(61,155,147,0.15);
+}
+
+.about-item {
+  background: var(--ink);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  transition: background 0.3s;
+}
+
+.about-item:hover { background: #38291a; }
+
+.about-icon { font-size: 1.5rem; margin-bottom: 0.85rem; }
+
+.about-item h3 {
+  font-family: 'Lora', serif;
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: var(--cream);
+  margin-bottom: 0.4rem;
+}
+
+.about-item p {
+  font-size: 0.76rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+/* ===== MENU SECTION ===== */
+#menu { background: var(--cream); }
+
+.lang-toggle {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 2rem;
+}
+
+.lang-btn {
+  padding: 0.38rem 1rem;
+  border: 1.5px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 2px;
+}
+
+.lang-btn.active {
+  background: var(--teal);
+  color: white;
+  border-color: var(--teal);
+}
+
+.lang-btn:hover:not(.active) {
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+.menu-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 3rem;
+  align-items: start;
+}
+
+.cat-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 2rem;
+}
+
+.cat-tab {
+  padding: 0.4rem 0.95rem;
+  border: 1.5px solid var(--border);
+  background: var(--card);
+  color: var(--muted);
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+
+.cat-tab.active {
+  background: var(--brick);
+  color: white;
+  border-color: var(--brick);
+}
+
+.cat-tab:hover:not(.active) {
+  border-color: var(--brick);
+  color: var(--brick);
+}
+
+.menu-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  transition: all 0.2s;
+  border-left: 3px solid transparent;
+  flex-wrap: nowrap;
+}
+
+.menu-item:first-child { border-top: 1px solid var(--border); }
+
+.menu-item:hover {
+  background: var(--card);
+  border-left-color: var(--teal);
+  padding-left: 1rem;
+}
+
+.menu-item-name {
+  font-family: 'Lora', serif;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--ink);
+  line-height: 1.35;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.menu-item-price {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-weight: 500;
+  white-space: nowrap;
+  min-width: 50px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.qty-ctrl {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.order-line {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  flex-wrap: nowrap;
+}
+.order-line-name {
+  flex: 1;
+  font-size: 0.78rem;
+  color: rgba(245,240,232,0.85);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.order-line-qty {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  flex-shrink: 0;
+}
+.order-line-price {
+  font-size: 0.78rem;
+  color: var(--gold);
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 45px;
+  text-align: right;
+}
+.remove-btn {
+  background: none;
+  border: none;
+  color: rgba(245,240,232,0.3);
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0 2px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.remove-btn:hover { color: #e74c3c; }
+
+.qty-btn {
+  width: 26px;
+  height: 26px;
+  border: 1.5px solid var(--border);
+  background: transparent;
+  color: var(--mid);
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  flex-shrink: 0;
+  border-radius: 2px;
+}
+
+.qty-btn:hover {
+  border-color: var(--teal);
+  color: var(--teal);
+  background: var(--teal-light);
+}
+
+.qty-input {
+  width: 34px;
+  height: 26px;
+  border: 1.5px solid var(--border);
+  background: var(--card);
+  color: var(--ink);
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.78rem;
+  text-align: center;
+  padding: 0;
+  border-radius: 2px;
+}
+
+.qty-input:focus { outline: none; border-color: var(--teal); }
+
+/* ===== ORDER PANEL ===== */
+.order-panel {
+  position: sticky;
+  top: 5rem;
+  background: var(--ink);
+  padding: 1.75rem;
+  color: var(--cream);
+  border-radius: 2px;
+  border-top: 3px solid var(--teal);
+}
+
+.order-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(61,155,147,0.25);
+}
+
+.order-header h3 {
+  font-family: 'Lora', serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--cream);
+}
+
+.clear-btn {
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: 'Raleway', sans-serif;
+  transition: color 0.2s;
+}
+
+.clear-btn:hover { color: var(--brick); }
+
+.order-items {
+  min-height: 80px;
+  margin-bottom: 1.25rem;
+}
+
+.order-empty {
+  text-align: center;
+  padding: 1.5rem 0;
+  font-size: 0.75rem;
+  color: rgba(245,240,230,0.25);
+  font-style: italic;
+  font-family: 'Lora', serif;
+}
+
+.order-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  gap: 0.5rem;
+}
+
+.order-item-name {
+  font-size: 0.78rem;
+  color: rgba(245,240,230,0.85);
+  flex: 1;
+  line-height: 1.3;
+}
+
+.order-item-qty {
+  font-size: 0.72rem;
+  color: var(--teal);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.order-item-price {
+  font-size: 0.78rem;
+  color: rgba(245,240,230,0.6);
+  min-width: 48px;
+  text-align: right;
+}
+
+.order-item-del {
+  background: transparent;
+  border: none;
+  color: rgba(245,240,230,0.2);
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: color 0.15s;
+  padding: 0 2px;
+}
+
+.order-item-del:hover { color: var(--brick); }
+
+.order-totals { border-top: 1px solid rgba(61,155,147,0.2); padding-top: 1rem; }
+
+.adj-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.adj-field { display: flex; flex-direction: column; gap: 0.3rem; }
+
+.adj-field label {
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(245,240,230,0.35);
+  font-family: 'Raleway', sans-serif;
+  font-weight: 500;
+}
+
+.adj-field input, .adj-field select {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(224,216,196,0.15);
+  color: var(--cream);
+  padding: 0.4rem 0.5rem;
+  font-size: 0.78rem;
+  font-family: 'Raleway', sans-serif;
+  border-radius: 2px;
+}
+
+.adj-field select option { background: var(--ink); }
+
+.order-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.3rem 0;
+}
+
+.order-row-label { font-size: 0.72rem; color: rgba(245,240,230,0.45); }
+.order-row-value { font-size: 0.78rem; color: rgba(245,240,230,0.7); }
+
+.order-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0 0.4rem;
+  border-top: 1px solid rgba(61,155,147,0.25);
+  margin-top: 0.4rem;
+}
+
+.order-total-label {
+  font-family: 'Lora', serif;
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--cream);
+}
+
+.order-total-value {
+  font-family: 'Lora', serif;
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--gold);
+}
+
+.order-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.order-btn {
+  padding: 0.72rem 1rem;
+  border: 1.5px solid rgba(224,216,196,0.2);
+  background: transparent;
+  color: rgba(245,240,230,0.7);
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 2px;
+  text-align: center;
+}
+
+.order-btn-main {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: white;
+  font-size: 0.72rem;
+}
+
+.order-btn-main:hover { background: var(--teal-dark); border-color: var(--teal-dark); }
+
+.order-btn-wa {
+  border-color: rgba(37,211,102,0.3);
+  color: #25d366;
+}
+
+.order-btn-wa:hover { background: rgba(37,211,102,0.1); }
+
+.order-btn-ghost { color: rgba(245,240,230,0.4); }
+.order-btn-ghost:hover { color: var(--cream); border-color: rgba(224,216,196,0.4); }
+
+/* ===== SUCCESS OVERLAY ===== */
+.success-overlay {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2rem 1.5rem;
+}
+
+.success-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--teal);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.success-title {
+  font-family: 'Lora', serif;
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--cream);
+  margin-bottom: 0.3rem;
+}
+
+.success-sub {
+  font-size: 0.72rem;
+  color: rgba(245,240,230,0.45);
+  margin-bottom: 1rem;
+}
+
+.receipt-box {
+  width: 100%;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(61,155,147,0.2);
+  padding: 0.9rem;
+  font-size: 0.75rem;
+  text-align: left;
+  margin-bottom: 1rem;
+  border-radius: 2px;
+}
+
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  font-size: 0.72rem;
+  color: rgba(245,240,230,0.7);
+}
+
+.success-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.success-btn {
+  padding: 0.55rem 1.1rem;
+  background: rgba(61,155,147,0.15);
+  border: 1.5px solid rgba(61,155,147,0.35);
+  color: var(--teal);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  font-family: 'Raleway', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 2px;
+}
+
+.success-btn:hover { background: var(--teal); color: white; }
+
+.new-btn {
+  padding: 0.5rem 1.2rem;
+  background: transparent;
+  border: 1.5px solid rgba(224,216,196,0.2);
+  color: rgba(245,240,230,0.5);
+  font-size: 0.68rem;
+  font-family: 'Raleway', sans-serif;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.2s;
+  flex: 1;
+}
+
+.new-btn:hover { color: var(--cream); border-color: rgba(224,216,196,0.4); }
+
+/* ===== RESERVATION SECTION ===== */
+#reservation {
+  background: var(--cream);
+  position: relative;
+}
+
+#reservation::before {
+  content: '';
+  display: block;
+  height: 4px;
+  background: linear-gradient(90deg, var(--teal), var(--brick), var(--teal));
+}
+
+.reservation-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: start;
+}
+
+.reservation-info .section-title { margin-bottom: 0.5rem; }
+
+.reservation-info p {
+  font-size: 0.82rem;
+  line-height: 1.85;
+  color: var(--mid);
+  margin-bottom: 0.8rem;
+}
+
+.info-list {
+  list-style: none;
+  margin-top: 1.5rem;
+}
+
+.info-list li {
+  font-size: 0.8rem;
+  color: var(--mid);
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--border);
+  padding-left: 1rem;
+  position: relative;
+}
+
+.info-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 4px;
+  background: var(--teal);
+  border-radius: 50%;
+}
+
+.res-form {
+  background: var(--card);
+  padding: 2.5rem;
+  border: 1.5px solid var(--border);
+  border-radius: 2px;
+  border-top: 3px solid var(--teal);
+}
+
+.form-title {
+  font-family: 'Lora', serif;
+  font-size: 1.6rem;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 0.4rem;
+  line-height: 1.2;
+}
+
+.form-subtitle {
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  margin-bottom: 1.75rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.form-field { display: flex; flex-direction: column; gap: 0.4rem; }
+.form-field.full { grid-column: 1/-1; }
+
+.form-field label {
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--teal);
+  font-weight: 600;
+  font-family: 'Raleway', sans-serif;
+}
+
+.form-field input, .form-field select, .form-field textarea {
+  padding: 0.65rem 0.85rem;
+  border: 1.5px solid var(--border);
+  background: white;
+  color: var(--ink);
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.85rem;
+  transition: border-color 0.2s;
+  border-radius: 2px;
+}
+
+.form-field input:focus, .form-field select:focus, .form-field textarea:focus {
+  outline: none;
+  border-color: var(--teal);
+}
+
+.form-field textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+
+.qty-ctrl { justify-content: flex-start; }
+
+.form-submit {
+  width: 100%;
+  padding: 0.95rem;
+  background: var(--teal);
+  color: white;
+  border: none;
+  border-radius: 2px;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 0.5rem;
+}
+
+.form-submit:hover { background: var(--teal-dark); transform: translateY(-1px); }
+
+/* reservation success */
+#res-success {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2.5rem;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 2px;
+  border-top: 3px solid var(--teal);
+}
+
+#res-success .success-icon { background: var(--teal); }
+#res-success .success-title { color: var(--ink); font-family: 'Lora', serif; }
+#res-success .success-sub { color: var(--muted); }
+
+/* ===== FOOTER ===== */
+footer {
+  background: var(--ink);
+  color: rgba(245,240,230,0.55);
+  padding: 4rem 0 2rem;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 3rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid rgba(61,155,147,0.15);
+  margin-bottom: 1.5rem;
+}
+
+.footer-brand h2 {
+  font-family: 'Lora', serif;
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: var(--cream);
+  margin-bottom: 0.75rem;
+}
+
+.footer-brand h2 span { color: var(--gold); font-style: italic; }
+
+.footer-brand p {
+  font-size: 0.76rem;
+  line-height: 1.75;
+  color: rgba(245,240,230,0.4);
+}
+
+.footer-col h4 {
+  font-size: 0.62rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--teal);
+  font-weight: 600;
+  margin-bottom: 1rem;
+  font-family: 'Raleway', sans-serif;
+}
+
+.footer-col p, .footer-col a {
+  font-size: 0.78rem;
+  color: rgba(245,240,230,0.45);
+  text-decoration: none;
+  display: block;
+  margin-bottom: 0.4rem;
+  transition: color 0.2s;
+}
+
+.footer-col a:hover { color: var(--teal); }
+
+.footer-bottom {
+  font-size: 0.68rem;
+  color: rgba(245,240,230,0.2);
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+
+/* ===== PRINT MENU BUTTON ===== */
+.print-menu-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.2rem;
+  border: 1.5px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-left: auto;
+  border-radius: 2px;
+}
+
+.print-menu-btn:hover {
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+.menu-top-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.menu-top-bar .lang-toggle { margin-bottom: 0; }
+
+/* ===== MOBILE ===== */
+@media (max-width: 900px) {
+  nav { padding: 0.75rem 1.25rem; }
+  .nav-links { display: none; }
+  .about-strip .container { grid-template-columns: 1fr; }
+  .menu-layout { grid-template-columns: 1fr; }
+  .order-panel { position: static; }
+  .reservation-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .form-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  html, body { overflow-x: hidden; max-width: 100vw; }
+  nav { padding: 0.6rem 1rem; }
+  nav.scrolled { padding: 0.5rem 1rem; }
+  .nav-logo img { height: 44px !important; }
+  .nav-reserve { display: none; }
+  .hero { min-height: 100svh; }
+  .hero-title { font-size: 2.5rem !important; }
+  .hero-eyebrow { font-size: 0.58rem; margin-bottom: 1rem; }
+  .hero-subtitle { font-size: 0.62rem; margin-bottom: 2rem; }
+  .hero-cta { flex-direction: column; align-items: center; gap: 0.75rem; }
+  .btn-primary, .btn-outline { width: 230px; text-align: center; padding: 0.9rem 1.5rem; }
+  section { padding: 3rem 0; }
+  .container { padding: 0 1rem; width: 100%; box-sizing: border-box; }
+  .section-title { font-size: 1.9rem; }
+  .about-strip .container { grid-template-columns: 1fr; }
+  .about-item { padding: 1.75rem 1.25rem; }
+
+  /* ===== MENU FIXES ===== */
+  #menu { overflow-x: hidden; }
+  #menu .container { overflow-x: hidden; }
+  .menu-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    gap: 0 !important;
+  }
+  .menu-layout > div {
+    width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: hidden;
+  }
+  .menu-top-bar {
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  .lang-toggle { flex-wrap: nowrap; }
+  .lang-btn { padding: 0.32rem 0.65rem; font-size: 0.62rem; }
+  .cat-tabs {
+    gap: 0.3rem;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+  }
+  .cat-tab {
+    padding: 0.38rem 0.75rem;
+    font-size: 0.62rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .menu-list { width: 100%; }
+  .menu-item {
+    padding: 0.85rem 0.5rem;
+    width: 100%;
+    box-sizing: border-box;
+    gap: 0.5rem;
+    flex-wrap: nowrap;
+  }
+  .menu-item-name {
+    font-size: 0.82rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+    flex: 1;
+  }
+  .menu-item-price {
+    font-size: 0.78rem;
+    flex-shrink: 0;
+    min-width: 42px;
+  }
+  .qty-ctrl { flex-shrink: 0; gap: 0.25rem; }
+  .qty-btn { width: 28px; height: 28px; font-size: 13px; flex-shrink: 0; }
+  .qty-input { width: 30px; height: 28px; font-size: 0.75rem; }
+
+  /* ===== ORDER PANEL FIXES ===== */
+  .order-panel {
+    margin-top: 1.5rem;
+    border-top: 3px solid var(--teal);
+    position: static !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 1.25rem 1rem;
+    min-width: 0;
+  }
+  .adj-row { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+  .adj-field label { font-size: 0.58rem; }
+  .adj-field input, .adj-field select { font-size: 0.82rem; padding: 0.38rem; }
+  .order-btn { font-size: 0.7rem; padding: 0.72rem 0.9rem; }
+  .order-actions { gap: 0.4rem; }
+
+  /* ===== RESERVATION FIXES ===== */
+  .reservation-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .res-form { padding: 1.5rem 1.1rem; }
+  .form-title { font-size: 1.5rem; }
+  .form-grid { grid-template-columns: 1fr; }
+  .form-field label { font-size: 0.58rem; }
+  .form-field input, .form-field select, .form-field textarea {
+    font-size: 0.88rem; padding: 0.6rem 0.8rem; width: 100%; box-sizing: border-box;
+  }
+  .form-submit { padding: 0.88rem; font-size: 0.72rem; }
+
+  /* ===== FOOTER ===== */
+  .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+  footer { padding: 2.5rem 0 1.5rem; }
+  .footer-brand h2 { font-size: 1.2rem; }
+
+  /* ===== SUCCESS / RECEIPT ===== */
+  .success-actions { flex-wrap: wrap; gap: 0.4rem; }
+  .success-btn { flex: 1; min-width: 90px; font-size: 0.68rem; padding: 0.55rem 0.4rem; }
+
+  .admin-fab { bottom: 1rem; right: 1rem; }
+}
+@media (max-width: 380px) {
+  .hero-title { font-size: 2.1rem !important; }
+  .btn-primary, .btn-outline { width: 195px; }
+  .container { padding: 0 0.75rem; }
+}
+
+/* ===== ADMIN PANEL ===== */
+.admin-fab {
+  position: fixed; bottom: 2rem; right: 2rem;
+  width: 48px; height: 48px; border-radius: 50%;
+  background: var(--ink); border: 1px solid rgba(61,155,147,0.5);
+  color: var(--teal); font-size: 1.2rem; cursor: pointer;
+  z-index: 300; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25); transition: all 0.2s;
+}
+.admin-fab:hover { transform: scale(1.1); background: var(--teal); color: white; }
+
+.admin-modal {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7); z-index: 500; overflow-y: auto;
+  align-items: flex-start; justify-content: center; padding: 2rem 1rem;
+}
+.admin-modal.open { display: flex; }
+
+.admin-box {
+  background: #1a1208; color: rgba(245,240,230,0.85);
+  width: 100%; max-width: 960px; border-radius: 4px;
+  border: 1px solid rgba(61,155,147,0.2);
+  font-family: 'Raleway', sans-serif; font-size: 0.82rem;
+}
+
+.admin-top {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.25rem 1.75rem; border-bottom: 1px solid rgba(61,155,147,0.15);
+}
+.admin-top h2 { font-family: 'Lora', serif; font-size: 1.2rem; font-weight: 400; color: var(--cream); }
+.admin-close {
+  background: transparent; border: none; color: rgba(245,240,230,0.4);
+  font-size: 1.4rem; cursor: pointer; transition: color 0.2s; line-height: 1;
+}
+.admin-close:hover { color: var(--brick); }
+
+.admin-tabs {
+  display: flex; gap: 0.25rem; padding: 1rem 1.75rem 0;
+  border-bottom: 1px solid rgba(61,155,147,0.12); flex-wrap: wrap;
+}
+.admin-tab {
+  padding: 0.5rem 1rem; background: transparent;
+  border: none; border-bottom: 2px solid transparent;
+  color: rgba(245,240,230,0.4); font-size: 0.72rem; font-weight: 500;
+  letter-spacing: 0.06em; cursor: pointer; font-family: 'Raleway', sans-serif;
+  transition: all 0.2s; white-space: nowrap;
+}
+.admin-tab.on { color: var(--teal); border-bottom-color: var(--teal); }
+.admin-tab:hover:not(.on) { color: rgba(245,240,230,0.7); }
+
+.admin-pane { display: none; padding: 1.5rem 1.75rem; }
+.admin-pane.on { display: block; }
+
+.admin-login { max-width: 340px; margin: 2rem auto; text-align: center; }
+.admin-login h3 { font-family: 'Lora', serif; font-size: 1.2rem; font-weight: 400; color: var(--cream); margin-bottom: 0.5rem; }
+.admin-login p { font-size: 0.76rem; color: rgba(245,240,230,0.4); margin-bottom: 1.5rem; }
+
+.admin-input {
+  width: 100%; padding: 0.6rem 0.85rem; margin-bottom: 0.75rem;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(224,216,196,0.15);
+  color: var(--cream); font-family: 'Raleway', sans-serif; font-size: 0.82rem;
+  border-radius: 2px;
+}
+.admin-input:focus { outline: none; border-color: var(--teal); }
+
+.admin-btn {
+  padding: 0.6rem 1.4rem; background: var(--teal); color: white;
+  border: none; border-radius: 2px; font-family: 'Raleway', sans-serif;
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em;
+  cursor: pointer; transition: all 0.2s; width: 100%;
+}
+.admin-btn:hover { background: var(--teal-dark); }
+.admin-btn-sm { padding: 0.42rem 0.9rem; font-size: 0.68rem; width: auto; }
+.admin-btn-ghost { background: transparent; border: 1px solid rgba(224,216,196,0.2); color: rgba(245,240,230,0.6); }
+.admin-btn-ghost:hover { background: rgba(255,255,255,0.06); color: var(--cream); }
+.admin-btn-danger { border-color: rgba(194,97,58,0.4); color: var(--brick); }
+.admin-btn-danger:hover { background: rgba(194,97,58,0.15); }
+
+.admin-toolbar {
+  display: flex; gap: 0.6rem; margin-bottom: 1rem; flex-wrap: wrap; align-items: center;
+}
+.admin-search {
+  flex: 1; min-width: 160px; padding: 0.45rem 0.75rem;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(224,216,196,0.15);
+  color: var(--cream); font-family: 'Raleway', sans-serif; font-size: 0.78rem;
+  border-radius: 2px;
+}
+.admin-search:focus { outline: none; border-color: var(--teal); }
+.admin-cat-filter {
+  padding: 0.45rem 0.65rem; background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(224,216,196,0.15); color: var(--cream);
+  font-family: 'Raleway', sans-serif; font-size: 0.76rem; border-radius: 2px;
+}
+
+.admin-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+.admin-table thead tr { border-bottom: 1px solid rgba(61,155,147,0.2); }
+.admin-table th {
+  padding: 0.6rem 0.75rem; text-align: left; font-size: 0.62rem;
+  font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--teal);
+}
+.admin-table td { padding: 0.55rem 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.admin-table tr:hover td { background: rgba(255,255,255,0.03); }
+.td-name { font-family: 'Lora', serif; font-size: 0.88rem; }
+
+.admin-section-title {
+  font-family: 'Lora', serif; font-size: 1.1rem; font-weight: 400;
+  color: var(--cream); margin-bottom: 1.1rem; padding-bottom: 0.6rem;
+  border-bottom: 1px solid rgba(61,155,147,0.15);
+}
+
+.admin-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+.admin-field { display: flex; flex-direction: column; gap: 0.35rem; }
+.admin-field.span2 { grid-column: 1/-1; }
+.admin-field label {
+  font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--teal); font-weight: 600;
+}
+.admin-field input, .admin-field select, .admin-field textarea {
+  padding: 0.5rem 0.7rem; background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(224,216,196,0.15); color: var(--cream);
+  font-family: 'Raleway', sans-serif; font-size: 0.8rem; border-radius: 2px;
+}
+.admin-field input:focus, .admin-field select:focus { outline: none; border-color: var(--teal); }
+.admin-field select option { background: #1a1208; }
+
+.admin-form-actions { display: flex; gap: 0.6rem; margin-top: 0.5rem; }
+
+.admin-msg {
+  padding: 0.6rem 0.85rem; border-radius: 2px; font-size: 0.75rem;
+  margin-bottom: 0.75rem; display: none;
+}
+.admin-msg.ok { background: rgba(61,155,147,0.15); border: 1px solid rgba(61,155,147,0.3); color: var(--teal); display: block; }
+.admin-msg.err { background: rgba(194,97,58,0.15); border: 1px solid rgba(194,97,58,0.3); color: var(--brick); display: block; }
+
+.badge { display: inline-block; padding: 2px 8px; border-radius: 2px; font-size: 0.68rem; font-weight: 600; }
+.badge-edit { background: rgba(212,168,67,0.15); color: var(--gold); border: 1px solid rgba(212,168,67,0.3); }
+
+/* Reservations table */
+.res-table-wrap { overflow-x: auto; }
+
+/* ===== ADMIN MOBILE ===== */
+@media (max-width: 700px) {
+  .admin-modal {
+    padding: 0;
+    align-items: flex-end;
+  }
+  .admin-box {
+    max-width: 100%;
+    border-radius: 12px 12px 0 0;
+    max-height: 92svh;
+    overflow-y: auto;
+  }
+  .admin-top {
+    padding: 1rem 1.1rem;
+    position: sticky;
+    top: 0;
+    background: #1a1208;
+    z-index: 10;
+  }
+  .admin-tabs {
+    padding: 0.6rem 0.75rem 0;
+    gap: 0.15rem;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+  .admin-tab {
+    padding: 0.45rem 0.7rem;
+    font-size: 0.68rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .admin-pane {
+    padding: 1rem 1rem;
+  }
+  .admin-form-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .admin-field.span2 {
+    grid-column: 1 !important;
+  }
+  .admin-form-actions {
+    flex-direction: column;
+  }
+  .admin-form-actions .admin-btn {
+    width: 100%;
+  }
+  .admin-toolbar {
+    flex-wrap: wrap;
+  }
+  .admin-search {
+    min-width: 100%;
+  }
+  .admin-table { font-size: 0.72rem; }
+  .admin-table th, .admin-table td { padding: 0.45rem 0.5rem; }
+  .res-table-wrap { font-size: 0.7rem; }
+  /* Settings: telegram block */
+  #at-settings .admin-form-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .admin-login {
+    padding: 0 0.5rem;
+  }
+  .admin-btn {
+    font-size: 0.76rem;
+    padding: 0.65rem 1rem;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo"><img src="https://raw.githubusercontent.com/tiflisi2020-alt/restaurant/main/logo.png" alt="რესტორანი ტიფლისი" style="height:72px;width:auto;vertical-align:middle;margin-right:.5rem;display:block" onerror="this.style.display='none';this.nextSibling.style.display='inline'"><span style="display:none">რესტორანი <span style="color:var(--gold);font-style:italic">ტიფლისი</span></span></div>
+  <ul class="nav-links">
+    <li><a href="#reservation" data-i18n="nav_res">რეზერვაცია</a></li>
+    <li><a href="#contact" data-i18n="nav_contact">კონტაქტი</a></li>
+    <li><a href="#menu" data-i18n="nav_menu">მენიუ</a></li>
+  </ul>
+  <div style="display:flex;align-items:center;gap:1rem;">
+    <div class="lang-toggle" style="margin-bottom:0">
+      <button class="lang-btn active" onclick="setLang('ka')">ქარ</button>
+      <button class="lang-btn" onclick="setLang('en')">ENG</button>
+      <button class="lang-btn" onclick="setLang('ru')">РУС</button>
+    </div>
+    <a href="#reservation" class="nav-reserve" data-i18n="nav_book">მაგიდის დაჯავშნა</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-pattern"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow" data-i18n="hero_eyebrow">ბათუმი · 2022 წლიდან</div>
+    <h1 class="hero-title" id="hero-title-ka" data-i18n-html="hero_title">რესტორანი<br><em>ტიფლისი</em></h1>
+    <div class="hero-subtitle" data-i18n="hero_sub">ქართული სამზარეულო · ვ.გორგასალის ქ. 18/110</div>
+    <div class="hero-divider"></div>
+    <div class="hero-cta">
+      <a href="#menu" class="btn-primary" data-i18n="btn_menu">მენიუს ნახვა</a>
+      <a href="#reservation" class="btn-outline" data-i18n="btn_book">მაგიდის დაჯავშნა</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span data-i18n="scroll">გადაახვიეთ</span>
+    <div class="scroll-line"></div>
+  </div>
+</div>
+
+<!-- ABOUT STRIP -->
+<div class="about-strip">
+  <div class="container">
+    <div class="about-item">
+      <div class="about-icon">🍽</div>
+      <h3 data-i18n="ab1_title">ნამდვილი ქართული</h3>
+      <p data-i18n-html="ab1_text">ტრადიციული რეცეპტები<br>თანამედროვე მიწოდებით</p>
+    </div>
+    <div class="about-item">
+      <div class="about-icon">🔥</div>
+      <h3 data-i18n="ab2_title">Josper ღუმელი</h3>
+      <p data-i18n-html="ab2_text">სპეციალური კერძები ხის ნახშირზე<br>და მაყალზე</p>
+    </div>
+    <div class="about-item">
+      <div class="about-icon">🍷</div>
+      <h3 data-i18n="ab3_title">სახლის ღვინო</h3>
+      <p data-i18n-html="ab3_text">ქართული ნეკტარი პირდაპირ<br>კახეთიდან</p>
+    </div>
+  </div>
+</div>
+
+<!-- MENU -->
+<section id="menu">
+  <div class="container">
+    <div class="section-label" data-i18n="menu_label">ჩვენი მენიუ</div>
+    <h2 class="section-title" data-i18n-html="menu_title">კერძები & <em>სასმელები</em></h2>
+
+    <div class="menu-top-bar">
+      <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLang('ka')">ქართული</button>
+        <button class="lang-btn" onclick="setLang('en')">English</button>
+        <button class="lang-btn" onclick="setLang('ru')">Русский</button>
+      </div>
+      <button class="print-menu-btn" onclick="printMenu()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
+        მენიუს დაბეჭდვა
+      </button>
+    </div>
+
+    <div class="menu-layout">
+      <!-- Left: Menu List -->
+      <div>
+        <div class="cat-tabs" id="cat-tabs"></div>
+        <div class="menu-list" id="menu-list"></div>
+      </div>
+
+      <!-- Right: Order Panel -->
+      <div class="order-panel">
+        <div class="order-header">
+          <h3 id="lt-order">შეკვეთა</h3>
+          <button class="clear-btn" onclick="clearAll()" id="lt-clear">გასუფთავება</button>
+        </div>
+
+        <div id="success-overlay" class="success-overlay">
+          <div class="success-icon">✓</div>
+          <div class="success-title" id="s-name"></div>
+          <div class="success-sub" id="s-sub"></div>
+          <div class="receipt-box" id="receipt"></div>
+          <div class="success-actions">
+            <button class="success-btn" onclick="sharePDF()">📄 PDF</button>
+            <button class="success-btn" onclick="printReceipt()" style="background:var(--dark);border-color:var(--gold);color:var(--gold)">🖨 PRINT</button>
+            <button class="success-btn" onclick="sendWASuccess()">📱 WhatsApp</button>
+          </div>
+          <div style="display:flex;gap:.5rem;margin-top:.5rem">
+            <button class="new-btn" onclick="goBackToOrder()" style="border:1px solid var(--border);padding:.5rem 1rem;font-size:.7rem"><span data-i18n="btn_back">← უკან</span></button>
+            <button class="new-btn" onclick="resetAll()" id="lt-new">ახალი შეკვეთა</button>
+          </div>
+        </div>
+
+        <div id="order-wrap">
+          <div class="order-items" id="order-list">
+            <div class="order-empty" id="lt-empty">კერძები არ არის შერჩეული</div>
+          </div>
+
+          <div class="order-totals">
+            <div class="adj-row">
+              <div class="adj-field">
+                <label data-i18n="svc_pct">მომსახ. %</label>
+                <input type="number" id="f-svc" value="0" min="0" max="100" oninput="recalc()">
+              </div>
+              <div class="adj-field">
+                <label data-i18n="disc_pct">ფასდაკლ. %</label>
+                <input type="number" id="f-disc" value="0" min="0" max="100" oninput="recalc()">
+              </div>
+            </div>
+            <div class="adj-row">
+              <div class="adj-field">
+                <label data-i18n="adv_lbl">ავანსი ₾</label>
+                <input type="number" id="f-adv" value="0" min="0" oninput="recalc()">
+              </div>
+              <div class="adj-field">
+                <label data-i18n="pay_lbl">გადახდა</label>
+                <select id="f-pay">
+                  <option value="">—</option>
+                  <option value="ნაღდი" data-i18n="pay_cash">💵 ნაღდი</option>
+                  <option value="bog">🏦 საქართველოს ბანკი</option>
+                  <option value="tbc">🏦 თიბისი ბანკი</option>
+                  <option value="tera">🏦 ტერა ბანკი</option>
+                  <option value="გადარიცხვა">🔁 გადარიცხვა</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="order-row" id="row-disc" style="display:none">
+              <span class="order-row-label" id="lt-disc">ფასდაკლება</span>
+              <span class="order-row-value" id="tv-disc" style="color:#e74c3c">—</span>
+            </div>
+            <div class="order-row" id="row-svc" style="display:none">
+              <span class="order-row-label" id="lt-svc">მომსახურება</span>
+              <span class="order-row-value" id="tv-svc">—</span>
+            </div>
+            <div class="order-row" id="row-adv" style="display:none">
+              <span class="order-row-label" id="lt-adv">ავანსი</span>
+              <span class="order-row-value" id="tv-adv" style="color:#e74c3c">—</span>
+            </div>
+
+            <div class="order-total-row">
+              <span class="order-total-label" id="lt-total">სულ</span>
+              <span class="order-total-value" id="tv-total">₾0.00</span>
+            </div>
+            <div class="order-row" style="margin-top:0.3rem">
+              <span class="order-row-label" id="lt-pp">1 სტუმარზე</span>
+              <span class="order-row-value" id="tv-pp">₾0.00</span>
+            </div>
+          </div>
+
+          <div class="order-actions">
+            <button class="order-btn order-btn-main" onclick="scrollToReserve()" data-i18n="btn_res_order">📋 რეზერვაცია + შეკვეთა</button>
+            <button class="order-btn order-btn-wa" onclick="sendMsg('wa')">📱 WhatsApp</button>
+            <button class="order-btn order-btn-ghost" onclick="saveOrder()" data-i18n="btn_save">💾 შენახვა</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESERVATION -->
+<section id="reservation">
+  <div class="container">
+    <div class="reservation-grid">
+      <div class="reservation-info">
+        <div class="section-label" data-i18n="res_label">ჯავშანი</div>
+        <h2 class="section-title" data-i18n-html="res_title">მაგიდის<br><em>დაჯავშნა</em></h2>
+        <p data-i18n="res_desc">აღმოაჩინეთ ტიფლისის არისტოკრატიული შარმი ბათუმის ისტორიულ ნაწილში. გორგასლის 18/110-ში ტრადიციული ქართული გემოები თანამედროვე ხელოვნებად იქცევა. გვეწვიეთ და შეიგრძენით ნამდვილი ქალაქური ნადიმი, სადაც ყოველი დეტალი თქვენს განწყობაზე ზრუნავს.</p>
+        <p style="font-size:0.72rem;color:var(--muted);font-style:italic;line-height:1.8;margin-top:1rem;" data-i18n="res_legend">„ლეგენდის თანახმად, ნადირობისას მეფე ვახტანგ გორგასლის მიმინო ცხელ წყაროში ჩავარდა. სწორედ ამ მაცოცხლებელი წყლების სიახლოვეს მეფემ ქალაქის გაშენება ბრძანა და მას სახელი „თბილი" (თბილისი) უწოდა. დღეს რესტორანი „ტიფლისი" ამ ისტორიულ მემკვიდრეობას გორგასლის ქუჩაზე აცოცხლებს — იქ, სადაც სტუმართმოყვარეობა ისეთივე მუდმივია, როგორც ჩვენი დედაქალაქის ისტორია."</p>
+        <ul class="info-list">
+          <li data-i18n="contact_addr">ბათუმი, ვ.გორგასალის ქ. 18/110</li>
+          <li>+995 568 76 76 38</li>
+          <li data-i18n="contact_hours">ყოველდღე: 10:00 — 24:00</li>
+          <li data-i18n="contact_groups">ჯგუფები: +995 568 76 76 38</li>
+        </ul>
+      </div>
+
+      <div>
+        <div id="res-success" class="success-overlay" style="background:white;padding:2.5rem;">
+          <div class="success-icon">✓</div>
+          <div class="success-title" data-i18n="res_ok_title">ჯავშანი მიღებულია!</div>
+          <div class="success-sub" data-i18n="res_ok_sub">მალე დაგიკავშირდებით დასადასტურებლად</div>
+          <button class="success-btn" onclick="resetRes()" style="margin-top:1rem;max-width:200px" data-i18n="res_new">ახალი ჯავშანი</button>
+        </div>
+
+        <div id="res-form-wrap">
+          <div class="res-form">
+            <h3 class="form-title" data-i18n-html="form_title">სარეზერვაციო<br>ფორმა</h3>
+            <p class="form-subtitle" data-i18n="form_sub">შეავსეთ ფორმა · ჩვენ დაგიდასტურებთ</p>
+
+            <div class="form-grid">
+              <div class="form-field">
+                <label data-i18n="f_name">სახელი და გვარი *</label>
+                <input type="text" id="r-name" data-i18n-ph="f_name_ph" placeholder="თქვენი სახელი">
+              </div>
+              <div class="form-field">
+                <label data-i18n="f_phone">ტელეფონი *</label>
+                <input type="tel" id="r-phone" placeholder="+995...">
+              </div>
+              <div class="form-field">
+                <label data-i18n="f_email">ელ. ფოსტა</label>
+                <input type="email" id="r-email" placeholder="email@example.com">
+              </div>
+              <div class="form-field">
+                <label data-i18n="f_guests">სტუმრების რაოდენობა</label>
+                <div class="qty-ctrl" style="justify-content:flex-start">
+                  <button class="qty-btn" onclick="adjGuests(-1)" type="button">−</button>
+                  <input class="qty-input" type="number" id="r-guests" min="1" max="300" value="2" style="width:60px;text-align:center" oninput="clampGuests(this)">
+                  <button class="qty-btn" onclick="adjGuests(1)" type="button">+</button>
+                </div>
+              </div>
+              <div class="form-field">
+                <label data-i18n="f_pay">გადახდის მეთოდი</label>
+                <select id="r-payment">
+                  <option value="" data-i18n="f_pay_sel">— აირჩიეთ —</option>
+                  <option value="cash">💵 CASH</option>
+                  <option value="bog">🏦 BOG</option>
+                  <option value="tbc">🏦 TBC</option>
+                  <option value="tera">🏦 TERA</option>
+                  <option value="transfer">🔁 გადმორიცხვა</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label data-i18n="f_date">თარიღი *</label>
+                <input type="date" id="r-date">
+              </div>
+              <div class="form-field">
+                <label data-i18n="f_time">დრო *</label>
+                <input type="time" id="r-time" value="19:00">
+              </div>
+              <div class="form-field full">
+                <label data-i18n="f_table">სასურველი მაგიდა</label>
+                <select id="r-table">
+                  <option value="" data-i18n="f_table_sel">— აირჩიეთ მაგიდა —</option>
+                  <optgroup label="🏠 ჰოლი (H-11 – H-19)">
+                    <option>H-11</option><option>H-12</option><option>H-13</option><option>H-14</option>
+                    <option>H-15</option><option>H-16</option><option>H-17</option><option>H-18</option>
+                    <option>H-19</option>
+                  </optgroup>
+                  <optgroup label="🌿 ანტრესოლი (A-20 – A-29)">
+                    <option>A-20</option><option>A-21</option><option>A-22</option><option>A-23</option>
+                    <option>A-24</option><option>A-25</option><option>A-26</option><option>A-27</option>
+                    <option>A-28</option><option>A-29</option>
+                  </optgroup>
+                  <optgroup label="🌅 ვერანდა (V-1 – V-8)">
+                    <option>V-1</option><option>V-2</option><option>V-3</option><option>V-4</option>
+                    <option>V-5</option><option>V-6</option><option>V-7</option><option>V-8</option>
+                  </optgroup>
+                </select>
+              </div>
+              <div class="form-field full">
+                <label data-i18n="f_note">განსაკუთრებული სურვილი</label>
+                <textarea id="r-note" data-i18n-ph="f_note_ph" placeholder="ალერგია, დაბადების დღე, სხვა სურვილი..."></textarea>
+              </div>
+            </div>
+
+            <button class="form-submit" onclick="submitReservation()" data-i18n="btn_book">მაგიდის დაჯავშნა</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ADMIN FAB -->
+<button class="admin-fab" onclick="openAdmin()" title="ადმინ პანელი">⚙</button>
+
+<!-- ADMIN MODAL -->
+<div id="admin-modal" class="admin-modal">
+  <div class="admin-box">
+    <div class="admin-top">
+      <h2>ადმინ პანელი</h2>
+      <button class="admin-close" onclick="closeAdmin()">×</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="admin-login-wrap">
+      <div class="admin-login">
+        <h3>🔐 შესვლა</h3>
+        <p>ადმინ პანელში შესასვლელად შეიყვანეთ პაროლი</p>
+        <input class="admin-input" type="password" id="admin-pw" placeholder="პაროლი" onkeydown="if(event.key==='Enter')adminLogin()">
+        <button class="admin-btn" onclick="adminLogin()">შესვლა</button>
+        <div id="admin-pw-err" style="color:#e74c3c;font-size:.75rem;margin-top:.75rem;display:none">❌ პაროლი არასწორია</div>
+      </div>
+    </div>
+
+    <!-- PANEL (after login) -->
+    <div id="admin-panel-wrap" style="display:none">
+      <div class="admin-tabs">
+        <button class="admin-tab on" onclick="adminTab('menu')">🍽 მენიუ</button>
+        <button class="admin-tab" onclick="adminTab('add')">➕ კერძი</button>
+        <button class="admin-tab" onclick="adminTab('cats')">📂 კატეგ.</button>
+        <button class="admin-tab" onclick="adminTab('map')">🗺 მაგიდები</button>
+        <button class="admin-tab" onclick="adminTab('reservations')">📋 ჯავშნები</button>
+        <button class="admin-tab" onclick="adminTab('settings')">⚙ პარამ.</button>
+      </div>
+
+      <!-- MENU LIST TAB -->
+      <div id="at-menu" class="admin-pane on">
+        <div class="admin-toolbar">
+          <input class="admin-search" type="text" id="adm-search" placeholder="🔍 კერძის ძებნა..." oninput="adminRenderMenu()">
+          <select class="admin-cat-filter" id="adm-cat-filter" onchange="adminRenderMenu()">
+            <option value="">ყველა კატეგორია</option>
+          </select>
+          <button class="admin-btn admin-btn-sm" onclick="adminTab('add')">+ დამატება</button>
+        </div>
+        <div id="adm-msg-menu" class="admin-msg"></div>
+        <div style="overflow-x:auto">
+          <table class="admin-table">
+            <thead><tr>
+              <th>კერძი (ქართ.)</th>
+              <th>English</th>
+              <th>კატეგ.</th>
+              <th>ფასი</th>
+              <th>მოქმედება</th>
+            </tr></thead>
+            <tbody id="adm-tbody"></tbody>
+          </table>
+        </div>
+        <div id="adm-count" style="margin-top:.75rem;font-size:.72rem;color:rgba(245,240,232,.3)"></div>
+      </div>
+
+      <!-- ADD/EDIT TAB -->
+      <div id="at-add" class="admin-pane">
+        <div id="adm-msg-add" class="admin-msg"></div>
+        <div id="adm-edit-badge" style="display:none;margin-bottom:1rem">
+          <span class="badge badge-edit">✏ რედაქტირების რეჟიმი</span>
+          <button onclick="adminCancelEdit()" style="background:transparent;border:none;color:rgba(245,240,232,.4);cursor:pointer;font-size:.75rem;margin-left:.5rem">გაუქმება</button>
+        </div>
+        <div class="admin-section-title" id="adm-form-title">ახალი კერძის დამატება</div>
+        <div class="admin-form-grid">
+          <div class="admin-field">
+            <label>სახელი ქართულად *</label>
+            <input type="text" id="af-ka" placeholder="კერძის სახელი">
+          </div>
+          <div class="admin-field">
+            <label>Name in English</label>
+            <input type="text" id="af-en" placeholder="Dish name">
+          </div>
+          <div class="admin-field">
+            <label>Название на русском</label>
+            <input type="text" id="af-ru" placeholder="Название блюда">
+          </div>
+          <div class="admin-field">
+            <label>ფასი (₾) *</label>
+            <input type="number" id="af-price" placeholder="0.00" min="0" step="0.5">
+          </div>
+          <div class="admin-field span2">
+            <label>კატეგორია *</label>
+            <select id="af-cat"></select>
+          </div>
+        </div>
+        <div class="admin-form-actions">
+          <button class="admin-btn" style="flex:1" onclick="adminSaveDish()" data-i18n="btn_save">💾 შენახვა</button>
+          <button class="admin-btn admin-btn-ghost" onclick="adminCancelEdit()">გაუქმება</button>
+        </div>
+      </div>
+
+      <!-- CATEGORIES TAB -->
+      <div id="at-cats" class="admin-pane">
+        <div class="admin-section-title">კატეგორიების მართვა</div>
+        <div id="adm-msg-cats" class="admin-msg"></div>
+        <div id="adm-cats-list" style="margin-bottom:1.5rem"></div>
+        <div class="admin-section-title" style="font-size:1rem">ახალი კატეგორია</div>
+        <div class="admin-form-grid">
+          <div class="admin-field">
+            <label>სახელი ქართულად *</label>
+            <input type="text" id="cf-ka" placeholder="კატეგორია">
+          </div>
+          <div class="admin-field">
+            <label>Name in English</label>
+            <input type="text" id="cf-en" placeholder="Category">
+          </div>
+          <div class="admin-field span2">
+            <label>Название на русском</label>
+            <input type="text" id="cf-ru" placeholder="Категория">
+          </div>
+        </div>
+        <button class="admin-btn admin-btn-sm" style="width:auto" onclick="adminAddCat()">+ კატეგორიის დამატება</button>
+      </div>
+
+      <!-- MAP TAB -->
+      <div id="at-map" class="admin-pane">
+        <div class="admin-section-title">🗺 მაგიდების რუკა</div>
+        <div style="display:flex;gap:.75rem;margin-bottom:1rem;flex-wrap:wrap;align-items:flex-end">
+          <div style="display:flex;flex-direction:column;gap:.25rem">
+            <label style="font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,240,232,.35)">თარიღი</label>
+            <input type="date" id="map-date-filter" class="admin-input" style="width:auto;margin:0;padding:.45rem .75rem;font-size:.8rem">
+          </div>
+          <button class="admin-btn admin-btn-sm" style="width:auto" onclick="loadMapTables()">🔍 ნახვა</button>
+          <div style="display:flex;align-items:center;gap:.4rem;font-size:.72rem;color:rgba(245,240,232,.5);margin-left:auto"><span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:#2ecc71"></span> თავისუფალი</div>
+          <div style="display:flex;align-items:center;gap:.4rem;font-size:.72rem;color:rgba(245,240,232,.5)"><span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:#e74c3c"></span> დაჯავშნილი</div>
+          <button class="admin-btn admin-btn-sm admin-btn-ghost" style="width:auto" onclick="document.getElementById('map-date-filter').value='';loadMapTables()">🔄 დღეს</button>
+        </div>
+        <div style="margin-bottom:1.25rem">
+          <div style="font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(245,240,232,.3);margin-bottom:.5rem">H ზონა</div>
+          <div id="map-zone-H" style="display:flex;flex-wrap:wrap;gap:.5rem"></div>
+        </div>
+        <div style="margin-bottom:1.25rem">
+          <div style="font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(245,240,232,.3);margin-bottom:.5rem">A ზონა</div>
+          <div id="map-zone-A" style="display:flex;flex-wrap:wrap;gap:.5rem"></div>
+        </div>
+        <div style="margin-bottom:1.25rem">
+          <div style="font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(245,240,232,.3);margin-bottom:.5rem">V ზონა</div>
+          <div id="map-zone-V" style="display:flex;flex-wrap:wrap;gap:.5rem"></div>
+        </div>
+        <div id="map-msg" class="admin-msg"></div>
+      </div>
+
+      <!-- RESERVATIONS TAB -->
+      <div id="at-reservations" class="admin-pane">
+        <div class="admin-section-title">📋 რეზერვაციების ისტორია</div>
+        <div style="display:flex;gap:.75rem;margin-bottom:1rem;flex-wrap:wrap;align-items:flex-end">
+          <div style="display:flex;flex-direction:column;gap:.25rem">
+            <label style="font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,240,232,.35)">თარიღი — დან</label>
+            <input type="date" id="res-filter-from" class="admin-input" style="width:auto;margin:0;padding:.45rem .75rem;font-size:.8rem">
+          </div>
+          <div style="display:flex;flex-direction:column;gap:.25rem">
+            <label style="font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,240,232,.35)">თარიღი — მდე</label>
+            <input type="date" id="res-filter-to" class="admin-input" style="width:auto;margin:0;padding:.45rem .75rem;font-size:.8rem">
+          </div>
+          <div style="display:flex;flex-direction:column;gap:.25rem">
+            <label style="font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,240,232,.35)">სტატუსი</label>
+            <select id="res-filter-status" class="admin-input" style="width:auto;margin:0;padding:.45rem .75rem;font-size:.8rem" onchange="applyResFilter()">
+              <option value="">ყველა</option>
+              <option value="pending">⏳ მომლოდინე</option>
+              <option value="confirmed">✅ დადასტ.</option>
+              <option value="cancelled">❌ გაუქმებული</option>
+            </select>
+          </div>
+          <button class="admin-btn admin-btn-sm" style="width:auto" onclick="loadReservations()">🔍 ფილტრი</button>
+          <button class="admin-btn admin-btn-sm admin-btn-ghost" style="width:auto" onclick="exportResPDF()">📄 PDF</button>
+          <button class="admin-btn admin-btn-sm admin-btn-ghost" style="width:auto" onclick="exportResXLSX()">📊 XLSX</button>
+          <button class="admin-btn admin-btn-sm" style="width:auto;margin-left:auto" onclick="loadReservations()">🔄 განახლება</button>
+        </div>
+        <div id="res-list-msg" class="admin-msg"></div>
+        <div style="overflow-x:auto">
+          <table class="admin-table" id="res-table">
+            <thead><tr>
+              <th>სახელი</th><th>ტელეფონი</th><th>თარიღი</th><th>დრო</th>
+              <th>სტუმ.</th><th>მაგიდა</th><th>გადახდა</th><th>ავანსი</th><th>შენიშვნა</th><th>სტატუსი</th><th></th>
+            </tr></thead>
+            <tbody id="res-tbody"><tr><td colspan="11" style="text-align:center;color:rgba(245,240,232,.3);padding:2rem;font-style:italic">ჩატვირთვა...</td></tr></tbody>
+          </table>
+        </div>
+        <div id="res-count" style="margin-top:.75rem;font-size:.72rem;color:rgba(245,240,232,.3)"></div>
+      </div>
+
+      <!-- SETTINGS TAB -->
+      <div id="at-settings" class="admin-pane">
+        <div class="admin-section-title">პარამეტრები</div>
+
+        <!-- Telegram Bot -->
+        <div style="background:rgba(0,136,204,0.08);border:1px solid rgba(0,136,204,0.25);border-radius:6px;padding:1rem 1.25rem;margin-bottom:1.5rem">
+          <div style="font-size:.78rem;color:#0088cc;font-weight:500;margin-bottom:.75rem">✈️ Telegram Bot — ავტომატური შეტყობინებები</div>
+          <div class="admin-form-grid">
+            <div class="admin-field">
+              <label>Bot Token</label>
+              <input type="text" id="tg-token" placeholder="123456:ABC-DEF..." oninput="saveTgSettings()">
+            </div>
+            <div class="admin-field">
+              <label>Chat ID</label>
+              <input type="text" id="tg-chatid" placeholder="-100123456789" oninput="saveTgSettings()">
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:.75rem;margin-top:.5rem">
+            <button class="admin-btn admin-btn-sm admin-btn-ghost" style="width:auto" onclick="testTelegramBot()">🧪 ტესტი</button>
+            <span id="tg-status" style="font-size:.72rem;color:rgba(245,240,232,.4)"></span>
+          </div>
+          <div style="font-size:.65rem;color:rgba(245,240,232,.25);margin-top:.5rem;line-height:1.6">
+            ყოველი ჯავშნის დროს ავტომატური შეტყობინება მოვა Telegram-ში.<br>
+            Bot Token: @BotFather → /newbot · Chat ID: @userinfobot
+          </div>
+        </div>
+
+        <div class="admin-form-grid">
+          <div class="admin-field span2">
+            <label>რესტორნის სახელი</label>
+            <input type="text" id="st-name" value="რესტორანი ტიფლისი">
+          </div>
+          <div class="admin-field span2">
+            <label>მისამართი</label>
+            <input type="text" id="st-addr" value="ბათუმი, ვ.გორგასალის ქ. 18/110">
+          </div>
+          <div class="admin-field">
+            <label>ტელეფონი</label>
+            <input type="text" id="st-phone" value="+995 568 76 76 38">
+          </div>
+          <div class="admin-field">
+            <label>WhatsApp ნომერი (კოდით)</label>
+            <input type="text" id="st-wa" value="995568767638">
+          </div>
+          <div class="admin-field">
+            <label>სამუშაო საათები</label>
+            <input type="text" id="st-hours" value="10:00 — 24:00">
+          </div>
+          <div class="admin-field">
+            <label>ახალი ადმინ პაროლი</label>
+            <input type="password" id="st-pw" placeholder="ცარიელი = არ შეიცვლება">
+          </div>
+        </div>
+        <div id="adm-msg-settings" class="admin-msg"></div>
+        <div class="admin-form-actions">
+          <button class="admin-btn" onclick="adminSaveSettings()" data-i18n="btn_save">💾 შენახვა</button>
+          <button class="admin-btn admin-btn-ghost admin-btn-danger" onclick="adminResetData()">🗑 ყველა ცვლილების გაუქმება</button>
+        </div>
+        <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,.06)">
+          <div style="font-size:.7rem;color:rgba(245,240,232,.25);line-height:1.8">
+            ყველა ცვლილება ინახება ბრაუზერში (localStorage).<br>
+            სხვა მოწყობილობაზე სანახავად გამოიყენეთ GitHub Sync.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- PRINT MENU OVERLAY (hidden on screen, shown only on print) -->
+<div id="print-menu-overlay" style="display:none"></div>
+
+<!-- FOOTER -->
+<footer id="contact">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h2>რესტორანი <span>ტიფლისი</span></h2>
+        <p>ქართული სამზარეულოს საუკეთესო ტრადიციები შერწყმული თანამედროვე სამზარეულოს ხელოვნებასთან. ბათუმის გულში, ვ. გორგასალის ქუჩაზე.</p>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="ft_hours_title">სამუშაო საათები</h4>
+        <p data-i18n="ft_everyday">ყოველდღე</p>
+        <p>10:00 — 24:00</p>
+
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="ft_contact">კონტაქტი</h4>
+        <a href="tel:+995568767638">+995 568 76 76 38</a>
+        <a href="mailto:tiflisi2020@gmail.com">tiflisi2020@gmail.com</a>
+        <p style="margin-top:0.5rem" data-i18n="ft_addr">ვ.გორგასალის ქ. 18/110</p>
+        <p data-i18n="ft_city">ბათუმი, საქართველო</p>
+
+        <!-- სოციალური ქსელები -->
+        <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem">
+          <a href="https://www.facebook.com/TiflisiRestaurantBatumi/" target="_blank" style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .8rem;border:1px solid rgba(255,255,255,0.15);color:rgba(245,240,232,0.6);text-decoration:none;font-size:.7rem;letter-spacing:.05em;transition:all .2s;border-radius:3px" onmouseover="this.style.borderColor='#1877f2';this.style.color='#1877f2'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)';this.style.color='rgba(245,240,232,0.6)'">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            Facebook
+          </a>
+          <a href="https://www.instagram.com/tiflisirestaurantbatumi/" target="_blank" style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .8rem;border:1px solid rgba(255,255,255,0.15);color:rgba(245,240,232,0.6);text-decoration:none;font-size:.7rem;letter-spacing:.05em;transition:all .2s;border-radius:3px" onmouseover="this.style.borderColor='#e1306c';this.style.color='#e1306c'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)';this.style.color='rgba(245,240,232,0.6)'">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            Instagram
+          </a>
+        </div>
+
+        <!-- მიტანის სერვისები -->
+        <div style="margin-top:0.85rem">
+          <div style="font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(245,240,232,.3);margin-bottom:.5rem;font-family:'Raleway',sans-serif;font-weight:600">მიტანის სერვისი</div>
+          <div style="display:flex;flex-wrap:wrap;gap:.5rem">
+            <a href="https://glovoapp.com/en/ge/batumi/stores/tiflisi-bat?content=pitsa-c.1421345036&section=pitsa-s.2999510380" target="_blank"
+               style="display:inline-flex;align-items:center;gap:.45rem;padding:.4rem .85rem;border:1px solid rgba(255,255,255,0.15);color:rgba(245,240,232,0.6);text-decoration:none;font-size:.7rem;letter-spacing:.05em;transition:all .2s;border-radius:3px"
+               onmouseover="this.style.borderColor='#ffc244';this.style.color='#ffc244'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)';this.style.color='rgba(245,240,232,0.6)'">
+              <svg width="15" height="15" viewBox="0 0 32 32" fill="currentColor"><path d="M16 2C8.28 2 2 8.28 2 16s6.28 14 14 14 14-6.28 14-14S23.72 2 16 2zm0 4a10 10 0 0 1 7.66 3.6l-2.56 2.56A6.25 6.25 0 1 0 22.75 16H16v-3.5h10.5A10 10 0 0 1 16 26 10 10 0 0 1 6 16 10 10 0 0 1 16 6z"/></svg>
+              Glovo
+            </a>
+            <a href="https://wolt.com/en/geo/batumi/restaurant/restaurant-tiflis/items/soup-10?srsltid=AfmBOopDnVtfrR30XTIjeboPzi9xLfad6qtpf8aEeldquKXKcx47KxqY" target="_blank"
+               style="display:inline-flex;align-items:center;gap:.45rem;padding:.4rem .85rem;border:1px solid rgba(255,255,255,0.15);color:rgba(245,240,232,0.6);text-decoration:none;font-size:.7rem;letter-spacing:.05em;transition:all .2s;border-radius:3px"
+               onmouseover="this.style.borderColor='#009de0';this.style.color='#009de0'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)';this.style.color='rgba(245,240,232,0.6)'">
+              <svg width="15" height="15" viewBox="0 0 32 32" fill="currentColor"><path d="M4 8h3.5l2.5 10.5L12.5 8H16l2.5 10.5L21 8h3.5l-4 16h-3.5L14.5 14 12 24H8.5L4 8z"/></svg>
+              Wolt
+            </a>
+            <a href="https://food.bolt.eu/ka-ge/38-batumi/p/67460-restorani-tiplisi/" target="_blank"
+               style="display:inline-flex;align-items:center;gap:.45rem;padding:.4rem .85rem;border:1px solid rgba(255,255,255,0.15);color:rgba(245,240,232,0.6);text-decoration:none;font-size:.7rem;letter-spacing:.05em;transition:all .2s;border-radius:3px"
+               onmouseover="this.style.borderColor='#34d186';this.style.color='#34d186'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)';this.style.color='rgba(245,240,232,0.6)'">
+              <svg width="15" height="15" viewBox="0 0 32 32" fill="currentColor"><path d="M18 2L6 18h10l-2 12 14-16H18L20 2z"/></svg>
+              Bolt Food
+            </a>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span data-i18n="ft_copy">© 2025 რესტორანი ტიფლისი · ყველა უფლება დაცულია</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ===== DATA =====
+const CATS=[];
+
+const MENU=[];
+
+const TXT = {
+  ka: { order:'შეკვეთა', clear:'გასუფთავება', empty:'კერძები არ არის', saved:'შენახულია', savedSub:'შეკვეთა წარმატებით შეინახა', total:'სულ', pp:'1 სტუმარზე', disc:'ფასდაკლება', svc:'მომსახურება', adv:'ავანსი', sub:'ქვეჯამი', newR:'ახალი შეკვეთა', errN:'გთხოვთ შეიყვანოთ სახელი', errT:'გთხოვთ მიუთითოთ მაგიდა',
+    nav_res:'რეზერვაცია', nav_contact:'კონტაქტი', nav_menu:'მენიუ', nav_book:'მაგიდის დაჯავშნა',
+    hero_eyebrow:'ბათუმი · 2022 წლიდან', hero_title:'რესტორანი<br><em>ტიფლისი</em>', hero_sub:'ქართული სამზარეულო · ვ.გორგასალის ქ. 18/110',
+    btn_menu:'მენიუს ნახვა', btn_book:'მაგიდის დაჯავშნა', scroll:'გადაახვიეთ',
+    ab1_title:'ნამდვილი ქართული', ab1_text:'ტრადიციული რეცეპტები<br>თანამედროვე მიწოდებით',
+    ab2_title:'Josper ღუმელი', ab2_text:'სპეციალური კერძები ხის ნახშირზე<br>და მაყალზე',
+    ab3_title:'სახლის ღვინო', ab3_text:'ქართული ნეკტარი პირდაპირ<br>კახეთიდან',
+    menu_label:'ჩვენი მენიუ', menu_title:'კერძები & <em>სასმელები</em>', print_menu:'მენიუს დაბეჭდვა',
+    res_label:'ჯავშანი', res_title:'მაგიდის<br><em>დაჯავშნა</em>',
+    res_desc:'აღმოაჩინეთ ტიფლისის არისტოკრატიული შარმი ბათუმის ისტორიულ ნაწილში. გორგასლის 18/110-ში ტრადიციული ქართული გემოები თანამედროვე ხელოვნებად იქცევა. გვეწვიეთ და შეიგრძენით ნამდვილი ქალაქური ნადიმი, სადაც ყოველი დეტალი თქვენს განწყობაზე ზრუნავს.',
+    res_legend:'„ლეგენდის თანახმად, ნადირობისას მეფე ვახტანგ გორგასლის მიმინო ცხელ წყაროში ჩავარდა. სწორედ ამ მაცოცხლებელი წყლების სიახლოვეს მეფემ ქალაქის გაშენება ბრძანა და მას სახელი „თბილი" (თბილისი) უწოდა. დღეს რესტორანი „ტიფლისი" ამ ისტორიულ მემკვიდრეობას გორგასლის ქუჩაზე აცოცხლებს — იქ, სადაც სტუმართმოყვარეობა ისეთივე მუდმივია, როგორც ჩვენი დედაქალაქის ისტორია."',
+    contact_addr:'ბათუმი, ვ.გორგასალის ქ. 18/110', contact_hours:'ყოველდღე: 10:00 — 24:00', contact_groups:'ჯგუფები: +995 568 76 76 38',
+    form_title:'სარეზერვაციო<br>ფორმა', form_sub:'შეავსეთ ფორმა · ჩვენ დაგიდასტურებთ',
+    f_name:'სახელი და გვარი *', f_phone:'ტელეფონი *', f_email:'ელ. ფოსტა', f_guests:'სტუმრების რაოდენობა',
+    f_pay:'გადახდის მეთოდი', f_date:'თარიღი *', f_time:'დრო *', f_table:'სასურველი მაგიდა', f_note:'განსაკუთრებული სურვილი',
+    f_name_ph:'თქვენი სახელი', f_note_ph:'ალერგია, დაბადების დღე, სხვა სურვილი...',
+    f_pay_sel:'— აირჩიეთ —', f_table_sel:'— აირჩიეთ მაგიდა —', pay_transfer:'🔁 გადმორიცხვა', pay_cash:'💵 ნაღდი',
+    btn_res_order:'📋 რეზერვაცია + შეკვეთა', btn_save:'💾 შენახვა', btn_back:'← უკან',
+    res_ok_title:'ჯავშანი მიღებულია!', res_ok_sub:'მალე დაგიკავშირდებით დასადასტურებლად', res_new:'ახალი ჯავშანი',
+    svc_pct:'მომსახ. %', disc_pct:'ფასდაკლ. %', adv_lbl:'ავანსი ₾', pay_lbl:'გადახდა',
+    ft_hours_title:'სამუშაო საათები', ft_everyday:'ყოველდღე', ft_contact:'კონტაქტი',
+    ft_addr:'ვ.გორგასალის ქ. 18/110', ft_city:'ბათუმი, საქართველო',
+    ft_copy:'© 2025 რესტორანი ტიფლისი · ყველა უფლება დაცულია'
+  },
+  en: { order:'Order', clear:'Clear', empty:'No items selected', saved:'Saved', savedSub:'Order saved successfully', total:'Total', pp:'Per guest', disc:'Discount', svc:'Service', adv:'Advance', sub:'Subtotal', newR:'New Order', errN:'Please enter name', errT:'Please enter table',
+    nav_res:'Reservation', nav_contact:'Contact', nav_menu:'Menu', nav_book:'Book a Table',
+    hero_eyebrow:'Batumi · Since 2022', hero_title:'Restaurant<br><em>Tiflisi</em>', hero_sub:'Georgian Cuisine · V. Gorgasali St. 18/110',
+    btn_menu:'View Menu', btn_book:'Book a Table', scroll:'Scroll',
+    ab1_title:'Authentic Georgian', ab1_text:'Traditional recipes<br>with a modern touch',
+    ab2_title:'Josper Oven', ab2_text:'Special dishes on charcoal<br>and open fire',
+    ab3_title:'House Wine', ab3_text:'Georgian nectar straight<br>from Kakheti',
+    menu_label:'Our Menu', menu_title:'Dishes & <em>Drinks</em>', print_menu:'Print Menu',
+    res_label:'Reservation', res_title:'Table<br><em>Booking</em>',
+    res_desc:'Discover the aristocratic charm of Tiflisi in the historic heart of Batumi. At Gorgasali 18/110, traditional Georgian flavors become modern art. Visit us and experience a genuine city feast where every detail cares for your mood.',
+    res_legend:'"According to legend, while hunting, King Vakhtang Gorgasali\'s falcon fell into a hot spring. Near these life-giving waters, the king ordered a city to be built and named it \"Tbili\" (Tbilisi). Today, Restaurant Tiflisi brings this historic heritage to life on Gorgasali Street — where hospitality is as eternal as the history of our capital."',
+    contact_addr:'Batumi, V. Gorgasali St. 18/110', contact_hours:'Every day: 10:00 — 24:00', contact_groups:'Groups: +995 568 76 76 38',
+    form_title:'Reservation<br>Form', form_sub:'Fill in the form · We will confirm',
+    f_name:'Full Name *', f_phone:'Phone *', f_email:'Email', f_guests:'Number of Guests',
+    f_pay:'Payment Method', f_date:'Date *', f_time:'Time *', f_table:'Preferred Table', f_note:'Special Request',
+    f_name_ph:'Your name', f_note_ph:'Allergy, birthday, other wishes...',
+    f_pay_sel:'— Select —', f_table_sel:'— Select a Table —', pay_transfer:'🔁 Transfer', pay_cash:'💵 Cash',
+    btn_res_order:'📋 Reservation + Order', btn_save:'💾 Save', btn_back:'← Back',
+    res_ok_title:'Reservation Received!', res_ok_sub:'We will contact you shortly to confirm', res_new:'New Reservation',
+    svc_pct:'Service %', disc_pct:'Discount %', adv_lbl:'Advance ₾', pay_lbl:'Payment',
+    ft_hours_title:'Working Hours', ft_everyday:'Every day', ft_contact:'Contact',
+    ft_addr:'V. Gorgasali St. 18/110', ft_city:'Batumi, Georgia',
+    ft_copy:'© 2025 Restaurant Tiflisi · All rights reserved'
+  },
+  ru: { order:'Заказ', clear:'Очистить', empty:'Ничего не выбрано', saved:'Сохранено', savedSub:'Заказ успешно сохранен', total:'Итого', pp:'На 1 гостя', disc:'Скидка', svc:'Обслуживание', adv:'Аванс', sub:'Подытог', newR:'Новый заказ', errN:'Введите имя', errT:'Введите стол',
+    nav_res:'Резервация', nav_contact:'Контакт', nav_menu:'Меню', nav_book:'Забронировать стол',
+    hero_eyebrow:'Батуми · С 2022 года', hero_title:'Ресторан<br><em>Тифлиси</em>', hero_sub:'Грузинская кухня · ул. В. Горгасали 18/110',
+    btn_menu:'Смотреть меню', btn_book:'Забронировать стол', scroll:'Листать',
+    ab1_title:'Настоящая грузинская', ab1_text:'Традиционные рецепты<br>в современном исполнении',
+    ab2_title:'Печь Josper', ab2_text:'Особые блюда на древесном угле<br>и открытом огне',
+    ab3_title:'Домашнее вино', ab3_text:'Грузинский нектар прямо<br>из Кахетии',
+    menu_label:'Наше меню', menu_title:'Блюда & <em>напитки</em>', print_menu:'Распечатать меню',
+    res_label:'Резервация', res_title:'Бронирование<br><em>стола</em>',
+    res_desc:'Откройте для себя аристократическое очарование Тифлиси в историческом центре Батуми. На Горгасали 18/110 традиционные грузинские вкусы превращаются в современное искусство. Приходите и ощутите настоящий городской пир, где каждая деталь заботится о вашем настроении.',
+    res_legend:'«По легенде, во время охоты сокол царя Вахтанга Горгасали упал в горячий источник. Именно у этих живительных вод царь повелел основать город и назвал его «Тбили» (Тбилиси). Сегодня ресторан «Тифлиси» воплощает это историческое наследие на улице Горгасали — там, где гостеприимство столь же вечно, как история нашей столицы.»',
+    contact_addr:'Батуми, ул. В. Горгасали 18/110', contact_hours:'Ежедневно: 10:00 — 24:00', contact_groups:'Группы: +995 568 76 76 38',
+    form_title:'Форма<br>бронирования', form_sub:'Заполните форму · Мы подтвердим',
+    f_name:'Имя и фамилия *', f_phone:'Телефон *', f_email:'Эл. почта', f_guests:'Количество гостей',
+    f_pay:'Способ оплаты', f_date:'Дата *', f_time:'Время *', f_table:'Предпочтительный стол', f_note:'Особые пожелания',
+    f_name_ph:'Ваше имя', f_note_ph:'Аллергия, день рождения, другие пожелания...',
+    f_pay_sel:'— Выберите —', f_table_sel:'— Выберите стол —', pay_transfer:'🔁 Перевод', pay_cash:'💵 Наличные',
+    btn_res_order:'📋 Резервация + заказ', btn_save:'💾 Сохранить', btn_back:'← Назад',
+    res_ok_title:'Бронь принята!', res_ok_sub:'Скоро свяжемся с вами для подтверждения', res_new:'Новая бронь',
+    svc_pct:'Обсл. %', disc_pct:'Скидка %', adv_lbl:'Аванс ₾', pay_lbl:'Оплата',
+    ft_hours_title:'Часы работы', ft_everyday:'Ежедневно', ft_contact:'Контакт',
+    ft_addr:'ул. В. Горгасали 18/110', ft_city:'Батуми, Грузия',
+    ft_copy:'© 2025 Ресторан Тифлиси · Все права защищены'
+  }
+};
+
+let lang = 'ka', catIdx = 0, order = {};
+const g = id => document.getElementById(id);
+
+// Nav scroll
+window.addEventListener('scroll', () => {
+  g('nav').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+function setLang(l) {
+  lang = l;
+  // Update lang-btn active state
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    const m = (b.getAttribute('onclick')||'').match(/setLang\('(\w+)'\)/);
+    if(m) b.classList.toggle('active', m[1] === l);
+  });
+  // Apply all i18n translations
+  applyI18n();
+  renderCats(); renderMenu(); renderOrder();
+}
+
+function applyI18n() {
+  const t = TXT[lang] || TXT.ka;
+  // Text content
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if(t[key] !== undefined) el.textContent = t[key];
+  });
+  // HTML content (for elements with <br> or <em>)
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const key = el.getAttribute('data-i18n-html');
+    if(t[key] !== undefined) el.innerHTML = t[key];
+  });
+  // Placeholders
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    const key = el.getAttribute('data-i18n-ph');
+    if(t[key] !== undefined) el.placeholder = t[key];
+  });
+  // document lang attribute
+  document.documentElement.lang = lang;
+}
+
+function renderCats() {
+  g('cat-tabs').innerHTML = CATS.map((c,i) =>
+    `<button class="cat-tab${i===catIdx?' active':''}" onclick="selCat(${i})">${c[lang]}</button>`
+  ).join('');
+}
+
+function selCat(i) { catIdx = i; renderCats(); renderMenu(); }
+
+function renderMenu() {
+  const catId = CATS[catIdx].id;
+  const items = MENU.filter(m => m.cat === catId);
+  if (!items.length) { g('menu-list').innerHTML = '<div style="padding:2rem;color:var(--muted);font-style:italic">—</div>'; return; }
+  g('menu-list').innerHTML = items.map(m => {
+    const q = order[m.id] || 0;
+    return `<div class="menu-item${q>0?' selected':''}">
+      <div class="menu-item-name">${m[lang]}</div>
+      <div class="menu-item-price">₾${m.p%1===0?m.p:m.p.toFixed(2)}</div>
+      <div class="qty-ctrl">
+        <button class="qty-btn" onclick="chg(${m.id},-1)">−</button>
+        <input class="qty-input" type="number" min="0" value="${q||''}" placeholder="0" oninput="setQ(${m.id},this.value)">
+        <button class="qty-btn" onclick="chg(${m.id},1)">+</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function chg(id, d) {
+  const nv = Math.max(0, (order[id]||0)+d);
+  if (nv === 0) delete order[id]; else order[id] = nv;
+  renderMenu(); renderOrder();
+}
+
+function setQ(id, v) {
+  const nv = parseInt(v)||0;
+  if (nv <= 0) delete order[id]; else order[id] = nv;
+  renderOrder();
+}
+
+function clearAll() { order = {}; renderMenu(); renderOrder(); }
+
+function removeItem(id) { delete order[id]; renderMenu(); renderOrder(); }
+
+function renderOrder() {
+  const ids = Object.keys(order).map(Number);
+  const el = g('order-list');
+  const t = TXT[lang];
+  if (!ids.length) {
+    el.innerHTML = `<div class="order-empty">${t.empty}</div>`;
+    recalc(); return;
+  }
+  el.innerHTML = ids.map(id => {
+    const item = MENU.find(m => m.id === id);
+    if (!item) return '';
+    const q = order[id], s = item.p * q;
+    return `<div class="order-line">
+      <div class="order-line-name">${item[lang]}</div>
+      <div class="order-line-qty">
+        <button class="qty-btn" style="width:20px;height:20px;font-size:11px" onclick="chg(${id},-1)">−</button>
+        <span style="font-size:.75rem;color:rgba(245,240,232,.6);min-width:16px;text-align:center">${q}</span>
+        <button class="qty-btn" style="width:20px;height:20px;font-size:11px" onclick="chg(${id},1)">+</button>
+      </div>
+      <div class="order-line-price">₾${s.toFixed(2)}</div>
+      <button class="remove-btn" onclick="removeItem(${id})">×</button>
+    </div>`;
+  }).join('');
+  recalc();
+}
+
+function recalc() {
+  const t = TXT[lang];
+  const svc = parseFloat(g('f-svc').value)||0;
+  const disc = parseFloat(g('f-disc').value)||0;
+  const adv = parseFloat(g('f-adv').value)||0;
+  const guests = parseInt(g('r-guests')?.value||'2')||1;
+  let sub = 0;
+  Object.keys(order).forEach(id => {
+    const item = MENU.find(m => m.id === parseInt(id));
+    if (item) sub += item.p * order[id];
+  });
+  const dA = sub*disc/100, afterD = sub-dA, sA = afterD*svc/100;
+  const total = Math.max(0, afterD+sA-adv);
+  g('tv-total').textContent = '₾'+total.toFixed(2);
+  g('tv-pp').textContent = '₾'+(total/guests).toFixed(2);
+  if (g('tv-disc')) g('tv-disc').textContent = '−₾'+dA.toFixed(2);
+  if (g('tv-svc')) g('tv-svc').textContent = '₾'+sA.toFixed(2);
+  if (g('tv-adv')) g('tv-adv').textContent = '−₾'+adv.toFixed(2);
+  g('row-disc').style.display = disc>0?'flex':'none';
+  g('row-svc').style.display = svc>0?'flex':'none';
+  g('row-adv').style.display = adv>0?'flex':'none';
+}
+
+function buildText() {
+  const name = g('r-name')?.value||'—';
+  const phone = g('r-phone')?.value||'—';
+  const date = g('r-date')?.value||'—';
+  const time = g('r-time')?.value||'—';
+  const guests = g('r-guests')?.value||'2';
+  const note = g('r-note')?.value||'';
+  const svc = parseFloat(g('f-svc').value)||0;
+  const disc = parseFloat(g('f-disc').value)||0;
+  const adv = parseFloat(g('f-adv').value)||0;
+  let sub = 0, lines = '';
+  Object.keys(order).map(Number).forEach(id => {
+    const item = MENU.find(m => m.id === id);
+    if (!item) return;
+    const q = order[id], lt = item.p*q; sub += lt;
+    lines += `  • ${item.ka} ×${q} — ₾${lt.toFixed(2)}\n`;
+  });
+  const dA=sub*disc/100, afterD=sub-dA, sA=afterD*svc/100, total=Math.max(0,afterD+sA-adv);
+  let t = `🍃 *რესტორანი ტიფლისი* 🍃\n━━━━━━━━━━━━━━━━━━━\n*${name}* | 📅 ${date} 🕐 ${time}\n👥 ${guests} სტუმარი${phone!=='—'?'\n📞 '+phone:''}\n\n*შეკვეთა:*\n${lines}───────────────────\n`;
+  t += `ქვეჯამი: ₾${sub.toFixed(2)}\n`;
+  if(disc>0) t+=`ფასდაკლება ${disc}%: −₾${dA.toFixed(2)}\n`;
+  if(svc>0) t+=`მომსახურება ${svc}%: ₾${sA.toFixed(2)}\n`;
+  if(adv>0) t+=`ავანსი: −₾${adv.toFixed(2)}\n`;
+  t += `*სულ: ₾${total.toFixed(2)}*\n1 სტუმარზე: ₾${(total/Math.max(1,parseInt(guests))).toFixed(2)}`;
+  if(note) t+=`\n\n📝 ${note}`;
+  return t;
+}
+
+function sendWA() { sendMsg('wa'); }
+function sendWASuccess() { sendMsg('wa'); }
+
+function sendMsg(type) {
+  const phone = (g('r-phone')?.value?.replace(/\D/g,'')||'');
+  const text = buildText();
+  let url = '';
+  if (type === 'wa') {
+    // WhatsApp: works on mobile and desktop
+    url = phone ? `https://wa.me/${phone}?text=${encodeURIComponent(text)}` : `https://wa.me/?text=${encodeURIComponent(text)}`;
+  } else if (type === 'viber') {
+    // Viber: on mobile use viber:// deep link, text only (Viber doesn't support pre-filled text to a number)
+    if (phone) {
+      url = `viber://add?number=${phone.replace(/^995/,'')}`;
+    } else {
+      // fallback: copy text and open viber
+      navigator.clipboard?.writeText(text).catch(()=>{});
+      url = `viber://`;
+    }
+    // Show message text in a prompt so user can paste it
+    setTimeout(() => {
+      if (phone) alert('Viber გახსნილია. ტექსტი კლიპბორდზე დაკოპირდა — ჩასვით შეტყობინებაში.\n\n' + text);
+    }, 300);
+    navigator.clipboard?.writeText(text).catch(()=>{});
+  } else if (type === 'tg') {
+    // Telegram: share URL works universally on mobile and desktop
+    url = `https://t.me/share/url?url=${encodeURIComponent('.')}&text=${encodeURIComponent(text)}`;
+  }
+  if (url) window.open(url, '_blank');
+}
+
+function buildReceiptHTML() {
+  const name = g('r-name')?.value||'—';
+  const date = g('r-date')?.value||'—';
+  const time = g('r-time')?.value||'—';
+  const guests = g('r-guests')?.value||'2';
+  let rows = '';
+  let sub = 0;
+  Object.keys(order).map(Number).forEach(id => {
+    const item = MENU.find(m => m.id === id);
+    if (!item) return;
+    const q = order[id], lt = item.p*q; sub += lt;
+    rows += `<div class="receipt-row"><span>${item[lang]||item.ka} ×${q}</span><span>₾${lt.toFixed(2)}</span></div>`;
+  });
+  const disc = parseFloat(g('f-disc').value)||0, svc = parseFloat(g('f-svc').value)||0, adv = parseFloat(g('f-adv').value)||0;
+  const dA=sub*disc/100,afterD=sub-dA,sA=afterD*svc/100,total=Math.max(0,afterD+sA-adv);
+  rows += `<div class="receipt-row" style="font-weight:500;color:var(--terracotta);border-top:1px solid var(--border);padding-top:6px;margin-top:4px"><span>${TXT[lang].total}</span><span>₾${total.toFixed(2)}</span></div>`;
+  return `<div style="font-family:'Cormorant Garamond',serif;font-size:1rem;margin-bottom:.5rem;color:var(--dark)">${name} — ${date} ${time} · ${guests}</div>${rows}`;
+}
+
+function saveOrder() {
+  if (!Object.keys(order).length) { alert('შეარჩიეთ კერძები'); return; }
+  try {
+    const ex = JSON.parse(localStorage.getItem('tiflis_orders')||'[]');
+    const name = g('r-name')?.value||'სტუმარი';
+    const svc=parseFloat(g('f-svc').value)||0, disc=parseFloat(g('f-disc').value)||0, adv=parseFloat(g('f-adv').value)||0;
+    let sub=0;
+    const items = Object.entries(order).map(([id,q])=>{
+      const item=MENU.find(m=>m.id===parseInt(id)); if(!item)return null;
+      sub+=item.p*q; return{id:parseInt(id),ka:item.ka,price:item.p,qty:q};
+    }).filter(Boolean);
+    const dA=sub*disc/100,afterD=sub-dA,sA=afterD*svc/100,total=Math.max(0,afterD+sA-adv);
+    ex.unshift({id:Date.now(),name,date:g('r-date')?.value,time:g('r-time')?.value,guests:g('r-guests')?.value,phone:g('r-phone')?.value,items,sub,total,savedAt:new Date().toISOString()});
+    localStorage.setItem('tiflis_orders',JSON.stringify(ex));
+  } catch(e) {}
+  g('s-name').textContent = TXT[lang].saved + ' — ' + (g('r-name')?.value||'');
+  g('s-sub').textContent = TXT[lang].savedSub;
+  g('receipt').innerHTML = buildReceiptHTML();
+  g('success-overlay').style.display = 'flex';
+  g('order-wrap').style.display = 'none';
+}
+
+function resetAll() {
+  order = {};
+  g('success-overlay').style.display = 'none';
+  g('order-wrap').style.display = 'block';
+  renderMenu(); renderOrder();
+}
+
+function goBackToOrder() {
+  g('success-overlay').style.display = 'none';
+  g('order-wrap').style.display = 'block';
+}
+
+function sharePDF() {
+  const name = g('r-name')?.value || g('s-name')?.textContent || '—';
+  const date = g('r-date')?.value || '—';
+  const time = g('r-time')?.value || '—';
+  const guests = g('r-guests')?.value || '2';
+  const svc = parseFloat(g('f-svc')?.value)||0;
+  const disc = parseFloat(g('f-disc')?.value)||0;
+  const adv = parseFloat(g('f-adv')?.value)||0;
+  const payVal = g('f-pay')?.value || '';
+  const payMaps = {
+    ka: {'ნაღდი':'ნაღდი','bog':'საქართველოს ბანკი','tbc':'თიბისი ბანკი','tera':'ტერა ბანკი','გადარიცხვა':'გადარიცხვა','cash':'ნაღდი','transfer':'გადარიცხვა'},
+    en: {'ნაღდი':'Cash','bog':'Bank of Georgia','tbc':'TBC Bank','tera':'Tera Bank','გადარიცხვა':'Transfer','cash':'Cash','transfer':'Transfer'},
+    ru: {'ნაღდი':'Наличные','bog':'Банк Грузии','tbc':'ТБС Банк','tera':'Тера Банк','გადარიცხვა':'Перевод','cash':'Наличные','transfer':'Перевод'}
+  };
+  const payMap = payMaps[lang] || payMaps.ka;
+  const payText = payMap[payVal] || payVal || '—';
+  let rows = '', sub = 0;
+  Object.keys(order).map(Number).forEach(id => {
+    const item = MENU.find(m => m.id === id); if(!item) return;
+    const q = order[id], lt = item.p*q; sub += lt;
+    rows += `<tr><td>${item[lang]||item.ka}</td><td style="text-align:center">×${q}</td><td style="text-align:right">₾${lt.toFixed(2)}</td></tr>`;
+  });
+  const dA=sub*disc/100, afterD=sub-dA, sA=afterD*svc/100, total=Math.max(0,afterD+sA-adv);
+  let extraRows = '';
+  if(disc>0) extraRows += `<tr style="color:#e74c3c"><td colspan="2">${TXT[lang].disc} ${disc}%</td><td style="text-align:right">−₾${dA.toFixed(2)}</td></tr>`;
+  if(svc>0) extraRows += `<tr><td colspan="2">${TXT[lang].svc} ${svc}%</td><td style="text-align:right">₾${sA.toFixed(2)}</td></tr>`;
+  if(adv>0) extraRows += `<tr style="color:#e74c3c"><td colspan="2">${TXT[lang].adv} (${payText})</td><td style="text-align:right">−₾${adv.toFixed(2)}</td></tr>`;
+  const win = window.open('','_blank');
+  if (!win) { alert('გთხოვთ დაუშვათ pop-up ამ საიტისთვის'); return; }
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${{ka:"ჩეკი",en:"Receipt",ru:"Чек"}[lang]} — Restaurant Tiflisi</title>
+  <style>
+    body{font-family:'Segoe UI',sans-serif;padding:24px;max-width:360px;margin:0 auto;color:#1a1a16}
+    h2{font-family:Georgia,serif;font-size:1.5rem;font-weight:400;margin-bottom:2px;color:#1a1a16}
+    h2 em{color:#c9a84c;font-style:italic}
+    .meta{font-size:.78rem;color:#888;margin-bottom:16px}
+    table{width:100%;border-collapse:collapse;font-size:.85rem}
+    td{padding:5px 4px;border-bottom:1px dotted #ddd}
+    .total-row td{font-size:1rem;font-weight:600;color:#b85c38;border-top:2px solid #b85c38;border-bottom:none;padding-top:8px}
+    .pay-row td{font-size:.78rem;color:#555;border-bottom:none;padding-top:4px}
+    .footer{margin-top:20px;font-size:.68rem;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:10px}
+  </style></head><body>
+  <div style="text-align:center;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #c9a84c">
+    <img src="https://raw.githubusercontent.com/tiflisi2020-alt/restaurant/main/logo.png" alt="ტიფლისი" style="max-height:90px;max-width:220px;object-fit:contain" onerror="this.style.display='none'">
+    <div style="font-family:Georgia,serif;font-size:1.1rem;color:#1a1a16;margin-top:6px">რესტორანი <em style="color:#c9a84c;font-style:italic">ტიფლისი</em></div>
+  </div>
+  <div class="meta">${name} · ${date} ${time} · ${guests} ${{ka:"სტუმარი",en:"guest(s)",ru:"гост."}[lang]}</div>
+  <table>
+    <thead><tr style="font-size:.72rem;color:#888"><th style="text-align:left">${{ka:"კერძი",en:"Dish",ru:"Блюдо"}[lang]}</th><th style="text-align:center">${{ka:"რაოდ.",en:"Qty",ru:"Кол."}[lang]}</th><th style="text-align:right">${{ka:"ფასი",en:"Price",ru:"Цена"}[lang]}</th></tr></thead>
+    <tbody>${rows}${extraRows}
+    <tr class="total-row"><td colspan="2">${{ka:"სულ გადასახდელი",en:"Total to Pay",ru:"Итого к оплате"}[lang]}</td><td style="text-align:right">₾${total.toFixed(2)}</td></tr>
+    <tr class="pay-row"><td colspan="3">${{ka:"გადახდის მეთოდი",en:"Payment",ru:"Оплата"}[lang]}: ${payText}</td></tr>
+    </tbody>
+  </table>
+  <div class="footer">რესტორანი ტიფლისი · ბათუმი, ვ.გორგასალის ქ. 18/110<br>+995 568 76 76 38 · tiflisi2020@gmail.com</div>
+  </body></html>`);
+  win.document.close();
+  setTimeout(() => win.print(), 400);
+}
+
+function printReceipt() {
+  const name = g('r-name')?.value || '—';
+  const date = g('r-date')?.value || '—';
+  const time = g('r-time')?.value || '—';
+  const guests = g('r-guests')?.value || '2';
+  const table = g('r-table')?.value || '—';
+  const payVal = g('f-pay')?.value || '';
+  const payMaps = {
+    ka: {'ნაღდი':'ნაღდი','bog':'BOG','tbc':'TBC','tera':'TERA','გადარიცხვა':'გადარიცხვა','cash':'ნაღდი','transfer':'გადარიცხვა'},
+    en: {'ნაღდი':'Cash','bog':'BOG','tbc':'TBC','tera':'TERA','გადარიცხვა':'Transfer','cash':'Cash','transfer':'Transfer'},
+    ru: {'ნაღდი':'Нал.','bog':'BOG','tbc':'TBC','tera':'TERA','გადარიცხვა':'Перевод','cash':'Нал.','transfer':'Перевод'}
+  };
+  const payText = (payMaps[lang]||payMaps.ka)[payVal] || payVal || '—';
+  const svc = parseFloat(g('f-svc')?.value)||0;
+  const disc = parseFloat(g('f-disc')?.value)||0;
+  const adv = parseFloat(g('f-adv')?.value)||0;
+
+  let rows = '', sub = 0;
+  Object.keys(order).map(Number).forEach(id => {
+    const item = MENU.find(m => m.id === id); if(!item) return;
+    const q = order[id], lt = item.p*q; sub += lt;
+    rows += `<tr><td>${item[lang]||item.ka}</td><td class="qty">x${q}</td><td class="price">${lt % 1 === 0 ? lt : lt.toFixed(2)}</td></tr>`;
+  });
+
+  const dA=sub*disc/100, afterD=sub-dA, sA=afterD*svc/100, total=Math.max(0,afterD+sA-adv);
+  let extraRows = '';
+  if(disc>0) extraRows += `<tr class="extra"><td colspan="2">${TXT[lang].disc} ${disc}%</td><td class="price">-${dA.toFixed(2)}</td></tr>`;
+  if(svc>0)  extraRows += `<tr class="extra"><td colspan="2">${TXT[lang].svc} ${svc}%</td><td class="price">+${sA.toFixed(2)}</td></tr>`;
+  if(adv>0)  extraRows += `<tr class="extra"><td colspan="2">${TXT[lang].adv}</td><td class="price">-${adv.toFixed(2)}</td></tr>`;
+
+  const labels = {
+    ka: { dish:'კერძი', qty:'რაოდ', price:'ფასი', total:'სულ', pay:'გადახდა', guest:'სტ.', table:'მაგ.', thanks:'გმადლობთ!' },
+    en: { dish:'Item', qty:'Qty', price:'Price', total:'TOTAL', pay:'Payment', guest:'gst', table:'tbl', thanks:'Thank you!' },
+    ru: { dish:'Блюдо', qty:'Кол', price:'Цена', total:'ИТОГО', pay:'Оплата', guest:'гст', table:'ст.', thanks:'Спасибо!' }
+  };
+  const L = labels[lang] || labels.ka;
+
+  const win = window.open('', '_blank');
+  if (!win) { alert('დაუშვით pop-up'); return; }
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
+<style>
+  @page { margin: 0; size: 80mm auto; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 11px;
+    width: 76mm;
+    padding: 4mm 3mm;
+    color: #000;
+    background: #fff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .logo-wrap { text-align: center; margin-bottom: 3mm; }
+  .logo-wrap img { max-width: 50mm; max-height: 20mm; object-fit: contain; filter: grayscale(100%) brightness(0); }
+  .logo-text { font-size: 13px; font-weight: bold; text-align: center; letter-spacing: 1px; }
+  .logo-sub { font-size: 9px; text-align: center; margin-bottom: 1mm; }
+  .sep { border: none; border-top: 1px dashed #000; margin: 2mm 0; }
+  .sep-solid { border: none; border-top: 1px solid #000; margin: 2mm 0; }
+  .meta { font-size: 10px; margin-bottom: 1mm; }
+  table { width: 100%; border-collapse: collapse; }
+  th { font-size: 9px; text-align: left; border-bottom: 1px solid #000; padding: 1mm 0; }
+  td { font-size: 10px; padding: 0.8mm 0; vertical-align: top; }
+  td.qty { width: 10mm; text-align: center; }
+  td.price { width: 16mm; text-align: right; white-space: nowrap; }
+  tr.extra td { font-size: 9px; color: #333; }
+  .total-row td { font-size: 13px; font-weight: bold; border-top: 1px solid #000; padding-top: 2mm; }
+  .total-row td.price { font-size: 13px; }
+  .pay-row td { font-size: 10px; padding-top: 1mm; }
+  .footer { text-align: center; font-size: 9px; margin-top: 3mm; line-height: 1.6; }
+  .thanks { font-size: 12px; font-weight: bold; text-align: center; margin: 2mm 0; }
+</style>
+</head><body>
+<div class="logo-wrap">
+  <img src="https://raw.githubusercontent.com/tiflisi2020-alt/restaurant/main/logo.png"
+       onerror="this.style.display='none';document.querySelector('.logo-text').style.display='block'">
+  <div class="logo-text" style="display:none">TIFLISI</div>
+</div>
+<div class="logo-sub">ბათუმი · ვ.გორგასალის ქ. 18/110</div>
+<hr class="sep-solid">
+<div class="meta">${name}</div>
+<div class="meta">📅 ${date} &nbsp; 🕐 ${time} &nbsp; 👥 ${guests} ${L.guest} &nbsp; 🪑 ${table}</div>
+<hr class="sep">
+<table>
+  <thead><tr><th>${L.dish}</th><th style="text-align:center">${L.qty}</th><th style="text-align:right">${L.price} ₾</th></tr></thead>
+  <tbody>${rows}${extraRows}</tbody>
+</table>
+<hr class="sep">
+<table><tbody>
+  <tr class="total-row"><td colspan="2">${L.total}</td><td class="price">₾${total % 1 === 0 ? total : total.toFixed(2)}</td></tr>
+  <tr class="pay-row"><td colspan="3">${L.pay}: ${payText}</td></tr>
+</tbody></table>
+<hr class="sep-solid">
+<div class="thanks">${L.thanks}</div>
+<div class="footer">+995 568 76 76 38<br>tiflisi2020@gmail.com</div>
+</body></html>`);
+  win.document.close();
+  setTimeout(() => { win.print(); setTimeout(() => win.close(), 1000); }, 400);
+}
+
+function scrollToReserve() {
+  document.getElementById('reservation').scrollIntoView({behavior:'smooth'});
+}
+
+// ===== SUPABASE =====
+const SUPA_URL = 'https://xcxzkelvpmynreewflrj.supabase.co';
+const SUPA_KEY = 'sb_publishable_LSW2eD3hyDBszjXT3bZxgA_vAq5lRBO';
+
+async function supaFetch(path, method='GET', body=null) {
+  const opts = { method, headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer '+SUPA_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=representation' } };
+  if (body) opts.body = JSON.stringify(body);
+  const r = await fetch(SUPA_URL+path, opts);
+  return r.json();
+}
+
+// guests stepper
+function adjGuests(d) {
+  const el = g('r-guests');
+  let v = parseInt(el.value)||1;
+  el.value = Math.max(1, Math.min(300, v+d));
+  recalc();
+}
+function clampGuests(el) {
+  let v = parseInt(el.value)||1;
+  el.value = Math.max(1, Math.min(300, v));
+  recalc();
+}
+
+// Reservation Form
+async function submitReservation() {
+  const name = g('r-name').value.trim();
+  const phone = g('r-phone').value.trim();
+  const date = g('r-date').value;
+  const time = g('r-time').value;
+  if (!name) { alert('გთხოვთ შეიყვანოთ სახელი'); return; }
+  if (!phone) { alert('გთხოვთ შეიყვანოთ ტელეფონი'); return; }
+  if (!date) { alert('გთხოვთ შეარჩიოთ თარიღი'); return; }
+
+  const guests = parseInt(g('r-guests').value)||2;
+  const table = g('r-table').value;
+  const note = g('r-note').value;
+  const email = g('r-email')?.value||'';
+  const payment = g('r-payment').value;
+
+  // Save to Supabase
+  try {
+    const advance_amount = parseFloat(g('f-adv')?.value)||0;
+    const advance_payment = g('f-pay')?.value||null;
+    await supaFetch('/rest/v1/reservations', 'POST', { name, phone, date, time, guests, table_id: table||'—', payment, note, status:'pending', advance_amount: advance_amount||null, advance_payment: advance_payment||null });
+    // update table status
+    if (table) await supaFetch(`/rest/v1/tables?id=eq.${table}`, 'PATCH', { status:'reserved' });
+  } catch(e) { console.warn('Supabase error', e); }
+
+  // Build WA message
+  const payLabels = {'ნაღდი':'ნაღდი',bog:'საქართველოს ბანკი',tbc:'თიბისი ბანკი',tera:'ტერა ბანკი','გადარიცხვა':'გადარიცხვა',cash:'ნაღდი',transfer:'გადარიცხვა'};
+  let text = `🍃 *რესტორანი ტიფლისი — ჯავშანი*\n━━━━━━━━━━━━━━━\n`;
+  text += `👤 *${name}*\n📞 ${phone}\n`;
+  if(email) text += `✉️ ${email}\n`;
+  text += `\n📅 ${date}  🕐 ${time}\n👥 ${guests} სტუმარი\n`;
+  if(table) text += `🪑 მაგიდა: ${table}\n`;
+  if(payment) text += `💳 ${payLabels[payment]||payment}\n`;
+  if (Object.keys(order).length > 0) {
+    text += `\n*წინასწარი შეკვეთა:*\n`;
+    let sub = 0;
+    Object.keys(order).map(Number).forEach(id => {
+      const item = MENU.find(m=>m.id===id); if(!item) return;
+      const q=order[id],lt=item.p*q; sub+=lt;
+      text+=`  • ${item.ka} ×${q} — ₾${lt.toFixed(2)}\n`;
+    });
+    text+=`\nსავარაუდო: ₾${sub.toFixed(2)}\n`;
+  }
+  if(note) text += `\n📝 ${note}`;
+
+  // Send Telegram notification to admin
+  const orderLines = Object.keys(order).length > 0
+    ? '\n🛒 ' + Object.keys(order).map(Number).map(id => {
+        const item = MENU.find(m=>m.id===id); if(!item) return '';
+        return `${item.ka} ×${order[id]}`;
+      }).filter(Boolean).join(', ')
+    : '';
+  const tgMsg = `🔔 <b>ახალი ჯავშანი — რესტორანი ტიფლისი</b>\n━━━━━━━━━━━━━━━\n👤 <b>${name}</b>\n📞 ${phone}\n📅 ${date} · 🕐 ${time}\n👥 ${guests} სტუმარი\n🪑 ${table||'—'}\n💳 ${(payLabels[payment]||payment||'—')}${orderLines}\n📝 ${note||'—'}`;
+  sendTelegramMsg(tgMsg);
+
+  g('res-form-wrap').style.display = 'none';
+  g('res-success').style.display = 'flex';
+
+  // Send WhatsApp to CUSTOMER's phone number with reservation + order receipt
+  const customerPhone = phone.replace(/\D/g, '');
+  if (customerPhone) {
+    setTimeout(() => {
+      // Build order receipt lines
+      let receiptLines = '';
+      let orderSub = 0;
+      const svcVal = parseFloat(g('f-svc')?.value)||0;
+      const discVal = parseFloat(g('f-disc')?.value)||0;
+      const advVal = parseFloat(g('f-adv')?.value)||0;
+      if (Object.keys(order).length > 0) {
+        Object.keys(order).map(Number).forEach(id => {
+          const item = MENU.find(m=>m.id===id); if(!item) return;
+          const q=order[id], lt=item.p*q; orderSub+=lt;
+          receiptLines += `  • ${item[lang]||item.ka} ×${q} — ₾${lt.toFixed(2)}\n`;
+        });
+        const dA=orderSub*discVal/100, afterD=orderSub-dA, sA=afterD*svcVal/100;
+        const orderTotal=Math.max(0,afterD+sA-advVal);
+        if(discVal>0) receiptLines+=`  ➖ ${TXT[lang].disc} ${discVal}% — −₾${dA.toFixed(2)}\n`;
+        if(svcVal>0) receiptLines+=`  ➕ ${TXT[lang].svc} ${svcVal}% — ₾${sA.toFixed(2)}\n`;
+        if(advVal>0) receiptLines+=`  ➖ ${TXT[lang].adv} — −₾${advVal.toFixed(2)}\n`;
+        receiptLines+=`  💰 *${{ka:'სულ',en:'Total',ru:'Итого'}[lang]}: ₾${orderTotal.toFixed(2)}*`;
+      }
+
+      const orderSection = {
+        ka: receiptLines ? `\n\n🧾 *წინასწარი შეკვეთა:*\n${receiptLines}` : '',
+        en: receiptLines ? `\n\n🧾 *Pre-order:*\n${receiptLines}` : '',
+        ru: receiptLines ? `\n\n🧾 *Предзаказ:*\n${receiptLines}` : ''
+      };
+
+      const confirmMsgs = {
+        ka: `🍃 *რესტორანი ტიფლისი*\n\nგამარჯობა, *${name}*! 👋\nთქვენი ჯავშანი მიღებულია ✅\n\n📅 ${date}  🕐 ${time}\n👥 ${guests} სტუმარი\n🪑 ${table||'—'}${payment?'\n💳 '+(payLabels[payment]||payment):''}${orderSection.ka}\n\nმალე დაგიდასტურებთ!\n━━━━━━━━━━━━━━━\nბათუმი, ვ.გორგასალის ქ. 18/110\n📞 +995 568 76 76 38`,
+        en: `🍃 *Restaurant Tiflisi*\n\nHello, *${name}*! 👋\nYour reservation has been received ✅\n\n📅 ${date}  🕐 ${time}\n👥 ${guests} guest(s)\n🪑 ${table||'—'}${payment?'\n💳 '+(payLabels[payment]||payment):''}${orderSection.en}\n\nWe will confirm shortly!\n━━━━━━━━━━━━━━━\nBatumi, V. Gorgasali St. 18/110\n📞 +995 568 76 76 38`,
+        ru: `🍃 *Ресторан Тифлиси*\n\nЗдравствуйте, *${name}*! 👋\nВаша бронь принята ✅\n\n📅 ${date}  🕐 ${time}\n👥 ${guests} гост.\n🪑 ${table||'—'}${payment?'\n💳 '+(payLabels[payment]||payment):''}${orderSection.ru}\n\nСкоро подтвердим!\n━━━━━━━━━━━━━━━\nБатуми, ул. В. Горгасали 18/110\n📞 +995 568 76 76 38`
+      };
+      const confirmText = confirmMsgs[lang] || confirmMsgs.ka;
+      window.open(`https://wa.me/${customerPhone}?text=${encodeURIComponent(confirmText)}`, '_blank');
+    }, 600);
+  }
+}
+
+function resetRes() {
+  g('res-form-wrap').style.display = 'block';
+  g('res-success').style.display = 'none';
+  ['r-name','r-phone','r-email','r-note'].forEach(id => { if(g(id)) g(id).value=''; });
+  g('r-date').value=''; g('r-time').value='19:00'; g('r-guests').value='2';
+  g('r-table').value=''; g('r-payment').value='';
+}
+
+const today = new Date().toISOString().split('T')[0];
+async function init() {
+  await loadOverrides();
+  if (g('r-date')) g('r-date').min = today;
+  applyI18n(); renderCats(); renderMenu(); renderOrder();
+}
+document.addEventListener('DOMContentLoaded', init);
+
+// ===== ADMIN PANEL =====
+const ADMIN_PW_DEFAULT = 'tiflis2024';
+
+// Load overrides from Supabase
+async function loadOverrides() {
+  try {
+    // Load categories from Supabase
+    const catsData = await supaFetch('/rest/v1/menu_categories?order=sort_order.asc,id.asc');
+    if (catsData && catsData.length > 0) {
+      CATS.length = 0;
+      catsData.forEach(c => CATS.push({ id: c.id, ka: c.ka, en: c.en, ru: c.ru }));
+    }
+    // Load menu from Supabase
+    const menuData = await supaFetch('/rest/v1/menu_items?order=id.asc&active=eq.true');
+    if (menuData && menuData.length > 0) {
+      MENU.length = 0;
+      menuData.forEach(m => MENU.push({ id: m.id, ka: m.ka, en: m.en, ru: m.ru, p: parseFloat(m.p), cat: m.cat }));
+    }
+  } catch(e) {
+    console.warn('Supabase load failed, using local data:', e);
+  }
+}
+
+async function saveOverrides() {
+  // Save single item to Supabase menu table (upsert)
+  // Called from admin panel when adding/editing dishes
+  // Individual items are saved via adminSaveDish
+}
+
+async function saveMenuItemToSupabase(item) {
+  try {
+    await supaFetch('/rest/v1/menu_items', 'POST', { id: item.id, ka: item.ka, en: item.en, ru: item.ru, p: item.p, cat: item.cat, active: true });
+  } catch(e) {
+    try {
+      await supaFetch(`/rest/v1/menu_items?id=eq.${item.id}`, 'PATCH', { ka: item.ka, en: item.en, ru: item.ru, p: item.p, cat: item.cat });
+    } catch(e2) { console.warn('Menu save error:', e2); }
+  }
+}
+
+async function deleteMenuItemFromSupabase(id) {
+  try {
+    await supaFetch(`/rest/v1/menu_items?id=eq.${id}`, 'PATCH', { active: false });
+  } catch(e) { console.warn('Menu delete error:', e); }
+}
+
+async function saveCatToSupabase(cat) {
+  try {
+    await supaFetch('/rest/v1/menu_categories', 'POST', { id: cat.id, ka: cat.ka, en: cat.en, ru: cat.ru });
+  } catch(e) {
+    try {
+      await supaFetch(`/rest/v1/menu_categories?id=eq.${cat.id}`, 'PATCH', { ka: cat.ka, en: cat.en, ru: cat.ru });
+    } catch(e2) { console.warn('Category save error:', e2); }
+  }
+}
+
+async function deleteCatFromSupabase(id) {
+  try {
+    await supaFetch(`/rest/v1/menu_categories?id=eq.${id}`, 'DELETE');
+  } catch(e) { console.warn('Category delete error:', e); }
+}
+
+// ===== TELEGRAM BOT =====
+function saveTgSettings() {
+  localStorage.setItem('tg_token', g('tg-token')?.value || '');
+  localStorage.setItem('tg_chatid', g('tg-chatid')?.value || '');
+}
+
+function loadTgSettings() {
+  const token = localStorage.getItem('tg_token') || '';
+  const chatid = localStorage.getItem('tg_chatid') || '';
+  if (g('tg-token')) g('tg-token').value = token;
+  if (g('tg-chatid')) g('tg-chatid').value = chatid;
+}
+
+async function sendTelegramMsg(text) {
+  const token = localStorage.getItem('tg_token') || '';
+  const chatid = localStorage.getItem('tg_chatid') || '';
+  if (!token || !chatid) return;
+  try {
+    await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({chat_id: chatid, text: text, parse_mode: 'HTML'})
+    });
+  } catch(e) { console.warn('Telegram error', e); }
+}
+
+async function testTelegramBot() {
+  const token = localStorage.getItem('tg_token') || '';
+  const chatid = localStorage.getItem('tg_chatid') || '';
+  if (!token || !chatid) { g('tg-status').textContent = '❌ Token და Chat ID შეავსეთ'; return; }
+  g('tg-status').textContent = '⏳ იგზავნება...';
+  try {
+    const r = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({chat_id: chatid, text: '✅ რესტორანი ტიფლისი — Telegram Bot მუშაობს!', parse_mode: 'HTML'})
+    });
+    const data = await r.json();
+    g('tg-status').textContent = data.ok ? '✅ წარმატებით გაიგზავნა!' : '❌ შეცდომა: ' + data.description;
+  } catch(e) { g('tg-status').textContent = '❌ კავშირის შეცდომა'; }
+}
+
+async function getAdminPw() {
+  try {
+    const data = await supaFetch('/rest/v1/settings?key=eq.admin_pw&select=value');
+    if (data && data[0] && data[0].value) return data[0].value;
+  } catch(e) {}
+  return localStorage.getItem('tiflis_admin_pw') || ADMIN_PW_DEFAULT;
+}
+
+async function saveAdminPw(pw) {
+  try {
+    await supaFetch('/rest/v1/settings?key=eq.admin_pw', 'PATCH', { value: pw });
+  } catch(e) {}
+  localStorage.setItem('tiflis_admin_pw', pw);
+}
+
+function openAdmin() {
+  g('admin-modal').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+  const logged = sessionStorage.getItem('tiflis_admin_logged');
+  if (logged === '1') {
+    showAdminPanel();
+  } else {
+    g('admin-login-wrap').style.display = 'block';
+    g('admin-panel-wrap').style.display = 'none';
+    setTimeout(() => g('admin-pw').focus(), 100);
+  }
+}
+
+function closeAdmin() {
+  g('admin-modal').style.display = 'none';
+  document.body.style.overflow = '';
+  g('admin-pw').value = '';
+  g('admin-pw-err').style.display = 'none';
+}
+
+async function adminLogin() {
+  const pw = g('admin-pw').value;
+  const correctPw = await getAdminPw();
+  if (pw === correctPw) {
+    sessionStorage.setItem('tiflis_admin_logged', '1');
+    g('admin-pw-err').style.display = 'none';
+    showAdminPanel();
+  } else {
+    g('admin-pw-err').style.display = 'block';
+    g('admin-pw').value = '';
+    g('admin-pw').focus();
+  }
+}
+
+function showAdminPanel() {
+  g('admin-login-wrap').style.display = 'none';
+  g('admin-panel-wrap').style.display = 'block';
+  adminPopulateCatFilter();
+  adminPopulateCatSelect();
+  adminRenderMenu();
+  adminRenderCatsList();
+  adminLoadSettings();
+  loadTgSettings();
+}
+
+function adminTab(t) {
+  const tabs = ['menu','add','cats','map','reservations','settings'];
+  document.querySelectorAll('.admin-tab').forEach((b,i) => {
+    b.classList.toggle('on', tabs[i] === t);
+  });
+  document.querySelectorAll('.admin-pane').forEach(p => p.classList.remove('on'));
+  g('at-' + t).classList.add('on');
+  if (t === 'add') {
+    g('adm-form-title').textContent = 'ახალი კერძის დამატება';
+    g('adm-edit-badge').style.display = 'none';
+  }
+  if (t === 'map') loadMapTables();
+  if (t === 'reservations') loadReservations();
+}
+
+function adminMsg(elId, msg, type) {
+  const el = g(elId);
+  el.textContent = msg;
+  el.className = 'admin-msg ' + type;
+  el.style.display = 'block';
+  setTimeout(() => { el.style.display = 'none'; }, 3000);
+}
+
+// --- MENU TAB ---
+function adminPopulateCatFilter() {
+  const sel = g('adm-cat-filter');
+  sel.innerHTML = '<option value="">ყველა კატეგორია</option>' +
+    CATS.map(c => `<option value="${c.id}">${c.ka}</option>`).join('');
+}
+
+function adminPopulateCatSelect() {
+  const sel = g('af-cat');
+  sel.innerHTML = CATS.map(c => `<option value="${c.id}">${c.ka}</option>`).join('');
+}
+
+function adminRenderMenu() {
+  const search = (g('adm-search').value || '').toLowerCase();
+  const catFilter = g('adm-cat-filter').value;
+  let items = MENU.filter(m => {
+    const matchCat = !catFilter || m.cat === parseInt(catFilter);
+    const matchSearch = !search ||
+      m.ka.toLowerCase().includes(search) ||
+      m.en.toLowerCase().includes(search);
+    return matchCat && matchSearch;
+  });
+
+  const getCatName = id => {
+    const c = CATS.find(c => c.id === id);
+    return c ? c.ka : '—';
+  };
+
+  const tbody = g('adm-tbody');
+  if (!items.length) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:rgba(245,240,232,.3);padding:2rem;font-style:italic">კერძები არ მოიძებნა</td></tr>';
+  } else {
+    tbody.innerHTML = items.map(m => `
+      <tr>
+        <td class="td-name">${m.ka}</td>
+        <td style="color:rgba(245,240,232,.5);font-size:.78rem">${m.en}</td>
+        <td class="td-cat">${getCatName(m.cat)}</td>
+        <td class="td-price">₾${m.p % 1 === 0 ? m.p : m.p.toFixed(2)}</td>
+        <td><div class="td-acts">
+          <button class="admin-btn admin-btn-ghost admin-btn-sm" onclick="adminEditDish(${m.id})">✏</button>
+          <button class="admin-btn-danger" onclick="adminDeleteDish(${m.id})">🗑</button>
+        </div></td>
+      </tr>`).join('');
+  }
+  g('adm-count').textContent = `${items.length} კერძი`;
+}
+
+// --- ADD/EDIT ---
+let editingId = null;
+
+function adminEditDish(id) {
+  const m = MENU.find(m => m.id === id);
+  if (!m) return;
+  editingId = id;
+  g('af-ka').value = m.ka;
+  g('af-en').value = m.en || '';
+  g('af-ru').value = m.ru || '';
+  g('af-price').value = m.p;
+  g('af-cat').value = m.cat;
+  g('adm-form-title').textContent = 'კერძის რედაქტირება';
+  g('adm-edit-badge').style.display = 'block';
+  adminTab('add');
+}
+
+function adminCancelEdit() {
+  editingId = null;
+  g('af-ka').value = '';
+  g('af-en').value = '';
+  g('af-ru').value = '';
+  g('af-price').value = '';
+  g('adm-form-title').textContent = 'ახალი კერძის დამატება';
+  g('adm-edit-badge').style.display = 'none';
+}
+
+function adminSaveDish() {
+  const ka = g('af-ka').value.trim();
+  const en = g('af-en').value.trim();
+  const ru = g('af-ru').value.trim();
+  const price = parseFloat(g('af-price').value);
+  const cat = parseInt(g('af-cat').value);
+
+  if (!ka) { adminMsg('adm-msg-add', '❌ ქართული სახელი სავალდებულოა', 'err'); return; }
+  if (isNaN(price) || price < 0) { adminMsg('adm-msg-add', '❌ ფასი სავალდებულოა', 'err'); return; }
+
+  if (editingId !== null) {
+    const idx = MENU.findIndex(m => m.id === editingId);
+    if (idx !== -1) {
+      MENU[idx] = { ...MENU[idx], ka, en, ru, p: price, cat };
+    }
+    adminMsg('adm-msg-add', '✅ კერძი განახლდა', 'ok');
+    editingId = null;
+    g('adm-edit-badge').style.display = 'none';
+    g('adm-form-title').textContent = 'ახალი კერძის დამატება';
+  } else {
+    const newId = Math.max(...MENU.map(m => m.id), 0) + 1;
+    MENU.push({ id: newId, ka, en, ru, p: price, cat });
+    adminMsg('adm-msg-add', '✅ კერძი დაემატა: ' + ka, 'ok');
+  }
+
+  // Save to Supabase
+  const savedItem = editingId !== null ? MENU.find(m => m.id === editingId) : MENU[MENU.length-1];
+  if (savedItem) saveMenuItemToSupabase(savedItem);
+  g('af-ka').value = '';
+  g('af-en').value = '';
+  g('af-ru').value = '';
+  g('af-price').value = '';
+  renderCats(); renderMenu(); renderOrder();
+  adminRenderMenu();
+}
+
+function adminDeleteDish(id) {
+  const m = MENU.find(m => m.id === id);
+  if (!m) return;
+  if (!confirm('წაშალოთ: ' + m.ka + '?')) return;
+  const idx = MENU.findIndex(m => m.id === id);
+  MENU.splice(idx, 1);
+  deleteMenuItemFromSupabase(id);
+  renderMenu(); renderOrder();
+  adminRenderMenu();
+  adminMsg('adm-msg-menu', '🗑 წაიშალა: ' + m.ka, 'ok');
+}
+
+// --- CATEGORIES TAB ---
+function adminRenderCatsList() {
+  g('adm-cats-list').innerHTML = CATS.map(c => `
+    <div style="display:flex;align-items:center;gap:.75rem;padding:.6rem 0;border-bottom:1px solid rgba(255,255,255,.05)">
+      <span style="flex:1;font-family:'Cormorant Garamond',serif;font-size:1rem;color:rgba(245,240,232,.8)">${c.ka}</span>
+      <span style="font-size:.72rem;color:rgba(245,240,232,.3);flex:1">${c.en || ''}</span>
+      <span style="font-size:.7rem;color:rgba(245,240,232,.25)">${MENU.filter(m=>m.cat===c.id).length} კერძი</span>
+      <button class="admin-btn-danger" onclick="adminDeleteCat(${c.id})">🗑</button>
+    </div>`).join('');
+}
+
+function adminAddCat() {
+  const ka = g('cf-ka').value.trim();
+  const en = g('cf-en').value.trim();
+  const ru = g('cf-ru').value.trim();
+  if (!ka) { adminMsg('adm-msg-cats', '❌ ქართული სახელი სავალდებულოა', 'err'); return; }
+  const newId = Math.max(...CATS.map(c => c.id), 0) + 10;
+  const newCat = { id: newId, ka, en, ru };
+  CATS.push(newCat);
+  saveCatToSupabase(newCat);
+  g('cf-ka').value = ''; g('cf-en').value = ''; g('cf-ru').value = '';
+  renderCats();
+  adminRenderCatsList();
+  adminPopulateCatFilter();
+  adminPopulateCatSelect();
+  adminMsg('adm-msg-cats', '✅ კატეგორია დაემატა: ' + ka, 'ok');
+}
+
+function adminDeleteCat(id) {
+  const c = CATS.find(c => c.id === id);
+  if (!c) return;
+  const count = MENU.filter(m => m.cat === id).length;
+  if (count > 0) {
+    if (!confirm(c.ka + ' — კატეგორიაში ' + count + ' კერძია. მაინც წაშლით?')) return;
+  } else {
+    if (!confirm('წაშალოთ კატეგორია: ' + c.ka + '?')) return;
+  }
+  const idx = CATS.findIndex(c => c.id === id);
+  CATS.splice(idx, 1);
+  deleteCatFromSupabase(id);
+  renderCats(); renderMenu();
+  adminRenderCatsList();
+  adminPopulateCatFilter();
+  adminPopulateCatSelect();
+  adminMsg('adm-msg-cats', '🗑 წაიშალა: ' + c.ka, 'ok');
+}
+
+// --- SETTINGS TAB ---
+function adminLoadSettings() {
+  try {
+    const s = JSON.parse(localStorage.getItem('tiflis_settings') || '{}');
+    if (s.name) g('st-name').value = s.name;
+    if (s.addr) g('st-addr').value = s.addr;
+    if (s.phone) g('st-phone').value = s.phone;
+    if (s.wa) g('st-wa').value = s.wa;
+    if (s.hours) g('st-hours').value = s.hours;
+  } catch(e) {}
+}
+
+async function adminSaveSettings() {
+  const s = {
+    name: g('st-name').value,
+    addr: g('st-addr').value,
+    phone: g('st-phone').value,
+    wa: g('st-wa').value,
+    hours: g('st-hours').value
+  };
+  localStorage.setItem('tiflis_settings', JSON.stringify(s));
+  const newPw = g('st-pw').value;
+  if (newPw.trim()) {
+    await saveAdminPw(newPw.trim());
+    g('st-pw').value = '';
+  }
+  adminMsg('adm-msg-settings', '✅ პარამეტრები შენახულია', 'ok');
+}
+
+function adminResetData() {
+  if (!confirm('გაუქმდება ყველა ცვლილება და მენიუ საწყის მდგომარეობას დაუბრუნდება. დარწმუნებული ხართ?')) return;
+  location.reload();
+}
+
+// Close modal on backdrop click
+g('admin-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeAdmin();
+});
+
+// ===== PRINT MENU =====
+function printMenu() {
+  const overlay = g('print-menu-overlay');
+  const printLang = lang;
+  let catsHTML = '';
+  CATS.forEach(cat => {
+    const items = MENU.filter(m => m.cat === cat.id);
+    if (!items.length) return;
+    const itemsHTML = items.map(m =>
+      `<div class="pm-item">
+        <span class="pm-item-name">${m[printLang]}</span>
+        <span class="pm-item-dots"></span>
+        <span class="pm-item-price">&#8382;${m.p % 1 === 0 ? m.p : m.p.toFixed(2)}</span>
+      </div>`
+    ).join('');
+    catsHTML += `<div class="pm-cat"><div class="pm-cat-title">${cat[printLang]}</div>${itemsHTML}</div>`;
+  });
+  overlay.innerHTML = `
+    <div class="pm-header">
+      <div class="pm-brand">
+        <div class="pm-brand-name">რესტორანი <span>ტიფლისი</span></div>
+        <div class="pm-brand-sub">ქართული სამზარეულო · ბათუმი</div>
+      </div>
+      <div class="pm-contact">
+        ვ.გორგასალის ქ. 18/110, ბათუმი<br>
+        +995 568 76 76 38<br>
+        ყოველდღე 10:00 — 24:00
+      </div>
+    </div>
+    <div class="pm-body">${catsHTML}</div>
+    <div class="pm-footer">
+      <span class="pm-footer-text">ფასები მოიცავს დღგ-ს · ალერგიის შემთხვევაში მიმართეთ სერვისს</span>
+      <span class="pm-footer-gold">რესტორანი ტიფლისი &copy; ${new Date().getFullYear()}</span>
+    </div>`;
+  overlay.style.display = 'block';
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => { overlay.style.display = 'none'; }, 500);
+  }, 300);
+}
+
+// ===== MAP =====
+async function loadMapTables() {
+  try {
+    const filterEl = document.getElementById('map-date-filter');
+    const today2 = filterEl && filterEl.value ? filterEl.value : new Date().toISOString().split('T')[0];
+    if (filterEl && !filterEl.value) filterEl.value = today2;
+    const rsvData = await supaFetch(`/rest/v1/reservations?date=eq.${today2}&status=neq.cancelled&select=table_id`);
+    const reservedIds = new Set((rsvData||[]).map(r => r.table_id));
+
+    const zones = {H:[],A:[],V:[]};
+    const allTables = [
+      ...Array.from({length:9},(_,i)=>({id:`H-${i+11}`,zone:'H'})),
+      ...Array.from({length:10},(_,i)=>({id:`A-${i+20}`,zone:'A'})),
+      ...Array.from({length:8},(_,i)=>({id:`V-${i+1}`,zone:'V'}))
+    ];
+    allTables.forEach(t => zones[t.zone].push(t));
+
+    ['H','A','V'].forEach(zone => {
+      const el = g(`map-zone-${zone}`);
+      if (!el) return;
+      el.innerHTML = zones[zone].map(t => {
+        const reserved = reservedIds.has(t.id);
+        return `<div onclick="toggleTable('${t.id}',${reserved})" style="
+          width:56px;height:44px;border-radius:6px;display:flex;align-items:center;justify-content:center;
+          cursor:pointer;font-size:.78rem;font-weight:500;letter-spacing:.04em;
+          background:${reserved?'rgba(231,76,60,0.25)':'rgba(46,204,113,0.18)'};
+          border:1px solid ${reserved?'rgba(231,76,60,0.6)':'rgba(46,204,113,0.5)'};
+          color:${reserved?'#e74c3c':'#2ecc71'};
+          transition:all .2s">${t.id}</div>`;
+      }).join('');
+    });
+  } catch(e) {
+    adminMsg('map-msg','❌ Supabase კავშირი ვერ მოხერხდა','err');
+  }
+}
+
+async function toggleTable(tableId, currentlyReserved) {
+  const newStatus = currentlyReserved ? 'free' : 'reserved';
+  try {
+    await supaFetch(`/rest/v1/tables?id=eq.${tableId}`, 'PATCH', {status: newStatus});
+    await loadMapTables();
+  } catch(e) {}
+}
+
+// ===== RESERVATIONS =====
+let allReservations = [];
+let filteredReservations = [];
+
+async function loadReservations() {
+  const tbody = g('res-tbody');
+  tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:rgba(245,240,232,.3);padding:2rem;font-style:italic">⏳ ჩატვირთვა...</td></tr>';
+  try {
+    let url = '/rest/v1/reservations?order=date.desc,time.desc';
+    const from = g('res-filter-from').value;
+    const to = g('res-filter-to').value;
+    const status = g('res-filter-status')?.value;
+    if (from) url += `&date=gte.${from}`;
+    if (to)   url += `&date=lte.${to}`;
+    if (status) url += `&status=eq.${status}`;
+    const data = await supaFetch(url);
+    allReservations = data || [];
+    filteredReservations = allReservations;
+    renderResTable(filteredReservations);
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:#e74c3c;padding:2rem">❌ Supabase კავშირი ვერ მოხერხდა</td></tr>';
+  }
+}
+
+function applyResFilter() {
+  if (allReservations.length) {
+    const status = g('res-filter-status')?.value;
+    filteredReservations = status ? allReservations.filter(r => r.status === status) : allReservations;
+    renderResTable(filteredReservations);
+  } else {
+    loadReservations();
+  }
+}
+
+const payLabels = {'ნაღდი':'ნაღდი',bog:'საქართველოს ბანკი',tbc:'თიბისი ბანკი',tera:'ტერა ბანკი','გადარიცხვა':'გადარიცხვა',cash:'ნაღდი',transfer:'გადარიცხვა'};
+const statusColors = {pending:'#c9a84c',confirmed:'#2ecc71',cancelled:'#e74c3c'};
+const statusLabels = {pending:'⏳ მომლოდინე',confirmed:'✅ დადასტ.',cancelled:'❌ გაუქმდა'};
+
+function renderResTable(data) {
+  const tbody = g('res-tbody');
+  if (!data.length) {
+    tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:rgba(245,240,232,.3);padding:2rem;font-style:italic">ჩანაწერები არ მოიძებნა</td></tr>';
+    g('res-count').textContent = '0 ჩანაწერი';
+    return;
+  }
+  tbody.innerHTML = data.map(r => `
+    <tr>
+      <td class="td-name">${r.name}</td>
+      <td style="font-size:.78rem;color:rgba(245,240,232,.6)">${r.phone||'—'}</td>
+      <td style="white-space:nowrap">${r.date}</td>
+      <td>${r.time||'—'}</td>
+      <td style="text-align:center">${r.guests}</td>
+      <td style="color:var(--gold)">${r.table_id||'—'}</td>
+      <td style="font-size:.75rem">${payLabels[r.payment]||r.payment||'—'}</td>
+      <td style="font-size:.75rem;color:var(--gold)">${(r.advance_amount||r.advance) ? ('₾'+(r.advance_amount||r.advance) + (r.advance_payment ? ' · '+(payLabels[r.advance_payment]||r.advance_payment) : '')) : '—'}</td>
+      <td style="font-size:.75rem;color:rgba(245,240,232,.45);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.note||''}">${r.note||'—'}</td>
+      <td><span style="font-size:.7rem;padding:2px 7px;border-radius:3px;border:1px solid ${statusColors[r.status]||'#c9a84c'};color:${statusColors[r.status]||'#c9a84c'}">${statusLabels[r.status]||r.status}</span></td>
+      <td>
+        <div style="display:flex;gap:.3rem">
+          <button class="admin-btn admin-btn-ghost admin-btn-sm" onclick="changeResStatus('${r.id}','confirmed')" title="დადასტურება" style="padding:3px 7px">✅</button>
+          <button class="admin-btn admin-btn-ghost admin-btn-sm" onclick="changeResStatus('${r.id}','cancelled')" title="გაუქმება" style="padding:3px 7px">❌</button>
+        </div>
+      </td>
+    </tr>`).join('');
+  g('res-count').textContent = `${data.length} ჩანაწერი`;
+}
+
+async function changeResStatus(id, status) {
+  try {
+    await supaFetch(`/rest/v1/reservations?id=eq.${id}`, 'PATCH', {status});
+    await loadReservations();
+  } catch(e) {}
+}
+
+// PDF export
+function exportResPDF() {
+  const exportData = filteredReservations.length ? filteredReservations : allReservations;
+  if (!exportData.length) { alert('მონაცემები არ არის'); return; }
+  const win = window.open('','_blank');
+  if (!win) { alert('გთხოვთ დაუშვათ pop-up ამ საიტისთვის'); return; }
+  const rows = exportData.map(r =>
+    `<tr><td>${r.name}</td><td>${r.phone||''}</td><td>${r.date}</td><td>${r.time||''}</td><td>${r.guests}</td><td>${r.table_id||''}</td><td>${payLabels[r.payment]||r.payment||''}</td><td>${r.advance_amount ? '₾'+r.advance_amount : '—'}</td><td>${statusLabels[r.status]||r.status}</td><td>${r.note||''}</td></tr>`
+  ).join('');
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>რეზერვაციები</title>
+  <style>body{font-family:sans-serif;font-size:11px;padding:20px}h2{margin-bottom:12px}
+  table{width:100%;border-collapse:collapse}th,td{border:1px solid #ccc;padding:5px 7px;text-align:left}
+  th{background:#f0f0f0;font-weight:600}</style></head><body>
+  <h2>რესტორანი ტიფლისი — რეზერვაციების ისტორია</h2>
+  <p style="font-size:10px;color:#666;margin-bottom:10px">დაბეჭდვის თარიღი: ${new Date().toLocaleDateString('ka-GE')}</p>
+  <table><thead><tr><th>სახელი</th><th>ტელეფონი</th><th>თარიღი</th><th>დრო</th><th>სტუმ.</th><th>მაგიდა</th><th>გადახდა</th><th>ავანსი</th><th>სტატუსი</th><th>შენიშვნა</th></tr></thead>
+  <tbody>${rows}</tbody></table></body></html>`);
+  win.document.close();
+  setTimeout(() => win.print(), 400);
+}
+
+// XLSX export
+function exportResXLSX() {
+  const exportData = filteredReservations.length ? filteredReservations : allReservations;
+  if (!exportData.length) { alert('მონაცემები არ არის'); return; }
+  const headers = ['სახელი','ტელეფონი','თარიღი','დრო','სტუმრები','მაგიდა','გადახდა','სტატუსი','შენიშვნა'];
+  const rows = exportData.map(r => [
+    r.name, r.phone||'', r.date, r.time||'', r.guests,
+    r.table_id||'', payLabels[r.payment]||r.payment||'',
+    statusLabels[r.status]||r.status, r.note||''
+  ]);
+  const csvContent = [headers, ...rows].map(row =>
+    row.map(cell => `"${String(cell).replace(/"/g,'""')}"`).join(',')
+  ).join('\n');
+  const BOM = '\uFEFF';
+  const blob = new Blob([BOM+csvContent], {type:'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `reservations_${new Date().toISOString().split('T')[0]}.csv`;
+  a.click(); URL.revokeObjectURL(url);
+}
+
+</script>
+</body>
+</html>

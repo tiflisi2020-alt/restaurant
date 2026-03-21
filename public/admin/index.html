@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>ადმინ შესვლა — რესტორანი ტიფლისი</title>
+  <script>
+    (function () {
+      if (sessionStorage.getItem('tiflis_admin_logged') !== '1') return;
+      var p = (location.pathname || '/').replace(/\/+$/, '') || '/';
+      var base = p.replace(/\/admin$/, '');
+      location.replace(base + '/admin/panel');
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital@0;1&family=Raleway:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cream: #f5f0e6;
+      --ink: #2c2010;
+      --teal: #3d9b93;
+      --teal-dark: #2d7870;
+      --brick: #c2613a;
+      --card: #1a1208;
+      --border: rgba(61, 155, 147, 0.22);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      font-family: 'Raleway', sans-serif;
+      background: radial-gradient(ellipse at 30% 20%, rgba(61, 155, 147, 0.12), transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(194, 97, 58, 0.08), transparent 45%),
+        var(--cream);
+      color: rgba(245, 240, 230, 0.88);
+    }
+    .card {
+      width: 100%;
+      max-width: 400px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 2rem 1.75rem;
+      box-shadow: 0 16px 48px rgba(44, 32, 16, 0.18);
+    }
+    h1 {
+      font-family: 'Lora', serif;
+      font-weight: 400;
+      font-size: 1.35rem;
+      color: var(--cream);
+      text-align: center;
+      margin-bottom: 0.35rem;
+    }
+    .sub {
+      text-align: center;
+      font-size: 0.72rem;
+      color: rgba(245, 240, 230, 0.38);
+      margin-bottom: 1.75rem;
+      line-height: 1.5;
+    }
+    label {
+      display: block;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--teal);
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+    input[type="password"] {
+      width: 100%;
+      padding: 0.65rem 0.85rem;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(224, 216, 196, 0.15);
+      border-radius: 2px;
+      color: var(--cream);
+      font-family: inherit;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+    input:focus {
+      outline: none;
+      border-color: var(--teal);
+    }
+    button[type="submit"] {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      background: var(--teal);
+      color: #fff;
+      border: none;
+      border-radius: 2px;
+      font-family: inherit;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button[type="submit"]:hover { background: var(--teal-dark); }
+    button[type="submit"]:disabled { opacity: 0.55; cursor: not-allowed; }
+    .err {
+      display: none;
+      font-size: 0.75rem;
+      color: #e74c3c;
+      margin-top: 0.85rem;
+      text-align: center;
+    }
+    .err.show { display: block; }
+    .back {
+      display: block;
+      text-align: center;
+      margin-top: 1.35rem;
+      font-size: 0.72rem;
+      color: rgba(245, 240, 230, 0.45);
+    }
+    .back a {
+      color: var(--teal);
+      text-decoration: none;
+    }
+    .back a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>ადმინ შესვლა</h1>
+    <p class="sub">რესტორანი ტიფლისი · პაროლის შემდეგ გადამისამართდებით ადმინ პანელზე</p>
+    <form id="login-form" autocomplete="on">
+      <label for="pw">პაროლი</label>
+      <input type="password" id="pw" name="password" autocomplete="current-password" required />
+      <button type="submit" id="btn">შესვლა</button>
+      <p class="err" id="err" role="alert">❌ პაროლი არასწორია</p>
+    </form>
+    <p class="back"><a href="/">← მთავარი გვერდი</a></p>
+  </div>
+  <script>
+    const SUPA_URL = 'https://xcxzkelvpmynreewflrj.supabase.co';
+    const SUPA_KEY = 'sb_publishable_LSW2eD3hyDBszjXT3bZxgA_vAq5lRBO';
+    const ADMIN_PW_DEFAULT = 'tiflis2024';
+
+    async function supaFetch(path, method = 'GET', body = null) {
+      const opts = {
+        method,
+        headers: {
+          apikey: SUPA_KEY,
+          Authorization: 'Bearer ' + SUPA_KEY,
+          'Content-Type': 'application/json',
+          Prefer: 'return=representation',
+        },
+      };
+      if (body) opts.body = JSON.stringify(body);
+      const r = await fetch(SUPA_URL + path, opts);
+      const text = await r.text();
+      let data = null;
+      if (text) {
+        try {
+          data = JSON.parse(text);
+        } catch {
+          data = { message: text };
+        }
+      }
+      if (!r.ok) {
+        const msg =
+          (data && (data.message || data.error_description || data.hint)) ||
+          r.statusText ||
+          'HTTP ' + r.status;
+        throw new Error(typeof msg === 'string' ? msg : JSON.stringify(msg));
+      }
+      return data;
+    }
+
+    async function getAdminPw() {
+      try {
+        const data = await supaFetch('/rest/v1/settings?key=eq.admin_pw&select=value');
+        if (data && data[0] && data[0].value) return data[0].value;
+      } catch (e) {}
+      try {
+        return localStorage.getItem('tiflis_admin_pw') || ADMIN_PW_DEFAULT;
+      } catch (e) {
+        return ADMIN_PW_DEFAULT;
+      }
+    }
+
+    const form = document.getElementById('login-form');
+    const pwEl = document.getElementById('pw');
+    const errEl = document.getElementById('err');
+    const btn = document.getElementById('btn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errEl.classList.remove('show');
+      btn.disabled = true;
+      try {
+        const ok = (await getAdminPw()) === pwEl.value;
+        if (ok) {
+          sessionStorage.setItem('tiflis_admin_logged', '1');
+          sessionStorage.setItem('tiflis_admin_stay', '1');
+          var p = (location.pathname || '/').replace(/\/+$/, '') || '/';
+          var base = p.replace(/\/admin$/, '');
+          window.location.replace(base + '/admin/panel');
+        } else {
+          errEl.classList.add('show');
+          pwEl.value = '';
+          pwEl.focus();
+        }
+      } catch (err) {
+        errEl.textContent = '❌ კავშირის შეცდომა';
+        errEl.classList.add('show');
+      } finally {
+        btn.disabled = false;
+      }
+    });
+    pwEl.focus();
+  </script>
+</body>
+</html>
