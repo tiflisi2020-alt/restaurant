@@ -3980,6 +3980,7 @@ async function adminSaveDish() {
 
   if (!ka) { adminMsg('adm-msg-add', '❌ ქართული სახელი სავალდებულოა', 'err'); return; }
   if (isNaN(price) || price < 0) { adminMsg('adm-msg-add', '❌ ფასი სავალდებულოა', 'err'); return; }
+  if (isNaN(cat) || !CATS.some(c => c.id === cat)) { adminMsg('adm-msg-add', '❌ აირჩიეთ კატეგორია', 'err'); return; }
 
   let savedItem = null;
   let wasEdit = false;
@@ -4014,6 +4015,11 @@ async function adminSaveDish() {
   g('af-en').value = '';
   g('af-ru').value = '';
   g('af-price').value = '';
+  /* სტუმრის მენიუში ჩანს მხოლოდ არჩეული კატეგორია — შენახვის შემდეგ გადავიდეთ იმ კატეგორიაზე, სადაც კერძი ჩაიწერა */
+  if (savedItem) {
+    const ni = CATS.findIndex(c => c.id === savedItem.cat);
+    if (ni >= 0) catIdx = ni;
+  }
   renderCats(); renderMenu(); renderOrder();
 
   if (savedItem && !wasEdit) {
