@@ -12,18 +12,8 @@ npm-debug.log*
 .DS_Store
 Thumbs.db
 
-# Editor / OS
+# Editor
 .idea/
 .vscode/
 *.swp
 *~
-Desktop.ini
-
-# Build / cache (if you add tooling later)
-dist/
-.cache/
-coverage/
-
-# Optional local notes (never commit secrets)
-*.pem
-secrets.*

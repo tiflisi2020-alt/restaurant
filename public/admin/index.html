@@ -4,14 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
-  <link rel="icon" href="../favicon.ico" type="image/png" sizes="any" />
   <title>ადმინ შესვლა — რესტორანი ტიფლისი</title>
   <script>
     (function () {
       if (sessionStorage.getItem('tiflis_admin_logged') !== '1') return;
       var p = (location.pathname || '/').replace(/\/+$/, '') || '/';
-      var base = p.replace(/\/admin$/, '');
-      location.replace(base + '/admin/panel');
+      var base = p.replace(/\/admin(\/index\.html)?$/i, '');
+      var panel = base + '/admin/panel';
+      if (location.hostname.indexOf('github.io') !== -1) panel += '/';
+      location.replace(panel);
     })();
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -135,7 +136,7 @@
       <button type="submit" id="btn">შესვლა</button>
       <p class="err" id="err" role="alert">❌ პაროლი არასწორია</p>
     </form>
-    <p class="back"><a href="/">← მთავარი გვერდი</a></p>
+    <p class="back"><a href="../">← მთავარი გვერდი</a></p>
   </div>
   <script>
     const SUPA_URL = 'https://xcxzkelvpmynreewflrj.supabase.co';
@@ -199,9 +200,11 @@
         if (ok) {
           sessionStorage.setItem('tiflis_admin_logged', '1');
           sessionStorage.setItem('tiflis_admin_stay', '1');
-          var p = (location.pathname || '/').replace(/\/+$/, '') || '/';
-          var base = p.replace(/\/admin$/, '');
-          window.location.replace(base + '/admin/panel');
+          var p2 = (location.pathname || '/').replace(/\/+$/, '') || '/';
+          var base = p2.replace(/\/admin(\/index\.html)?$/i, '');
+          var panel = base + '/admin/panel';
+          if (location.hostname.indexOf('github.io') !== -1) panel += '/';
+          window.location.replace(panel);
         } else {
           errEl.classList.add('show');
           pwEl.value = '';

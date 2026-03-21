@@ -3,14 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="favicon.ico" type="image/png" sizes="any">
+<link rel="apple-touch-icon" href="logo.png">
 <script>
 (function () {
+  var host = location.hostname || "";
+  var isGh = host.indexOf("github.io") !== -1;
   var p = (location.pathname || "/").replace(/\/+$/, "") || "/";
-  if (!/\/admin\/panel$/.test(p)) return;
+
+  if (isGh && location.search.indexOf("gh_panel=1") !== -1) {
+    document.documentElement.classList.add("admin-panel-route");
+    document.documentElement.style.background = "#0d0905";
+    if (sessionStorage.getItem("tiflis_admin_logged") !== "1") {
+      var baseSeg = (p.match(/^(\/[^\/]+)/) || [])[1] || "";
+      location.replace(baseSeg + "/admin/");
+      return;
+    }
+    try {
+      var pathOnly = location.pathname.replace(/\/index\.html$/i, "") || "/";
+      history.replaceState(null, "", pathOnly.endsWith("/") ? pathOnly : pathOnly + "/");
+    } catch (e) {}
+    return;
+  }
+
+  if (!/\/admin\/panel$/i.test(p) && !/\/admin\/panel\/index\.html$/i.test(p)) return;
   document.documentElement.classList.add("admin-panel-route");
   document.documentElement.style.background = "#0d0905";
   if (sessionStorage.getItem("tiflis_admin_logged") !== "1") {
-    location.replace(p.replace(/\/admin\/panel$/, "/admin"));
+    location.replace(p.replace(/\/admin\/panel(\/index\.html)?$/i, "/admin"));
   }
 })();
 </script>
@@ -1992,7 +2012,7 @@ tr.admin-row-flash td {
 
 <!-- NAV -->
 <nav id="nav">
-  <div class="nav-logo"><img src="/logo.png" alt="რესტორანი ტიფლისი" style="height:72px;width:auto;vertical-align:middle;margin-right:.5rem;display:block" onerror="this.style.display='none';this.nextSibling.style.display='inline'"><span style="display:none">რესტორანი <span style="color:var(--gold);font-style:italic">ტიფლისი</span></span></div>
+  <div class="nav-logo"><img src="logo.png" alt="რესტორანი ტიფლისი" style="height:72px;width:auto;vertical-align:middle;margin-right:.5rem;display:block" onerror="this.style.display='none';this.nextSibling.style.display='inline'"><span style="display:none">რესტორანი <span style="color:var(--gold);font-style:italic">ტიფლისი</span></span></div>
   <ul class="nav-links">
     <li><a href="#menu" data-i18n="nav_menu">მენიუ</a></li>
     <li><a href="#reservation" data-i18n="nav_res">რეზერვაცია</a></li>
@@ -2680,18 +2700,26 @@ const TXT = {
 let lang = 'ka', catIdx = 0, order = {};
 const g = id => document.getElementById(id);
 
-/** პრეფიქსი თუ ადმინია `/repo/admin/panel` სტილზე; მთავარ გვერდზე — ცარიელი */
+/** პრეფიქსი: `/repo` GitHub Pages-ზე ან `/repo/admin(/panel)` მარშრუტებიდან */
 function adminBaseFromPathname() {
   var p = (location.pathname || '/').replace(/\/+$/, '') || '/';
-  if (/\/admin\/panel$/.test(p)) return p.replace(/\/admin\/panel$/, '') || '';
-  if (/\/admin$/.test(p)) return p.replace(/\/admin$/, '') || '';
+  if (/\/admin\/panel(\/index\.html)?$/i.test(p)) return p.replace(/\/admin\/panel(\/index\.html)?$/i, '') || '';
+  if (/\/admin(\/index\.html)?$/i.test(p)) return p.replace(/\/admin(\/index\.html)?$/i, '') || '';
+  if (location.hostname.indexOf('github.io') !== -1) {
+    var m = p.match(/^(\/[^\/]+)/);
+    if (m && m[1]) return m[1];
+  }
   return '';
 }
 function adminPanelUrl() {
-  return adminBaseFromPathname() + '/admin/panel';
+  var b = adminBaseFromPathname();
+  if (location.hostname.indexOf('github.io') !== -1) return b + '/admin/panel/';
+  return b + '/admin/panel';
 }
 function adminLoginUrl() {
-  return adminBaseFromPathname() + '/admin';
+  var b = adminBaseFromPathname();
+  if (location.hostname.indexOf('github.io') !== -1) return b + '/admin/';
+  return b + '/admin';
 }
 function adminPublicHomeUrl() {
   var b = adminBaseFromPathname();
@@ -3010,7 +3038,7 @@ function sharePDF() {
     .footer{margin-top:20px;font-size:.68rem;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:10px}
   </style></head><body>
   <div style="text-align:center;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #c9a84c">
-    <img src="/logo.png" alt="ტიფლისი" style="max-height:90px;max-width:220px;object-fit:contain" onerror="this.style.display='none'">
+    <img src="logo.png" alt="ტიფლისი" style="max-height:90px;max-width:220px;object-fit:contain" onerror="this.style.display='none'">
     <div style="font-family:Georgia,serif;font-size:1.1rem;color:#1a1a16;margin-top:6px">რესტორანი <em style="color:#c9a84c;font-style:italic">ტიფლისი</em></div>
   </div>
   <div class="meta">${name} · ${date} ${time} · ${guests} ${{ka:"სტუმარი",en:"guest(s)",ru:"гост."}[lang]}</div>
@@ -3101,7 +3129,7 @@ function printReceipt() {
 </style>
 </head><body>
 <div class="logo-wrap">
-  <img src="/logo.png"
+  <img src="logo.png"
        onerror="this.style.display='none';document.querySelector('.logo-text').style.display='block'">
   <div class="logo-text" style="display:none">TIFLISI</div>
 </div>
