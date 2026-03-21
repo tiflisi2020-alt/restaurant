@@ -73,7 +73,6 @@ body {
 /* ===== HERO ===== */
 .hero {
   position: relative;
-  z-index: 2;
   height: 100vh;
   min-height: 600px;
   display: flex;
@@ -354,119 +353,6 @@ nav.scrolled {
 
 /* ===== SECTION LAYOUT ===== */
 section { padding: 6rem 0; }
-
-/* ვაზის ორნამენტი — ძველი თბილისის სტილი, stroke „ხატვა“ ჩატვირთვაზე (ერთხელ) */
-.tiflis-vine-frame {
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  overflow: visible;
-}
-html.admin-panel-route .tiflis-vine-frame {
-  display: none;
-}
-.tiflis-vine-side {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: min(132px, 16vw);
-  opacity: 0.9;
-}
-.tiflis-vine-side--left { left: 0; }
-.tiflis-vine-side--right {
-  right: 0;
-  transform: scaleX(-1);
-}
-.tiflis-vine-side svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-.tiflis-vine-draw {
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  animation: tiflisVineStroke 0.92s cubic-bezier(0.32, 0, 0.22, 1) forwards;
-}
-.tiflis-vine-draw--brown {
-  stroke: #7a6548;
-  stroke-width: 1.12;
-  opacity: 0.82;
-  animation-duration: 1.02s;
-}
-.tiflis-vine-draw--gold {
-  stroke: #c9a13d;
-  stroke-width: 1.42;
-  animation-duration: 1.08s;
-  filter: drop-shadow(0 0 5px rgba(201, 161, 61, 0.22));
-}
-.tiflis-vine-draw--green {
-  stroke: rgba(61, 155, 147, 0.7);
-  stroke-width: 0.82;
-  animation-duration: 0.76s;
-  animation-delay: 0.2s;
-}
-.tiflis-vine-draw--d2 { animation-delay: 0.12s; animation-duration: 1.02s; }
-.tiflis-vine-draw--d3 { animation-delay: 0.24s; animation-duration: 0.96s; }
-.tiflis-vine-draw--d4 { animation-delay: 0.36s; animation-duration: 0.9s; }
-.tiflis-vine-draw--d5 { animation-delay: 0.48s; animation-duration: 0.84s; }
-@keyframes tiflisVineStroke {
-  to { stroke-dashoffset: 0; }
-}
-.tiflis-vine-leaf {
-  fill: rgba(61, 155, 147, 0.42);
-  opacity: 0;
-  transform-origin: center;
-  transform-box: fill-box;
-  animation: tiflisVineLeaf 0.48s cubic-bezier(0.34, 1.15, 0.64, 1) forwards;
-}
-.tiflis-vine-leaf--2 { animation-delay: 0.82s; }
-.tiflis-vine-leaf--3 { animation-delay: 1.02s; }
-.tiflis-vine-leaf--4 { animation-delay: 1.14s; }
-@keyframes tiflisVineLeaf {
-  from {
-    opacity: 0;
-    transform: scale(0.15) rotate(-10deg);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) rotate(0deg);
-  }
-}
-.tiflis-vine-grape {
-  fill: #5c4a32;
-  opacity: 0;
-  transform-origin: center;
-  transform-box: fill-box;
-  animation: tiflisVineGrape 0.4s cubic-bezier(0.33, 1.1, 0.68, 1) forwards;
-}
-.tiflis-vine-grape--a { animation-delay: 1.12s; }
-.tiflis-vine-grape--b { animation-delay: 1.22s; }
-.tiflis-vine-grape--c { animation-delay: 1.3s; }
-@keyframes tiflisVineGrape {
-  from { opacity: 0; transform: scale(0); }
-  to { opacity: 0.9; transform: scale(1); }
-}
-.about-strip,
-section,
-footer {
-  position: relative;
-  z-index: 2;
-}
-
-@media (max-width: 600px) {
-  .tiflis-vine-side {
-    width: min(64px, 13vw);
-    opacity: 0.62;
-  }
-}
-
-@media print {
-  .tiflis-vine-frame { display: none !important; }
-}
 
 .container {
   max-width: 1200px;
@@ -1059,6 +945,37 @@ img:hover {
 .order-btn-ghost { color: rgba(245,240,230,0.4); }
 .order-btn-ghost:hover { color: var(--cream); border-color: rgba(224,216,196,0.4); }
 
+.order-actions-row {
+  display: flex;
+  flex-direction: row;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+.order-actions-row .order-btn {
+  flex: 1 1 calc(50% - 0.25rem);
+  min-width: 6.5rem;
+}
+
+.order-btn-print {
+  border-color: rgba(61, 155, 147, 0.45);
+  color: var(--teal);
+}
+.order-btn-print:hover {
+  background: rgba(61, 155, 147, 0.12);
+  border-color: var(--teal);
+  color: #e8f6f4;
+}
+
+.order-btn-pdf {
+  border-color: rgba(212, 168, 67, 0.5);
+  color: var(--gold);
+}
+.order-btn-pdf:hover {
+  background: rgba(212, 168, 67, 0.12);
+  border-color: var(--gold);
+  color: #f5f0e6;
+}
+
 /* ===== SUCCESS OVERLAY ===== */
 .success-overlay {
   display: none;
@@ -1175,6 +1092,50 @@ img:hover {
 }
 
 .reservation-info .section-title { margin-bottom: 0.5rem; }
+
+.reservation-info {
+  position: relative;
+  isolation: isolate;
+  min-height: 12rem;
+}
+
+.reservation-info > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* მეფე გორგასლის ემბლემა — ვოტერმარკი ტექსტის უკან (images/tiflisi-king-emblem.png) */
+.reservation-info::before {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  right: -3%;
+  bottom: -14%;
+  width: min(56%, 420px);
+  aspect-ratio: 2 / 3;
+  max-height: 118%;
+  background: url('images/tiflisi-king-emblem.png') right bottom / contain no-repeat;
+  opacity: 0.15;
+  filter: brightness(1.02) contrast(1.06) saturate(0.88) sepia(0.14) hue-rotate(168deg);
+}
+
+.reservation-info::after {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  top: 0;
+  right: 0;
+  width: 58%;
+  height: 100%;
+  background: linear-gradient(
+    to left,
+    rgba(61, 155, 147, 0.07) 0%,
+    rgba(245, 240, 230, 0) 72%
+  );
+  mix-blend-mode: multiply;
+}
 
 .reservation-info p {
   font-size: 0.82rem;
@@ -1438,6 +1399,13 @@ footer {
   }
   .order-panel { position: static; max-height: none; overflow-y: visible; }
   .reservation-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .reservation-info::before {
+    width: min(68%, 360px);
+    opacity: 0.11;
+    right: -8%;
+    bottom: -12%;
+  }
+  .reservation-info::after { width: 70%; }
   .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
   .form-grid { grid-template-columns: 1fr; }
 }
@@ -1562,6 +1530,12 @@ footer {
 
   /* ===== RESERVATION FIXES ===== */
   .reservation-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .reservation-info::before {
+    width: min(58%, 260px);
+    opacity: 0.075;
+    right: -4%;
+    bottom: -8%;
+  }
   .res-form { padding: 1.5rem 1.1rem; }
   .form-title { font-size: 1.5rem; }
   .form-grid { grid-template-columns: 1fr; }
@@ -2290,66 +2264,13 @@ html.admin-panel-route .tiflis-float-rail {
   .ft-pill:hover {
     transform: none;
   }
-  .tiflis-vine-draw {
-    animation: none !important;
-    stroke-dashoffset: 0 !important;
-  }
-  .tiflis-vine-leaf {
-    animation: none !important;
-    opacity: 0.85 !important;
-    transform: none !important;
-  }
-  .tiflis-vine-grape {
-    animation: none !important;
-    opacity: 0.88 !important;
-    transform: none !important;
+  .reservation-info::before {
+    filter: brightness(1.02) contrast(1.04) saturate(0.9);
   }
 }
 </style>
 </head>
 <body>
-
-<!-- Spring vine ornaments (draw-once); mirrored L/R -->
-<div class="tiflis-vine-frame" aria-hidden="true">
-  <div class="tiflis-vine-side tiflis-vine-side--left">
-    <svg viewBox="0 0 100 900" preserveAspectRatio="xMinYMid slice" xmlns="http://www.w3.org/2000/svg">
-      <path pathLength="1" class="tiflis-vine-draw tiflis-vine-draw--gold tiflis-vine-draw--d2" d="M 6 38 C 22 22 44 48 68 32 C 86 22 96 44 98 72"/>
-      <path pathLength="1" class="tiflis-vine-draw tiflis-vine-draw--gold" d="M 28 900 C 22 720 38 560 28 400 C 20 260 36 120 32 52"/>
-      <path pathLength="1" class="tiflis-vine-draw tiflis-vine-draw--brown tiflis-vine-draw--d3" d="M 36 840 Q 30 600 42 380 Q 34 210 44 78"/>
-      <path pathLength="1" class="tiflis-vine-draw tiflis-vine-draw--gold tiflis-vine-draw--d4" d="M 28 640 Q 56 598 82 548 Q 92 528 88 505"/>
-      <path pathLength="1" class="tiflis-vine-draw tiflis-vine-draw--brown tiflis-vine-draw--d5" d="M 30 455 Q 54 425 76 388 Q 86 368 82 345"/>
-      <path pathLength="1" class="tiflis-vine-draw tiflis-vine-draw--green" d="M 24 530 Q 10 505 16 462 Q 20 438 12 418"/>
-      <path pathLength="1" class="tiflis-vine-draw tiflis-vine-draw--gold tiflis-vine-draw--d5" d="M 40 195 Q 24 148 46 102 Q 64 68 50 36"/>
-      <ellipse class="tiflis-vine-leaf tiflis-vine-leaf--2" cx="58" cy="592" rx="10" ry="4.2" transform="rotate(-36 58 592)"/>
-      <ellipse class="tiflis-vine-leaf tiflis-vine-leaf--3" cx="48" cy="418" rx="9" ry="3.8" transform="rotate(-52 48 418)"/>
-      <ellipse class="tiflis-vine-leaf tiflis-vine-leaf--4" cx="72" cy="268" rx="8" ry="3.4" transform="rotate(28 72 268)"/>
-      <circle class="tiflis-vine-grape tiflis-vine-grape--a" cx="84" cy="532" r="3.1"/>
-      <circle class="tiflis-vine-grape tiflis-vine-grape--b" cx="90" cy="540" r="2.6"/>
-      <circle class="tiflis-vine-grape tiflis-vine-grape--c" cx="87" cy="546" r="2.3"/>
-      <circle class="tiflis-vine-grape tiflis-vine-grape--b" cx="78" cy="368" r="2.5"/>
-      <circle class="tiflis-vine-grape tiflis-vine-grape--c" cx="83" cy="375" r="2.1"/>
-    </svg>
-  </div>
-  <div class="tiflis-vine-side tiflis-vine-side--right">
-    <svg viewBox="0 0 100 900" preserveAspectRatio="xMinYMid slice" xmlns="http://www.w3.org/2000/svg">
-      <path pathLength="1" class="tiflis-vine-draw tiflis-vine-draw--gold tiflis-vine-draw--d2" d="M 6 38 C 22 22 44 48 68 32 C 86 22 96 44 98 72"/>
-      <path pathLength="1" class="tiflis-vine-draw tiflis-vine-draw--gold" d="M 28 900 C 22 720 38 560 28 400 C 20 260 36 120 32 52"/>
-      <path pathLength="1" class="tiflis-vine-draw tiflis-vine-draw--brown tiflis-vine-draw--d3" d="M 36 840 Q 30 600 42 380 Q 34 210 44 78"/>
-      <path pathLength="1" class="tiflis-vine-draw tiflis-vine-draw--gold tiflis-vine-draw--d4" d="M 28 640 Q 56 598 82 548 Q 92 528 88 505"/>
-      <path pathLength="1" class="tiflis-vine-draw tiflis-vine-draw--brown tiflis-vine-draw--d5" d="M 30 455 Q 54 425 76 388 Q 86 368 82 345"/>
-      <path pathLength="1" class="tiflis-vine-draw tiflis-vine-draw--green" d="M 24 530 Q 10 505 16 462 Q 20 438 12 418"/>
-      <path pathLength="1" class="tiflis-vine-draw tiflis-vine-draw--gold tiflis-vine-draw--d5" d="M 40 195 Q 24 148 46 102 Q 64 68 50 36"/>
-      <ellipse class="tiflis-vine-leaf tiflis-vine-leaf--2" cx="58" cy="592" rx="10" ry="4.2" transform="rotate(-36 58 592)"/>
-      <ellipse class="tiflis-vine-leaf tiflis-vine-leaf--3" cx="48" cy="418" rx="9" ry="3.8" transform="rotate(-52 48 418)"/>
-      <ellipse class="tiflis-vine-leaf tiflis-vine-leaf--4" cx="72" cy="268" rx="8" ry="3.4" transform="rotate(28 72 268)"/>
-      <circle class="tiflis-vine-grape tiflis-vine-grape--a" cx="84" cy="532" r="3.1"/>
-      <circle class="tiflis-vine-grape tiflis-vine-grape--b" cx="90" cy="540" r="2.6"/>
-      <circle class="tiflis-vine-grape tiflis-vine-grape--c" cx="87" cy="546" r="2.3"/>
-      <circle class="tiflis-vine-grape tiflis-vine-grape--b" cx="78" cy="368" r="2.5"/>
-      <circle class="tiflis-vine-grape tiflis-vine-grape--c" cx="83" cy="375" r="2.1"/>
-    </svg>
-  </div>
-</div>
 
 <!-- Floating contact rail: WhatsApp, Messenger, Glovo, Wolt, Bolt -->
 <aside class="tiflis-float-rail" aria-label="სწრაფი კონტაქტი">
@@ -2483,6 +2404,10 @@ html.admin-panel-route .tiflis-float-rail {
           <div class="order-actions">
             <button type="button" class="order-btn order-btn-main" onclick="scrollToReserve()" data-i18n="btn_res_order">📋 რეზერვაცია + შეკვეთა</button>
             <button type="button" class="order-btn order-btn-wa" onclick="sendWA()">WhatsApp</button>
+            <div class="order-actions-row">
+              <button type="button" class="order-btn order-btn-print" onclick="printOrderReceipt()" data-i18n="btn_print_check">🖨 ბეჭდვა</button>
+              <button type="button" class="order-btn order-btn-pdf" onclick="exportOrderPdf()" data-i18n="btn_pdf_check">📄 PDF</button>
+            </div>
             <button type="button" class="order-btn order-btn-ghost" onclick="saveOrder()" data-i18n="btn_save">💾 შენახვა</button>
           </div>
         </div>
@@ -2993,7 +2918,8 @@ const TXT = {
     f_pay:'გადახდის მეთოდი', f_date:'თარიღი *', f_time:'დრო *', f_table:'სასურველი მაგიდა', f_note:'განსაკუთრებული სურვილი',
     f_name_ph:'თქვენი სახელი', f_note_ph:'ალერგია, დაბადების დღე, სხვა სურვილი...',
     f_pay_sel:'— აირჩიეთ —', f_table_sel:'— აირჩიეთ მაგიდა —', pay_transfer:'🔁 გადმორიცხვა', pay_cash:'💵 ნაღდი',
-    btn_res_order:'📋 რეზერვაცია + შეკვეთა', btn_save:'💾 შენახვა', btn_back:'← უკან',
+    btn_res_order:'📋 რეზერვაცია + შეკვეთა', btn_save:'💾 შენახვა', btn_print_check:'🖨 ბეჭდვა', btn_pdf_check:'📄 PDF',
+    btn_back:'← უკან',
     res_ok_title:'ჯავშანი მიღებულია!', res_ok_sub:'მალე დაგიკავშირდებით დასადასტურებლად', res_new:'ახალი ჯავშანი',
     svc_pct:'მომსახ. %', disc_pct:'ფასდაკლ. %', adv_lbl:'ავანსი ₾', pay_lbl:'გადახდა',
     ft_hours_title:'სამუშაო საათები', ft_everyday:'ყოველდღე', ft_contact:'კონტაქტი',
@@ -3018,7 +2944,8 @@ const TXT = {
     f_pay:'Payment Method', f_date:'Date *', f_time:'Time *', f_table:'Preferred Table', f_note:'Special Request',
     f_name_ph:'Your name', f_note_ph:'Allergy, birthday, other wishes...',
     f_pay_sel:'— Select —', f_table_sel:'— Select a Table —', pay_transfer:'🔁 Transfer', pay_cash:'💵 Cash',
-    btn_res_order:'📋 Reservation + Order', btn_save:'💾 Save', btn_back:'← Back',
+    btn_res_order:'📋 Reservation + Order', btn_save:'💾 Save', btn_print_check:'🖨 Print', btn_pdf_check:'📄 PDF',
+    btn_back:'← Back',
     res_ok_title:'Reservation Received!', res_ok_sub:'We will contact you shortly to confirm', res_new:'New Reservation',
     svc_pct:'Service %', disc_pct:'Discount %', adv_lbl:'Advance ₾', pay_lbl:'Payment',
     ft_hours_title:'Working Hours', ft_everyday:'Every day', ft_contact:'Contact',
@@ -3043,7 +2970,8 @@ const TXT = {
     f_pay:'Способ оплаты', f_date:'Дата *', f_time:'Время *', f_table:'Предпочтительный стол', f_note:'Особые пожелания',
     f_name_ph:'Ваше имя', f_note_ph:'Аллергия, день рождения, другие пожелания...',
     f_pay_sel:'— Выберите —', f_table_sel:'— Выберите стол —', pay_transfer:'🔁 Перевод', pay_cash:'💵 Наличные',
-    btn_res_order:'📋 Резервация + заказ', btn_save:'💾 Сохранить', btn_back:'← Назад',
+    btn_res_order:'📋 Резервация + заказ', btn_save:'💾 Сохранить', btn_print_check:'🖨 Печать', btn_pdf_check:'📄 PDF',
+    btn_back:'← Назад',
     res_ok_title:'Бронь принята!', res_ok_sub:'Скоро свяжемся с вами для подтверждения', res_new:'Новая бронь',
     svc_pct:'Обсл. %', disc_pct:'Скидка %', adv_lbl:'Аванс ₾', pay_lbl:'Оплата',
     ft_hours_title:'Часы работы', ft_everyday:'Ежедневно', ft_contact:'Контакт',
@@ -3314,9 +3242,19 @@ function buildReceiptHTML() {
   return `<div style="font-family:'Cormorant Garamond',serif;font-size:1rem;margin-bottom:.5rem;color:var(--dark)">${name} — ${date} ${time} · ${guests}</div>${rows}`;
 }
 
+function printOrderReceipt() {
+  if (!Object.keys(order).length) { alert(TXT[lang].empty); return; }
+  printReceipt();
+}
+
+function exportOrderPdf() {
+  if (!Object.keys(order).length) { alert(TXT[lang].empty); return; }
+  sharePDF();
+}
+
 function saveOrder() {
   if (!g('order-wrap')) return;
-  if (!Object.keys(order).length) { alert('შეარჩიეთ კერძები'); return; }
+  if (!Object.keys(order).length) { alert(TXT[lang].empty); return; }
   try {
     const ex = JSON.parse(localStorage.getItem('tiflis_orders')||'[]');
     const name = g('r-name')?.value||'სტუმარი';
@@ -3352,6 +3290,15 @@ function goBackToOrder() {
   if (ow) ow.style.display = 'block';
 }
 
+/** ახალ ფანჯარაში (about:blank) relative logo.png არ მუშაობს — სრული URL */
+function tiflisAssetUrl(relPath) {
+  try {
+    return new URL(relPath, window.location.href).href;
+  } catch (e) {
+    return relPath;
+  }
+}
+
 function sharePDF() {
   const name = g('r-name')?.value || g('s-name')?.textContent || '—';
   const date = g('r-date')?.value || '—';
@@ -3381,32 +3328,85 @@ function sharePDF() {
   if(adv>0) extraRows += `<tr style="color:#e74c3c"><td colspan="2">${TXT[lang].adv} (${payText})</td><td style="text-align:right">−₾${adv.toFixed(2)}</td></tr>`;
   const win = window.open('','_blank');
   if (!win) { alert('გთხოვთ დაუშვათ pop-up ამ საიტისთვის'); return; }
-  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${{ka:"ჩეკი",en:"Receipt",ru:"Чек"}[lang]} — Restaurant Tiflisi</title>
+  const pdfTitle = { ka: 'ჩეკი', en: 'Receipt', ru: 'Чек' }[lang] || 'Receipt';
+  const logoSrc = tiflisAssetUrl('logo.png');
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${pdfTitle} — Restaurant Tiflisi</title>
   <style>
-    body{font-family:'Segoe UI',sans-serif;padding:24px;max-width:360px;margin:0 auto;color:#1a1a16}
-    h2{font-family:Georgia,serif;font-size:1.5rem;font-weight:400;margin-bottom:2px;color:#1a1a16}
-    h2 em{color:#c9a84c;font-style:italic}
-    .meta{font-size:.78rem;color:#888;margin-bottom:16px}
-    table{width:100%;border-collapse:collapse;font-size:.85rem}
-    td{padding:5px 4px;border-bottom:1px dotted #ddd}
-    .total-row td{font-size:1rem;font-weight:600;color:#b85c38;border-top:2px solid #b85c38;border-bottom:none;padding-top:8px}
-    .pay-row td{font-size:.78rem;color:#555;border-bottom:none;padding-top:4px}
-    .footer{margin-top:20px;font-size:.68rem;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:10px}
-    .site-logo-teal-pdf{display:inline-block;height:90px;width:220px;max-width:100%;background-color:#3d9b93;-webkit-mask-image:url(logo.png);mask-image:url(logo.png);-webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center}
+    @page { margin: 14mm; size: A4 portrait; }
+    * { box-sizing: border-box; }
+    body{
+      font-family: Georgia, 'Times New Roman', serif;
+      padding: 28px 32px;
+      max-width: 440px;
+      margin: 0 auto;
+      color: #2c2010;
+      background: #fffdf8;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .pdf-card {
+      border: 1px solid #e0d8c4;
+      border-radius: 2px;
+      padding: 20px 22px 24px;
+      background: #fff;
+      box-shadow: 0 1px 0 rgba(44,32,16,0.06);
+    }
+    h2{font-size:1.35rem;font-weight:400;margin:0 0 2px;color:#2c2010;letter-spacing:0.02em}
+    h2 em{color:#b8922e;font-style:italic}
+    .meta{font-size:.8rem;color:#6b5a48;margin-bottom:14px;line-height:1.5}
+    table{width:100%;border-collapse:collapse;font-size:.84rem}
+    thead th{
+      font-family:'Segoe UI',Tahoma,sans-serif;
+      font-size:.68rem;
+      letter-spacing:0.12em;
+      text-transform:uppercase;
+      color:#6b5a48;
+      border-bottom:2px solid #3d9b93;
+      padding:8px 4px 6px;
+      font-weight:600;
+    }
+    td{padding:7px 4px;border-bottom:1px dotted #e0d8c4}
+    .total-row td{
+      font-size:1.05rem;
+      font-weight:600;
+      color:#2c2010;
+      border-top:2px solid #3d9b93;
+      border-bottom:none;
+      padding-top:10px;
+      font-family: Georgia, serif;
+    }
+    .total-row td:last-child{color:#b85c38}
+    .pay-row td{font-size:.76rem;color:#6b5a48;border-bottom:none;padding-top:8px}
+    .footer{
+      margin-top:22px;
+      font-size:.7rem;
+      color:#9a8878;
+      text-align:center;
+      border-top:1px solid #e0d8c4;
+      padding-top:12px;
+      line-height:1.55;
+    }
+    .pdf-logo-img{
+      display:block;height:88px;width:auto;max-width:220px;margin:0 auto;
+      object-fit:contain;
+    }
+    .pdf-head{text-align:center;margin-bottom:14px;padding-bottom:14px;border-bottom:2px solid #d4a843}
   </style></head><body>
-  <div style="text-align:center;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #c9a84c">
-    <div class="site-logo-teal-pdf" role="img" aria-label="ტიფლისი"></div>
-    <div style="font-family:Georgia,serif;font-size:1.1rem;color:#1a1a16;margin-top:6px">რესტორანი <em style="color:#c9a84c;font-style:italic">ტიფლისი</em></div>
+  <div class="pdf-card">
+  <div class="pdf-head">
+    <img class="pdf-logo-img" src="${logoSrc}" alt="Restaurant Tiflisi">
+    <div style="font-size:1.08rem;color:#2c2010;margin-top:8px">რესტორანი <em style="color:#b8922e;font-style:italic">ტიფლისი</em></div>
   </div>
   <div class="meta">${name} · ${date} ${time} · ${guests} ${{ka:"სტუმარი",en:"guest(s)",ru:"гост."}[lang]}</div>
   <table>
-    <thead><tr style="font-size:.72rem;color:#888"><th style="text-align:left">${{ka:"კერძი",en:"Dish",ru:"Блюдо"}[lang]}</th><th style="text-align:center">${{ka:"რაოდ.",en:"Qty",ru:"Кол."}[lang]}</th><th style="text-align:right">${{ka:"ფასი",en:"Price",ru:"Цена"}[lang]}</th></tr></thead>
+    <thead><tr><th style="text-align:left">${{ka:"კერძი",en:"Dish",ru:"Блюдо"}[lang]}</th><th style="text-align:center">${{ka:"რაოდ.",en:"Qty",ru:"Кол."}[lang]}</th><th style="text-align:right">${{ka:"ფასი",en:"Price",ru:"Цена"}[lang]}</th></tr></thead>
     <tbody>${rows}${extraRows}
     <tr class="total-row"><td colspan="2">${{ka:"სულ გადასახდელი",en:"Total to Pay",ru:"Итого к оплате"}[lang]}</td><td style="text-align:right">₾${total.toFixed(2)}</td></tr>
     <tr class="pay-row"><td colspan="3">${{ka:"გადახდის მეთოდი",en:"Payment",ru:"Оплата"}[lang]}: ${payText}</td></tr>
     </tbody>
   </table>
   <div class="footer">რესტორანი ტიფლისი · ბათუმი, ვ.გორგასალის ქ. 18/110<br>+995 568 76 76 38 · tiflisi2020@gmail.com</div>
+  </div>
   </body></html>`);
   win.document.close();
   setTimeout(() => win.print(), 400);
@@ -3451,6 +3451,7 @@ function printReceipt() {
 
   const win = window.open('', '_blank');
   if (!win) { alert('დაუშვით pop-up'); return; }
+  const logoSrc = tiflisAssetUrl('logo.png');
   win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
 <style>
   @page { margin: 0; size: 80mm auto; }
@@ -3466,20 +3467,13 @@ function printReceipt() {
     print-color-adjust: exact;
   }
   .logo-wrap { text-align: center; margin-bottom: 3mm; }
-  .site-logo-teal-receipt {
+  .receipt-logo-img {
     display: inline-block;
     height: 18mm;
-    width: 50mm;
-    max-width: 100%;
-    background-color: #3d9b93;
-    -webkit-mask-image: url(logo.png);
-    mask-image: url(logo.png);
-    -webkit-mask-size: contain;
-    mask-size: contain;
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    -webkit-mask-position: center;
-    mask-position: center;
+    width: auto;
+    max-width: 50mm;
+    object-fit: contain;
+    vertical-align: middle;
   }
   .logo-text { font-size: 13px; font-weight: bold; text-align: center; letter-spacing: 1px; }
   .logo-sub { font-size: 9px; text-align: center; margin-bottom: 1mm; }
@@ -3500,7 +3494,7 @@ function printReceipt() {
 </style>
 </head><body>
 <div class="logo-wrap">
-  <div class="site-logo-teal-receipt" role="img" aria-label="ტიფლისი"></div>
+  <img class="receipt-logo-img" src="${logoSrc}" alt="Tiflisi">
   <div class="logo-text" style="display:none">TIFLISI</div>
 </div>
 <div class="logo-sub">ბათუმი · ვ.გორგასალის ქ. 18/110</div>
