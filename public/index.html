@@ -291,6 +291,27 @@ nav.scrolled {
 
 .nav-logo span { color: var(--gold); font-style: italic; }
 
+/* ლოგოს ფერი = იგივე ტილი რაც „მაგიდის დაჯავშნა“ (.nav-reserve → var(--teal)) */
+.site-logo-teal {
+  display: inline-block;
+  flex-shrink: 0;
+  background-color: var(--teal);
+  -webkit-mask-image: url('logo.png');
+  mask-image: url('logo.png');
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center left;
+  mask-position: center left;
+}
+.site-logo-teal--nav {
+  height: 72px;
+  width: 220px;
+  max-width: min(220px, 42vw);
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
 .nav-links {
   display: flex;
   gap: 2.5rem;
@@ -1258,7 +1279,11 @@ footer {
   html, body { overflow-x: hidden; max-width: 100vw; }
   nav { padding: 0.6rem 1rem; }
   nav.scrolled { padding: 0.5rem 1rem; }
-  .nav-logo img { height: 44px !important; }
+  .nav-logo .site-logo-teal--nav {
+    height: 44px !important;
+    width: 150px !important;
+    max-width: 40vw !important;
+  }
   .nav-reserve { display: none; }
   .hero { min-height: 100svh; }
   .hero-title { font-size: 2.5rem !important; }
@@ -2117,7 +2142,7 @@ html.admin-panel-route .tiflis-float-rail {
 
 <!-- NAV -->
 <nav id="nav">
-  <div class="nav-logo"><img src="logo.png" alt="რესტორანი ტიფლისი" style="height:72px;width:auto;vertical-align:middle;margin-right:.5rem;display:block" onerror="this.style.display='none';this.nextSibling.style.display='inline'"><span style="display:none">რესტორანი <span style="color:var(--gold);font-style:italic">ტიფლისი</span></span></div>
+  <div class="nav-logo"><span class="site-logo-teal site-logo-teal--nav" role="img" aria-label="რესტორანი ტიფლისი"></span><span style="display:none">რესტორანი <span style="color:var(--gold);font-style:italic">ტიფლისი</span></span></div>
   <ul class="nav-links">
     <li><a href="#menu" data-i18n="nav_menu">მენიუ</a></li>
     <li><a href="#reservation" data-i18n="nav_res">რეზერვაცია</a></li>
@@ -3140,9 +3165,10 @@ function sharePDF() {
     .total-row td{font-size:1rem;font-weight:600;color:#b85c38;border-top:2px solid #b85c38;border-bottom:none;padding-top:8px}
     .pay-row td{font-size:.78rem;color:#555;border-bottom:none;padding-top:4px}
     .footer{margin-top:20px;font-size:.68rem;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:10px}
+    .site-logo-teal-pdf{display:inline-block;height:90px;width:220px;max-width:100%;background-color:#3d9b93;-webkit-mask-image:url(logo.png);mask-image:url(logo.png);-webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center}
   </style></head><body>
   <div style="text-align:center;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #c9a84c">
-    <img src="logo.png" alt="ტიფლისი" style="max-height:90px;max-width:220px;object-fit:contain" onerror="this.style.display='none'">
+    <div class="site-logo-teal-pdf" role="img" aria-label="ტიფლისი"></div>
     <div style="font-family:Georgia,serif;font-size:1.1rem;color:#1a1a16;margin-top:6px">რესტორანი <em style="color:#c9a84c;font-style:italic">ტიფლისი</em></div>
   </div>
   <div class="meta">${name} · ${date} ${time} · ${guests} ${{ka:"სტუმარი",en:"guest(s)",ru:"гост."}[lang]}</div>
@@ -3213,7 +3239,21 @@ function printReceipt() {
     print-color-adjust: exact;
   }
   .logo-wrap { text-align: center; margin-bottom: 3mm; }
-  .logo-wrap img { max-width: 50mm; max-height: 20mm; object-fit: contain; filter: grayscale(100%) brightness(0); }
+  .site-logo-teal-receipt {
+    display: inline-block;
+    height: 18mm;
+    width: 50mm;
+    max-width: 100%;
+    background-color: #3d9b93;
+    -webkit-mask-image: url(logo.png);
+    mask-image: url(logo.png);
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+  }
   .logo-text { font-size: 13px; font-weight: bold; text-align: center; letter-spacing: 1px; }
   .logo-sub { font-size: 9px; text-align: center; margin-bottom: 1mm; }
   .sep { border: none; border-top: 1px dashed #000; margin: 2mm 0; }
@@ -3233,8 +3273,7 @@ function printReceipt() {
 </style>
 </head><body>
 <div class="logo-wrap">
-  <img src="logo.png"
-       onerror="this.style.display='none';document.querySelector('.logo-text').style.display='block'">
+  <div class="site-logo-teal-receipt" role="img" aria-label="ტიფლისი"></div>
   <div class="logo-text" style="display:none">TIFLISI</div>
 </div>
 <div class="logo-sub">ბათუმი · ვ.გორგასალის ქ. 18/110</div>
