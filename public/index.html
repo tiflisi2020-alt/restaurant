@@ -3482,6 +3482,13 @@ setInterval(() => {
 const ADMIN_PW_DEFAULT = 'tiflis2024';
 
 // Load overrides from Supabase
+function menuItemIsPublicVisible(m) {
+  if (!m || typeof m !== 'object') return false;
+  const a = m.active;
+  if (a === false || a === 'false' || a === 'f' || a === 0) return false;
+  return true;
+}
+
 async function loadOverrides() {
   try {
     // Load categories from Supabase
@@ -3494,9 +3501,10 @@ async function loadOverrides() {
       }));
       sortCatsInPlace();
     }
-    // Load menu from Supabase
-    const menuData = await supaFetch('/rest/v1/menu_items?order=id.asc&active=eq.true');
-    if (menuData && menuData.length > 0) {
+    // Load menu: არ ვფილტრავთ URL-ზე active=eq.true (boolean/text/NULL უსაფრთხოდ), ფილტრი JS-ში
+    const menuRaw = await supaFetch('/rest/v1/menu_items?order=id.asc');
+    const menuData = Array.isArray(menuRaw) ? menuRaw.filter(menuItemIsPublicVisible) : [];
+    if (menuData.length > 0) {
       MENU.length = 0;
       menuData.forEach(m => MENU.push({ id: m.id, ka: m.ka, en: m.en, ru: m.ru, p: parseFloat(m.p), cat: Number(m.cat) }));
     }
@@ -3514,24 +3522,45 @@ async function saveOverrides() {
 async function saveMenuItemToSupabase(item) {
   const row = { id: item.id, ka: item.ka, en: item.en, ru: item.ru, p: item.p, cat: item.cat, active: true };
   const patchBody = { ka: row.ka, en: row.en, ru: row.ru, p: row.p, cat: row.cat, active: true };
+  let wrote = false;
   try {
     const patched = await supaFetch(`/rest/v1/menu_items?id=eq.${item.id}`, 'PATCH', patchBody);
-    if (Array.isArray(patched) && patched.length > 0) return { ok: true };
+    if (Array.isArray(patched) && patched.length > 0) wrote = true;
   } catch (e) {
     console.warn('Menu PATCH:', e);
   }
-  try {
-    await supaFetch('/rest/v1/menu_items', 'POST', row);
-    return { ok: true };
-  } catch (e2) {
+  if (!wrote) {
     try {
-      await supaFetch(`/rest/v1/menu_items?id=eq.${item.id}`, 'PATCH', patchBody);
-      return { ok: true };
-    } catch (e3) {
-      console.warn('Menu POST/PATCH:', e3);
-      return { ok: false, error: String((e3 && e3.message) || (e2 && e2.message) || 'unknown').slice(0, 280) };
+      await supaFetch('/rest/v1/menu_items', 'POST', row);
+      wrote = true;
+    } catch (e2) {
+      try {
+        const patched2 = await supaFetch(`/rest/v1/menu_items?id=eq.${item.id}`, 'PATCH', patchBody);
+        if (Array.isArray(patched2) && patched2.length > 0) wrote = true;
+      } catch (e3) {
+        console.warn('Menu POST/PATCH:', e3);
+        return { ok: false, error: String((e3 && e3.message) || (e2 && e2.message) || 'unknown').slice(0, 280) };
+      }
     }
   }
+  if (!wrote) return { ok: false, error: 'ჩანაწერი ვერ შეიქმნა/განახლდა' };
+  // იგივე წაკითხვა, რასაც სტუმარი იყენებს — თუ ცარიელია, პრობლემაა RLS SELECT ან active
+  try {
+    const check = await supaFetch(`/rest/v1/menu_items?id=eq.${item.id}&select=id,active`);
+    const row0 = Array.isArray(check) && check[0];
+    if (!row0) {
+      return {
+        ok: false,
+        error: 'სერვერზე ჩაწერა გავიდა, მაგრამ წაკითხვა ვერ მოხერხდა. Supabase → Authentication → Policies: menu_items-ზე დაამატეთ anon/public SELECT (მინ.: USING (true) ან active = true).'
+      };
+    }
+    if (!menuItemIsPublicVisible(row0)) {
+      return { ok: false, error: 'active=false — სტუმრის მენიუში არ გამოჩნდება; ჩართეთ active ან შეცვალეთ ჩანაწერი.' };
+    }
+  } catch (verErr) {
+    return { ok: false, error: 'ვერიფიკაცია: ' + String((verErr && verErr.message) || verErr).slice(0, 220) };
+  }
+  return { ok: true };
 }
 
 async function deleteMenuItemFromSupabase(id) {
