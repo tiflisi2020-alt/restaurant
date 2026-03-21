@@ -2499,7 +2499,7 @@ html.admin-panel-route .tiflis-float-rail {
               </div>
               <div class="form-field">
                 <label data-i18n="f_date">თარიღი *</label>
-                <input type="date" id="r-date">
+                <input type="date" id="r-date" onchange="refreshReservationTableSelectState()">
               </div>
               <div class="form-field">
                 <label data-i18n="f_time">დრო *</label>
@@ -2707,8 +2707,9 @@ html.admin-panel-route .tiflis-float-rail {
           </div>
           <button type="button" class="admin-btn admin-btn-sm" style="width:auto" onclick="loadMapTables()">ნახვა</button>
           <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" style="width:auto" onclick="document.getElementById('map-date-filter').value='';loadMapTables()">დღეს</button>
-          <span class="admin-filter-label" style="display:flex;align-items:center;gap:0.35rem;margin-left:auto"><i style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#2ecc71"></i> თავ.</span>
-          <span class="admin-filter-label" style="display:flex;align-items:center;gap:0.35rem"><i style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#e74c3c"></i> დაჯავ.</span>
+          <span class="admin-filter-label" style="display:flex;align-items:center;gap:0.35rem;margin-left:auto"><i style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#2ecc71"></i> თავისუფალი</span>
+          <span class="admin-filter-label" style="display:flex;align-items:center;gap:0.35rem"><i style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#f1c40f"></i> მომლოდინე</span>
+          <span class="admin-filter-label" style="display:flex;align-items:center;gap:0.35rem"><i style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#e74c3c"></i> დადასტურებული</span>
         </div>
         <div style="margin-bottom:0.65rem">
           <div class="admin-filter-label" style="margin-bottom:0.35rem">H ზონა</div>
@@ -3571,7 +3572,13 @@ async function submitReservation() {
   if (!date) { alert('გთხოვთ შეარჩიოთ თარიღი'); return; }
 
   const guests = parseInt(g('r-guests').value)||2;
-  const table = g('r-table').value;
+  const tableSel = g('r-table');
+  const table = tableSel.value;
+  const tableOpt = table ? Array.from(tableSel.options).find(o => o.value === table) : null;
+  if (table && tableOpt && tableOpt.disabled) {
+    alert('ეს მაგიდა არჩეული თარიღისთვის უკვე დადასტურებული ჯავშნითაა დაკავებული — გთხოვთ აირჩიოთ სხვა მაგიდა.');
+    return;
+  }
   const note = g('r-note').value;
   const email = g('r-email')?.value||'';
   const payment = g('r-payment').value;
@@ -3666,6 +3673,7 @@ function resetRes() {
   g('r-date').value=''; g('r-time').value='19:00'; g('r-guests').value='2';
   g('r-table').value=''; g('r-payment').value='';
   if (g('f-adv')) { g('f-adv').value = '0'; recalc(); }
+  refreshReservationTableSelectState();
 }
 
 const today = new Date().toISOString().split('T')[0];
@@ -3726,6 +3734,7 @@ async function init() {
       else openAdmin();
     });
   }
+  queueMicrotask(() => refreshReservationTableSelectState());
 }
 document.addEventListener('DOMContentLoaded', init);
 
@@ -4680,41 +4689,115 @@ function printMenu() {
   }, 300);
 }
 
-// ===== MAP =====
+// ===== MAP / RESERVATION TABLES (იგივე ID-ები) =====
+const MAP_ALL_TABLE_IDS = [
+  ...Array.from({ length: 9 }, (_, i) => `H-${i + 11}`),
+  ...Array.from({ length: 10 }, (_, i) => `A-${i + 20}`),
+  ...Array.from({ length: 8 }, (_, i) => `V-${i + 1}`)
+];
+
+/** ჯავშნების სიიდან: confirmed > pending > free */
+function tableOccupancyStateFromReservations(rows, tableId) {
+  let state = 'free';
+  for (const r of rows || []) {
+    if (r.table_id !== tableId || r.status === 'cancelled') continue;
+    if (r.status === 'confirmed') return 'confirmed';
+    if (r.status === 'pending') state = 'pending';
+  }
+  return state;
+}
+
+function mapTileStyles(state) {
+  if (state === 'confirmed') {
+    return {
+      bg: 'rgba(231,76,60,0.28)',
+      border: 'rgba(231,76,60,0.72)',
+      color: '#e74c3c',
+      occupied: true
+    };
+  }
+  if (state === 'pending') {
+    return {
+      bg: 'rgba(241,196,15,0.22)',
+      border: 'rgba(212,160,23,0.75)',
+      color: '#c9a017',
+      occupied: true
+    };
+  }
+  return {
+    bg: 'rgba(46,204,113,0.18)',
+    border: 'rgba(46,204,113,0.5)',
+    color: '#2ecc71',
+    occupied: false
+  };
+}
+
 async function loadMapTables() {
   try {
     const filterEl = document.getElementById('map-date-filter');
     const today2 = filterEl && filterEl.value ? filterEl.value : new Date().toISOString().split('T')[0];
     if (filterEl && !filterEl.value) filterEl.value = today2;
-    const rsvData = await supaFetch(`/rest/v1/reservations?date=eq.${today2}&status=neq.cancelled&select=table_id`);
-    const reservedIds = new Set((rsvData||[]).map(r => r.table_id));
+    const rsvData = await supaFetch(`/rest/v1/reservations?date=eq.${today2}&status=neq.cancelled&select=table_id,status`);
 
-    const zones = {H:[],A:[],V:[]};
+    const zones = { H: [], A: [], V: [] };
     const allTables = [
-      ...Array.from({length:9},(_,i)=>({id:`H-${i+11}`,zone:'H'})),
-      ...Array.from({length:10},(_,i)=>({id:`A-${i+20}`,zone:'A'})),
-      ...Array.from({length:8},(_,i)=>({id:`V-${i+1}`,zone:'V'}))
+      ...Array.from({ length: 9 }, (_, i) => ({ id: `H-${i + 11}`, zone: 'H' })),
+      ...Array.from({ length: 10 }, (_, i) => ({ id: `A-${i + 20}`, zone: 'A' })),
+      ...Array.from({ length: 8 }, (_, i) => ({ id: `V-${i + 1}`, zone: 'V' }))
     ];
     allTables.forEach(t => zones[t.zone].push(t));
 
-    ['H','A','V'].forEach(zone => {
+    ['H', 'A', 'V'].forEach(zone => {
       const el = g(`map-zone-${zone}`);
       if (!el) return;
       el.innerHTML = zones[zone].map(t => {
-        const reserved = reservedIds.has(t.id);
-        return `<div onclick="toggleTable('${t.id}',${reserved})" style="
+        const state = tableOccupancyStateFromReservations(rsvData, t.id);
+        const s = mapTileStyles(state);
+        return `<div onclick="toggleTable('${t.id}',${s.occupied})" style="
           width:56px;height:44px;border-radius:6px;display:flex;align-items:center;justify-content:center;
           cursor:pointer;font-size:.78rem;font-weight:500;letter-spacing:.04em;
-          background:${reserved?'rgba(231,76,60,0.25)':'rgba(46,204,113,0.18)'};
-          border:1px solid ${reserved?'rgba(231,76,60,0.6)':'rgba(46,204,113,0.5)'};
-          color:${reserved?'#e74c3c':'#2ecc71'};
+          background:${s.bg};
+          border:1px solid ${s.border};
+          color:${s.color};
           transition:all .2s">${t.id}</div>`;
       }).join('');
     });
-  } catch(e) {
-    adminMsg('map-msg','❌ Supabase კავშირი ვერ მოხერხდა','err');
+  } catch (e) {
+    adminMsg('map-msg', '❌ Supabase კავშირი ვერ მოხერხდა', 'err');
   }
 }
+
+/** სარეზერვაციო ფორმა: არჩევა დადასტურებული მაგიდისთვის არჩეული თარიღით — აკრძალული */
+async function refreshReservationTableSelectState() {
+  const sel = g('r-table');
+  const dateEl = g('r-date');
+  if (!sel || !dateEl) return;
+  const date = dateEl.value || new Date().toISOString().split('T')[0];
+  let confirmedIds = new Set();
+  try {
+    const rows = await supaFetch(`/rest/v1/reservations?date=eq.${date}&status=eq.confirmed&select=table_id`);
+    confirmedIds = new Set((rows || []).map(r => r.table_id).filter(Boolean));
+  } catch (_) {
+    /* ქსელი/Supabase — ყველა ვარიანტი დარჩეს ხელმისაწვდომი */
+  }
+  const prev = sel.value;
+  sel.querySelectorAll('option').forEach(opt => {
+    const v = (opt.value || opt.textContent || '').trim();
+    if (!v || v.startsWith('—')) {
+      opt.disabled = false;
+      return;
+    }
+    const isTable = MAP_ALL_TABLE_IDS.includes(v);
+    opt.disabled = isTable && confirmedIds.has(v);
+    if (opt.disabled) opt.title = 'დადასტურებული ჯავშანი — ეს მაგიდა დაკავებულია';
+    else opt.removeAttribute('title');
+  });
+  if (prev) {
+    const o = Array.from(sel.options).find(opt => opt.value === prev);
+    if (o && o.disabled) sel.value = '';
+  }
+}
+
 
 async function toggleTable(tableId, currentlyReserved) {
   const newStatus = currentlyReserved ? 'free' : 'reserved';
@@ -4797,10 +4880,14 @@ const payLabels = {'ნაღდი':'ნაღდი',bog:'საქართ�
 const statusColors = {pending:'#c9a84c',confirmed:'#2ecc71',cancelled:'#e74c3c'};
 const statusLabels = {pending:'⏳ მომლოდინე',confirmed:'✅ დადასტ.',cancelled:'❌ გაუქმდა'};
 
-function resAdvancePaymentSelectHtml(r) {
+function resAdvanceLocked(r) {
+  return (r.advance_amount != null && r.advance_amount !== '') || (r.advance_payment != null && r.advance_payment !== '');
+}
+function resAdvancePaymentSelectHtml(r, locked) {
   const cur = (r.advance_payment != null && r.advance_payment !== '') ? String(r.advance_payment) : '';
   const opt = (v, label) => `<option value="${v}"${cur === v ? ' selected' : ''}>${label}</option>`;
-  return `<select class="admin-input" id="res-advpay-${r.id}" style="width:100%;max-width:10rem;margin:0;padding:.28rem .35rem;font-size:.65rem;box-sizing:border-box" aria-label="ავანსის გადახდის მეთოდი">
+  const dis = locked ? ' disabled' : '';
+  return `<select class="admin-input" id="res-advpay-${r.id}" style="width:100%;max-width:10rem;margin:0;padding:.28rem .35rem;font-size:.65rem;box-sizing:border-box" aria-label="ავანსის გადახდის მეთოდი"${dis}>
     ${opt('', '— აირჩიეთ —')}
     ${opt('cash', '💵 ნაღდი')}
     ${opt('bog', '🏦 BOG')}
@@ -4825,14 +4912,16 @@ function renderResTable(data) {
       <td>${r.time||'—'}</td>
       <td style="text-align:center">${r.guests}</td>
       <td style="color:var(--gold)">${r.table_id||'—'}</td>
-      <td style="min-width:7rem;max-width:10.5rem;vertical-align:top">${resAdvancePaymentSelectHtml(r)}</td>
-      <td style="min-width:6.5rem;max-width:9rem;vertical-align:middle">
-        <div style="display:flex;align-items:center;gap:.28rem;flex-wrap:wrap">
+      <td colspan="2" style="min-width:12rem;vertical-align:middle" data-res-adv-row="${r.id}">
+        <div style="display:flex;align-items:center;gap:.35rem;flex-wrap:wrap" class="res-adv-cell">
+          ${resAdvancePaymentSelectHtml(r, resAdvanceLocked(r))}
           <span style="font-size:.7rem;color:rgba(245,240,232,.45)">₾</span>
           <input type="number" class="admin-input" id="res-adv-${r.id}" min="0" step="0.5" style="width:4rem;margin:0;padding:.28rem .35rem;font-size:.72rem"
             value="${(() => { const a = r.advance_amount != null && r.advance_amount !== '' ? Number(r.advance_amount) : (r.advance != null && r.advance !== '' ? Number(r.advance) : NaN); return Number.isFinite(a) ? a : ''; })()}"
+            ${resAdvanceLocked(r) ? 'disabled' : ''}
             onkeydown="if(event.key==='Enter'){event.preventDefault();saveReservationAdvanceRow('${r.id}');}">
-          <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" style="padding:2px 7px;font-size:.62rem;width:auto;white-space:nowrap" onclick="saveReservationAdvanceRow('${r.id}')">შენახვა</button>
+          <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost res-adv-save-btn" style="padding:2px 7px;font-size:.62rem;width:auto;white-space:nowrap${resAdvanceLocked(r) ? ';display:none' : ''}" onclick="saveReservationAdvanceRow('${r.id}')">შენახვა</button>
+          <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost res-adv-edit-btn" style="padding:2px 7px;font-size:.62rem;width:auto;white-space:nowrap${resAdvanceLocked(r) ? '' : ';display:none'}" onclick="unlockReservationAdvanceRow('${r.id}')">რედაქტირება</button>
         </div>
       </td>
       <td style="font-size:.75rem;color:rgba(245,240,232,.45);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.note||''}">${r.note||'—'}</td>
@@ -4878,10 +4967,56 @@ async function saveReservationAdvanceRow(resId) {
     await supaFetch(`/rest/v1/reservations?id=eq.${resId}`, 'PATCH', { advance_amount, advance_payment });
     adminMsg('res-list-msg', '✅ შენახულია', 'ok');
     auditLog('res_advance', String(resId));
-    await loadReservations();
+    lockReservationAdvanceRow(resId);
   } catch (e) {
     adminMsg('res-list-msg', '❌ ვერ შენახა: ' + (e.message || ''), 'err');
   }
+}
+
+function lockReservationAdvanceRow(resId) {
+  const row = document.querySelector(`[data-res-adv-row="${resId}"]`);
+  if (!row) return;
+  const sel = g('res-advpay-' + resId);
+  const inp = g('res-adv-' + resId);
+  const saveBtn = row.querySelector('.res-adv-save-btn');
+  const editBtn = row.querySelector('.res-adv-edit-btn');
+  if (sel) sel.disabled = true;
+  if (inp) inp.disabled = true;
+  if (saveBtn) saveBtn.style.display = 'none';
+  if (editBtn) editBtn.style.display = '';
+}
+
+function unlockReservationAdvanceRow(resId) {
+  const row = document.querySelector(`[data-res-adv-row="${resId}"]`);
+  if (!row) return;
+  const sel = g('res-advpay-' + resId);
+  const inp = g('res-adv-' + resId);
+  const saveBtn = row.querySelector('.res-adv-save-btn');
+  const editBtn = row.querySelector('.res-adv-edit-btn');
+  if (sel) sel.disabled = false;
+  if (inp) inp.disabled = false;
+  if (saveBtn) saveBtn.style.display = '';
+  if (editBtn) editBtn.style.display = 'none';
+}
+
+/** ექსპორტისთვის მონაცემი — DOM-ის მიმდინარე მნიშვნელობები (შეცვლილი, მაგრამ დაუზოგავი) უპირატესი */
+function getResForExport(r) {
+  const advEl = g('res-adv-' + r.id);
+  const payEl = g('res-advpay-' + r.id);
+  const adv = advEl && String(advEl.value || '').trim() !== '' ? parseFloat(String(advEl.value).replace(',','.')) : (r.advance_amount != null && r.advance_amount !== '' ? Number(r.advance_amount) : (r.advance != null && r.advance !== '' ? Number(r.advance) : null));
+  const pay = payEl && payEl.value ? payEl.value : (r.advance_payment || '');
+  return {
+    name: r.name || '—',
+    phone: r.phone || '',
+    date: r.date || '—',
+    time: r.time || '—',
+    guests: r.guests != null ? r.guests : '—',
+    table_id: r.table_id || '',
+    advance_payment: pay,
+    advance_amount: Number.isFinite(adv) ? adv : null,
+    status: r.status || '—',
+    note: r.note || ''
+  };
 }
 
 // PDF export
@@ -4890,9 +5025,10 @@ function exportResPDF() {
   if (!exportData.length) { alert('მონაცემები არ არის'); return; }
   const win = window.open('','_blank');
   if (!win) { alert('გთხოვთ დაუშვათ pop-up ამ საიტისთვის'); return; }
-  const rows = exportData.map(r =>
-    `<tr><td>${r.name}</td><td>${r.phone||''}</td><td>${r.date}</td><td>${r.time||''}</td><td>${r.guests}</td><td>${r.table_id||''}</td><td>${payLabels[r.advance_payment]||r.advance_payment||'—'}</td><td>${r.advance_amount ? '₾'+r.advance_amount : '—'}</td><td>${statusLabels[r.status]||r.status}</td><td>${r.note||''}</td></tr>`
-  ).join('');
+  const rows = exportData.map(r => {
+    const e = getResForExport(r);
+    return `<tr><td>${escapeHtml(e.name)}</td><td>${escapeHtml(e.phone)}</td><td>${escapeHtml(e.date)}</td><td>${escapeHtml(e.time)}</td><td>${e.guests}</td><td>${escapeHtml(e.table_id)}</td><td>${escapeHtml(payLabels[e.advance_payment]||e.advance_payment||'—')}</td><td>${e.advance_amount != null && e.advance_amount !== '' ? '₾'+Number(e.advance_amount) : '—'}</td><td>${escapeHtml(statusLabels[e.status]||e.status)}</td><td>${escapeHtml(e.note)}</td></tr>`;
+  }).join('');
   win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>რეზერვაციები</title>
   <style>body{font-family:sans-serif;font-size:11px;padding:20px}h2{margin-bottom:12px}
   table{width:100%;border-collapse:collapse}th,td{border:1px solid #ccc;padding:5px 7px;text-align:left}
@@ -4910,12 +5046,15 @@ function exportResXLSX() {
   const exportData = filteredReservations.length ? filteredReservations : allReservations;
   if (!exportData.length) { alert('მონაცემები არ არის'); return; }
   const headers = ['სახელი','ტელეფონი','თარიღი','დრო','სტუმრები','მაგიდა','გადახდის მეთოდი','ავანსი ₾','სტატუსი','შენიშვნა'];
-  const rows = exportData.map(r => [
-    r.name, r.phone||'', r.date, r.time||'', r.guests,
-    r.table_id||'', payLabels[r.advance_payment]||r.advance_payment||'',
-    r.advance_amount != null && r.advance_amount !== '' ? r.advance_amount : '—',
-    statusLabels[r.status]||r.status, r.note||''
-  ]);
+  const rows = exportData.map(r => {
+    const e = getResForExport(r);
+    return [
+      e.name, e.phone, e.date, e.time, e.guests,
+      e.table_id, payLabels[e.advance_payment]||e.advance_payment||'—',
+      e.advance_amount != null && e.advance_amount !== '' ? e.advance_amount : '—',
+      statusLabels[e.status]||e.status, e.note
+    ];
+  });
   const csvContent = [headers, ...rows].map(row =>
     row.map(cell => `"${String(cell).replace(/"/g,'""')}"`).join(',')
   ).join('\n');
