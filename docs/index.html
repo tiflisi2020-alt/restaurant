@@ -1062,6 +1062,54 @@ img:hover {
 
 .reservation-info .section-title { margin-bottom: 0.5rem; }
 
+.reservation-info {
+  position: relative;
+  isolation: isolate;
+  min-height: 12rem;
+}
+
+.reservation-info > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Emblem: ვოტერმარკი ტექსტის უკან — ფერები მორგებულია cream + teal პალიტრას */
+.reservation-info::before {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  right: -3%;
+  bottom: -14%;
+  width: min(56%, 420px);
+  aspect-ratio: 2 / 3;
+  max-height: 118%;
+  background: url('images/tiflisi-king-emblem.png') right bottom / contain no-repeat;
+  opacity: 0.15;
+  filter: brightness(1.02) contrast(1.06) saturate(0.88) sepia(0.14) hue-rotate(168deg);
+}
+
+.reservation-info::after {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  top: 0;
+  right: 0;
+  width: 58%;
+  height: 100%;
+  background: linear-gradient(
+    to left,
+    rgba(61, 155, 147, 0.07) 0%,
+    rgba(245, 240, 230, 0) 72%
+  );
+  mix-blend-mode: multiply;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reservation-info::before { filter: brightness(1.02) contrast(1.04) saturate(0.9); }
+}
+
 .reservation-info p {
   font-size: 0.82rem;
   line-height: 1.85;
@@ -1324,6 +1372,13 @@ footer {
   }
   .order-panel { position: static; max-height: none; overflow-y: visible; }
   .reservation-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .reservation-info::before {
+    width: min(68%, 360px);
+    opacity: 0.11;
+    right: -8%;
+    bottom: -12%;
+  }
+  .reservation-info::after { width: 70%; }
   .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
   .form-grid { grid-template-columns: 1fr; }
 }
@@ -1448,6 +1503,12 @@ footer {
 
   /* ===== RESERVATION FIXES ===== */
   .reservation-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .reservation-info::before {
+    width: min(58%, 260px);
+    opacity: 0.075;
+    right: -4%;
+    bottom: -8%;
+  }
   .res-form { padding: 1.5rem 1.1rem; }
   .form-title { font-size: 1.5rem; }
   .form-grid { grid-template-columns: 1fr; }
