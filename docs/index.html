@@ -2006,9 +2006,148 @@ tr.admin-row-flash td {
     padding: 0.55rem 0.6rem 0.65rem;
   }
 }
+
+/* ===== FLOAT CONTACT RAIL (glass — ფერები როგორც .nav-reserve „მაგიდის დაჯავშნა“) ===== */
+.tiflis-float-rail {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  width: 56px;
+  background: rgba(61, 155, 147, 0.14);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
+  border: 1.5px solid rgba(61, 155, 147, 0.5);
+  border-right: none;
+  border-radius: 2px 0 0 2px;
+  box-shadow: -6px 10px 32px rgba(44, 32, 16, 0.12);
+  overflow: hidden;
+  font-family: 'Raleway', sans-serif;
+}
+.tiflis-float-rail a {
+  color: var(--teal);
+  text-decoration: none;
+  outline: none;
+}
+.tiflis-float-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 56px;
+  flex-shrink: 0;
+  background: transparent;
+  border-bottom: 1px solid rgba(61, 155, 147, 0.28);
+  transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+.tiflis-float-btn:last-child {
+  border-bottom: none;
+}
+.tiflis-float-btn svg {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  fill: currentColor;
+}
+/* Wolt + Glovo: ერთი ოფიციალური ბანერიდან (bm.ge რეფერენსი) — მარცხნივ Wolt, მარჯვნივ Glovo */
+.tiflis-float-btn img.tiflis-float-pair-img {
+  display: block;
+  width: 42px;
+  height: 30px;
+  object-fit: cover;
+  border-radius: 4px;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+.tiflis-float-pair-img--wolt {
+  object-position: 22% center;
+}
+.tiflis-float-pair-img--glovo {
+  object-position: 82% center;
+}
+.tiflis-float-bolt-svg {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  display: block;
+}
+.tiflis-float-btn:hover,
+.tiflis-float-btn:focus-visible {
+  background: var(--teal);
+  color: #fff;
+  transform: scale(1.04);
+}
+.tiflis-float-btn:hover .tiflis-float-bolt-svg path,
+.tiflis-float-btn:focus-visible .tiflis-float-bolt-svg path {
+  fill: #fff;
+}
+.tiflis-float-btn:active {
+  transform: scale(0.98);
+}
+html.admin-panel-route .tiflis-float-rail {
+  display: none !important;
+}
+@media print {
+  .tiflis-float-rail { display: none !important; }
+}
+@media (max-width: 600px) {
+  .tiflis-float-rail {
+    top: auto;
+    bottom: 5.5rem;
+    transform: none;
+    width: 52px;
+    border-radius: 2px 0 0 2px;
+  }
+  .tiflis-float-btn {
+    height: 52px;
+  }
+  .tiflis-float-btn svg {
+    width: 24px;
+    height: 24px;
+  }
+  .tiflis-float-btn img.tiflis-float-pair-img {
+    width: 38px;
+    height: 28px;
+  }
+  .tiflis-float-bolt-svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tiflis-float-btn {
+    transition-duration: 0.01ms;
+  }
+  .tiflis-float-btn:hover,
+  .tiflis-float-btn:focus-visible {
+    transform: none;
+  }
+}
 </style>
 </head>
 <body>
+
+<!-- Floating contact rail: WhatsApp, Messenger, Glovo, Wolt, Bolt -->
+<aside class="tiflis-float-rail" aria-label="სწრაფი კონტაქტი">
+  <a class="tiflis-float-btn" href="https://wa.me/995568767638" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" title="WhatsApp">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.883 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+  <a class="tiflis-float-btn" href="https://m.me/TiflisiRestaurantBatumi" target="_blank" rel="noopener noreferrer" aria-label="Facebook Messenger" title="Messenger">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.04c-5.376 0-9.74 4.15-9.74 9.26 0 2.9 1.434 5.49 3.68 7.17V22l3.37-1.85c.9.25 1.85.38 2.85.38 5.376 0 9.74-4.15 9.74-9.26S17.376 2.04 12 2.04zm.93 12.07-2.45-2.6L7.2 14.07l5.4-5.75 2.5 2.62 4.84-2.62-5.81 5.99z"/></svg>
+  </a>
+  <a class="tiflis-float-btn" href="https://glovoapp.com/en/ge/batumi/stores/tiflisi-bat?content=pitsa-c.1421345036&amp;section=pitsa-s.2999510380" target="_blank" rel="noopener noreferrer" aria-label="Glovo" title="Glovo">
+    <img class="tiflis-float-pair-img tiflis-float-pair-img--glovo" src="images/glovo-wolt-reference.jpeg" alt="" width="84" height="60" decoding="async" loading="lazy">
+  </a>
+  <a class="tiflis-float-btn" href="https://wolt.com/en/geo/batumi/restaurant/restaurant-tiflis/items/soup-10?srsltid=AfmBOopDnVtfrR30XTIjeboPzi9xLfad6qtpf8aEeldquKXKcx47KxqY" target="_blank" rel="noopener noreferrer" aria-label="Wolt" title="Wolt">
+    <img class="tiflis-float-pair-img tiflis-float-pair-img--wolt" src="images/glovo-wolt-reference.jpeg" alt="" width="84" height="60" decoding="async" loading="lazy">
+  </a>
+  <a class="tiflis-float-btn" href="https://food.bolt.eu/ka-ge/38-batumi/p/67460-restorani-tiplisi/" target="_blank" rel="noopener noreferrer" aria-label="Bolt Food" title="Bolt Food">
+    <svg class="tiflis-float-bolt-svg" viewBox="0 0 56 56" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="#34D186" d="M34.4 2.8 12.6 28.6h10.1L10.4 53.2l32-31.4H30.7L34.4 2.8z"/></svg>
+  </a>
+</aside>
 
 <!-- NAV -->
 <nav id="nav">
@@ -2099,11 +2238,6 @@ tr.admin-row-flash td {
                 <input type="number" id="f-disc" min="0" max="100" step="0.5" value="0" oninput="recalc()">
               </div>
             </div>
-            <div class="adj-field" style="margin-bottom:0.75rem">
-              <label for="f-adv" data-i18n="adv_lbl">ავანსი ₾</label>
-              <input type="number" id="f-adv" min="0" step="0.5" value="0" oninput="recalc()">
-            </div>
-            <input type="hidden" id="f-pay" value="">
             <div id="row-disc" class="order-row" style="display:none">
               <span class="order-row-label" data-i18n="disc">ფასდაკლება</span>
               <span class="order-row-value" id="tv-disc">−₾0.00</span>
@@ -2212,6 +2346,10 @@ tr.admin-row-flash td {
                   <option value="tera">🏦 TERA</option>
                   <option value="transfer">🔁 გადმორიცხვა</option>
                 </select>
+              </div>
+              <div class="form-field">
+                <label for="f-adv" data-i18n="adv_lbl">ავანსი ₾</label>
+                <input type="number" id="f-adv" min="0" step="0.5" value="0" oninput="recalc()" inputmode="decimal" placeholder="0">
               </div>
               <div class="form-field">
                 <label data-i18n="f_date">თარიღი *</label>
@@ -2471,7 +2609,7 @@ tr.admin-row-flash td {
           <table class="admin-table" id="res-table">
             <thead><tr>
               <th>სახელი</th><th>ტელეფონი</th><th>თარიღი</th><th>დრო</th>
-              <th>სტუმ.</th><th>მაგიდა</th><th>გადახდა</th><th>ავანსი</th><th>შენიშვნა</th><th>სტატუსი</th><th></th>
+              <th>სტუმ.</th><th>მაგიდა</th><th title="ავანსის გადახდის მეთოდი">გადახდის მეთოდი</th><th>ავანსი ₾</th><th>შენიშვნა</th><th>სტატუსი</th><th></th>
             </tr></thead>
             <tbody id="res-tbody"><tr><td colspan="11" style="text-align:center;color:rgba(245,240,232,.3);padding:2rem;font-style:italic">ჩატვირთვა...</td></tr></tbody>
           </table>
@@ -3004,7 +3142,7 @@ function sharePDF() {
   const svc = parseFloat(g('f-svc')?.value)||0;
   const disc = parseFloat(g('f-disc')?.value)||0;
   const adv = parseFloat(g('f-adv')?.value)||0;
-  const payVal = g('f-pay')?.value || '';
+  const payVal = g('r-payment')?.value || '';
   const payMaps = {
     ka: {'ნაღდი':'ნაღდი','bog':'საქართველოს ბანკი','tbc':'თიბისი ბანკი','tera':'ტერა ბანკი','გადარიცხვა':'გადარიცხვა','cash':'ნაღდი','transfer':'გადარიცხვა'},
     en: {'ნაღდი':'Cash','bog':'Bank of Georgia','tbc':'TBC Bank','tera':'Tera Bank','გადარიცხვა':'Transfer','cash':'Cash','transfer':'Transfer'},
@@ -3061,7 +3199,7 @@ function printReceipt() {
   const time = g('r-time')?.value || '—';
   const guests = g('r-guests')?.value || '2';
   const table = g('r-table')?.value || '—';
-  const payVal = g('f-pay')?.value || '';
+  const payVal = g('r-payment')?.value || '';
   const payMaps = {
     ka: {'ნაღდი':'ნაღდი','bog':'BOG','tbc':'TBC','tera':'TERA','გადარიცხვა':'გადარიცხვა','cash':'ნაღდი','transfer':'გადარიცხვა'},
     en: {'ნაღდი':'Cash','bog':'BOG','tbc':'TBC','tera':'TERA','გადარიცხვა':'Transfer','cash':'Cash','transfer':'Transfer'},
@@ -3215,8 +3353,8 @@ async function submitReservation() {
   // Save to Supabase
   try {
     const advance_amount = parseFloat(g('f-adv')?.value)||0;
-    const advance_payment = g('f-pay')?.value||null;
-    await supaFetch('/rest/v1/reservations', 'POST', { name, phone, date, time, guests, table_id: table||'—', payment, note, status:'pending', advance_amount: advance_amount||null, advance_payment: advance_payment||null });
+    const advance_payment = (advance_amount > 0 && payment) ? payment : null;
+    await supaFetch('/rest/v1/reservations', 'POST', { name, phone, date, time, guests, table_id: table||'—', payment, note, status:'pending', advance_amount: advance_amount||null, advance_payment });
     // update table status
     if (table) await supaFetch(`/rest/v1/tables?id=eq.${table}`, 'PATCH', { status:'reserved' });
   } catch(e) { console.warn('Supabase error', e); }
@@ -3301,6 +3439,7 @@ function resetRes() {
   ['r-name','r-phone','r-email','r-note'].forEach(id => { if(g(id)) g(id).value=''; });
   g('r-date').value=''; g('r-time').value='19:00'; g('r-guests').value='2';
   g('r-table').value=''; g('r-payment').value='';
+  if (g('f-adv')) { g('f-adv').value = '0'; recalc(); }
 }
 
 const today = new Date().toISOString().split('T')[0];
@@ -4365,19 +4504,52 @@ async function toggleTable(tableId, currentlyReserved) {
 let allReservations = [];
 let filteredReservations = [];
 
+/** უახლესი ჯავშანი ზევით: created_at / inserted_at, სარეზერვო — რიცხვობრივი id */
+function sortReservationsNewestFirst(rows) {
+  if (!Array.isArray(rows)) return [];
+  const key = (r) => {
+    const raw = r.created_at || r.inserted_at;
+    if (raw) {
+      const t = Date.parse(raw);
+      if (!isNaN(t)) return t;
+    }
+    const id = r.id;
+    if (typeof id === 'number' && Number.isFinite(id)) return id;
+    if (id != null && /^\d+$/.test(String(id))) return parseInt(String(id), 10);
+    return 0;
+  };
+  return rows.slice().sort((a, b) => key(b) - key(a));
+}
+
+function reservationsQueryUrl(orderParam) {
+  const from = g('res-filter-from').value;
+  const to = g('res-filter-to').value;
+  const status = g('res-filter-status')?.value;
+  const parts = [];
+  if (from) parts.push(`date=gte.${from}`);
+  if (to) parts.push(`date=lte.${to}`);
+  if (status) parts.push(`status=eq.${status}`);
+  if (orderParam) parts.push(orderParam);
+  return '/rest/v1/reservations' + (parts.length ? '?' + parts.join('&') : '');
+}
+
 async function loadReservations() {
   const tbody = g('res-tbody');
   tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:rgba(245,240,232,.3);padding:2rem;font-style:italic">⏳ ჩატვირთვა...</td></tr>';
   try {
-    let url = '/rest/v1/reservations?order=date.desc,time.desc';
-    const from = g('res-filter-from').value;
-    const to = g('res-filter-to').value;
-    const status = g('res-filter-status')?.value;
-    if (from) url += `&date=gte.${from}`;
-    if (to)   url += `&date=lte.${to}`;
-    if (status) url += `&status=eq.${status}`;
-    const data = await supaFetch(url);
-    allReservations = data || [];
+    let data;
+    let useClientSort = false;
+    try {
+      data = await supaFetch(reservationsQueryUrl('order=created_at.desc,id.desc'));
+    } catch (_) {
+      try {
+        data = await supaFetch(reservationsQueryUrl('order=id.desc'));
+      } catch (__) {
+        data = await supaFetch(reservationsQueryUrl(null));
+        useClientSort = true;
+      }
+    }
+    allReservations = useClientSort ? sortReservationsNewestFirst(data || []) : (data || []);
     filteredReservations = allReservations;
     renderResTable(filteredReservations);
   } catch(e) {
@@ -4399,6 +4571,19 @@ const payLabels = {'ნაღდი':'ნაღდი',bog:'საქართ�
 const statusColors = {pending:'#c9a84c',confirmed:'#2ecc71',cancelled:'#e74c3c'};
 const statusLabels = {pending:'⏳ მომლოდინე',confirmed:'✅ დადასტ.',cancelled:'❌ გაუქმდა'};
 
+function resAdvancePaymentSelectHtml(r) {
+  const cur = (r.advance_payment != null && r.advance_payment !== '') ? String(r.advance_payment) : '';
+  const opt = (v, label) => `<option value="${v}"${cur === v ? ' selected' : ''}>${label}</option>`;
+  return `<select class="admin-input" id="res-advpay-${r.id}" style="width:100%;max-width:10rem;margin:0;padding:.28rem .35rem;font-size:.65rem;box-sizing:border-box" aria-label="ავანსის გადახდის მეთოდი">
+    ${opt('', '— აირჩიეთ —')}
+    ${opt('cash', '💵 ნაღდი')}
+    ${opt('bog', '🏦 BOG')}
+    ${opt('tbc', '🏦 TBC')}
+    ${opt('tera', '🏦 TERA')}
+    ${opt('transfer', '🔁 გადარიცხვა')}
+  </select>`;
+}
+
 function renderResTable(data) {
   const tbody = g('res-tbody');
   if (!data.length) {
@@ -4414,8 +4599,16 @@ function renderResTable(data) {
       <td>${r.time||'—'}</td>
       <td style="text-align:center">${r.guests}</td>
       <td style="color:var(--gold)">${r.table_id||'—'}</td>
-      <td style="font-size:.75rem">${payLabels[r.payment]||r.payment||'—'}</td>
-      <td style="font-size:.75rem;color:var(--gold)">${(r.advance_amount||r.advance) ? ('₾'+(r.advance_amount||r.advance) + (r.advance_payment ? ' · '+(payLabels[r.advance_payment]||r.advance_payment) : '')) : '—'}</td>
+      <td style="min-width:7rem;max-width:10.5rem;vertical-align:top">${resAdvancePaymentSelectHtml(r)}</td>
+      <td style="min-width:6.5rem;max-width:9rem;vertical-align:middle">
+        <div style="display:flex;align-items:center;gap:.28rem;flex-wrap:wrap">
+          <span style="font-size:.7rem;color:rgba(245,240,232,.45)">₾</span>
+          <input type="number" class="admin-input" id="res-adv-${r.id}" min="0" step="0.5" style="width:4rem;margin:0;padding:.28rem .35rem;font-size:.72rem"
+            value="${(() => { const a = r.advance_amount != null && r.advance_amount !== '' ? Number(r.advance_amount) : (r.advance != null && r.advance !== '' ? Number(r.advance) : NaN); return Number.isFinite(a) ? a : ''; })()}"
+            onkeydown="if(event.key==='Enter'){event.preventDefault();saveReservationAdvanceRow('${r.id}');}">
+          <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" style="padding:2px 7px;font-size:.62rem;width:auto;white-space:nowrap" onclick="saveReservationAdvanceRow('${r.id}')">შენახვა</button>
+        </div>
+      </td>
       <td style="font-size:.75rem;color:rgba(245,240,232,.45);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.note||''}">${r.note||'—'}</td>
       <td><span style="font-size:.7rem;padding:2px 7px;border-radius:3px;border:1px solid ${statusColors[r.status]||'#c9a84c'};color:${statusColors[r.status]||'#c9a84c'}">${statusLabels[r.status]||r.status}</span></td>
       <td>
@@ -4438,6 +4631,33 @@ async function changeResStatus(id, status) {
   }
 }
 
+async function saveReservationAdvanceRow(resId) {
+  const rawVal = g('res-adv-' + resId)?.value;
+  const paySel = g('res-advpay-' + resId);
+  const payVal = paySel ? String(paySel.value || '').trim() : '';
+  const s = String(rawVal == null ? '' : rawVal).trim().replace(',', '.');
+  let advance_amount;
+  if (s === '' || s === '-') {
+    advance_amount = null;
+  } else {
+    const v = parseFloat(s);
+    if (isNaN(v) || v < 0) {
+      adminMsg('res-list-msg', '❌ არასწორი თანხა', 'err');
+      return;
+    }
+    advance_amount = v;
+  }
+  const advance_payment = payVal === '' ? null : payVal;
+  try {
+    await supaFetch(`/rest/v1/reservations?id=eq.${resId}`, 'PATCH', { advance_amount, advance_payment });
+    adminMsg('res-list-msg', '✅ შენახულია', 'ok');
+    auditLog('res_advance', String(resId));
+    await loadReservations();
+  } catch (e) {
+    adminMsg('res-list-msg', '❌ ვერ შენახა: ' + (e.message || ''), 'err');
+  }
+}
+
 // PDF export
 function exportResPDF() {
   const exportData = filteredReservations.length ? filteredReservations : allReservations;
@@ -4445,7 +4665,7 @@ function exportResPDF() {
   const win = window.open('','_blank');
   if (!win) { alert('გთხოვთ დაუშვათ pop-up ამ საიტისთვის'); return; }
   const rows = exportData.map(r =>
-    `<tr><td>${r.name}</td><td>${r.phone||''}</td><td>${r.date}</td><td>${r.time||''}</td><td>${r.guests}</td><td>${r.table_id||''}</td><td>${payLabels[r.payment]||r.payment||''}</td><td>${r.advance_amount ? '₾'+r.advance_amount : '—'}</td><td>${statusLabels[r.status]||r.status}</td><td>${r.note||''}</td></tr>`
+    `<tr><td>${r.name}</td><td>${r.phone||''}</td><td>${r.date}</td><td>${r.time||''}</td><td>${r.guests}</td><td>${r.table_id||''}</td><td>${payLabels[r.advance_payment]||r.advance_payment||'—'}</td><td>${r.advance_amount ? '₾'+r.advance_amount : '—'}</td><td>${statusLabels[r.status]||r.status}</td><td>${r.note||''}</td></tr>`
   ).join('');
   win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>რეზერვაციები</title>
   <style>body{font-family:sans-serif;font-size:11px;padding:20px}h2{margin-bottom:12px}
@@ -4453,7 +4673,7 @@ function exportResPDF() {
   th{background:#f0f0f0;font-weight:600}</style></head><body>
   <h2>რესტორანი ტიფლისი — რეზერვაციების ისტორია</h2>
   <p style="font-size:10px;color:#666;margin-bottom:10px">დაბეჭდვის თარიღი: ${new Date().toLocaleDateString('ka-GE')}</p>
-  <table><thead><tr><th>სახელი</th><th>ტელეფონი</th><th>თარიღი</th><th>დრო</th><th>სტუმ.</th><th>მაგიდა</th><th>გადახდა</th><th>ავანსი</th><th>სტატუსი</th><th>შენიშვნა</th></tr></thead>
+  <table><thead><tr><th>სახელი</th><th>ტელეფონი</th><th>თარიღი</th><th>დრო</th><th>სტუმ.</th><th>მაგიდა</th><th>გადახდის მეთოდი</th><th>ავანსი ₾</th><th>სტატუსი</th><th>შენიშვნა</th></tr></thead>
   <tbody>${rows}</tbody></table></body></html>`);
   win.document.close();
   setTimeout(() => win.print(), 400);
@@ -4463,10 +4683,11 @@ function exportResPDF() {
 function exportResXLSX() {
   const exportData = filteredReservations.length ? filteredReservations : allReservations;
   if (!exportData.length) { alert('მონაცემები არ არის'); return; }
-  const headers = ['სახელი','ტელეფონი','თარიღი','დრო','სტუმრები','მაგიდა','გადახდა','სტატუსი','შენიშვნა'];
+  const headers = ['სახელი','ტელეფონი','თარიღი','დრო','სტუმრები','მაგიდა','გადახდის მეთოდი','ავანსი ₾','სტატუსი','შენიშვნა'];
   const rows = exportData.map(r => [
     r.name, r.phone||'', r.date, r.time||'', r.guests,
-    r.table_id||'', payLabels[r.payment]||r.payment||'',
+    r.table_id||'', payLabels[r.advance_payment]||r.advance_payment||'',
+    r.advance_amount != null && r.advance_amount !== '' ? r.advance_amount : '—',
     statusLabels[r.status]||r.status, r.note||''
   ]);
   const csvContent = [headers, ...rows].map(row =>
