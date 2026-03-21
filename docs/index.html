@@ -868,7 +868,6 @@ img:hover {
   border-radius: 2px;
 }
 
-.adj-field select option { background: var(--ink); }
 
 .order-row {
   display: flex;
@@ -1669,6 +1668,7 @@ html.admin-panel-route .admin-content {
   width: 100%; max-width: min(960px, calc(100vw - 2.5rem)); margin-right: auto; border-radius: 4px;
   border: 1px solid rgba(61,155,147,0.2);
   font-family: 'Raleway', sans-serif; font-size: 0.82rem;
+  color-scheme: light; /* select dropdowns: light bg + dark text for readability */
 }
 #admin-panel-wrap,
 #admin-login-wrap {
@@ -1795,6 +1795,13 @@ html.admin-panel-route .admin-content {
   border-radius: 2px;
 }
 .admin-input:focus { outline: none; border-color: var(--teal); }
+/* Native select dropdown: OS often uses light bg — dark text for readability */
+select option,
+.admin-input option, .admin-field select option, .admin-cat-filter option,
+#admin-modal select option, .admin-box select option, .adj-field select option,
+.form-field select option {
+  background: #fff; color: #1a1208;
+}
 
 .admin-btn {
   padding: 0.48rem 1rem; background: var(--teal); color: white;
@@ -1874,7 +1881,6 @@ tr.admin-row-flash td {
   font-family: 'Raleway', sans-serif; font-size: 0.76rem; border-radius: 2px;
 }
 .admin-field input:focus, .admin-field select:focus { outline: none; border-color: var(--teal); }
-.admin-field select option { background: #1a1208; }
 
 .admin-form-actions { display: flex; gap: 0.45rem; margin-top: 0.35rem; flex-wrap: wrap; }
 
@@ -2710,6 +2716,23 @@ html.admin-panel-route .tiflis-float-rail {
           <span class="admin-filter-label" style="display:flex;align-items:center;gap:0.35rem;margin-left:auto"><i style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#2ecc71"></i> თავისუფალი</span>
           <span class="admin-filter-label" style="display:flex;align-items:center;gap:0.35rem"><i style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#f1c40f"></i> მომლოდინე</span>
           <span class="admin-filter-label" style="display:flex;align-items:center;gap:0.35rem"><i style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#e74c3c"></i> დადასტურებული</span>
+        </div>
+        <div class="admin-filter-row" style="margin-bottom:0.65rem;padding:0.5rem 0;border-top:1px solid rgba(255,255,255,0.06)">
+          <span class="admin-filter-label">ტრანსფერი</span>
+          <div class="admin-filter-field">
+            <label style="font-size:.65rem;color:rgba(245,240,232,.5);margin-right:.25rem">წყარო (FROM)</label>
+            <select id="map-transfer-from" class="admin-input" style="width:auto;min-width:5rem;margin:0;padding:.28rem .4rem;font-size:.72rem">
+              <option value="">— აირჩიეთ —</option>
+            </select>
+          </div>
+          <span style="color:rgba(245,240,232,.4);font-size:.75rem">→</span>
+          <div class="admin-filter-field">
+            <label style="font-size:.65rem;color:rgba(245,240,232,.5);margin-right:.25rem">სამიზნე (TO)</label>
+            <select id="map-transfer-to" class="admin-input" style="width:auto;min-width:5rem;margin:0;padding:.28rem .4rem;font-size:.72rem">
+              <option value="">— აირჩიეთ —</option>
+            </select>
+          </div>
+          <button type="button" class="admin-btn admin-btn-sm" style="width:auto" onclick="transferTableReservation()">შენახვა</button>
         </div>
         <div style="margin-bottom:0.65rem">
           <div class="admin-filter-label" style="margin-bottom:0.35rem">H ზონა</div>
@@ -4762,8 +4785,70 @@ async function loadMapTables() {
           transition:all .2s">${t.id}</div>`;
       }).join('');
     });
+    const occupiedIds = new Set((rsvData || []).map(r => r.table_id).filter(Boolean));
+    populateMapTransferSelects(occupiedIds);
   } catch (e) {
     adminMsg('map-msg', '❌ Supabase კავშირი ვერ მოხერხდა', 'err');
+  }
+}
+
+function populateMapTransferSelects(occupiedIds) {
+  const fromSel = g('map-transfer-from');
+  const toSel = g('map-transfer-to');
+  if (!fromSel || !toSel) return;
+  const occupied = occupiedIds || new Set();
+  const opt = (id, disabled) => disabled
+    ? `<option value="${id}" disabled title="დაკავებული">${id}</option>`
+    : `<option value="${id}">${id}</option>`;
+  const optgroup = (label, ids, toList) =>
+    `<optgroup label="${label}">${ids.map(id => opt(id, toList && occupied.has(id))).join('')}</optgroup>`;
+  const hIds = MAP_ALL_TABLE_IDS.filter(id => id.startsWith('H-'));
+  const aIds = MAP_ALL_TABLE_IDS.filter(id => id.startsWith('A-'));
+  const vIds = MAP_ALL_TABLE_IDS.filter(id => id.startsWith('V-'));
+  const fromOptions = `<option value="">— აირჩიეთ —</option>${optgroup('H ზონა', hIds, false)}${optgroup('A ზონა', aIds, false)}${optgroup('V ზონა', vIds, false)}`;
+  const toOptions = `<option value="">— აირჩიეთ —</option>${optgroup('H ზონა', hIds, true)}${optgroup('A ზონა', aIds, true)}${optgroup('V ზონა', vIds, true)}`;
+  fromSel.innerHTML = fromOptions;
+  toSel.innerHTML = toOptions;
+}
+
+async function transferTableReservation() {
+  const fromSel = g('map-transfer-from');
+  const toSel = g('map-transfer-to');
+  const dateEl = g('map-date-filter');
+  const fromId = fromSel?.value?.trim();
+  const toId = toSel?.value?.trim();
+  const date = dateEl?.value || new Date().toISOString().split('T')[0];
+  if (!fromId || !toId) {
+    adminMsg('map-msg', '❌ გთხოვთ აირჩიოთ წყარო და სამიზნე მაგიდა', 'err');
+    return;
+  }
+  if (fromId === toId) {
+    adminMsg('map-msg', '❌ წყარო და სამიზნე არ უნდა ემთხვეოდეს', 'err');
+    return;
+  }
+  let toOccupied = false;
+  try {
+    const toRows = await supaFetch(`/rest/v1/reservations?date=eq.${date}&table_id=eq.${encodeURIComponent(toId)}&status=neq.cancelled&select=id`);
+    toOccupied = Array.isArray(toRows) && toRows.length > 0;
+  } catch (_) {}
+  if (toOccupied) {
+    adminMsg('map-msg', `❌ მაგიდა ${toId} ამ თარიღზე დაკავებულია — ტრანსფერი შეუძლებელია`, 'err');
+    return;
+  }
+  try {
+    const res = await supaFetch(
+      `/rest/v1/reservations?date=eq.${date}&table_id=eq.${encodeURIComponent(fromId)}&status=neq.cancelled`,
+      'PATCH',
+      { table_id: toId }
+    );
+    const count = Array.isArray(res) ? res.length : 0;
+    adminMsg('map-msg', count > 0 ? `✅ ${count} ჯავშანი გადატანილია ${fromId} → ${toId}` : `⚠️ ჯავშანი არ მოიძებნა ${fromId}-ზე ${date}`, count > 0 ? 'ok' : 'warn');
+    if (count > 0) {
+      auditLog('res_transfer', `${fromId} → ${toId} (${date})`);
+      await loadMapTables();
+    }
+  } catch (e) {
+    adminMsg('map-msg', '❌ ტრანსფერი ვერ შესრულდა: ' + (e.message || ''), 'err');
   }
 }
 
