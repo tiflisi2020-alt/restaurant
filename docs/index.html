@@ -1949,6 +1949,16 @@ tr.admin-row-flash td {
 }
 
 /* Dashboard */
+.dashboard-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(61, 155, 147, 0.12);
+}
 .dashboard-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
@@ -2623,7 +2633,15 @@ html.admin-panel-route .tiflis-float-rail {
       </div>
       <!-- DASHBOARD TAB -->
       <div id="at-dashboard" class="admin-pane on" role="tabpanel">
-        <div class="admin-section-title">დაშბორდი</div>
+        <div class="dashboard-header">
+          <div class="admin-section-title" style="margin-bottom:0">დაშბორდი</div>
+          <div class="dashboard-quicklinks">
+            <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="adminTab('reservations')">📋 ჯავშნები</button>
+            <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="adminTab('map')">🗺 მაგიდები</button>
+            <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="adminTab('menu')">🍽 მენიუ</button>
+            <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="adminTab('add')">➕ კერძის დამატება</button>
+          </div>
+        </div>
         <div id="dashboard-stats" class="dashboard-grid">
           <div class="dashboard-card">
             <div class="dashboard-card-value" id="dash-today">—</div>
@@ -2641,12 +2659,6 @@ html.admin-panel-route .tiflis-float-rail {
             <div class="dashboard-card-value" id="dash-cats">0</div>
             <div class="dashboard-card-label">კატეგორიები</div>
           </div>
-        </div>
-        <div class="dashboard-quicklinks">
-          <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="adminTab('reservations')">📋 ჯავშნები</button>
-          <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="adminTab('map')">🗺 მაგიდები</button>
-          <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="adminTab('menu')">🍽 მენიუ</button>
-          <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="adminTab('add')">➕ კერძის დამატება</button>
         </div>
         <div id="dashboard-msg" class="admin-msg"></div>
       </div>
@@ -3069,6 +3081,14 @@ const TXT = {
 
 let lang = 'ka', catIdx = 0, order = {};
 const g = id => document.getElementById(id);
+
+/** საქართველოს დრო (Asia/Tbilisi, UTC+4) */
+function todayGeorgia() {
+  return new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Tbilisi' });
+}
+function toLocaleDateStringGeorgia(d) {
+  return (d instanceof Date ? d : new Date(d)).toLocaleDateString('ka-GE', { timeZone: 'Asia/Tbilisi' });
+}
 
 /** პრეფიქსი: `/repo` GitHub Pages-ზე ან `/repo/admin(/panel)` მარშრუტებიდან */
 function adminBaseFromPathname() {
@@ -3761,7 +3781,6 @@ function resetRes() {
   refreshReservationTableSelectState();
 }
 
-const today = new Date().toISOString().split('T')[0];
 async function init() {
   const isPanel = document.documentElement.classList.contains('admin-panel-route');
   if (isPanel) {
@@ -3784,7 +3803,7 @@ async function init() {
     }
     return;
   }
-  if (g('r-date')) g('r-date').min = today;
+  if (g('r-date')) g('r-date').min = todayGeorgia();
   applyI18n();
   renderCats();
   renderMenu();
@@ -3887,7 +3906,7 @@ function exportMenuJSON() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'tiflis-menu-' + new Date().toISOString().split('T')[0] + '.json';
+  a.download = 'tiflis-menu-' + todayGeorgia() + '.json';
   a.click();
   URL.revokeObjectURL(url);
   auditLog('export', 'menu JSON');
@@ -4320,7 +4339,8 @@ function adminTab(t) {
 }
 
 async function loadDashboardData() {
-  const today = new Date().toISOString().split('T')[0];
+  const today = todayGeorgia();
+  await clearOldReservationsFromTables();
   g('dash-menu').textContent = (MENU || []).length;
   g('dash-cats').textContent = (CATS || []).length;
   g('dash-today').textContent = '…';
@@ -4803,6 +4823,20 @@ const MAP_ALL_TABLE_IDS = [
   ...Array.from({ length: 8 }, (_, i) => `V-${i + 1}`)
 ];
 
+const TABLE_CLEANUP_KEY = 'tiflis_tables_cleared_date';
+
+/** 00:01-ის შემდეგ — ყველა მაგიდა გაიწმინდოს ძველი რეზერვიდან (tables.status → free) */
+async function clearOldReservationsFromTables() {
+  const today = todayGeorgia();
+  if (localStorage.getItem(TABLE_CLEANUP_KEY) === today) return;
+  try {
+    await Promise.all(MAP_ALL_TABLE_IDS.map(id =>
+      supaFetch(`/rest/v1/tables?id=eq.${id}`, 'PATCH', { status: 'free' })
+    ));
+    localStorage.setItem(TABLE_CLEANUP_KEY, today);
+  } catch (_) { /* Supabase/tables ცხრილი შესაძლოა არ არსებობდეს */ }
+}
+
 /** ჯავშნების სიიდან: confirmed > pending > free */
 function tableOccupancyStateFromReservations(rows, tableId) {
   let state = 'free';
@@ -4841,8 +4875,9 @@ function mapTileStyles(state) {
 
 async function loadMapTables() {
   try {
+    await clearOldReservationsFromTables();
     const filterEl = document.getElementById('map-date-filter');
-    const today2 = filterEl && filterEl.value ? filterEl.value : new Date().toISOString().split('T')[0];
+    const today2 = filterEl && filterEl.value ? filterEl.value : todayGeorgia();
     if (filterEl && !filterEl.value) filterEl.value = today2;
     const rsvData = await supaFetch(`/rest/v1/reservations?date=eq.${today2}&status=neq.cancelled&select=table_id,status`);
 
@@ -4901,7 +4936,7 @@ async function transferTableReservation() {
   const dateEl = g('map-date-filter');
   const fromId = fromSel?.value?.trim();
   const toId = toSel?.value?.trim();
-  const date = dateEl?.value || new Date().toISOString().split('T')[0];
+  const date = dateEl?.value || todayGeorgia();
   if (!fromId || !toId) {
     adminMsg('map-msg', '❌ გთხოვთ აირჩიოთ წყარო და სამიზნე მაგიდა', 'err');
     return;
@@ -4941,7 +4976,7 @@ async function refreshReservationTableSelectState() {
   const sel = g('r-table');
   const dateEl = g('r-date');
   if (!sel || !dateEl) return;
-  const date = dateEl.value || new Date().toISOString().split('T')[0];
+  const date = dateEl.value || todayGeorgia();
   let confirmedIds = new Set();
   try {
     const rows = await supaFetch(`/rest/v1/reservations?date=eq.${date}&status=eq.confirmed&select=table_id`);
@@ -5204,7 +5239,7 @@ function exportResPDF() {
   th{background:#f0f0f0;font-weight:600}</style></head><body>
   <h2>რესტორანი ტიფლისი — ჯავშნების რეპორტი</h2>
   <p class="report-meta">${period}${statusStr}</p>
-  <p class="report-meta">დაბეჭდვის თარიღი: ${new Date().toLocaleDateString('ka-GE')} · ${exportData.length} ჩანაწერი</p>
+  <p class="report-meta">დაბეჭდვის თარიღი: ${toLocaleDateStringGeorgia(new Date())} · ${exportData.length} ჩანაწერი</p>
   <table><thead><tr><th>სახელი</th><th>ტელეფონი</th><th>თარიღი</th><th>დრო</th><th>სტუმ.</th><th>მაგიდა</th><th>გადახდის მეთოდი</th><th>ავანსი ₾</th><th>სტატუსი</th><th>შენიშვნა</th></tr></thead>
   <tbody>${rows}</tbody></table></body></html>`);
   win.document.close();
@@ -5235,7 +5270,7 @@ function exportResXLSX() {
   const from = g('res-filter-from')?.value || '';
   const to = g('res-filter-to')?.value || '';
   const range = (from || to) ? `${from || '?'}_${to || '?'}` : 'all';
-  a.href = url; a.download = `reservations_${range}_${new Date().toISOString().split('T')[0]}.csv`;
+  a.href = url; a.download = `reservations_${range}_${todayGeorgia()}.csv`;
   a.click(); URL.revokeObjectURL(url);
 }
 
