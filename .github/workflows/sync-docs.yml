@@ -1,0 +1,42 @@
+# GitHub Pages (branch main, folder /docs) — ავტომატურად ასინქრონებს public/ → docs/
+name: Sync docs for GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "public/**"
+      - "scripts/sync-docs.mjs"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-docs-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sync-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Mirror public → docs
+        run: node scripts/sync-docs.mjs
+
+      - name: Commit and push if docs changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs
+          if git diff --staged --quiet; then
+            echo "docs/ already matches public/"
+            exit 0
+          fi
+          git commit -m "chore: sync docs/ from public/ (GitHub Pages)"
+          git push
