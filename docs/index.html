@@ -3,34 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" href="favicon.ico" type="image/png" sizes="any">
-<link rel="apple-touch-icon" href="logo.png">
 <script>
 (function () {
-  var host = location.hostname || "";
-  var isGh = host.indexOf("github.io") !== -1;
   var p = (location.pathname || "/").replace(/\/+$/, "") || "/";
-
-  if (isGh && location.search.indexOf("gh_panel=1") !== -1) {
-    document.documentElement.classList.add("admin-panel-route");
-    document.documentElement.style.background = "#0d0905";
-    if (sessionStorage.getItem("tiflis_admin_logged") !== "1") {
-      var baseSeg = (p.match(/^(\/[^\/]+)/) || [])[1] || "";
-      location.replace(baseSeg + "/admin/");
-      return;
-    }
-    try {
-      var pathOnly = location.pathname.replace(/\/index\.html$/i, "") || "/";
-      history.replaceState(null, "", pathOnly.endsWith("/") ? pathOnly : pathOnly + "/");
-    } catch (e) {}
-    return;
-  }
-
-  if (!/\/admin\/panel$/i.test(p) && !/\/admin\/panel\/index\.html$/i.test(p)) return;
+  if (!/\/admin\/panel$/.test(p)) return;
   document.documentElement.classList.add("admin-panel-route");
   document.documentElement.style.background = "#0d0905";
   if (sessionStorage.getItem("tiflis_admin_logged") !== "1") {
-    location.replace(p.replace(/\/admin\/panel(\/index\.html)?$/i, "/admin"));
+    location.replace(p.replace(/\/admin\/panel$/, "/admin"));
   }
 })();
 </script>
@@ -86,7 +66,7 @@ body {
 .hero-bg {
   position: absolute;
   inset: 0;
-  background-image: url('Hero%20section.jpg');
+  background-image: url('/Hero%20section.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -1181,6 +1161,31 @@ footer {
   letter-spacing: 0.05em;
 }
 
+/* ===== PRINT MENU BUTTON ===== */
+.print-menu-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.2rem;
+  border: 1.5px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-left: auto;
+  border-radius: 2px;
+}
+
+.print-menu-btn:hover {
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
 .menu-top-bar {
   display: flex;
   align-items: center;
@@ -1987,7 +1992,7 @@ tr.admin-row-flash td {
 
 <!-- NAV -->
 <nav id="nav">
-  <div class="nav-logo"><img src="logo.png" alt="რესტორანი ტიფლისი" style="height:72px;width:auto;vertical-align:middle;margin-right:.5rem;display:block" onerror="this.style.display='none';this.nextSibling.style.display='inline'"><span style="display:none">რესტორანი <span style="color:var(--gold);font-style:italic">ტიფლისი</span></span></div>
+  <div class="nav-logo"><img src="/logo.png" alt="რესტორანი ტიფლისი" style="height:72px;width:auto;vertical-align:middle;margin-right:.5rem;display:block" onerror="this.style.display='none';this.nextSibling.style.display='inline'"><span style="display:none">რესტორანი <span style="color:var(--gold);font-style:italic">ტიფლისი</span></span></div>
   <ul class="nav-links">
     <li><a href="#menu" data-i18n="nav_menu">მენიუ</a></li>
     <li><a href="#reservation" data-i18n="nav_res">რეზერვაცია</a></li>
@@ -2119,8 +2124,12 @@ tr.admin-row-flash td {
         </div>
       </aside>
     </div>
+    <p style="text-align:center;margin-top:1.25rem;">
+      <button type="button" class="print-menu-btn" onclick="printMenu()" data-i18n="print_menu">მენიუს დაბეჭდვა</button>
+    </p>
   </div>
 </section>
+<div id="print-menu-overlay" style="display:none" aria-hidden="true"></div>
 
 <!-- RESERVATION -->
 <section id="reservation">
@@ -2520,6 +2529,7 @@ tr.admin-row-flash td {
   </div>
 </div>
 
+<!-- PRINT MENU OVERLAY (hidden on screen, shown only on print) -->
 <!-- FOOTER -->
 <footer id="contact">
   <div class="container">
@@ -2600,7 +2610,7 @@ const TXT = {
     ab1_title:'ნამდვილი ქართული', ab1_text:'ტრადიციული რეცეპტები<br>თანამედროვე მიწოდებით',
     ab2_title:'Josper ღუმელი', ab2_text:'სპეციალური კერძები ხის ნახშირზე<br>და მაყალზე',
     ab3_title:'სახლის ღვინო', ab3_text:'ქართული ნეკტარი პირდაპირ<br>კახეთიდან',
-    menu_label:'ჩვენი მენიუ', menu_title:'კერძები & <em>სასმელები</em>',
+    menu_label:'ჩვენი მენიუ', menu_title:'კერძები & <em>სასმელები</em>', print_menu:'მენიუს დაბეჭდვა',
     res_label:'ჯავშანი', res_title:'მაგიდის<br><em>დაჯავშნა</em>',
     res_desc:'აღმოაჩინეთ ტიფლისის არისტოკრატიული შარმი ბათუმის ისტორიულ ნაწილში. გორგასლის 18/110-ში ტრადიციული ქართული გემოები თანამედროვე ხელოვნებად იქცევა. გვეწვიეთ და შეიგრძენით ნამდვილი ქალაქური ნადიმი, სადაც ყოველი დეტალი თქვენს განწყობაზე ზრუნავს.',
     res_legend:'„ლეგენდის თანახმად, ნადირობისას მეფე ვახტანგ გორგასლის მიმინო ცხელ წყაროში ჩავარდა. სწორედ ამ მაცოცხლებელი წყლების სიახლოვეს მეფემ ქალაქის გაშენება ბრძანა და მას სახელი „თბილი" (თბილისი) უწოდა. დღეს რესტორანი „ტიფლისი" ამ ისტორიულ მემკვიდრეობას გორგასლის ქუჩაზე აცოცხლებს — იქ, სადაც სტუმართმოყვარეობა ისეთივე მუდმივია, როგორც ჩვენი დედაქალაქის ისტორია."',
@@ -2615,8 +2625,7 @@ const TXT = {
     svc_pct:'მომსახ. %', disc_pct:'ფასდაკლ. %', adv_lbl:'ავანსი ₾', pay_lbl:'გადახდა',
     ft_hours_title:'სამუშაო საათები', ft_everyday:'ყოველდღე', ft_contact:'კონტაქტი',
     ft_addr:'ვ.გორგასალის ქ. 18/110', ft_city:'ბათუმი, საქართველო',
-    ft_copy:'© 2025 რესტორანი ტიფლისი · ყველა უფლება დაცულია',
-    wa_header:'🍃 *რესტორანი ტიფლისი* 🍃', wa_guest_unit:'სტუმარი', wa_note_lbl:'შენიშვნა'
+    ft_copy:'© 2025 რესტორანი ტიფლისი · ყველა უფლება დაცულია'
   },
   en: { order:'Order', clear:'Clear', empty:'No items selected', saved:'Saved', savedSub:'Order saved successfully', total:'Total', pp:'Per guest', disc:'Discount', svc:'Service', adv:'Advance', sub:'Subtotal', newR:'New Order', errN:'Please enter name', errT:'Please enter table',
     nav_res:'Reservation', nav_contact:'Contact', nav_menu:'Menu', nav_book:'Book a Table',
@@ -2625,7 +2634,7 @@ const TXT = {
     ab1_title:'Authentic Georgian', ab1_text:'Traditional recipes<br>with a modern touch',
     ab2_title:'Josper Oven', ab2_text:'Special dishes on charcoal<br>and open fire',
     ab3_title:'House Wine', ab3_text:'Georgian nectar straight<br>from Kakheti',
-    menu_label:'Our Menu', menu_title:'Dishes & <em>Drinks</em>',
+    menu_label:'Our Menu', menu_title:'Dishes & <em>Drinks</em>', print_menu:'Print Menu',
     res_label:'Reservation', res_title:'Table<br><em>Booking</em>',
     res_desc:'Discover the aristocratic charm of Tiflisi in the historic heart of Batumi. At Gorgasali 18/110, traditional Georgian flavors become modern art. Visit us and experience a genuine city feast where every detail cares for your mood.',
     res_legend:'"According to legend, while hunting, King Vakhtang Gorgasali\'s falcon fell into a hot spring. Near these life-giving waters, the king ordered a city to be built and named it \"Tbili\" (Tbilisi). Today, Restaurant Tiflisi brings this historic heritage to life on Gorgasali Street — where hospitality is as eternal as the history of our capital."',
@@ -2640,8 +2649,7 @@ const TXT = {
     svc_pct:'Service %', disc_pct:'Discount %', adv_lbl:'Advance ₾', pay_lbl:'Payment',
     ft_hours_title:'Working Hours', ft_everyday:'Every day', ft_contact:'Contact',
     ft_addr:'V. Gorgasali St. 18/110', ft_city:'Batumi, Georgia',
-    ft_copy:'© 2025 Restaurant Tiflisi · All rights reserved',
-    wa_header:'🍃 *Restaurant Tiflisi* 🍃', wa_guest_unit:'guest(s)', wa_note_lbl:'Note'
+    ft_copy:'© 2025 Restaurant Tiflisi · All rights reserved'
   },
   ru: { order:'Заказ', clear:'Очистить', empty:'Ничего не выбрано', saved:'Сохранено', savedSub:'Заказ успешно сохранен', total:'Итого', pp:'На 1 гостя', disc:'Скидка', svc:'Обслуживание', adv:'Аванс', sub:'Подытог', newR:'Новый заказ', errN:'Введите имя', errT:'Введите стол',
     nav_res:'Резервация', nav_contact:'Контакт', nav_menu:'Меню', nav_book:'Забронировать стол',
@@ -2650,7 +2658,7 @@ const TXT = {
     ab1_title:'Настоящая грузинская', ab1_text:'Традиционные рецепты<br>в современном исполнении',
     ab2_title:'Печь Josper', ab2_text:'Особые блюда на древесном угле<br>и открытом огне',
     ab3_title:'Домашнее вино', ab3_text:'Грузинский нектар прямо<br>из Кахетии',
-    menu_label:'Наше меню', menu_title:'Блюда & <em>напитки</em>',
+    menu_label:'Наше меню', menu_title:'Блюда & <em>напитки</em>', print_menu:'Распечатать меню',
     res_label:'Резервация', res_title:'Бронирование<br><em>стола</em>',
     res_desc:'Откройте для себя аристократическое очарование Тифлиси в историческом центре Батуми. На Горгасали 18/110 традиционные грузинские вкусы превращаются в современное искусство. Приходите и ощутите настоящий городской пир, где каждая деталь заботится о вашем настроении.',
     res_legend:'«По легенде, во время охоты сокол царя Вахтанга Горгасали упал в горячий источник. Именно у этих живительных вод царь повелел основать город и назвал его «Тбили» (Тбилиси). Сегодня ресторан «Тифлиси» воплощает это историческое наследие на улице Горгасали — там, где гостеприимство столь же вечно, как история нашей столицы.»',
@@ -2665,57 +2673,25 @@ const TXT = {
     svc_pct:'Обсл. %', disc_pct:'Скидка %', adv_lbl:'Аванс ₾', pay_lbl:'Оплата',
     ft_hours_title:'Часы работы', ft_everyday:'Ежедневно', ft_contact:'Контакт',
     ft_addr:'ул. В. Горгасали 18/110', ft_city:'Батуми, Грузия',
-    ft_copy:'© 2025 Ресторан Тифлиси · Все права защищены',
-    wa_header:'🍃 *Ресторан Тифлиси* 🍃', wa_guest_unit:'гост.', wa_note_lbl:'Комментарий'
+    ft_copy:'© 2025 Ресторан Тифлиси · Все права защищены'
   }
 };
 
-/** გადახდის ეტიკეტი რეზერვაციის WhatsApp-ში (r-payment value) */
-function reservationPaymentLabel(paymentKey, l) {
-  const maps = {
-    ka: { cash:'ნაღდი', bog:'საქართველოს ბანკი', tbc:'თიბისი ბანკი', tera:'ტერა ბანკი', transfer:'გადარიცხვა' },
-    en: { cash:'Cash', bog:'Bank of Georgia', tbc:'TBC Bank', tera:'Tera Bank', transfer:'Transfer' },
-    ru: { cash:'Наличные', bog:'Банк Грузии', tbc:'ТБС Банк', tera:'Тера Банк', transfer:'Перевод' }
-  };
-  const m = maps[l] || maps.ka;
-  return m[paymentKey] || paymentKey || '—';
-}
-
-/** მაგიდის ეტიკეტი WhatsApp-ში */
-function reservationTableLabel(l) {
-  return { ka: 'მაგიდა', en: 'Table', ru: 'Стол' }[l] || 'მაგიდა';
-}
-
 let lang = 'ka', catIdx = 0, order = {};
 const g = id => document.getElementById(id);
-/** სრული URL ლოგოსთვის (about:blank პრინტი, GitHub Pages /repo/) */
-function absLogoUrl() {
-  try {
-    var b = adminBaseFromPathname() || '';
-    return location.origin + b + '/logo.png';
-  } catch (e) { return 'logo.png'; }
-}
 
 /** პრეფიქსი თუ ადმინია `/repo/admin/panel` სტილზე; მთავარ გვერდზე — ცარიელი */
 function adminBaseFromPathname() {
   var p = (location.pathname || '/').replace(/\/+$/, '') || '/';
-  if (/\/admin\/panel(\/index\.html)?$/i.test(p)) return p.replace(/\/admin\/panel(\/index\.html)?$/i, '') || '';
-  if (/\/admin(\/index\.html)?$/i.test(p)) return p.replace(/\/admin(\/index\.html)?$/i, '') || '';
-  if (location.hostname.indexOf('github.io') !== -1) {
-    var m = p.match(/^(\/[^\/]+)/);
-    if (m && m[1]) return m[1];
-  }
+  if (/\/admin\/panel$/.test(p)) return p.replace(/\/admin\/panel$/, '') || '';
+  if (/\/admin$/.test(p)) return p.replace(/\/admin$/, '') || '';
   return '';
 }
 function adminPanelUrl() {
-  var b = adminBaseFromPathname();
-  if (location.hostname.indexOf('github.io') !== -1) return b + '/admin/panel/';
-  return b + '/admin/panel';
+  return adminBaseFromPathname() + '/admin/panel';
 }
 function adminLoginUrl() {
-  var b = adminBaseFromPathname();
-  if (location.hostname.indexOf('github.io') !== -1) return b + '/admin/';
-  return b + '/admin';
+  return adminBaseFromPathname() + '/admin';
 }
 function adminPublicHomeUrl() {
   var b = adminBaseFromPathname();
@@ -2877,7 +2853,6 @@ function recalc() {
 }
 
 function buildText() {
-  const tr = TXT[lang] || TXT.ka;
   const name = g('r-name')?.value||'—';
   const phone = g('r-phone')?.value||'—';
   const date = g('r-date')?.value||'—';
@@ -2892,18 +2867,16 @@ function buildText() {
     const item = MENU.find(m => m.id === id);
     if (!item) return;
     const q = order[id], lt = item.p*q; sub += lt;
-    const dishName = item[lang] || item.ka;
-    lines += `  • ${dishName} ×${q} — ₾${lt.toFixed(2)}\n`;
+    lines += `  • ${item.ka} ×${q} — ₾${lt.toFixed(2)}\n`;
   });
   const dA=sub*disc/100, afterD=sub-dA, sA=afterD*svc/100, total=Math.max(0,afterD+sA-adv);
-  const guestUnit = tr.wa_guest_unit || 'guest(s)';
-  let t = `${tr.wa_header}\n━━━━━━━━━━━━━━━━━━━\n*${name}* | 📅 ${date} 🕐 ${time}\n👥 ${guests} ${guestUnit}${phone!=='—'?'\n📞 '+phone:''}\n\n*${tr.order}:*\n${lines}───────────────────\n`;
-  t += `${tr.sub}: ₾${sub.toFixed(2)}\n`;
-  if(disc>0) t+=`${tr.disc} ${disc}%: −₾${dA.toFixed(2)}\n`;
-  if(svc>0) t+=`${tr.svc} ${svc}%: ₾${sA.toFixed(2)}\n`;
-  if(adv>0) t+=`${tr.adv}: −₾${adv.toFixed(2)}\n`;
-  t += `*${tr.total}: ₾${total.toFixed(2)}*\n${tr.pp}: ₾${(total/Math.max(1,parseInt(guests))).toFixed(2)}`;
-  if(note) t+=`\n\n📝 ${tr.wa_note_lbl}: ${note}`;
+  let t = `🍃 *რესტორანი ტიფლისი* 🍃\n━━━━━━━━━━━━━━━━━━━\n*${name}* | 📅 ${date} 🕐 ${time}\n👥 ${guests} სტუმარი${phone!=='—'?'\n📞 '+phone:''}\n\n*შეკვეთა:*\n${lines}───────────────────\n`;
+  t += `ქვეჯამი: ₾${sub.toFixed(2)}\n`;
+  if(disc>0) t+=`ფასდაკლება ${disc}%: −₾${dA.toFixed(2)}\n`;
+  if(svc>0) t+=`მომსახურება ${svc}%: ₾${sA.toFixed(2)}\n`;
+  if(adv>0) t+=`ავანსი: −₾${adv.toFixed(2)}\n`;
+  t += `*სულ: ₾${total.toFixed(2)}*\n1 სტუმარზე: ₾${(total/Math.max(1,parseInt(guests))).toFixed(2)}`;
+  if(note) t+=`\n\n📝 ${note}`;
   return t;
 }
 
@@ -3024,7 +2997,6 @@ function sharePDF() {
   if(adv>0) extraRows += `<tr style="color:#e74c3c"><td colspan="2">${TXT[lang].adv} (${payText})</td><td style="text-align:right">−₾${adv.toFixed(2)}</td></tr>`;
   const win = window.open('','_blank');
   if (!win) { alert('გთხოვთ დაუშვათ pop-up ამ საიტისთვის'); return; }
-  const _logo = absLogoUrl();
   win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${{ka:"ჩეკი",en:"Receipt",ru:"Чек"}[lang]} — Restaurant Tiflisi</title>
   <style>
     body{font-family:'Segoe UI',sans-serif;padding:24px;max-width:360px;margin:0 auto;color:#1a1a16}
@@ -3038,7 +3010,7 @@ function sharePDF() {
     .footer{margin-top:20px;font-size:.68rem;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:10px}
   </style></head><body>
   <div style="text-align:center;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #c9a84c">
-    <img src="${_logo}" alt="ტიფლისი" style="max-height:90px;max-width:220px;object-fit:contain" onerror="this.style.display='none'">
+    <img src="/logo.png" alt="ტიფლისი" style="max-height:90px;max-width:220px;object-fit:contain" onerror="this.style.display='none'">
     <div style="font-family:Georgia,serif;font-size:1.1rem;color:#1a1a16;margin-top:6px">რესტორანი <em style="color:#c9a84c;font-style:italic">ტიფლისი</em></div>
   </div>
   <div class="meta">${name} · ${date} ${time} · ${guests} ${{ka:"სტუმარი",en:"guest(s)",ru:"гост."}[lang]}</div>
@@ -3094,7 +3066,6 @@ function printReceipt() {
 
   const win = window.open('', '_blank');
   if (!win) { alert('დაუშვით pop-up'); return; }
-  const _logoR = absLogoUrl();
   win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
 <style>
   @page { margin: 0; size: 80mm auto; }
@@ -3130,7 +3101,7 @@ function printReceipt() {
 </style>
 </head><body>
 <div class="logo-wrap">
-  <img src="${_logoR}"
+  <img src="/logo.png"
        onerror="this.style.display='none';document.querySelector('.logo-text').style.display='block'">
   <div class="logo-text" style="display:none">TIFLISI</div>
 </div>
@@ -3164,10 +3135,8 @@ function scrollToReserve() {
 const SUPA_URL = 'https://xcxzkelvpmynreewflrj.supabase.co';
 const SUPA_KEY = 'sb_publishable_LSW2eD3hyDBszjXT3bZxgA_vAq5lRBO';
 
-async function supaFetch(path, method='GET', body=null, preferExtra=null) {
-  let prefer = 'return=representation';
-  if (preferExtra) prefer += ',' + preferExtra;
-  const opts = { method, headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer '+SUPA_KEY, 'Content-Type': 'application/json', 'Prefer': prefer } };
+async function supaFetch(path, method='GET', body=null) {
+  const opts = { method, headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer '+SUPA_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=representation' } };
   if (body) opts.body = JSON.stringify(body);
   const r = await fetch(SUPA_URL+path, opts);
   const text = await r.text();
@@ -3223,16 +3192,34 @@ async function submitReservation() {
     if (table) await supaFetch(`/rest/v1/tables?id=eq.${table}`, 'PATCH', { status:'reserved' });
   } catch(e) { console.warn('Supabase error', e); }
 
-  const payLabelsAdmin = { cash:'ნაღდი', bog:'BOG', tbc:'TBC', tera:'TERA', transfer:'გადარიცხვა' };
+  // Build WA message
+  const payLabels = {'ნაღდი':'ნაღდი',bog:'საქართველოს ბანკი',tbc:'თიბისი ბანკი',tera:'ტერა ბანკი','გადარიცხვა':'გადარიცხვა',cash:'ნაღდი',transfer:'გადარიცხვა'};
+  let text = `🍃 *რესტორანი ტიფლისი — ჯავშანი*\n━━━━━━━━━━━━━━━\n`;
+  text += `👤 *${name}*\n📞 ${phone}\n`;
+  if(email) text += `✉️ ${email}\n`;
+  text += `\n📅 ${date}  🕐 ${time}\n👥 ${guests} სტუმარი\n`;
+  if(table) text += `🪑 მაგიდა: ${table}\n`;
+  if(payment) text += `💳 ${payLabels[payment]||payment}\n`;
+  if (Object.keys(order).length > 0) {
+    text += `\n*წინასწარი შეკვეთა:*\n`;
+    let sub = 0;
+    Object.keys(order).map(Number).forEach(id => {
+      const item = MENU.find(m=>m.id===id); if(!item) return;
+      const q=order[id],lt=item.p*q; sub+=lt;
+      text+=`  • ${item.ka} ×${q} — ₾${lt.toFixed(2)}\n`;
+    });
+    text+=`\nსავარაუდო: ₾${sub.toFixed(2)}\n`;
+  }
+  if(note) text += `\n📝 ${note}`;
 
-  // Send Telegram notification to admin (ქართული — პერსონალისთვის)
+  // Send Telegram notification to admin
   const orderLines = Object.keys(order).length > 0
     ? '\n🛒 ' + Object.keys(order).map(Number).map(id => {
         const item = MENU.find(m=>m.id===id); if(!item) return '';
         return `${item.ka} ×${order[id]}`;
       }).filter(Boolean).join(', ')
     : '';
-  const tgMsg = `🔔 <b>ახალი ჯავშანი — რესტორანი ტიფლისი</b>\n━━━━━━━━━━━━━━━\n👤 <b>${name}</b>\n📞 ${phone}\n📅 ${date} · 🕐 ${time}\n👥 ${guests} სტუმარი\n🪑 ${table||'—'}\n💳 ${(payLabelsAdmin[payment]||payment||'—')}${orderLines}\n📝 ${note||'—'}`;
+  const tgMsg = `🔔 <b>ახალი ჯავშანი — რესტორანი ტიფლისი</b>\n━━━━━━━━━━━━━━━\n👤 <b>${name}</b>\n📞 ${phone}\n📅 ${date} · 🕐 ${time}\n👥 ${guests} სტუმარი\n🪑 ${table||'—'}\n💳 ${(payLabels[payment]||payment||'—')}${orderLines}\n📝 ${note||'—'}`;
   sendTelegramMsg(tgMsg);
 
   g('res-form-wrap').style.display = 'none';
@@ -3262,17 +3249,16 @@ async function submitReservation() {
         receiptLines+=`  💰 *${{ka:'სულ',en:'Total',ru:'Итого'}[lang]}: ₾${orderTotal.toFixed(2)}*`;
       }
 
-      const tr = TXT[lang] || TXT.ka;
-      const preOrderTitle = { ka: '🧾 *წინასწარი შეკვეთა:*', en: '🧾 *Pre-order:*', ru: '🧾 *Предзаказ:*' }[lang] || '🧾 *წინასწარი შეკვეთა:*';
-      const orderSection = receiptLines ? `\n\n${preOrderTitle}\n${receiptLines}` : '';
-      const payLine = payment ? '\n💳 ' + reservationPaymentLabel(payment, lang) : '';
-      const tblLbl = reservationTableLabel(lang);
-      const guestU = tr.wa_guest_unit || 'guest(s)';
+      const orderSection = {
+        ka: receiptLines ? `\n\n🧾 *წინასწარი შეკვეთა:*\n${receiptLines}` : '',
+        en: receiptLines ? `\n\n🧾 *Pre-order:*\n${receiptLines}` : '',
+        ru: receiptLines ? `\n\n🧾 *Предзаказ:*\n${receiptLines}` : ''
+      };
 
       const confirmMsgs = {
-        ka: `🍃 *რესტორანი ტიფლისი*\n\nგამარჯობა, *${name}*! 👋\nთქვენი ჯავშანი მიღებულია ✅\n\n📅 ${date}  🕐 ${time}\n👥 ${guests} ${guestU}\n🪑 ${tblLbl}: ${table||'—'}${payLine}${orderSection}\n\nმალე დაგიდასტურებთ!\n━━━━━━━━━━━━━━━\nბათუმი, ვ.გორგასალის ქ. 18/110\n📞 +995 568 76 76 38`,
-        en: `🍃 *Restaurant Tiflisi*\n\nHello, *${name}*! 👋\nYour reservation has been received ✅\n\n📅 ${date}  🕐 ${time}\n👥 ${guests} ${guestU}\n🪑 ${tblLbl}: ${table||'—'}${payLine}${orderSection}\n\nWe will confirm shortly!\n━━━━━━━━━━━━━━━\nBatumi, V. Gorgasali St. 18/110\n📞 +995 568 76 76 38`,
-        ru: `🍃 *Ресторан Тифлиси*\n\nЗдравствуйте, *${name}*! 👋\nВаша бронь принята ✅\n\n📅 ${date}  🕐 ${time}\n👥 ${guests} ${guestU}\n🪑 ${tblLbl}: ${table||'—'}${payLine}${orderSection}\n\nСкоро подтвердим!\n━━━━━━━━━━━━━━━\nБатуми, ул. В. Горгасали 18/110\n📞 +995 568 76 76 38`
+        ka: `🍃 *რესტორანი ტიფლისი*\n\nგამარჯობა, *${name}*! 👋\nთქვენი ჯავშანი მიღებულია ✅\n\n📅 ${date}  🕐 ${time}\n👥 ${guests} სტუმარი\n🪑 ${table||'—'}${payment?'\n💳 '+(payLabels[payment]||payment):''}${orderSection.ka}\n\nმალე დაგიდასტურებთ!\n━━━━━━━━━━━━━━━\nბათუმი, ვ.გორგასალის ქ. 18/110\n📞 +995 568 76 76 38`,
+        en: `🍃 *Restaurant Tiflisi*\n\nHello, *${name}*! 👋\nYour reservation has been received ✅\n\n📅 ${date}  🕐 ${time}\n👥 ${guests} guest(s)\n🪑 ${table||'—'}${payment?'\n💳 '+(payLabels[payment]||payment):''}${orderSection.en}\n\nWe will confirm shortly!\n━━━━━━━━━━━━━━━\nBatumi, V. Gorgasali St. 18/110\n📞 +995 568 76 76 38`,
+        ru: `🍃 *Ресторан Тифлиси*\n\nЗдравствуйте, *${name}*! 👋\nВаша бронь принята ✅\n\n📅 ${date}  🕐 ${time}\n👥 ${guests} гост.\n🪑 ${table||'—'}${payment?'\n💳 '+(payLabels[payment]||payment):''}${orderSection.ru}\n\nСкоро подтвердим!\n━━━━━━━━━━━━━━━\nБатуми, ул. В. Горгасали 18/110\n📞 +995 568 76 76 38`
       };
       const confirmText = confirmMsgs[lang] || confirmMsgs.ka;
       window.open(`https://wa.me/${customerPhone}?text=${encodeURIComponent(confirmText)}`, '_blank');
@@ -3481,7 +3467,6 @@ setInterval(() => {
 // ===== ADMIN PANEL =====
 const ADMIN_PW_DEFAULT = 'tiflis2024';
 
-// Load overrides from Supabase
 function menuItemIsPublicVisible(m) {
   if (!m || typeof m !== 'object') return false;
   const a = m.active;
@@ -3489,6 +3474,7 @@ function menuItemIsPublicVisible(m) {
   return true;
 }
 
+// Load overrides from Supabase
 async function loadOverrides() {
   try {
     // Load categories from Supabase
@@ -3501,7 +3487,7 @@ async function loadOverrides() {
       }));
       sortCatsInPlace();
     }
-    // Load menu: არ ვფილტრავთ URL-ზე active=eq.true (boolean/text/NULL უსაფრთხოდ), ფილტრი JS-ში
+    // მენიუ: ფილტრი JS-ში (active სვეტის ტიპი/NULL არ აგდებს ხაზებს)
     const menuRaw = await supaFetch('/rest/v1/menu_items?order=id.asc');
     const menuData = Array.isArray(menuRaw) ? menuRaw.filter(menuItemIsPublicVisible) : [];
     if (menuData.length > 0) {
@@ -3522,6 +3508,8 @@ async function saveOverrides() {
 async function saveMenuItemToSupabase(item) {
   const row = { id: item.id, ka: item.ka, en: item.en, ru: item.ru, p: item.p, cat: item.cat, active: true };
   const patchBody = { ka: row.ka, en: row.en, ru: row.ru, p: row.p, cat: row.cat, active: true };
+  const errMsg = e => String((e && e.message) || e || 'unknown').slice(0, 280);
+
   let wrote = false;
   try {
     const patched = await supaFetch(`/rest/v1/menu_items?id=eq.${item.id}`, 'PATCH', patchBody);
@@ -3539,26 +3527,27 @@ async function saveMenuItemToSupabase(item) {
         if (Array.isArray(patched2) && patched2.length > 0) wrote = true;
       } catch (e3) {
         console.warn('Menu POST/PATCH:', e3);
-        return { ok: false, error: String((e3 && e3.message) || (e2 && e2.message) || 'unknown').slice(0, 280) };
+        return { ok: false, error: errMsg(e3) || errMsg(e2) };
       }
     }
   }
-  if (!wrote) return { ok: false, error: 'ჩანაწერი ვერ შეიქმნა/განახლდა' };
-  // იგივე წაკითხვა, რასაც სტუმარი იყენებს — თუ ცარიელია, პრობლემაა RLS SELECT ან active
+  if (!wrote) {
+    return { ok: false, error: 'ჩანაწერი ვერ შეიქმნა/განახლდა (PATCH ცარიელია)' };
+  }
   try {
-    const check = await supaFetch(`/rest/v1/menu_items?id=eq.${item.id}&select=id,active`);
+    const check = await supaFetch(`/rest/v1/menu_items?id=eq.${item.id}&select=id,active,ka`);
     const row0 = Array.isArray(check) && check[0];
     if (!row0) {
       return {
         ok: false,
-        error: 'სერვერზე ჩაწერა გავიდა, მაგრამ წაკითხვა ვერ მოხერხდა. Supabase → Authentication → Policies: menu_items-ზე დაამატეთ anon/public SELECT (მინ.: USING (true) ან active = true).'
+        error: 'ჩაწერა გავიდა, მაგრამ წაკითხვა ცარიელია — შეამოწმეთ Supabase RLS SELECT menu_items (anon).'
       };
     }
     if (!menuItemIsPublicVisible(row0)) {
-      return { ok: false, error: 'active=false — სტუმრის მენიუში არ გამოჩნდება; ჩართეთ active ან შეცვალეთ ჩანაწერი.' };
+      return { ok: false, error: 'active=false — სტუმრის მენიუში არ ჩანს.' };
     }
   } catch (verErr) {
-    return { ok: false, error: 'ვერიფიკაცია: ' + String((verErr && verErr.message) || verErr).slice(0, 220) };
+    return { ok: false, error: 'ვერიფიკაცია: ' + errMsg(verErr) };
   }
   return { ok: true };
 }
@@ -4019,8 +4008,8 @@ async function adminSaveDish() {
   if (savedItem) {
     const cloud = await saveMenuItemToSupabase(savedItem);
     if (!cloud.ok) {
-      const detail = cloud.error ? ' — ' + cloud.error : '';
-      adminMsg('adm-msg-add', (wasEdit ? '⚠ სერვერზე ვერ ინახება (ლოკალურად ჩანს)' : '⚠ სერვერზე ვერ ემატება') + detail, 'err');
+      const tail = cloud.error ? ' — ' + cloud.error : '';
+      adminMsg('adm-msg-add', (wasEdit ? '⚠ სერვერზე ვერ ინახება' : '⚠ სერვერზე ვერ ემატება') + tail, 'err');
     } else {
       adminMsg('adm-msg-add', wasEdit ? '✅ კერძი განახლდა' : '✅ კერძი დაემატა: ' + savedItem.ka, 'ok');
       auditLog(wasEdit ? 'dish_edit' : 'dish_add', savedItem.ka);
@@ -4032,11 +4021,6 @@ async function adminSaveDish() {
   g('af-en').value = '';
   g('af-ru').value = '';
   g('af-price').value = '';
-  /* სტუმრის მენიუში ჩანს მხოლოდ არჩეული კატეგორია — შენახვის შემდეგ გადავიდეთ იმ კატეგორიაზე, სადაც კერძი ჩაიწერა */
-  if (savedItem) {
-    const ni = CATS.findIndex(c => c.id === savedItem.cat);
-    if (ni >= 0) catIdx = ni;
-  }
   renderCats(); renderMenu(); renderOrder();
 
   if (savedItem && !wasEdit) {
@@ -4179,7 +4163,7 @@ async function adminConfirmCatReassignAndDelete() {
     m.cat = targetId;
     const res = await saveMenuItemToSupabase(m);
     if (!res.ok) {
-      adminMsg('adm-msg-cats', '⚠ სერვერზე ვერ გადაიტანა: ' + m.ka + (res.error ? ' — ' + res.error : ''), 'err');
+      adminMsg('adm-msg-cats', '⚠ სერვერზე ვერ გადაიტანა: ' + m.ka + (res.error ? ' — ' + res.error.slice(0, 80) : ''), 'err');
     }
   }
   adminCancelCatDelete();
@@ -4259,6 +4243,48 @@ function adminResetData() {
     if (e.target === this) closeAdmin();
   });
 })();
+
+// ===== PRINT MENU =====
+function printMenu() {
+  const overlay = g('print-menu-overlay');
+  if (!overlay) return;
+  const printLang = lang;
+  let catsHTML = '';
+  CATS.forEach(cat => {
+    const items = MENU.filter(m => m.cat === cat.id);
+    if (!items.length) return;
+    const itemsHTML = items.map(m =>
+      `<div class="pm-item">
+        <span class="pm-item-name">${m[printLang]}</span>
+        <span class="pm-item-dots"></span>
+        <span class="pm-item-price">&#8382;${m.p % 1 === 0 ? m.p : m.p.toFixed(2)}</span>
+      </div>`
+    ).join('');
+    catsHTML += `<div class="pm-cat"><div class="pm-cat-title">${cat[printLang]}</div>${itemsHTML}</div>`;
+  });
+  overlay.innerHTML = `
+    <div class="pm-header">
+      <div class="pm-brand">
+        <div class="pm-brand-name">რესტორანი <span>ტიფლისი</span></div>
+        <div class="pm-brand-sub">ქართული სამზარეულო · ბათუმი</div>
+      </div>
+      <div class="pm-contact">
+        ვ.გორგასალის ქ. 18/110, ბათუმი<br>
+        +995 568 76 76 38<br>
+        ყოველდღე 10:00 — 24:00
+      </div>
+    </div>
+    <div class="pm-body">${catsHTML}</div>
+    <div class="pm-footer">
+      <span class="pm-footer-text">ფასები მოიცავს დღგ-ს · ალერგიის შემთხვევაში მიმართეთ სერვისს</span>
+      <span class="pm-footer-gold">რესტორანი ტიფლისი &copy; ${new Date().getFullYear()}</span>
+    </div>`;
+  overlay.style.display = 'block';
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => { overlay.style.display = 'none'; }, 500);
+  }, 300);
+}
 
 // ===== MAP =====
 async function loadMapTables() {
