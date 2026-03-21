@@ -3170,8 +3170,10 @@ function scrollToReserve() {
 const SUPA_URL = 'https://xcxzkelvpmynreewflrj.supabase.co';
 const SUPA_KEY = 'sb_publishable_LSW2eD3hyDBszjXT3bZxgA_vAq5lRBO';
 
-async function supaFetch(path, method='GET', body=null) {
-  const opts = { method, headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer '+SUPA_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=representation' } };
+async function supaFetch(path, method='GET', body=null, preferExtra=null) {
+  let prefer = 'return=representation';
+  if (preferExtra) prefer += ',' + preferExtra;
+  const opts = { method, headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer '+SUPA_KEY, 'Content-Type': 'application/json', 'Prefer': prefer } };
   if (body) opts.body = JSON.stringify(body);
   const r = await fetch(SUPA_URL+path, opts);
   const text = await r.text();
@@ -3533,16 +3535,24 @@ async function saveOverrides() {
 }
 
 async function saveMenuItemToSupabase(item) {
+  const row = { id: item.id, ka: item.ka, en: item.en, ru: item.ru, p: item.p, cat: item.cat, active: true };
+  const patchBody = { ka: row.ka, en: row.en, ru: row.ru, p: row.p, cat: row.cat, active: true };
   try {
-    await supaFetch('/rest/v1/menu_items', 'POST', { id: item.id, ka: item.ka, en: item.en, ru: item.ru, p: item.p, cat: item.cat, active: true });
-    return true;
+    const patched = await supaFetch(`/rest/v1/menu_items?id=eq.${item.id}`, 'PATCH', patchBody);
+    if (Array.isArray(patched) && patched.length > 0) return { ok: true };
   } catch (e) {
+    console.warn('Menu PATCH:', e);
+  }
+  try {
+    await supaFetch('/rest/v1/menu_items', 'POST', row);
+    return { ok: true };
+  } catch (e2) {
     try {
-      await supaFetch(`/rest/v1/menu_items?id=eq.${item.id}`, 'PATCH', { ka: item.ka, en: item.en, ru: item.ru, p: item.p, cat: item.cat });
-      return true;
-    } catch (e2) {
-      console.warn('Menu save error:', e2);
-      return false;
+      await supaFetch(`/rest/v1/menu_items?id=eq.${item.id}`, 'PATCH', patchBody);
+      return { ok: true };
+    } catch (e3) {
+      console.warn('Menu POST/PATCH:', e3);
+      return { ok: false, error: String((e3 && e3.message) || (e2 && e2.message) || 'unknown').slice(0, 280) };
     }
   }
 }
@@ -4001,9 +4011,10 @@ async function adminSaveDish() {
   }
 
   if (savedItem) {
-    const cloudOk = await saveMenuItemToSupabase(savedItem);
-    if (!cloudOk) {
-      adminMsg('adm-msg-add', wasEdit ? '⚠ რედაქტირება ლოკალურად; სერვერი ვერ განახლდა' : '⚠ დამატება ლოკალურად; სერვერი ვერ განახლდა', 'err');
+    const cloud = await saveMenuItemToSupabase(savedItem);
+    if (!cloud.ok) {
+      const detail = cloud.error ? ' — ' + cloud.error : '';
+      adminMsg('adm-msg-add', (wasEdit ? '⚠ სერვერზე ვერ ინახება (ლოკალურად ჩანს)' : '⚠ სერვერზე ვერ ემატება') + detail, 'err');
     } else {
       adminMsg('adm-msg-add', wasEdit ? '✅ კერძი განახლდა' : '✅ კერძი დაემატა: ' + savedItem.ka, 'ok');
       auditLog(wasEdit ? 'dish_edit' : 'dish_add', savedItem.ka);
@@ -4160,9 +4171,9 @@ async function adminConfirmCatReassignAndDelete() {
   const moved = MENU.filter(m => m.cat === fromId);
   for (const m of moved) {
     m.cat = targetId;
-    const ok = await saveMenuItemToSupabase(m);
-    if (!ok) {
-      adminMsg('adm-msg-cats', '⚠ სერვერზე ვერ გადაიტანა: ' + m.ka, 'err');
+    const res = await saveMenuItemToSupabase(m);
+    if (!res.ok) {
+      adminMsg('adm-msg-cats', '⚠ სერვერზე ვერ გადაიტანა: ' + m.ka + (res.error ? ' — ' + res.error : ''), 'err');
     }
   }
   adminCancelCatDelete();
