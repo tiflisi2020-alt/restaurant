@@ -3160,8 +3160,9 @@ function scrollToReserve() {
 }
 
 // ===== SUPABASE =====
+// If POST returns 401: replace SUPA_KEY with anon (public) JWT from Supabase → Settings → API (never service_role).
 const SUPA_URL = 'https://xcxzkelvpmynreewflrj.supabase.co';
-const SUPA_KEY = 'sb_publishable_LSW2eD3hyDBszjXT3bZxgA_vAq5lRBO';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhjeHprZWx2cG15bnJlZXdmbHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NDUwMTksImV4cCI6MjA4OTMyMTAxOX0.swcXV9m5g9Ox1t_QkLz_9suVTnBPanG0QxA1Eo4H-rY';
 
 async function supaFetch(path, method='GET', body=null) {
   const opts = { method, headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer '+SUPA_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=representation' } };
