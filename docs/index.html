@@ -2052,37 +2052,11 @@ tr.admin-row-flash td {
   flex-shrink: 0;
   fill: currentColor;
 }
-/* Wolt + Glovo: ერთი ოფიციალური ბანერიდან (bm.ge რეფერენსი) — მარცხნივ Wolt, მარჯვნივ Glovo */
-.tiflis-float-btn img.tiflis-float-pair-img {
-  display: block;
-  width: 42px;
-  height: 30px;
-  object-fit: cover;
-  border-radius: 4px;
-  pointer-events: none;
-  flex-shrink: 0;
-}
-.tiflis-float-pair-img--wolt {
-  object-position: 22% center;
-}
-.tiflis-float-pair-img--glovo {
-  object-position: 82% center;
-}
-.tiflis-float-bolt-svg {
-  width: 26px;
-  height: 26px;
-  flex-shrink: 0;
-  display: block;
-}
 .tiflis-float-btn:hover,
 .tiflis-float-btn:focus-visible {
   background: var(--teal);
   color: #fff;
   transform: scale(1.04);
-}
-.tiflis-float-btn:hover .tiflis-float-bolt-svg path,
-.tiflis-float-btn:focus-visible .tiflis-float-bolt-svg path {
-  fill: #fff;
 }
 .tiflis-float-btn:active {
   transform: scale(0.98);
@@ -2105,14 +2079,6 @@ html.admin-panel-route .tiflis-float-rail {
     height: 52px;
   }
   .tiflis-float-btn svg {
-    width: 24px;
-    height: 24px;
-  }
-  .tiflis-float-btn img.tiflis-float-pair-img {
-    width: 38px;
-    height: 28px;
-  }
-  .tiflis-float-bolt-svg {
     width: 24px;
     height: 24px;
   }
@@ -2139,13 +2105,13 @@ html.admin-panel-route .tiflis-float-rail {
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.04c-5.376 0-9.74 4.15-9.74 9.26 0 2.9 1.434 5.49 3.68 7.17V22l3.37-1.85c.9.25 1.85.38 2.85.38 5.376 0 9.74-4.15 9.74-9.26S17.376 2.04 12 2.04zm.93 12.07-2.45-2.6L7.2 14.07l5.4-5.75 2.5 2.62 4.84-2.62-5.81 5.99z"/></svg>
   </a>
   <a class="tiflis-float-btn" href="https://glovoapp.com/en/ge/batumi/stores/tiflisi-bat?content=pitsa-c.1421345036&amp;section=pitsa-s.2999510380" target="_blank" rel="noopener noreferrer" aria-label="Glovo" title="Glovo">
-    <img class="tiflis-float-pair-img tiflis-float-pair-img--glovo" src="images/glovo-wolt-reference.jpeg" alt="" width="84" height="60" decoding="async" loading="lazy">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2C8.28 2 2 8.28 2 16s6.28 14 14 14 14-6.28 14-14S23.72 2 16 2zm0 4a10 10 0 0 1 7.66 3.6l-2.56 2.56A6.25 6.25 0 1 0 22.75 16H16v-3.5h10.5A10 10 0 0 1 16 26 10 10 0 0 1 6 16 10 10 0 0 1 16 6z"/></svg>
   </a>
   <a class="tiflis-float-btn" href="https://wolt.com/en/geo/batumi/restaurant/restaurant-tiflis/items/soup-10?srsltid=AfmBOopDnVtfrR30XTIjeboPzi9xLfad6qtpf8aEeldquKXKcx47KxqY" target="_blank" rel="noopener noreferrer" aria-label="Wolt" title="Wolt">
-    <img class="tiflis-float-pair-img tiflis-float-pair-img--wolt" src="images/glovo-wolt-reference.jpeg" alt="" width="84" height="60" decoding="async" loading="lazy">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M4 8h3.5l2.5 10.5L12.5 8H16l2.5 10.5L21 8h3.5l-4 16h-3.5L14.5 14 12 24H8.5L4 8z"/></svg>
   </a>
   <a class="tiflis-float-btn" href="https://food.bolt.eu/ka-ge/38-batumi/p/67460-restorani-tiplisi/" target="_blank" rel="noopener noreferrer" aria-label="Bolt Food" title="Bolt Food">
-    <svg class="tiflis-float-bolt-svg" viewBox="0 0 56 56" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="#34D186" d="M34.4 2.8 12.6 28.6h10.1L10.4 53.2l32-31.4H30.7L34.4 2.8z"/></svg>
+    <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M18 2L6 18h10l-2 12 14-16H18L20 2z"/></svg>
   </a>
 </aside>
 
