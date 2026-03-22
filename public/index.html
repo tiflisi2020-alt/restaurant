@@ -5280,31 +5280,58 @@ function unlockReservationAdvanceRow(resId) {
   if (editBtn) editBtn.style.display = 'none';
 }
 
-/** ექსპორტისთვის მონაცემი — DOM-ის მიმდინარე მნიშვნელობები (შეცვლილი, მაგრამ დაუზოგავი) უპირატესი */
-function getResForExport(r) {
-  const rowCell = document.querySelector(`td[data-res-adv-row="${cssEscapeAttrSelector(String(r.id))}"]`);
-  const advEl = rowCell?.querySelector('input.res-adv-input');
-  const payEl = rowCell?.querySelector('select.res-advpay-select');
-  const adv = advEl && String(advEl.value || '').trim() !== '' ? parseFloat(String(advEl.value).replace(',','.')) : (r.advance_amount != null && r.advance_amount !== '' ? Number(r.advance_amount) : (r.advance != null && r.advance !== '' ? Number(r.advance) : null));
-  const pay = payEl && payEl.value ? payEl.value : (r.advance_payment || '');
-  return {
-    name: r.name || '—',
-    phone: r.phone || '',
-    date: r.date || '—',
-    time: r.time || '—',
-    guests: r.guests != null ? r.guests : '—',
-    table_id: r.table_id || '',
-    advance_payment: pay,
-    advance_amount: Number.isFinite(adv) ? adv : null,
-    status: r.status || '—',
-    note: r.note || ''
-  };
+/**
+ * ექსპორტი იკითხავს ზუსტად იმას, რაც ეკრანზეა (#res-tbody), არა მხოლოდ მეხსიერებაში ბოლო fetch-ს.
+ * სვეტების რიგი ემთხვევა renderResTable-ს: სახელი, ტელ, თარიღი, დრო, სტუმ., მაგიდა, ავანსის უჯრა, შენიშვნა, სტატუსი, ღილაკები.
+ */
+function gatherReservationRowsFromDom() {
+  const tbody = g('res-tbody');
+  if (!tbody) return [];
+  const out = [];
+  for (const tr of tbody.querySelectorAll('tr')) {
+    const tds = Array.from(tr.children).filter(el => el.tagName === 'TD');
+    if (tds.length < 10) continue;
+    const name = (tds[0].textContent || '').replace(/\s+/g, ' ').trim();
+    const phone = (tds[1].textContent || '').replace(/\s+/g, ' ').trim();
+    const date = (tds[2].textContent || '').trim();
+    const time = (tds[3].textContent || '').trim();
+    const guests = (tds[4].textContent || '').trim();
+    const table_id = (tds[5].textContent || '').trim();
+    const advCell = tds[6];
+    const paySel = advCell.querySelector('select.res-advpay-select');
+    const advInp = advCell.querySelector('input.res-adv-input');
+    const payVal = paySel ? String(paySel.value || '').trim() : '';
+    const payLabel = payVal ? (payLabels[payVal] || payVal) : '—';
+    let advStr = '—';
+    if (advInp) {
+      const raw = String(advInp.value || '').trim().replace(',', '.');
+      if (raw !== '' && raw !== '-') {
+        const v = parseFloat(raw);
+        advStr = Number.isFinite(v) ? String(v) : '—';
+      }
+    }
+    const note = (tds[7].textContent || '').replace(/\s+/g, ' ').trim();
+    const statusText = (tds[8].textContent || '').replace(/\s+/g, ' ').trim();
+    out.push({
+      name: name || '—',
+      phone: phone || '—',
+      date: date || '—',
+      time: time || '—',
+      guests: guests || '—',
+      table_id: table_id || '—',
+      payLabel,
+      advanceStr: advStr,
+      statusText: statusText || '—',
+      note: note || '—'
+    });
+  }
+  return out;
 }
 
 // PDF export
 function exportResPDF() {
-  const exportData = filteredReservations.length ? filteredReservations : allReservations;
-  if (!exportData.length) { alert('მონაცემები არ არის — ჯერ დააჭირეთ „ჩვენება“ ფილტრის გამოსაყენებლად'); return; }
+  const exportRows = gatherReservationRowsFromDom();
+  if (!exportRows.length) { alert('მონაცემები არ არის — ჯერ დააჭირეთ „ჩვენება“ და დაელოდეთ სიის ჩატვირთვას'); return; }
   const from = g('res-filter-from')?.value || '';
   const to = g('res-filter-to')?.value || '';
   const status = g('res-filter-status')?.value || '';
@@ -5312,10 +5339,9 @@ function exportResPDF() {
   const statusStr = status ? ` | სტატუსი: ${statusLabels[status] || status}` : ' | სტატუსი: ყველა';
   const win = window.open('','_blank');
   if (!win) { alert('გთხოვთ დაუშვათ pop-up ამ საიტისთვის'); return; }
-  const rows = exportData.map(r => {
-    const e = getResForExport(r);
-    return `<tr><td>${escapeHtml(e.name)}</td><td>${escapeHtml(e.phone)}</td><td>${escapeHtml(e.date)}</td><td>${escapeHtml(e.time)}</td><td>${e.guests}</td><td>${escapeHtml(e.table_id)}</td><td>${escapeHtml(payLabels[e.advance_payment]||e.advance_payment||'—')}</td><td>${e.advance_amount != null && e.advance_amount !== '' ? '₾'+Number(e.advance_amount) : '—'}</td><td>${escapeHtml(statusLabels[e.status]||e.status)}</td><td>${escapeHtml(e.note)}</td></tr>`;
-  }).join('');
+  const rows = exportRows.map(e =>
+    `<tr><td>${escapeHtml(e.name)}</td><td>${escapeHtml(e.phone)}</td><td>${escapeHtml(e.date)}</td><td>${escapeHtml(e.time)}</td><td>${escapeHtml(e.guests)}</td><td>${escapeHtml(e.table_id)}</td><td>${escapeHtml(e.payLabel)}</td><td>${e.advanceStr === '—' ? '—' : '₾' + escapeHtml(e.advanceStr)}</td><td>${escapeHtml(e.statusText)}</td><td>${escapeHtml(e.note)}</td></tr>`
+  ).join('');
   win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>რეზერვაციები</title>
   <style>body{font-family:sans-serif;font-size:11px;padding:20px}h2{margin-bottom:8px}
   .report-meta{font-size:10px;color:#666;margin-bottom:12px}
@@ -5323,27 +5349,24 @@ function exportResPDF() {
   th{background:#f0f0f0;font-weight:600}</style></head><body>
   <h2>რესტორანი ტიფლისი — ჯავშნების რეპორტი</h2>
   <p class="report-meta">${period}${statusStr}</p>
-  <p class="report-meta">დაბეჭდვის თარიღი: ${toLocaleDateStringGeorgia(new Date())} · ${exportData.length} ჩანაწერი</p>
+  <p class="report-meta">დაბეჭდვის თარიღი: ${toLocaleDateStringGeorgia(new Date())} · ${exportRows.length} ჩანაწერი</p>
   <table><thead><tr><th>სახელი</th><th>ტელეფონი</th><th>თარიღი</th><th>დრო</th><th>სტუმ.</th><th>მაგიდა</th><th>გადახდის მეთოდი</th><th>ავანსი ₾</th><th>სტატუსი</th><th>შენიშვნა</th></tr></thead>
   <tbody>${rows}</tbody></table></body></html>`);
   win.document.close();
   setTimeout(() => win.print(), 400);
 }
 
-// XLSX/CSV export
+// XLSX/CSV export (ფაილი .csv — Excel იხსნის)
 function exportResXLSX() {
-  const exportData = filteredReservations.length ? filteredReservations : allReservations;
-  if (!exportData.length) { alert('მონაცემები არ არის — ჯერ დააჭირეთ „ჩვენება“ ფილტრის გამოსაყენებლად'); return; }
+  const exportRows = gatherReservationRowsFromDom();
+  if (!exportRows.length) { alert('მონაცემები არ არის — ჯერ დააჭირეთ „ჩვენება“ და დაელოდეთ სიის ჩატვირთვას'); return; }
   const headers = ['სახელი','ტელეფონი','თარიღი','დრო','სტუმრები','მაგიდა','გადახდის მეთოდი','ავანსი ₾','სტატუსი','შენიშვნა'];
-  const rows = exportData.map(r => {
-    const e = getResForExport(r);
-    return [
-      e.name, e.phone, e.date, e.time, e.guests,
-      e.table_id, payLabels[e.advance_payment]||e.advance_payment||'—',
-      e.advance_amount != null && e.advance_amount !== '' ? e.advance_amount : '—',
-      statusLabels[e.status]||e.status, e.note
-    ];
-  });
+  const rows = exportRows.map(e => [
+    e.name, e.phone, e.date, e.time, e.guests,
+    e.table_id, e.payLabel,
+    e.advanceStr,
+    e.statusText, e.note
+  ]);
   const csvContent = [headers, ...rows].map(row =>
     row.map(cell => `"${String(cell).replace(/"/g,'""')}"`).join(',')
   ).join('\n');
