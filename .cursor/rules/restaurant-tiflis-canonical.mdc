@@ -1,0 +1,28 @@
+---
+description: Canonical repo path and workflow for Restaurant Tiflis (რესტორანი ტიფლისი)
+alwaysApply: true
+---
+
+# Restaurant Tiflis — ერთი საწყისი საქაღალდე
+
+## სად მუშაობა
+
+- **ყველა ცვლილება** ამ პროექტში უნდა ხდებოდეს:
+  - `C:\Users\Restaurant Tiflis\restaurant-tiflis`
+- სხვა workspace-ში (მაგ. `rezervi-fullstack\rezervi`) **არ გადაიტანო** კოდი, თუ მომხმარებელი პირდაპირ არ ითხოვს სხვა პროექტს.
+
+## GitHub
+
+- **Remote:** `https://github.com/tiflisi2020-alt/restaurant.git`
+- დასრულების შემდეგ: `git add`, `git commit`, `git push origin main` (როცა მომხმარებელი ითხოვს ატვირთვას).
+
+## საიტი და დეპლოი
+
+- წყარო: **`public/`** (მთავარი `public/index.html`).
+- GitHub Pages: **`docs/`** — ყოველთვის გაასინქრონე წყაროდან:
+  - `node scripts/sync-docs.mjs`
+- ორივე ფაილი (`public/index.html` და `docs/index.html`) commit-ში ერთად, რომ საიტი და რეპო არ განსხვავდებოდეს.
+
+## ადმინი / Supabase
+
+- ადმინ პანელი და სტუმრის UI იგივე `public/index.html`-შია (მოდალით და `/admin/panel` მარშრუტით).
