@@ -1891,6 +1891,7 @@ tr.admin-row-flash td {
 }
 .admin-msg.ok { background: rgba(61,155,147,0.15); border: 1px solid rgba(61,155,147,0.3); color: var(--teal); display: block; }
 .admin-msg.err { background: rgba(194,97,58,0.15); border: 1px solid rgba(194,97,58,0.3); color: var(--brick); display: block; }
+.admin-msg.warn { background: rgba(241,196,15,0.12); border: 1px solid rgba(212,160,23,0.35); color: #d4a017; display: block; }
 
 .badge { display: inline-block; padding: 2px 8px; border-radius: 2px; font-size: 0.68rem; font-weight: 600; }
 .badge-edit { background: rgba(212,168,67,0.15); color: var(--gold); border: 1px solid rgba(212,168,67,0.3); }
@@ -3883,6 +3884,16 @@ function escapeHtml(s) {
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 }
 
+/** ატრიბუტებისთვის (id, data-*, title) — ორმაგ ბრჭყალებში */
+function escapeAttr(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+}
+
+function cssEscapeAttrSelector(s) {
+  if (typeof CSS !== 'undefined' && typeof CSS.escape === 'function') return CSS.escape(String(s));
+  return String(s).replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+}
+
 function auditLog(action, detail) {
   try {
     const a = JSON.parse(localStorage.getItem(AUDIT_KEY) || '[]');
@@ -3925,7 +3936,8 @@ function getAdminFocusables() {
 }
 
 function adminModalKeydownHandler(e) {
-  if (!g('admin-modal').classList.contains('open')) return;
+  const admModal = g('admin-modal');
+  if (!admModal || !admModal.classList.contains('open')) return;
   if (e.key === 'Escape') {
     e.preventDefault();
     closeAdmin();
@@ -4133,10 +4145,12 @@ async function sendTelegramMsg(text) {
 }
 
 async function testTelegramBot() {
+  const st = g('tg-status');
   const token = localStorage.getItem('tg_token') || '';
   const chatid = localStorage.getItem('tg_chatid') || '';
-  if (!token || !chatid) { g('tg-status').textContent = '❌ Token და Chat ID შეავსეთ'; return; }
-  g('tg-status').textContent = '⏳ იგზავნება...';
+  if (!st) return;
+  if (!token || !chatid) { st.textContent = '❌ Token და Chat ID შეავსეთ'; return; }
+  st.textContent = '⏳ იგზავნება...';
   try {
     const r = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
       method: 'POST',
@@ -4144,8 +4158,8 @@ async function testTelegramBot() {
       body: JSON.stringify({chat_id: chatid, text: '✅ რესტორანი ტიფლისი — Telegram Bot მუშაობს!', parse_mode: 'HTML'})
     });
     const data = await r.json();
-    g('tg-status').textContent = data.ok ? '✅ წარმატებით გაიგზავნა!' : '❌ შეცდომა: ' + data.description;
-  } catch(e) { g('tg-status').textContent = '❌ კავშირის შეცდომა'; }
+    st.textContent = data.ok ? '✅ წარმატებით გაიგზავნა!' : '❌ შეცდომა: ' + data.description;
+  } catch(e) { st.textContent = '❌ კავშირის შეცდომა'; }
 }
 
 async function getAdminPw() {
@@ -4238,8 +4252,10 @@ function closeAdminForce() {
   const fab = g('admin-fab-btn');
   if (fab) fab.setAttribute('aria-expanded', 'false');
   document.body.style.overflow = '';
-  g('admin-pw').value = '';
-  g('admin-pw-err').style.display = 'none';
+  const pwEl = g('admin-pw');
+  if (pwEl) pwEl.value = '';
+  const pwErr = g('admin-pw-err');
+  if (pwErr) pwErr.style.display = 'none';
   if (adminKeyListenerOn) {
     document.removeEventListener('keydown', adminModalKeydownHandler, true);
     adminKeyListenerOn = false;
@@ -4311,6 +4327,7 @@ function showAdminPanel() {
   loadTgSettings();
   adminRenderAudit();
   adminUpdateDishPreview();
+  ensureReservationsTableDelegation();
   loadDashboardData();
   touchAdminSession();
   updateAdminStayUI();
@@ -4342,28 +4359,35 @@ function adminTab(t) {
 async function loadDashboardData() {
   const today = todayGeorgia();
   await clearOldReservationsFromTables();
-  g('dash-menu').textContent = (MENU || []).length;
-  g('dash-cats').textContent = (CATS || []).length;
-  g('dash-today').textContent = '…';
-  g('dash-pending').textContent = '…';
+  const dashMsg = g('dashboard-msg');
+  if (g('dash-menu')) g('dash-menu').textContent = String((MENU || []).length);
+  if (g('dash-cats')) g('dash-cats').textContent = String((CATS || []).length);
+  if (g('dash-today')) g('dash-today').textContent = '…';
+  if (g('dash-pending')) g('dash-pending').textContent = '…';
   try {
     const [todayRows, pendingRows] = await Promise.all([
       supaFetch(`/rest/v1/reservations?date=eq.${today}&status=neq.cancelled&select=id`),
       supaFetch(`/rest/v1/reservations?status=eq.pending&select=id`)
     ]);
-    g('dash-today').textContent = Array.isArray(todayRows) ? todayRows.length : 0;
-    g('dash-pending').textContent = Array.isArray(pendingRows) ? pendingRows.length : 0;
+    if (g('dash-today')) g('dash-today').textContent = String(Array.isArray(todayRows) ? todayRows.length : 0);
+    if (g('dash-pending')) g('dash-pending').textContent = String(Array.isArray(pendingRows) ? pendingRows.length : 0);
+    if (dashMsg) {
+      dashMsg.style.display = 'none';
+      dashMsg.textContent = '';
+      dashMsg.className = 'admin-msg';
+    }
   } catch (e) {
-    g('dash-today').textContent = '—';
-    g('dash-pending').textContent = '—';
+    if (g('dash-today')) g('dash-today').textContent = '—';
+    if (g('dash-pending')) g('dash-pending').textContent = '—';
     adminMsg('dashboard-msg', '❌ ჯავშნების მონაცემები ვერ ჩაიტვირთა', 'err');
   }
 }
 
 function adminMsg(elId, msg, type) {
   const el = g(elId);
+  if (!el) return;
   el.textContent = msg;
-  el.className = 'admin-msg ' + type;
+  el.className = 'admin-msg ' + (type || 'ok');
   el.style.display = 'block';
   setTimeout(() => { el.style.display = 'none'; }, 3000);
 }
@@ -4371,13 +4395,15 @@ function adminMsg(elId, msg, type) {
 // --- MENU TAB ---
 function adminPopulateCatFilter() {
   const sel = g('adm-cat-filter');
+  if (!sel) return;
   sel.innerHTML = '<option value="">ყველა კატეგორია</option>' +
-    CATS.map(c => `<option value="${c.id}">${c.ka}</option>`).join('');
+    CATS.map(c => `<option value="${c.id}">${escapeHtml(c.ka)}</option>`).join('');
 }
 
 function adminPopulateCatSelect() {
   const sel = g('af-cat');
-  sel.innerHTML = CATS.map(c => `<option value="${c.id}">${c.ka}</option>`).join('');
+  if (!sel) return;
+  sel.innerHTML = CATS.map(c => `<option value="${c.id}">${escapeHtml(c.ka)}</option>`).join('');
 }
 
 /** იგივე კატეგორიების რიგი რაც საიტზე; შიგნით id-ით */
@@ -4395,8 +4421,10 @@ function adminSortMenuItems(items) {
 }
 
 function adminRenderMenu() {
-  const search = (g('adm-search').value || '').toLowerCase();
-  const catFilter = g('adm-cat-filter').value;
+  const tbody = g('adm-tbody');
+  if (!tbody) return;
+  const search = (g('adm-search')?.value || '').toLowerCase();
+  const catFilter = g('adm-cat-filter')?.value || '';
   let items = MENU.filter(m => {
     const matchCat = !catFilter || m.cat === parseInt(catFilter, 10);
     const ru = (m.ru || '').toLowerCase();
@@ -4413,7 +4441,6 @@ function adminRenderMenu() {
     return c ? c.ka : '—';
   };
 
-  const tbody = g('adm-tbody');
   if (!items.length) {
     tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:rgba(245,240,232,.3);padding:2rem;font-style:italic">კერძები არ მოიძებნა</td></tr>';
   } else {
@@ -4439,7 +4466,8 @@ function adminRenderMenu() {
     }
     tbody.innerHTML = rows.join('');
   }
-  g('adm-count').textContent = `${items.length} კერძი`;
+  const cnt = g('adm-count');
+  if (cnt) cnt.textContent = `${items.length} კერძი`;
 }
 
 // --- ADD/EDIT ---
@@ -5035,10 +5063,46 @@ function sortReservationsNewestFirst(rows) {
   return rows.slice().sort((a, b) => key(b) - key(a));
 }
 
+let reservationsTableDelegated = false;
+function ensureReservationsTableDelegation() {
+  const table = g('res-table');
+  if (!table || reservationsTableDelegated) return;
+  reservationsTableDelegated = true;
+  table.addEventListener('click', function (e) {
+    const saveBtn = e.target.closest && e.target.closest('.res-adv-save-btn');
+    if (saveBtn && table.contains(saveBtn)) {
+      const id = saveBtn.getAttribute('data-res-id');
+      if (id) saveReservationAdvanceRow(id);
+      return;
+    }
+    const editBtn = e.target.closest && e.target.closest('.res-adv-edit-btn');
+    if (editBtn && table.contains(editBtn)) {
+      const id = editBtn.getAttribute('data-res-id');
+      if (id) unlockReservationAdvanceRow(id);
+      return;
+    }
+    const stBtn = e.target.closest && e.target.closest('.res-status-btn');
+    if (stBtn && table.contains(stBtn)) {
+      const id = stBtn.getAttribute('data-res-id');
+      const st = stBtn.getAttribute('data-res-status');
+      if (id && st) changeResStatus(id, st);
+    }
+  });
+  table.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter') return;
+    const inp = e.target.closest && e.target.closest('input.res-adv-input');
+    if (!inp || !table.contains(inp)) return;
+    e.preventDefault();
+    const cell = inp.closest('td[data-res-adv-row]');
+    const id = cell && cell.getAttribute('data-res-adv-row');
+    if (id) saveReservationAdvanceRow(id);
+  });
+}
+
 function reservationsQueryUrl(orderParam) {
-  const from = g('res-filter-from').value;
-  const to = g('res-filter-to').value;
-  const status = g('res-filter-status')?.value;
+  const from = g('res-filter-from')?.value || '';
+  const to = g('res-filter-to')?.value || '';
+  const status = g('res-filter-status')?.value || '';
   const parts = [];
   if (from) parts.push(`date=gte.${from}`);
   if (to) parts.push(`date=lte.${to}`);
@@ -5049,6 +5113,7 @@ function reservationsQueryUrl(orderParam) {
 
 async function loadReservations() {
   const tbody = g('res-tbody');
+  if (!tbody) return;
   tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:rgba(245,240,232,.3);padding:2rem;font-style:italic">⏳ ჩატვირთვა...</td></tr>';
   try {
     let data;
@@ -5084,9 +5149,9 @@ function resAdvanceLocked(r) {
 }
 function resAdvancePaymentSelectHtml(r, locked) {
   const cur = (r.advance_payment != null && r.advance_payment !== '') ? String(r.advance_payment) : '';
-  const opt = (v, label) => `<option value="${v}"${cur === v ? ' selected' : ''}>${label}</option>`;
+  const opt = (v, label) => `<option value="${escapeAttr(v)}"${cur === v ? ' selected' : ''}>${label}</option>`;
   const dis = locked ? ' disabled' : '';
-  return `<select class="admin-input" id="res-advpay-${r.id}" style="width:100%;max-width:10rem;margin:0;padding:.28rem .35rem;font-size:.65rem;box-sizing:border-box" aria-label="ავანსის გადახდის მეთოდი"${dis}>
+  return `<select class="admin-input res-advpay-select" style="width:100%;max-width:10rem;margin:0;padding:.28rem .35rem;font-size:.65rem;box-sizing:border-box" aria-label="ავანსის გადახდის მეთოდი"${dis}>
     ${opt('', '— აირჩიეთ —')}
     ${opt('cash', '💵 ნაღდი')}
     ${opt('bog', '🏦 BOG')}
@@ -5098,46 +5163,60 @@ function resAdvancePaymentSelectHtml(r, locked) {
 
 function renderResTable(data) {
   const tbody = g('res-tbody');
+  if (!tbody) return;
   if (!data.length) {
     tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:rgba(245,240,232,.3);padding:2rem;font-style:italic">ჩანაწერები არ მოიძებნა</td></tr>';
-    g('res-count').textContent = '0 ჩანაწერი';
+    const rc = g('res-count');
+    if (rc) rc.textContent = '0 ჩანაწერი';
     return;
   }
-  tbody.innerHTML = data.map(r => `
+  tbody.innerHTML = data.map(r => {
+    const idStr = String(r.id);
+    const idAttr = escapeAttr(idStr);
+    const locked = resAdvanceLocked(r);
+    const advVal = (() => {
+      const a = r.advance_amount != null && r.advance_amount !== '' ? Number(r.advance_amount) : (r.advance != null && r.advance !== '' ? Number(r.advance) : NaN);
+      return Number.isFinite(a) ? a : '';
+    })();
+    const st = r.status || '';
+    const stColor = statusColors[st] || '#c9a84c';
+    const stLabel = escapeHtml(statusLabels[st] || st || '—');
+    return `
     <tr>
-      <td class="td-name">${r.name}</td>
-      <td style="font-size:.78rem;color:rgba(245,240,232,.6)">${r.phone||'—'}</td>
-      <td style="white-space:nowrap">${r.date}</td>
-      <td>${r.time||'—'}</td>
-      <td style="text-align:center">${r.guests}</td>
-      <td style="color:var(--gold)">${r.table_id||'—'}</td>
-      <td colspan="2" style="min-width:12rem;vertical-align:middle" data-res-adv-row="${r.id}">
+      <td class="td-name">${escapeHtml(r.name || '—')}</td>
+      <td style="font-size:.78rem;color:rgba(245,240,232,.6)">${escapeHtml(r.phone || '—')}</td>
+      <td style="white-space:nowrap">${escapeHtml(r.date || '—')}</td>
+      <td>${escapeHtml(r.time || '—')}</td>
+      <td style="text-align:center">${escapeHtml(String(r.guests != null ? r.guests : '—'))}</td>
+      <td style="color:var(--gold)">${escapeHtml(r.table_id || '—')}</td>
+      <td colspan="2" style="min-width:12rem;vertical-align:middle" data-res-adv-row="${idAttr}">
         <div style="display:flex;align-items:center;gap:.35rem;flex-wrap:wrap" class="res-adv-cell">
-          ${resAdvancePaymentSelectHtml(r, resAdvanceLocked(r))}
+          ${resAdvancePaymentSelectHtml(r, locked)}
           <span style="font-size:.7rem;color:rgba(245,240,232,.45)">₾</span>
-          <input type="number" class="admin-input" id="res-adv-${r.id}" min="0" step="0.5" style="width:4rem;margin:0;padding:.28rem .35rem;font-size:.72rem"
-            value="${(() => { const a = r.advance_amount != null && r.advance_amount !== '' ? Number(r.advance_amount) : (r.advance != null && r.advance !== '' ? Number(r.advance) : NaN); return Number.isFinite(a) ? a : ''; })()}"
-            ${resAdvanceLocked(r) ? 'disabled' : ''}
-            onkeydown="if(event.key==='Enter'){event.preventDefault();saveReservationAdvanceRow('${r.id}');}">
-          <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost res-adv-save-btn" style="padding:2px 7px;font-size:.62rem;width:auto;white-space:nowrap${resAdvanceLocked(r) ? ';display:none' : ''}" onclick="saveReservationAdvanceRow('${r.id}')">შენახვა</button>
-          <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost res-adv-edit-btn" style="padding:2px 7px;font-size:.62rem;width:auto;white-space:nowrap${resAdvanceLocked(r) ? '' : ';display:none'}" onclick="unlockReservationAdvanceRow('${r.id}')">რედაქტირება</button>
+          <input type="number" class="admin-input res-adv-input" min="0" step="0.5" style="width:4rem;margin:0;padding:.28rem .35rem;font-size:.72rem"
+            value="${advVal === '' ? '' : escapeAttr(String(advVal))}"
+            ${locked ? 'disabled' : ''}>
+          <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost res-adv-save-btn" data-res-id="${idAttr}" style="padding:2px 7px;font-size:.62rem;width:auto;white-space:nowrap${locked ? ';display:none' : ''}">შენახვა</button>
+          <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost res-adv-edit-btn" data-res-id="${idAttr}" style="padding:2px 7px;font-size:.62rem;width:auto;white-space:nowrap${locked ? '' : ';display:none'}">რედაქტირება</button>
         </div>
       </td>
-      <td style="font-size:.75rem;color:rgba(245,240,232,.45);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.note||''}">${r.note||'—'}</td>
-      <td><span style="font-size:.7rem;padding:2px 7px;border-radius:3px;border:1px solid ${statusColors[r.status]||'#c9a84c'};color:${statusColors[r.status]||'#c9a84c'}">${statusLabels[r.status]||r.status}</span></td>
+      <td style="font-size:.75rem;color:rgba(245,240,232,.45);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escapeAttr(r.note || '')}">${escapeHtml(r.note || '—')}</td>
+      <td><span style="font-size:.7rem;padding:2px 7px;border-radius:3px;border:1px solid ${stColor};color:${stColor}">${stLabel}</span></td>
       <td>
         <div style="display:flex;gap:.3rem">
-          <button class="admin-btn admin-btn-ghost admin-btn-sm" onclick="changeResStatus('${r.id}','confirmed')" title="დადასტურება" style="padding:3px 7px">✅</button>
-          <button class="admin-btn admin-btn-ghost admin-btn-sm" onclick="changeResStatus('${r.id}','cancelled')" title="გაუქმება" style="padding:3px 7px">❌</button>
+          <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm res-status-btn" data-res-id="${idAttr}" data-res-status="confirmed" title="დადასტურება" style="padding:3px 7px">✅</button>
+          <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm res-status-btn" data-res-id="${idAttr}" data-res-status="cancelled" title="გაუქმება" style="padding:3px 7px">❌</button>
         </div>
       </td>
-    </tr>`).join('');
-  g('res-count').textContent = `${data.length} ჩანაწერი`;
+    </tr>`;
+  }).join('');
+  const rc2 = g('res-count');
+  if (rc2) rc2.textContent = `${data.length} ჩანაწერი`;
 }
 
 async function changeResStatus(id, status) {
   try {
-    await supaFetch(`/rest/v1/reservations?id=eq.${id}`, 'PATCH', {status});
+    await supaFetch(`/rest/v1/reservations?id=eq.${encodeURIComponent(String(id))}`, 'PATCH', {status});
     await loadReservations();
     auditLog('res_status', id + ' → ' + status);
   } catch (e) {
@@ -5146,8 +5225,11 @@ async function changeResStatus(id, status) {
 }
 
 async function saveReservationAdvanceRow(resId) {
-  const rawVal = g('res-adv-' + resId)?.value;
-  const paySel = g('res-advpay-' + resId);
+  const rowCell = document.querySelector(`td[data-res-adv-row="${cssEscapeAttrSelector(resId)}"]`);
+  if (!rowCell) return;
+  const inpEl = rowCell.querySelector('input.res-adv-input');
+  const paySel = rowCell.querySelector('select.res-advpay-select');
+  const rawVal = inpEl?.value;
   const payVal = paySel ? String(paySel.value || '').trim() : '';
   const s = String(rawVal == null ? '' : rawVal).trim().replace(',', '.');
   let advance_amount;
@@ -5163,7 +5245,7 @@ async function saveReservationAdvanceRow(resId) {
   }
   const advance_payment = payVal === '' ? null : payVal;
   try {
-    await supaFetch(`/rest/v1/reservations?id=eq.${resId}`, 'PATCH', { advance_amount, advance_payment });
+    await supaFetch(`/rest/v1/reservations?id=eq.${encodeURIComponent(String(resId))}`, 'PATCH', { advance_amount, advance_payment });
     adminMsg('res-list-msg', '✅ შენახულია', 'ok');
     auditLog('res_advance', String(resId));
     lockReservationAdvanceRow(resId);
@@ -5173,10 +5255,10 @@ async function saveReservationAdvanceRow(resId) {
 }
 
 function lockReservationAdvanceRow(resId) {
-  const row = document.querySelector(`[data-res-adv-row="${resId}"]`);
+  const row = document.querySelector(`td[data-res-adv-row="${cssEscapeAttrSelector(resId)}"]`);
   if (!row) return;
-  const sel = g('res-advpay-' + resId);
-  const inp = g('res-adv-' + resId);
+  const sel = row.querySelector('select.res-advpay-select');
+  const inp = row.querySelector('input.res-adv-input');
   const saveBtn = row.querySelector('.res-adv-save-btn');
   const editBtn = row.querySelector('.res-adv-edit-btn');
   if (sel) sel.disabled = true;
@@ -5186,10 +5268,10 @@ function lockReservationAdvanceRow(resId) {
 }
 
 function unlockReservationAdvanceRow(resId) {
-  const row = document.querySelector(`[data-res-adv-row="${resId}"]`);
+  const row = document.querySelector(`td[data-res-adv-row="${cssEscapeAttrSelector(resId)}"]`);
   if (!row) return;
-  const sel = g('res-advpay-' + resId);
-  const inp = g('res-adv-' + resId);
+  const sel = row.querySelector('select.res-advpay-select');
+  const inp = row.querySelector('input.res-adv-input');
   const saveBtn = row.querySelector('.res-adv-save-btn');
   const editBtn = row.querySelector('.res-adv-edit-btn');
   if (sel) sel.disabled = false;
@@ -5200,8 +5282,9 @@ function unlockReservationAdvanceRow(resId) {
 
 /** ექსპორტისთვის მონაცემი — DOM-ის მიმდინარე მნიშვნელობები (შეცვლილი, მაგრამ დაუზოგავი) უპირატესი */
 function getResForExport(r) {
-  const advEl = g('res-adv-' + r.id);
-  const payEl = g('res-advpay-' + r.id);
+  const rowCell = document.querySelector(`td[data-res-adv-row="${cssEscapeAttrSelector(String(r.id))}"]`);
+  const advEl = rowCell?.querySelector('input.res-adv-input');
+  const payEl = rowCell?.querySelector('select.res-advpay-select');
   const adv = advEl && String(advEl.value || '').trim() !== '' ? parseFloat(String(advEl.value).replace(',','.')) : (r.advance_amount != null && r.advance_amount !== '' ? Number(r.advance_amount) : (r.advance != null && r.advance !== '' ? Number(r.advance) : null));
   const pay = payEl && payEl.value ? payEl.value : (r.advance_payment || '');
   return {
