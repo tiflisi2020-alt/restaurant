@@ -2932,7 +2932,7 @@ html.admin-panel-route .tiflis-float-rail {
         <button type="button" role="tab" class="admin-tab" onclick="adminTab('reservations')" aria-selected="false">ჯავშნები</button>
         <div class="admin-tab-group" role="group" aria-label="ჩეკები და ურნა">
           <button type="button" role="tab" class="admin-tab" onclick="adminTab('reschecks')" aria-selected="false">ჩეკები</button>
-          <button type="button" class="admin-tab-trash" onclick="resChecksTrashFromTab()" title="ურნა — ჩეკიანი ჯავშნების გაუქმება (სტატუსი: გაუქმებული)" aria-label="ურნა">🗑</button>
+          <button type="button" class="admin-tab-trash" onclick="resChecksTrashFromTab()" title="ურნა — ჩეკის არქივი ცხრილში (res_checks_trash) + ჯავშნის გაუქმება; წაშლა არა" aria-label="ურნა">🗑</button>
         </div>
         <button type="button" role="tab" class="admin-tab" onclick="adminTab('settings')" aria-selected="false">პარამეტრები</button>
       </div>
@@ -3170,9 +3170,9 @@ html.admin-panel-route .tiflis-float-rail {
       <!-- RESERVATIONS + PRECHECK (ჩეკი) TAB -->
       <div id="at-reschecks" class="admin-pane" role="tabpanel">
         <div class="admin-section-title">ჯავშნები ჩეკებით</div>
-        <p class="admin-compact-hint" style="margin:0 0 0.65rem">იგივე ფილტრები რაც „ჯავშნებში“. ჩანს ჩეკიანი ჯავშნები <strong>მომლოდინე/დადასტურებული</strong> (გაუქმებულები აქ აღარ ჩანს — ნახავ „ჯავშნებში“ სტატუსით). ტაბის გვერდით <strong>🗑 ურნა</strong> ამ სიას აგიუქმებს (სტატუსი → გაუქმებული), არა DELETE. Supabase: <code style="font-size:.65rem">precheck_json</code> (jsonb).</p>
+        <p class="admin-compact-hint" style="margin:0 0 0.65rem">ზედა: აქტიური ჩეკები (თარიღი „დან/მდე“). გაუქმებისას ჩეკი იწერება ცალკე ცხრილში <code style="font-size:.65rem">res_checks_trash</code> (არ იშლება). ქვედა ურნა აჩვენებს ამ არქივს. ტაბის 🗑 — მთელი სიის გაუქმება + არქივი. SQL: <code style="font-size:.65rem">public/sql/res_checks_trash.sql</code> (საქაღალდე public → sql).</p>
         <div class="admin-filter-row">
-          <button type="button" class="admin-btn admin-btn-sm" style="width:auto" onclick="loadReservationsWithChecks()">ჩვენება (იგივე ფილტრები)</button>
+          <button type="button" class="admin-btn admin-btn-sm" style="width:auto" onclick="loadReservationsWithChecks()">ჩვენება (თარიღი „ჯავშნებიდან“)</button>
           <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" style="width:auto" onclick="printResChecksReport()">🖨 ბეჭდვა</button>
         </div>
         <div id="res-checks-msg" class="admin-msg"></div>
@@ -3186,6 +3186,19 @@ html.admin-panel-route .tiflis-float-rail {
           </table>
         </div>
         <div id="res-checks-count" style="margin-top:.45rem;font-size:.65rem;color:rgba(245,240,232,.28)"></div>
+
+        <div class="admin-section-title" style="margin-top:1.15rem;padding-top:.85rem;border-top:1px solid rgba(201,168,76,.2)">🗑 ურნა — ცხრილი <code style="font-size:.65rem">res_checks_trash</code></div>
+        <p class="admin-compact-hint" style="margin:0 0 0.5rem;font-size:.68rem;color:rgba(245,240,232,.45)">გაუქმებული ჩეკები ინახება ცალკე ბაზაში (snapshot); იგივე „დან/მდე“ თარიღი. ↩ / ✅ აღდგენა — ჩანაწერი ურნიდან იშლება.</p>
+        <div style="overflow-x:auto">
+          <table class="admin-table" id="res-checks-trash-table">
+            <thead><tr>
+              <th>სახელი</th><th>ტელეფონი</th><th>თარიღი</th><th>დრო</th>
+              <th>მაგიდა</th><th style="min-width:14rem">ჩეკი</th><th>სტატუსი</th><th></th>
+            </tr></thead>
+            <tbody id="res-checks-trash-tbody"><tr><td colspan="8" style="text-align:center;color:rgba(245,240,232,.25);padding:1rem;font-size:.72rem;font-style:italic">ჩვენების შემდეგ</td></tr></tbody>
+          </table>
+        </div>
+        <div id="res-checks-trash-count" style="margin-top:.45rem;font-size:.65rem;color:rgba(245,240,232,.28)"></div>
       </div>
 
       <!-- SETTINGS TAB -->
@@ -4014,9 +4027,19 @@ function scrollToReserve() {
 const SUPA_URL = 'https://xcxzkelvpmynreewflrj.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhjeHprZWx2cG15bnJlZXdmbHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NDUwMTksImV4cCI6MjA4OTMyMTAxOX0.swcXV9m5g9Ox1t_QkLz_9suVTnBPanG0QxA1Eo4H-rY';
 
-async function supaFetch(path, method='GET', body=null) {
-  const opts = { method, headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer '+SUPA_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=representation' } };
-  if (body) opts.body = JSON.stringify(body);
+async function supaFetch(path, method='GET', body=null, fetchOpts) {
+  const prefer =
+    fetchOpts && typeof fetchOpts.prefer === 'string' ? fetchOpts.prefer : 'return=representation';
+  const opts = {
+    method,
+    headers: {
+      apikey: SUPA_KEY,
+      Authorization: 'Bearer ' + SUPA_KEY,
+      'Content-Type': 'application/json',
+      Prefer: prefer,
+    },
+  };
+  if (body != null && method !== 'GET' && method !== 'HEAD') opts.body = JSON.stringify(body);
   const r = await fetch(SUPA_URL+path, opts);
   const text = await r.text();
   let data = null;
@@ -5681,11 +5704,183 @@ function reservationHasPrecheck(r) {
   return !!(o && o.items.length > 0);
 }
 
+function isReservationCancelled(r) {
+  const s = String(r.status ?? '')
+    .trim()
+    .toLowerCase();
+  return s === 'cancelled' || s === 'canceled';
+}
+
 /** ჩეკები ტაბი: ჩეკი აქვს და არ არის ურნაში (გაუქმებული) */
 function reservationActiveCheckRow(r) {
   if (!reservationHasPrecheck(r)) return false;
-  const st = String(r.status || '').toLowerCase();
-  return st !== 'cancelled';
+  return !isReservationCancelled(r);
+}
+
+/** ურნა: გაუქმებული + ჩეკი (ზედმეტი შემოწმება API პასუხზე) */
+function reservationTrashCheckRow(r) {
+  return reservationHasPrecheck(r) && isReservationCancelled(r);
+}
+
+/** Supabase ცხრილი res_checks_trash → იგივე ფორმა რაც reservations (რენდერისთვის) */
+function trashArchiveRowToReservationShape(tr) {
+  if (!tr || tr.reservation_id == null) return null;
+  return {
+    id: tr.reservation_id,
+    name: tr.name,
+    phone: tr.phone,
+    date: tr.res_date,
+    time: tr.time_slot,
+    table_id: tr.table_id,
+    guests: tr.guests,
+    note: tr.note,
+    precheck_json: tr.precheck_json,
+    status: 'cancelled',
+  };
+}
+
+function buildResCheckTrashArchivePayload(r) {
+  let guests = null;
+  if (r.guests != null && r.guests !== '') {
+    const n = parseInt(String(r.guests), 10);
+    if (Number.isFinite(n)) guests = n;
+  }
+  const d = r.date != null ? String(r.date).trim() : '';
+  return {
+    reservation_id: String(r.id),
+    cancelled_at: new Date().toISOString(),
+    res_date: d ? d : null,
+    name: r.name != null ? String(r.name) : null,
+    phone: r.phone != null ? String(r.phone) : null,
+    time_slot: r.time != null ? String(r.time) : null,
+    table_id: r.table_id != null ? String(r.table_id) : null,
+    guests,
+    note: r.note != null ? String(r.note) : null,
+    precheck_json: r.precheck_json != null ? r.precheck_json : null,
+    previous_status: r.status != null ? String(r.status) : null,
+  };
+}
+
+function isResChecksTrashTableMissingError(e) {
+  if (!e) return false;
+  const msg = String(e.message || '');
+  const code = e.code;
+  if (code === 'PGRST205') return true;
+  if (msg.includes('Could not find the table') && msg.includes('res_checks_trash')) return true;
+  if (msg.includes('schema cache') && msg.includes('res_checks_trash')) return true;
+  if (e.status === 404 && msg.toLowerCase().includes('res_checks_trash')) return true;
+  return false;
+}
+
+/** true = ჩაიწერა ურნაში; false = ცხრილი არაა — გაუქმება მაინც უნდა გაგრძელდეს */
+async function tryUpsertResCheckTrashArchive(r) {
+  try {
+    await upsertResCheckTrashArchive(r);
+    return true;
+  } catch (e) {
+    if (isResChecksTrashTableMissingError(e)) {
+      console.warn('res_checks_trash: ცხრილი არ არსებობს — არქივი გამოტოვებულია', e.message || e);
+      return false;
+    }
+    throw e;
+  }
+}
+
+async function upsertResCheckTrashArchive(r) {
+  const payload = buildResCheckTrashArchivePayload(r);
+  const rid = encodeURIComponent(String(r.id));
+  const patchBody = {
+    cancelled_at: payload.cancelled_at,
+    res_date: payload.res_date,
+    name: payload.name,
+    phone: payload.phone,
+    time_slot: payload.time_slot,
+    table_id: payload.table_id,
+    guests: payload.guests,
+    note: payload.note,
+    precheck_json: payload.precheck_json,
+    previous_status: payload.previous_status,
+  };
+  try {
+    await supaFetch('/rest/v1/res_checks_trash?on_conflict=reservation_id', 'POST', payload, {
+      prefer: 'resolution=merge-duplicates,return=minimal',
+    });
+    return;
+  } catch (e1) {
+    const st = e1.status;
+    const code = e1.code;
+    const msg = String((e1 && e1.message) || '');
+    const retryPatchOrInsert =
+      st === 409 ||
+      code === '23505' ||
+      msg.includes('duplicate') ||
+      msg.includes('unique') ||
+      (st === 400 && (msg.includes('on_conflict') || msg.includes('Prefer')));
+    if (!retryPatchOrInsert) throw e1;
+  }
+  try {
+    await supaFetch(`/rest/v1/res_checks_trash?reservation_id=eq.${rid}`, 'PATCH', patchBody, {
+      prefer: 'return=minimal',
+    });
+  } catch (e2) {
+    if (isResChecksTrashTableMissingError(e2)) throw e2;
+    const msg2 = String((e2 && e2.message) || '');
+    const noRow = e2.status === 404 || msg2.includes('0 rows') || msg2.includes('No rows');
+    if (noRow) {
+      await supaFetch('/rest/v1/res_checks_trash', 'POST', payload, { prefer: 'return=minimal' });
+      return;
+    }
+    throw e2;
+  }
+}
+
+async function deleteResCheckTrashByReservationId(resId) {
+  try {
+    await supaFetch(
+      `/rest/v1/res_checks_trash?reservation_id=eq.${encodeURIComponent(String(resId))}`,
+      'DELETE',
+      null,
+      { prefer: 'return=minimal' }
+    );
+  } catch (e) {
+    console.warn('res_checks_trash delete (ignored)', resId, e && e.message);
+  }
+}
+
+function resChecksTrashListUrl(orderParam) {
+  const from = g('res-filter-from')?.value || '';
+  const to = g('res-filter-to')?.value || '';
+  const parts = [];
+  if (from) parts.push(`res_date=gte.${from}`);
+  if (to) parts.push(`res_date=lte.${to}`);
+  if (orderParam) parts.push(orderParam);
+  return '/rest/v1/res_checks_trash' + (parts.length ? '?' + parts.join('&') : '');
+}
+
+function sortTrashRowsByCancelledAt(rows) {
+  return [...(rows || [])].sort((a, b) => {
+    const ta = new Date(a.cancelled_at || 0).getTime();
+    const tb = new Date(b.cancelled_at || 0).getTime();
+    return tb - ta;
+  });
+}
+
+async function fetchReservationRowById(id) {
+  const rows = await supaFetch(`/rest/v1/reservations?id=eq.${encodeURIComponent(String(id))}&select=*`);
+  return Array.isArray(rows) && rows[0] ? rows[0] : null;
+}
+
+/** სტატუსის ცვლილებამდე სრული ხაზი: API → კეში (GET/RLS ხშირად ცარიელია, UI-ში ხაზი მაინც ჩანს) */
+async function resolveReservationRowForAdmin(id) {
+  const sid = String(id);
+  let row = await fetchReservationRowById(id);
+  if (row) return row;
+  row = allReservations.find(r => String(r.id) === sid);
+  if (row) return row;
+  row = filteredReservations.find(r => String(r.id) === sid);
+  if (row) return row;
+  row = lastResChecksRows.find(r => String(r.id) === sid);
+  return row || null;
 }
 
 function formatPrecheckCellHtml(r) {
@@ -5764,19 +5959,21 @@ function ensureReservationsTableDelegation() {
   });
 }
 
-let resChecksTableDelegated = false;
 function ensureResChecksTableDelegation() {
-  const table = g('res-checks-table');
-  if (!table || resChecksTableDelegated) return;
-  resChecksTableDelegated = true;
-  table.addEventListener('click', function (e) {
-    const stBtn = e.target.closest && e.target.closest('.res-check-status-btn');
-    if (stBtn && table.contains(stBtn)) {
-      const id = stBtn.getAttribute('data-res-id');
-      const st = stBtn.getAttribute('data-res-status');
-      if (id && st) changeResStatus(id, st);
-    }
-  });
+  const bind = table => {
+    if (!table || table.dataset.resChecksDelegated === '1') return;
+    table.dataset.resChecksDelegated = '1';
+    table.addEventListener('click', function (e) {
+      const stBtn = e.target.closest && e.target.closest('.res-check-status-btn');
+      if (stBtn && table.contains(stBtn)) {
+        const id = stBtn.getAttribute('data-res-id');
+        const st = stBtn.getAttribute('data-res-status');
+        if (id && st) changeResStatus(id, st);
+      }
+    });
+  };
+  bind(g('res-checks-table'));
+  bind(g('res-checks-trash-table'));
 }
 
 function reservationsQueryUrl(orderParam) {
@@ -5789,6 +5986,28 @@ function reservationsQueryUrl(orderParam) {
   if (status) parts.push(`status=eq.${status}`);
   if (orderParam) parts.push(orderParam);
   return '/rest/v1/reservations' + (parts.length ? '?' + parts.join('&') : '');
+}
+
+/** ჩეკების ზედა სია: იგივე თარიღი, სტატუსის dropdown არა — ყველა არაგაუქმებული ჩეკი ჩანს */
+function reservationsQueryUrlForChecksTab(orderParam) {
+  const from = g('res-filter-from')?.value || '';
+  const to = g('res-filter-to')?.value || '';
+  const parts = [];
+  if (from) parts.push(`date=gte.${from}`);
+  if (to) parts.push(`date=lte.${to}`);
+  if (orderParam) parts.push(orderParam);
+  return '/rest/v1/reservations' + (parts.length ? '?' + parts.join('&') : '');
+}
+
+/** ჩეკების ურნა: მხოლოდ გაუქმებული, იგივე თარიღი (admin სტატუსის select-ს არ იყენებს) */
+function reservationsCancelledInRangeQueryUrl(orderParam) {
+  const from = g('res-filter-from')?.value || '';
+  const to = g('res-filter-to')?.value || '';
+  const parts = ['status=eq.cancelled'];
+  if (from) parts.push(`date=gte.${from}`);
+  if (to) parts.push(`date=lte.${to}`);
+  if (orderParam) parts.push(orderParam);
+  return '/rest/v1/reservations?' + parts.join('&');
 }
 
 async function loadReservations() {
@@ -5850,7 +6069,44 @@ function renderResChecksTable(data) {
     </tr>`;
   }).join('');
   const rc2 = g('res-checks-count');
-  if (rc2) rc2.textContent = `${data.length} აქტიური ჩეკიანი ჯავშანი (გაუქმებული ურნაშია)`;
+  if (rc2) rc2.textContent = `${data.length} აქტიური ჩეკიანი ჯავშანი (გაუქმებული ქვედა ურნაში)`;
+}
+
+function renderResChecksTrashTable(data) {
+  const tbody = g('res-checks-trash-tbody');
+  if (!tbody) return;
+  if (!data.length) {
+    tbody.innerHTML =
+      '<tr><td colspan="8" style="text-align:center;color:rgba(245,240,232,.3);padding:1.25rem;font-style:italic">ურნა ცარიელია (ამ პერიოდში გაუქმებული ჩეკიანი არ არის)</td></tr>';
+    const rc = g('res-checks-trash-count');
+    if (rc) rc.textContent = '0 ჩანაწერი ურნაში';
+    return;
+  }
+  tbody.innerHTML = data.map(r => {
+    const idStr = String(r.id);
+    const idAttr = escapeAttr(idStr);
+    const st = r.status || '';
+    const stColor = statusColors[st] || '#e74c3c';
+    const stLabel = escapeHtml(statusLabels[st] || st || '—');
+    return `
+    <tr>
+      <td class="td-name">${escapeHtml(r.name || '—')}</td>
+      <td style="font-size:.78rem;color:rgba(245,240,232,.6)">${escapeHtml(r.phone || '—')}</td>
+      <td style="white-space:nowrap">${escapeHtml(r.date || '—')}</td>
+      <td>${escapeHtml(r.time || '—')}</td>
+      <td style="color:var(--gold)">${escapeHtml(r.table_id || '—')}</td>
+      <td style="vertical-align:top;max-width:18rem">${formatPrecheckCellHtml(r)}</td>
+      <td><span style="font-size:.7rem;padding:2px 7px;border-radius:3px;border:1px solid ${stColor};color:${stColor}">${stLabel}</span></td>
+      <td>
+        <div style="display:flex;gap:.3rem;flex-wrap:wrap">
+          <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm res-check-status-btn" data-res-id="${idAttr}" data-res-status="pending" title="აღდგენა (მომლოდინე)" style="padding:3px 7px">↩</button>
+          <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm res-check-status-btn" data-res-id="${idAttr}" data-res-status="confirmed" title="დადასტურება" style="padding:3px 7px">✅</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+  const rc2 = g('res-checks-trash-count');
+  if (rc2) rc2.textContent = `${data.length} ჩეკიანი გაუქმებული (ურნა)`;
 }
 
 async function loadReservationsWithChecks() {
@@ -5867,12 +6123,12 @@ async function loadReservationsWithChecks() {
     let data;
     let useClientSort = false;
     try {
-      data = await supaFetch(reservationsQueryUrl('order=created_at.desc,id.desc'));
+      data = await supaFetch(reservationsQueryUrlForChecksTab('order=created_at.desc,id.desc'));
     } catch (_) {
       try {
-        data = await supaFetch(reservationsQueryUrl('order=id.desc'));
+        data = await supaFetch(reservationsQueryUrlForChecksTab('order=id.desc'));
       } catch (__) {
-        data = await supaFetch(reservationsQueryUrl(null));
+        data = await supaFetch(reservationsQueryUrlForChecksTab(null));
         useClientSort = true;
       }
     }
@@ -5880,8 +6136,48 @@ async function loadReservationsWithChecks() {
     const withCheck = rows.filter(reservationActiveCheckRow);
     lastResChecksRows = withCheck;
     renderResChecksTable(withCheck);
+
+    try {
+      let trashList;
+      try {
+        trashList = await supaFetch(resChecksTrashListUrl('order=cancelled_at.desc'));
+      } catch (_) {
+        trashList = await supaFetch(resChecksTrashListUrl(null));
+      }
+      const arr = sortTrashRowsByCancelledAt(Array.isArray(trashList) ? trashList : []);
+      const mapped = arr.map(trashArchiveRowToReservationShape).filter(Boolean);
+      renderResChecksTrashTable(mapped);
+    } catch (trashErr) {
+      console.warn('res_checks_trash load, fallback reservations', trashErr);
+      try {
+        let trashRaw;
+        let trashUseSort = false;
+        try {
+          trashRaw = await supaFetch(reservationsCancelledInRangeQueryUrl('order=created_at.desc,id.desc'));
+        } catch (_) {
+          try {
+            trashRaw = await supaFetch(reservationsCancelledInRangeQueryUrl('order=id.desc'));
+          } catch (__) {
+            trashRaw = await supaFetch(reservationsCancelledInRangeQueryUrl(null));
+            trashUseSort = true;
+          }
+        }
+        const trashRows = trashUseSort ? sortReservationsNewestFirst(trashRaw || []) : trashRaw || [];
+        renderResChecksTrashTable(trashRows.filter(reservationTrashCheckRow));
+      } catch (e2) {
+        console.warn('res checks trash fallback', e2);
+        const tt = g('res-checks-trash-tbody');
+        if (tt) {
+          tt.innerHTML =
+            '<tr><td colspan="8" style="text-align:center;color:#e74c3c;padding:1.25rem;font-size:.75rem">❌ ურნა ვერ ჩაიტვირთა — შექმენით ცხრილი <code style="font-size:.65rem">res_checks_trash</code> (იხ. public/sql/res_checks_trash.sql) ან RLS SELECT</td></tr>';
+        }
+        const trc = g('res-checks-trash-count');
+        if (trc) trc.textContent = '';
+      }
+    }
   } catch (e) {
     lastResChecksRows = [];
+    renderResChecksTrashTable([]);
     tbody.innerHTML =
       '<tr><td colspan="8" style="text-align:center;color:#e74c3c;padding:2rem">❌ Supabase კავშირი ვერ მოხერხდა</td></tr>';
     if (msgEl) {
@@ -5906,9 +6202,8 @@ function printResChecksReport() {
   }
   const from = g('res-filter-from')?.value || '';
   const to = g('res-filter-to')?.value || '';
-  const status = g('res-filter-status')?.value || '';
   const period = (from || to) ? `პერიოდი: ${from || '—'} — ${to || '—'}` : 'პერიოდი: ყველა';
-  const statusStr = status ? ` | სტატუსი: ${statusLabels[status] || status}` : ' | სტატუსი: ყველა';
+  const statusStr = ' | აქტიური ჩეკები (მომლოდინე + დადასტურებული)';
   const blocks = lastResChecksRows.map(r => {
     const o = parseReservationPrecheck(r.precheck_json);
     const itemsHtml =
@@ -5951,25 +6246,28 @@ function printResChecksReport() {
   setTimeout(() => win.print(), 400);
 }
 
-/** ურნა (ტაბის გვერდით) — ჩეკიანი ჯავშნები → სტატუსი „გაუქმებული“ (ურნა), არა DELETE */
+/** ურნა (ტაბის გვერდით) — ჩეკი snapshot → res_checks_trash, შემდეგ reservations.status = cancelled (არა DELETE) */
 async function resChecksTrashFromTab() {
   adminTab('reschecks');
   if (!lastResChecksRows.length) {
-    adminMsg('res-checks-msg', '❯ ჯერ დააჭირეთ „ჩვენება (იგივე ფილტრები)“', 'err');
+    adminMsg('res-checks-msg', '❯ ჯერ დააჭირეთ „ჩვენება (თარიღი „ჯავშნებიდან“)“', 'err');
     return;
   }
   const n = lastResChecksRows.length;
   if (
     !confirm(
-      `ურნა: ${n} ჩეკიანი ჯავშანი გაუქმდეს?\n(სტატუსი → გაუქმებული — ჩანაწერი დარჩება „ჯავშნებში“, აქედან გაქრება.)`
+      `ურნა: ${n} ჩეკიანი ჯავშანი გაუქმდეს და ჩაიწეროს ცალკე ცხრილში (res_checks_trash)?\nჯავშანი reservations-ში დარჩება სტატუსით „გაუქმებული“ — წაშლა არ ხდება.`
     )
   ) {
     return;
   }
   let ok = 0;
   let fail = 0;
+  let archiveSkipped = false;
   for (const r of lastResChecksRows) {
     try {
+      const archived = await tryUpsertResCheckTrashArchive(r);
+      if (!archived) archiveSkipped = true;
       await supaFetch(`/rest/v1/reservations?id=eq.${encodeURIComponent(String(r.id))}`, 'PATCH', { status: 'cancelled' });
       ok++;
     } catch (e) {
@@ -5980,8 +6278,12 @@ async function resChecksTrashFromTab() {
   lastResChecksRows = [];
   adminMsg(
     'res-checks-msg',
-    fail ? `⚠ გაუქმდა ${ok}, ვერ გაუქმდა ${fail} (RLS UPDATE ან ქსელი)` : `✅ ურნაში გადატანილია ${ok} ჯავშანი (გაუქმებული)`,
-    fail ? 'err' : 'ok'
+    fail
+      ? `⚠ ${ok} გაუქმდა, ${fail} ვერ — ქსელი ან RLS`
+      : archiveSkipped
+        ? `⚠ ${ok} ჯავშანი გაუქმებულია. ურნის ცხრილი res_checks_trash არაა — გაუშვით public/sql/res_checks_trash.sql (Supabase → SQL Editor).`
+        : `✅ ${ok} ჩეკი ურნის ბაზაში და ჯავშანი გაუქმებულია`,
+    fail ? 'err' : archiveSkipped ? 'warn' : 'ok'
   );
   auditLog('res_checks_trash_cancel', ok + ' ok, ' + fail + ' fail');
   try {
@@ -6064,7 +6366,23 @@ function renderResTable(data) {
 
 async function changeResStatus(id, status) {
   try {
-    await supaFetch(`/rest/v1/reservations?id=eq.${encodeURIComponent(String(id))}`, 'PATCH', {status});
+    const row = await resolveReservationRowForAdmin(id);
+    if (status === 'cancelled') {
+      if (row && reservationHasPrecheck(row)) {
+        const archived = await tryUpsertResCheckTrashArchive(row);
+        if (!archived) {
+          adminMsg(
+            'res-checks-msg',
+            '⚠ ურნის ცხრილი res_checks_trash არაა Supabase-ში — სტატუსი მაინც გაუქმდება. SQL Editor: public/sql/res_checks_trash.sql',
+            'warn'
+          );
+        }
+      }
+    }
+    await supaFetch(`/rest/v1/reservations?id=eq.${encodeURIComponent(String(id))}`, 'PATCH', { status });
+    if (status !== 'cancelled') {
+      await deleteResCheckTrashByReservationId(id);
+    }
     await loadReservations();
     await loadReservationsWithChecks();
     auditLog('res_status', id + ' → ' + status);
