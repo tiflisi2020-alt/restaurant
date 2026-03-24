@@ -1329,7 +1329,7 @@ footer {
   letter-spacing: 0.05em;
 }
 
-/* ===== PRINT MENU BUTTON ===== */
+/* ===== PRINT MENU (მთავარი გვერდი) ===== */
 .print-menu-btn {
   display: inline-flex;
   align-items: center;
@@ -1345,14 +1345,59 @@ footer {
   text-transform: uppercase;
   cursor: pointer;
   transition: all 0.2s;
-  margin-left: auto;
   border-radius: 2px;
 }
-
 .print-menu-btn:hover {
   border-color: var(--teal);
   color: var(--teal);
 }
+
+#print-menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #fffdf8;
+  padding: 1.5rem;
+  overflow: auto;
+  box-sizing: border-box;
+  font-family: 'Raleway', Georgia, serif;
+  color: #2c2010;
+}
+.pm-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 2px solid #3d9b93;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+.pm-brand-name { font-size: 1.25rem; font-weight: 600; }
+.pm-brand-name span { color: #b8922e; font-style: italic; }
+.pm-brand-sub { font-size: 0.7rem; color: #6b5a48; margin-top: 0.25rem; }
+.pm-contact { font-size: 0.72rem; color: #6b5a48; text-align: right; line-height: 1.5; }
+.pm-cat { margin-bottom: 1.25rem; page-break-inside: avoid; }
+.pm-cat-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #3d9b93;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #e0d8c4;
+  padding-bottom: 0.25rem;
+}
+.pm-item { display: flex; align-items: baseline; gap: 0.35rem; font-size: 0.8rem; margin-bottom: 0.35rem; }
+.pm-item-dots { flex: 1; border-bottom: 1px dotted #e0d8c4; min-width: 1rem; margin: 0 0.25rem; height: 0.6em; }
+.pm-item-price { font-weight: 600; white-space: nowrap; }
+.pm-footer {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e0d8c4;
+  font-size: 0.65rem;
+  color: #9a8878;
+  text-align: center;
+}
+.pm-footer-gold { display: block; margin-top: 0.35rem; color: #b8922e; }
 
 .menu-top-bar {
   display: flex;
@@ -1849,6 +1894,34 @@ html.admin-panel-route .admin-content {
   color: rgba(245, 240, 230, 0.88);
   background: rgba(255, 255, 255, 0.06);
   border-color: rgba(255, 255, 255, 0.06);
+}
+
+.admin-content .admin-tab-group {
+  display: inline-flex;
+  align-items: stretch;
+  gap: 0.15rem;
+  flex: 0 0 auto;
+}
+.admin-content .admin-tab-trash {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.15rem;
+  min-height: 2.15rem;
+  padding: 0.2rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--adm-radius-sm);
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  color: rgba(245, 240, 230, 0.45);
+  transition: color 0.15s, background 0.15s, border-color 0.15s, opacity 0.15s;
+}
+.admin-content .admin-tab-trash:hover {
+  color: #e74c3c;
+  background: rgba(231, 76, 60, 0.12);
+  border-color: rgba(231, 76, 60, 0.35);
 }
 
 .admin-pane {
@@ -2494,6 +2567,18 @@ html.admin-panel-route .tiflis-float-rail {
 }
 @media print {
   .tiflis-float-rail { display: none !important; }
+  body.printing-menu * { visibility: hidden !important; }
+  body.printing-menu #print-menu-overlay,
+  body.printing-menu #print-menu-overlay * { visibility: visible !important; }
+  body.printing-menu #print-menu-overlay {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    display: block !important;
+    background: #fff !important;
+    z-index: 0 !important;
+  }
 }
 @media (max-width: 600px) {
   .tiflis-float-rail {
@@ -2618,6 +2703,9 @@ html.admin-panel-route .tiflis-float-rail {
   <div class="container">
     <div class="section-label" data-i18n="menu_label">ჩვენი მენიუ</div>
     <h2 class="section-title" data-i18n-html="menu_title">კერძები & <em>სასმელები</em></h2>
+    <p style="text-align:center;margin:0 0 1.25rem">
+      <button type="button" class="print-menu-btn" onclick="printMenu()" data-i18n="print_menu">🖨 მენიუს დაბეჭდვა</button>
+    </p>
     <div class="menu-layout">
       <div class="menu-nav-col">
         <div id="cat-tabs" class="cat-tabs"></div>
@@ -2687,9 +2775,6 @@ html.admin-panel-route .tiflis-float-rail {
         </div>
       </aside>
     </div>
-    <p style="text-align:center;margin-top:1.25rem;">
-      <button type="button" class="print-menu-btn" onclick="printMenu()" data-i18n="print_menu">მენიუს დაბეჭდვა</button>
-    </p>
   </div>
 </section>
 <div id="print-menu-overlay" style="display:none" aria-hidden="true"></div>
@@ -2845,6 +2930,10 @@ html.admin-panel-route .tiflis-float-rail {
         <button type="button" role="tab" class="admin-tab" onclick="adminTab('cats')" aria-selected="false">კატეგორიები</button>
         <button type="button" role="tab" class="admin-tab" onclick="adminTab('map')" aria-selected="false">მაგიდები</button>
         <button type="button" role="tab" class="admin-tab" onclick="adminTab('reservations')" aria-selected="false">ჯავშნები</button>
+        <div class="admin-tab-group" role="group" aria-label="ჩეკები და ურნა">
+          <button type="button" role="tab" class="admin-tab" onclick="adminTab('reschecks')" aria-selected="false">ჩეკები</button>
+          <button type="button" class="admin-tab-trash" onclick="resChecksTrashFromTab()" title="ურნა — ჩეკიანი ჯავშნების გაუქმება (სტატუსი: გაუქმებული)" aria-label="ურნა">🗑</button>
+        </div>
         <button type="button" role="tab" class="admin-tab" onclick="adminTab('settings')" aria-selected="false">პარამეტრები</button>
       </div>
       <!-- DASHBOARD TAB -->
@@ -2853,6 +2942,7 @@ html.admin-panel-route .tiflis-float-rail {
           <div class="admin-section-title dashboard-title-plain">დაშბორდი</div>
           <div class="dashboard-quicklinks">
             <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="adminTab('reservations')">📋 ჯავშნები</button>
+            <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="adminTab('reschecks')">🧾 ჩეკები</button>
             <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="adminTab('map')">🗺 მაგიდები</button>
             <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="adminTab('menu')">🍽 მენიუ</button>
             <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="adminTab('add')">➕ კერძის დამატება</button>
@@ -2989,7 +3079,7 @@ html.admin-panel-route .tiflis-float-rail {
               <input type="text" id="cf-ru" placeholder="Категория">
             </div>
           </div>
-          <button type="button" class="admin-btn admin-btn-sm" style="width:auto" onclick="adminAddCat()">დამატება</button>
+          <button type="button" class="admin-btn" style="width:auto;min-width:140px" onclick="adminAddCat()" data-i18n="btn_save">💾 შენახვა</button>
         </div>
       </div>
 
@@ -3077,6 +3167,27 @@ html.admin-panel-route .tiflis-float-rail {
         <div id="res-count" style="margin-top:.45rem;font-size:.65rem;color:rgba(245,240,232,.28)"></div>
       </div>
 
+      <!-- RESERVATIONS + PRECHECK (ჩეკი) TAB -->
+      <div id="at-reschecks" class="admin-pane" role="tabpanel">
+        <div class="admin-section-title">ჯავშნები ჩეკებით</div>
+        <p class="admin-compact-hint" style="margin:0 0 0.65rem">იგივე ფილტრები რაც „ჯავშნებში“. ჩანს ჩეკიანი ჯავშნები <strong>მომლოდინე/დადასტურებული</strong> (გაუქმებულები აქ აღარ ჩანს — ნახავ „ჯავშნებში“ სტატუსით). ტაბის გვერდით <strong>🗑 ურნა</strong> ამ სიას აგიუქმებს (სტატუსი → გაუქმებული), არა DELETE. Supabase: <code style="font-size:.65rem">precheck_json</code> (jsonb).</p>
+        <div class="admin-filter-row">
+          <button type="button" class="admin-btn admin-btn-sm" style="width:auto" onclick="loadReservationsWithChecks()">ჩვენება (იგივე ფილტრები)</button>
+          <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" style="width:auto" onclick="printResChecksReport()">🖨 ბეჭდვა</button>
+        </div>
+        <div id="res-checks-msg" class="admin-msg"></div>
+        <div style="overflow-x:auto">
+          <table class="admin-table" id="res-checks-table">
+            <thead><tr>
+              <th>სახელი</th><th>ტელეფონი</th><th>თარიღი</th><th>დრო</th>
+              <th>მაგიდა</th><th style="min-width:14rem">ჩეკი (შეკვეთა)</th><th>სტატუსი</th><th></th>
+            </tr></thead>
+            <tbody id="res-checks-tbody"><tr><td colspan="8" style="text-align:center;color:rgba(245,240,232,.3);padding:2rem;font-style:italic">ჩატვირთვა...</td></tr></tbody>
+          </table>
+        </div>
+        <div id="res-checks-count" style="margin-top:.45rem;font-size:.65rem;color:rgba(245,240,232,.28)"></div>
+      </div>
+
       <!-- SETTINGS TAB -->
       <div id="at-settings" class="admin-pane" role="tabpanel">
         <div class="admin-section-title">პარამეტრები</div>
@@ -3147,7 +3258,6 @@ html.admin-panel-route .tiflis-float-rail {
   </div>
 </div>
 
-<!-- PRINT MENU OVERLAY (hidden on screen, shown only on print) -->
 <!-- FOOTER -->
 <footer id="contact">
   <div class="container">
@@ -3248,7 +3358,7 @@ const TXT = {
     ab1_title:'Authentic Georgian', ab1_text:'Traditional recipes<br>with a modern touch',
     ab2_title:'Josper Oven', ab2_text:'Special dishes on charcoal<br>and open fire',
     ab3_title:'House Wine', ab3_text:'Georgian nectar straight<br>from Kakheti',
-    menu_label:'Our Menu', menu_title:'Dishes & <em>Drinks</em>', print_menu:'Print Menu',
+    menu_label:'Our Menu', menu_title:'Dishes & <em>Drinks</em>', print_menu:'Print menu',
     res_label:'Reservation', res_title:'Table<br><em>Booking</em>',
     res_desc:'Discover the aristocratic charm of Tiflisi in the historic heart of Batumi. At Gorgasali 110/18, traditional Georgian flavors become modern art. Visit us and experience a genuine city feast where every detail cares for your mood.',
     res_legend:'"According to legend, while hunting, King Vakhtang Gorgasali\'s falcon fell into a hot spring. Near these life-giving waters, the king ordered a city to be built and named it \"Tbili\" (Tbilisi). Today, Restaurant Tiflisi brings this historic heritage to life on Gorgasali Street — where hospitality is as eternal as the history of our capital."',
@@ -3274,7 +3384,7 @@ const TXT = {
     ab1_title:'Настоящая грузинская', ab1_text:'Традиционные рецепты<br>в современном исполнении',
     ab2_title:'Печь Josper', ab2_text:'Особые блюда на древесном угле<br>и открытом огне',
     ab3_title:'Домашнее вино', ab3_text:'Грузинский нектар прямо<br>из Кахетии',
-    menu_label:'Наше меню', menu_title:'Блюда & <em>напитки</em>', print_menu:'Распечатать меню',
+    menu_label:'Наше меню', menu_title:'Блюда & <em>напитки</em>', print_menu:'Печать меню',
     res_label:'Резервация', res_title:'Бронирование<br><em>стола</em>',
     res_desc:'Откройте для себя аристократическое очарование Тифлиси в историческом центре Батуми. На Горгасали 110/18 традиционные грузинские вкусы превращаются в современное искусство. Приходите и ощутите настоящий городской пир, где каждая деталь заботится о вашем настроении.',
     res_legend:'«По легенде, во время охоты сокол царя Вахтанга Горгасали упал в горячий источник. Именно у этих живительных вод царь повелел основать город и назвал его «Тбили» (Тбилиси). Сегодня ресторан «Тифлиси» воплощает это историческое наследие на улице Горгасали — там, где гостеприимство столь же вечно, как история нашей столицы.»',
@@ -3562,6 +3672,60 @@ function buildReceiptHTML() {
   const dA=sub*disc/100,afterD=sub-dA,sA=afterD*svc/100,total=Math.max(0,afterD+sA-adv);
   rows += `<div class="receipt-row" style="font-weight:500;color:var(--terracotta);border-top:1px solid var(--border);padding-top:6px;margin-top:4px"><span>${TXT[lang].total}</span><span>₾${total.toFixed(2)}</span></div>`;
   return `<div style="font-family:'Cormorant Garamond',serif;font-size:1rem;margin-bottom:.5rem;color:var(--dark)">${name} — ${date} ${time} · ${guests}</div>${rows}`;
+}
+
+function printMenu() {
+  const overlay = g('print-menu-overlay');
+  if (!overlay) return;
+  if (!CATS.length || !MENU.length) {
+    alert('მენიუ ჯერ იტვირთება — გთხოვთ რამდენიმე წამში სცადოთ ხელახლა.');
+    return;
+  }
+  const printLang = lang;
+  let catsHTML = '';
+  CATS.forEach(cat => {
+    const items = MENU.filter(m => m.cat === cat.id);
+    if (!items.length) return;
+    const itemsHTML = items
+      .map(
+        m =>
+          `<div class="pm-item">
+        <span class="pm-item-name">${escapeHtml(m[printLang] || m.ka)}</span>
+        <span class="pm-item-dots"></span>
+        <span class="pm-item-price">&#8382;${m.p % 1 === 0 ? m.p : m.p.toFixed(2)}</span>
+      </div>`
+      )
+      .join('');
+    catsHTML += `<div class="pm-cat"><div class="pm-cat-title">${escapeHtml(cat[printLang] || cat.ka)}</div>${itemsHTML}</div>`;
+  });
+  overlay.innerHTML = `
+    <div class="pm-header">
+      <div class="pm-brand">
+        <div class="pm-brand-name">რესტორანი <span>ტიფლისი</span></div>
+        <div class="pm-brand-sub">ქართული სამზარეულო · ბათუმი</div>
+      </div>
+      <div class="pm-contact">
+        ვ.გორგასალის ქ. 110/18, ბათუმი<br>
+        +995 568 76 76 38<br>
+        ყოველდღე 10:00 — 24:00
+      </div>
+    </div>
+    <div class="pm-body">${catsHTML}</div>
+    <div class="pm-footer">
+      <span class="pm-footer-text">ფასები მოიცავს დღგ-ს · ალერგიის შემთხვევაში მიმართეთ სერვისს</span>
+      <span class="pm-footer-gold">რესტორანი ტიფლისი &copy; ${new Date().getFullYear()}</span>
+    </div>`;
+  overlay.style.display = 'block';
+  overlay.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('printing-menu');
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => {
+      overlay.style.display = 'none';
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('printing-menu');
+    }, 500);
+  }, 300);
 }
 
 function printOrderReceipt() {
@@ -3860,10 +4024,13 @@ async function supaFetch(path, method='GET', body=null) {
     try { data = JSON.parse(text); } catch { data = { message: text }; }
   }
   if (!r.ok) {
-    const msg = (data && (data.message || data.error_description || data.hint)) || r.statusText || ('HTTP ' + r.status);
-    const err = new Error(typeof msg === 'string' ? msg : JSON.stringify(msg));
+    const d = data && typeof data === 'object' ? data : {};
+    const parts = [d.message, d.details, d.hint].filter(Boolean);
+    const msg = parts.length ? parts.map(String).join(' — ') : (r.statusText || ('HTTP ' + r.status));
+    const err = new Error(typeof msg === 'string' ? msg.slice(0, 400) : JSON.stringify(msg).slice(0, 400));
     err.status = r.status;
     err.body = data;
+    err.code = d.code;
     throw err;
   }
   return data;
@@ -3880,6 +4047,36 @@ function clampGuests(el) {
   let v = parseInt(el.value)||1;
   el.value = Math.max(1, Math.min(300, v));
   recalc();
+}
+
+/** წინასწარი შეკვეთის snapshot → Supabase `precheck_json` (jsonb) */
+function buildReservationPrecheckSnapshot() {
+  const items = [];
+  let sub = 0;
+  Object.keys(order).map(Number).forEach(id => {
+    const item = MENU.find(m => m.id === id);
+    if (!item) return;
+    const q = order[id];
+    const line = item.p * q;
+    sub += line;
+    items.push({ id: item.id, ka: item.ka, en: item.en, ru: item.ru, p: item.p, qty: q, line });
+  });
+  const disc = parseFloat(g('f-disc')?.value) || 0;
+  const svc = parseFloat(g('f-svc')?.value) || 0;
+  const adv = parseFloat(g('f-adv')?.value) || 0;
+  const dA = sub * disc / 100;
+  const afterD = sub - dA;
+  const sA = afterD * svc / 100;
+  const total = Math.max(0, afterD + sA - adv);
+  return {
+    items,
+    disc_pct: disc,
+    svc_pct: svc,
+    advance: adv,
+    subtotal: sub,
+    total,
+    saved_at: new Date().toISOString(),
+  };
 }
 
 // Reservation Form
@@ -3908,7 +4105,27 @@ async function submitReservation() {
   try {
     const advance_amount = parseFloat(g('f-adv')?.value)||0;
     const advance_payment = (advance_amount > 0 && payment) ? payment : null;
-    await supaFetch('/rest/v1/reservations', 'POST', { name, phone, date, time, guests, table_id: table||'—', payment, note, status:'pending', advance_amount: advance_amount||null, advance_payment });
+    const snap = buildReservationPrecheckSnapshot();
+    const payload = {
+      name, phone, date, time, guests, table_id: table||'—', payment, note, status:'pending',
+      advance_amount: advance_amount||null, advance_payment,
+    };
+    if (snap.items.length > 0) payload.precheck_json = snap;
+    try {
+      await supaFetch('/rest/v1/reservations', 'POST', payload);
+    } catch (e1) {
+      if (payload.precheck_json) {
+        delete payload.precheck_json;
+        try {
+          await supaFetch('/rest/v1/reservations', 'POST', payload);
+          console.warn('precheck_json: ველი reservations ცხრილში არ არის — დაამატეთ: ALTER TABLE reservations ADD COLUMN precheck_json jsonb;');
+        } catch (e2) {
+          throw e2;
+        }
+      } else {
+        throw e1;
+      }
+    }
     // update table status
     if (table) await supaFetch(`/rest/v1/tables?id=eq.${table}`, 'PATCH', { status:'reserved' });
   } catch(e) { console.warn('Supabase error', e); }
@@ -4001,11 +4218,6 @@ async function init() {
   const isPanel = document.documentElement.classList.contains('admin-panel-route');
   if (isPanel) {
     document.title = 'ადმინ პანელი — რესტორანი ტიფლისი';
-    if (sessionStorage.getItem('tiflis_admin_logged') === '1') {
-      bindAdminActivity();
-      touchAdminSession();
-      queueMicrotask(() => openAdmin());
-    }
     try {
       await Promise.race([
         loadOverrides(),
@@ -4013,6 +4225,16 @@ async function init() {
       ]);
     } catch (e) {
       console.warn('loadOverrides:', e);
+    }
+    applyI18n();
+    if (catIdx >= CATS.length) catIdx = 0;
+    renderCats();
+    renderMenu();
+    renderOrder();
+    if (sessionStorage.getItem('tiflis_admin_logged') === '1') {
+      bindAdminActivity();
+      touchAdminSession();
+      queueMicrotask(() => openAdmin());
     }
     if (sessionStorage.getItem('tiflis_admin_logged') === '1' && g('admin-modal') && g('admin-modal').classList.contains('open')) {
       showAdminPanel();
@@ -4296,20 +4518,205 @@ async function deleteMenuItemFromSupabase(id) {
   }
 }
 
-async function saveCatToSupabase(cat) {
-  const row = { id: cat.id, ka: cat.ka, en: cat.en, ru: cat.ru, sort_order: cat.sort_order ?? cat.id };
+/** ცარიელი პასუხის შემდეგ — ბოლო ჩანაწერის მოძებნა (ka + sort_order) */
+async function lookupCategoryRowByKaAndSort(ka, sortOrder) {
   try {
-    await supaFetch('/rest/v1/menu_categories', 'POST', row);
-    return true;
+    const enc = encodeURIComponent(ka);
+    const rows = await supaFetch(
+      `/rest/v1/menu_categories?ka=eq.${enc}&select=id,ka,en,ru,sort_order&order=id.desc&limit=15`
+    );
+    if (!Array.isArray(rows) || !rows.length) return null;
+    if (sortOrder != null && Number.isFinite(Number(sortOrder))) {
+      const so = Number(sortOrder);
+      const hit = rows.find(r => Number(r.sort_order ?? r.id) === so);
+      if (hit) return hit;
+    }
+    return rows[0];
   } catch (e) {
+    console.warn('lookupCategoryRowByKaAndSort', e);
+    return null;
+  }
+}
+
+function verifyCategoryFetch(cat) {
+  return supaFetch(`/rest/v1/menu_categories?id=eq.${cat.id}&select=id,ka,en,ru,sort_order`);
+}
+
+/** PATCH → POST (id) → POST (უსაიდო); ახალი ხაზისთვის ჯერ POST უსაიდოდ (DB სერიალი/RLS) */
+async function saveCatToSupabase(cat, opts = {}) {
+  const preferInsertWithoutId = opts.preferInsertWithoutId === true;
+  const sortOrder = cat.sort_order != null ? Number(cat.sort_order) : null;
+  const patchBody = {
+    ka: cat.ka,
+    en: cat.en || '',
+    ru: cat.ru || '',
+  };
+  if (Number.isFinite(sortOrder)) patchBody.sort_order = sortOrder;
+
+  const errMsg = e => String((e && e.message) || e || 'unknown').slice(0, 280);
+
+  function applyReturnedRow(row0) {
+    if (!row0 || row0.id == null) return false;
+    const nid = Number(row0.id);
+    if (!Number.isFinite(nid)) return false;
+    cat.id = nid;
+    cat.ka = row0.ka != null ? String(row0.ka) : cat.ka;
+    cat.en = row0.en != null ? String(row0.en) : cat.en;
+    cat.ru = row0.ru != null ? String(row0.ru) : cat.ru;
+    if (row0.sort_order != null) cat.sort_order = Number(row0.sort_order);
+    return true;
+  }
+
+  async function finalizeVerify() {
     try {
-      await supaFetch(`/rest/v1/menu_categories?id=eq.${cat.id}`, 'PATCH', { ka: cat.ka, en: cat.en, ru: cat.ru, sort_order: row.sort_order });
-      return true;
-    } catch (e2) {
-      console.warn('Category save error:', e2);
-      return false;
+      const check = await verifyCategoryFetch(cat);
+      const row0 = Array.isArray(check) && check[0];
+      if (!row0) {
+        const found = await lookupCategoryRowByKaAndSort(cat.ka, patchBody.sort_order);
+        if (found && applyReturnedRow(found)) {
+          const check2 = await verifyCategoryFetch(cat);
+          const r2 = Array.isArray(check2) && check2[0];
+          if (!r2) {
+            return {
+              ok: false,
+              error: 'ჩაწერა გავიდა, მაგრამ წაკითხვა ცარიელია — შეამოწმეთ Supabase RLS SELECT menu_categories (anon).',
+            };
+          }
+          applyReturnedRow(r2);
+        } else {
+          return {
+            ok: false,
+            error: 'ჩაწერა გავიდა, მაგრამ წაკითხვა ცარიელია — შეამოწმეთ Supabase RLS SELECT menu_categories (anon).',
+          };
+        }
+      } else {
+        applyReturnedRow(row0);
+      }
+    } catch (verErr) {
+      return { ok: false, error: 'ვერიფიკაცია: ' + errMsg(verErr) };
+    }
+    return { ok: true };
+  }
+
+  const clientPlaceholderId =
+    preferInsertWithoutId && cat.id != null && Number.isFinite(Number(cat.id)) ? Number(cat.id) : null;
+
+  let preferredPostSucceeded = false;
+  if (preferInsertWithoutId) {
+    try {
+      const data = await supaFetch('/rest/v1/menu_categories', 'POST', patchBody);
+      preferredPostSucceeded = true;
+      let row0 = Array.isArray(data) && data[0] ? data[0] : null;
+      if (!row0 && data && typeof data === 'object' && data.id != null) row0 = data;
+      if (row0) applyReturnedRow(row0);
+      else {
+        const found = await lookupCategoryRowByKaAndSort(cat.ka, patchBody.sort_order);
+        if (found) applyReturnedRow(found);
+      }
+      if (Number.isFinite(cat.id) && (clientPlaceholderId == null || cat.id !== clientPlaceholderId)) {
+        const v = await finalizeVerify();
+        if (v.ok) return v;
+      }
+    } catch (e0) {
+      preferredPostSucceeded = false;
+      console.warn('Category POST (new, no client id):', e0);
     }
   }
+
+  async function recoverIdAfterPreferredInsert() {
+    const found = await lookupCategoryRowByKaAndSort(cat.ka, patchBody.sort_order);
+    if (found) applyReturnedRow(found);
+    if (clientPlaceholderId != null && cat.id === clientPlaceholderId) {
+      const latest = await supaFetch(
+        '/rest/v1/menu_categories?select=id,ka,en,ru,sort_order&order=id.desc&limit=5'
+      );
+      if (Array.isArray(latest) && latest.length) {
+        const so = patchBody.sort_order;
+        const hit = latest.find(
+          r =>
+            String(r.ka) === String(cat.ka) &&
+            (so == null || !Number.isFinite(Number(so)) || Number(r.sort_order ?? r.id) === Number(so))
+        );
+        if (hit) applyReturnedRow(hit);
+      }
+    }
+  }
+
+  if (preferredPostSucceeded && (!Number.isFinite(cat.id) || cat.id === clientPlaceholderId)) {
+    try {
+      await recoverIdAfterPreferredInsert();
+      if (Number.isFinite(cat.id) && (clientPlaceholderId == null || cat.id !== clientPlaceholderId)) {
+        const v = await finalizeVerify();
+        if (v.ok) return v;
+        return { ok: false, error: v.error || 'ვერიფიკაცია ვერ გადაიჭრა' };
+      }
+    } catch (e) {
+      console.warn('Category recover id:', e);
+    }
+    return {
+      ok: false,
+      error:
+        'ჩანაწერი შესაძლოა შეიქმნა, მაგრამ id ვერ დაბრუნდა — განაახლეთ გვერდი (F5) ან Supabase → RLS (SELECT/INSERT + return).',
+    };
+  }
+
+  let wrote = false;
+  if (cat.id != null && Number.isFinite(Number(cat.id))) {
+    try {
+      const patched = await supaFetch(`/rest/v1/menu_categories?id=eq.${cat.id}`, 'PATCH', patchBody);
+      if (Array.isArray(patched) && patched.length > 0) {
+        applyReturnedRow(patched[0]);
+        wrote = true;
+      }
+    } catch (e) {
+      console.warn('Category PATCH:', e);
+    }
+  }
+
+  if (!wrote) {
+    try {
+      const row = { id: cat.id, ...patchBody };
+      await supaFetch('/rest/v1/menu_categories', 'POST', row);
+      wrote = true;
+    } catch (e2) {
+      console.warn('Category POST (with id):', e2);
+    }
+  }
+
+  if (!wrote) {
+    try {
+      const data = await supaFetch('/rest/v1/menu_categories', 'POST', patchBody);
+      if (Array.isArray(data) && data[0]) applyReturnedRow(data[0]);
+      wrote = true;
+    } catch (e3) {
+      try {
+        if (cat.id != null && Number.isFinite(Number(cat.id))) {
+          const patched2 = await supaFetch(`/rest/v1/menu_categories?id=eq.${cat.id}`, 'PATCH', patchBody);
+          if (Array.isArray(patched2) && patched2.length > 0) {
+            applyReturnedRow(patched2[0]);
+            wrote = true;
+          }
+        }
+      } catch (e4) {
+        console.warn('Category POST/PATCH:', e4);
+        return { ok: false, error: errMsg(e4) || errMsg(e3) };
+      }
+      if (!wrote) return { ok: false, error: errMsg(e3) };
+    }
+  }
+
+  if (!wrote) {
+    return { ok: false, error: 'ჩანაწერი ვერ შეიქმნა/განახლდა (PATCH ცარიელია)' };
+  }
+
+  if (!Number.isFinite(cat.id)) {
+    const found = await lookupCategoryRowByKaAndSort(cat.ka, patchBody.sort_order);
+    if (!found || !applyReturnedRow(found)) {
+      return { ok: false, error: 'ჩანაწერი ვერ დადასტურდა — ცარიელი პასუხი სერვერიდან ან RLS.' };
+    }
+  }
+
+  return finalizeVerify();
 }
 
 async function deleteCatFromSupabase(id) {
@@ -4542,13 +4949,14 @@ function showAdminPanel() {
   adminRenderAudit();
   adminUpdateDishPreview();
   ensureReservationsTableDelegation();
+  ensureResChecksTableDelegation();
   loadDashboardData();
   touchAdminSession();
   updateAdminStayUI();
 }
 
 function adminTab(t) {
-  const tabs = ['dashboard','menu','add','cats','map','reservations','settings'];
+  const tabs = ['dashboard','menu','add','cats','map','reservations','reschecks','settings'];
   document.querySelectorAll('.admin-tab').forEach((b, i) => {
     const on = tabs[i] === t;
     b.classList.toggle('on', on);
@@ -4566,6 +4974,7 @@ function adminTab(t) {
   if (t === 'add') adminUpdateDishPreview();
   if (t === 'map') loadMapTables();
   if (t === 'reservations') loadReservations();
+  if (t === 'reschecks') loadReservationsWithChecks();
   if (t === 'settings') adminRenderAudit();
   touchAdminSession();
 }
@@ -4877,20 +5286,52 @@ async function adminAddCat() {
   const en = g('cf-en').value.trim();
   const ru = g('cf-ru').value.trim();
   if (!ka) { adminMsg('adm-msg-cats', '❌ ქართული სახელი სავალდებულოა', 'err'); return; }
-  const maxSo = Math.max(0, ...CATS.map(c => Number(c.sort_order) || 0));
-  const newId = Math.max(...CATS.map(c => c.id), 0) + 10;
+  const maxSo = Math.max(0, ...CATS.map(c => Number(c.sort_order ?? c.id) || 0));
+  const newId = Math.max(0, ...CATS.map(c => Number(c.id) || 0)) + 1;
   const newCat = { id: newId, ka, en, ru, sort_order: maxSo + 1 };
   CATS.push(newCat);
   sortCatsInPlace();
-  const ok = await saveCatToSupabase(newCat);
-  g('cf-ka').value = ''; g('cf-en').value = ''; g('cf-ru').value = '';
   renderCats();
+  renderMenu();
+  renderOrder();
   adminRenderCatsList();
   adminPopulateCatFilter();
   adminPopulateCatSelect();
-  if (!ok) adminMsg('adm-msg-cats', '⚠ ლოკალურად დაემატა; სერვერზე ვერ ჩაიწერა', 'err');
-  else adminMsg('adm-msg-cats', '✅ კატეგორია დაემატა: ' + ka, 'ok');
+
+  const cloud = await saveCatToSupabase(newCat, { preferInsertWithoutId: true });
+  g('cf-ka').value = '';
+  g('cf-en').value = '';
+  g('cf-ru').value = '';
+
+  if (!cloud.ok) {
+    const idx = CATS.indexOf(newCat);
+    if (idx >= 0) CATS.splice(idx, 1);
+    sortCatsInPlace();
+    const tail = cloud.error ? ' — ' + cloud.error : '';
+    adminMsg('adm-msg-cats', '⚠ სერვერზე ვერ ემატება' + tail, 'err');
+    try {
+      g('adm-msg-cats')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } catch (e) {}
+    renderCats();
+    renderMenu();
+    renderOrder();
+    adminRenderCatsList();
+    adminPopulateCatFilter();
+    adminPopulateCatSelect();
+    return;
+  }
+
+  adminMsg('adm-msg-cats', '✅ კატეგორია დაემატა: ' + ka, 'ok');
   auditLog('cat_add', ka);
+  try {
+    g('adm-msg-cats')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  } catch (e) {}
+  renderCats();
+  renderMenu();
+  renderOrder();
+  adminRenderCatsList();
+  adminPopulateCatFilter();
+  adminPopulateCatSelect();
 }
 
 async function adminDeleteCat(id) {
@@ -5016,48 +5457,6 @@ function adminResetData() {
     if (e.target === this) closeAdmin();
   });
 })();
-
-// ===== PRINT MENU =====
-function printMenu() {
-  const overlay = g('print-menu-overlay');
-  if (!overlay) return;
-  const printLang = lang;
-  let catsHTML = '';
-  CATS.forEach(cat => {
-    const items = MENU.filter(m => m.cat === cat.id);
-    if (!items.length) return;
-    const itemsHTML = items.map(m =>
-      `<div class="pm-item">
-        <span class="pm-item-name">${m[printLang]}</span>
-        <span class="pm-item-dots"></span>
-        <span class="pm-item-price">&#8382;${m.p % 1 === 0 ? m.p : m.p.toFixed(2)}</span>
-      </div>`
-    ).join('');
-    catsHTML += `<div class="pm-cat"><div class="pm-cat-title">${cat[printLang]}</div>${itemsHTML}</div>`;
-  });
-  overlay.innerHTML = `
-    <div class="pm-header">
-      <div class="pm-brand">
-        <div class="pm-brand-name">რესტორანი <span>ტიფლისი</span></div>
-        <div class="pm-brand-sub">ქართული სამზარეულო · ბათუმი</div>
-      </div>
-      <div class="pm-contact">
-        ვ.გორგასალის ქ. 110/18, ბათუმი<br>
-        +995 568 76 76 38<br>
-        ყოველდღე 10:00 — 24:00
-      </div>
-    </div>
-    <div class="pm-body">${catsHTML}</div>
-    <div class="pm-footer">
-      <span class="pm-footer-text">ფასები მოიცავს დღგ-ს · ალერგიის შემთხვევაში მიმართეთ სერვისს</span>
-      <span class="pm-footer-gold">რესტორანი ტიფლისი &copy; ${new Date().getFullYear()}</span>
-    </div>`;
-  overlay.style.display = 'block';
-  setTimeout(() => {
-    window.print();
-    setTimeout(() => { overlay.style.display = 'none'; }, 500);
-  }, 300);
-}
 
 // ===== MAP / RESERVATION TABLES (იგივე ID-ები) =====
 const MAP_ALL_TABLE_IDS = [
@@ -5259,6 +5658,58 @@ async function toggleTable(tableId, currentlyReserved) {
 // ===== RESERVATIONS =====
 let allReservations = [];
 let filteredReservations = [];
+/** ბოლო ჩეკიანი ჯავშნების სია — ბეჭდვისთვის */
+let lastResChecksRows = [];
+
+function parseReservationPrecheck(raw) {
+  if (raw == null || raw === '') return null;
+  if (typeof raw === 'object' && raw !== null && !Array.isArray(raw)) {
+    if (Array.isArray(raw.items)) return raw;
+    return null;
+  }
+  if (typeof raw === 'string') {
+    try {
+      const o = JSON.parse(raw);
+      if (o && Array.isArray(o.items)) return o;
+    } catch (_) {}
+  }
+  return null;
+}
+
+function reservationHasPrecheck(r) {
+  const o = parseReservationPrecheck(r.precheck_json);
+  return !!(o && o.items.length > 0);
+}
+
+/** ჩეკები ტაბი: ჩეკი აქვს და არ არის ურნაში (გაუქმებული) */
+function reservationActiveCheckRow(r) {
+  if (!reservationHasPrecheck(r)) return false;
+  const st = String(r.status || '').toLowerCase();
+  return st !== 'cancelled';
+}
+
+function formatPrecheckCellHtml(r) {
+  const o = parseReservationPrecheck(r.precheck_json);
+  if (!o || !o.items.length) return '<span style="color:rgba(245,240,232,.22)">—</span>';
+  const lines = o.items.map(it => {
+    const nm = escapeHtml(it.ka || it.en || it.ru || '—');
+    const lt =
+      it.line != null && Number.isFinite(Number(it.line))
+        ? Number(it.line)
+        : Number(it.p) * Number(it.qty || 0);
+    const sum = Number.isFinite(lt) ? lt.toFixed(2) : '—';
+    return `<div style="font-size:.64rem;line-height:1.35;color:rgba(245,240,232,.75)">${nm} <span style="color:rgba(245,240,232,.4)">×${escapeHtml(String(it.qty))}</span> · ₾${sum}</div>`;
+  }).join('');
+  const tot = o.total != null && Number.isFinite(Number(o.total)) ? Number(o.total).toFixed(2) : null;
+  const sub = o.subtotal != null && Number.isFinite(Number(o.subtotal)) ? Number(o.subtotal).toFixed(2) : null;
+  let meta = '';
+  if (Number(o.disc_pct) > 0 || Number(o.svc_pct) > 0 || Number(o.advance) > 0) {
+    meta = `<div style="font-size:.58rem;color:rgba(245,240,232,.35);margin-top:.2rem">ფასდაკლ. ${o.disc_pct || 0}% · სერვ. ${o.svc_pct || 0}% · ავანს ₾${Number(o.advance || 0).toFixed(2)}</div>`;
+  }
+  const totalLine = tot != null ? `<div style="margin-top:.35rem;font-weight:600;color:var(--teal);font-size:.7rem">სულ: ₾${tot}</div>` : '';
+  const subLine = sub != null && sub !== tot ? `<div style="font-size:.58rem;color:rgba(245,240,232,.4)">ქვეჯამი: ₾${sub}</div>` : '';
+  return `<div>${lines}${meta}${subLine}${totalLine}</div>`;
+}
 
 /** უახლესი ჯავშანი ზევით: created_at / inserted_at, სარეზერვო — რიცხვობრივი id */
 function sortReservationsNewestFirst(rows) {
@@ -5313,6 +5764,21 @@ function ensureReservationsTableDelegation() {
   });
 }
 
+let resChecksTableDelegated = false;
+function ensureResChecksTableDelegation() {
+  const table = g('res-checks-table');
+  if (!table || resChecksTableDelegated) return;
+  resChecksTableDelegated = true;
+  table.addEventListener('click', function (e) {
+    const stBtn = e.target.closest && e.target.closest('.res-check-status-btn');
+    if (stBtn && table.contains(stBtn)) {
+      const id = stBtn.getAttribute('data-res-id');
+      const st = stBtn.getAttribute('data-res-status');
+      if (id && st) changeResStatus(id, st);
+    }
+  });
+}
+
 function reservationsQueryUrl(orderParam) {
   const from = g('res-filter-from')?.value || '';
   const to = g('res-filter-to')?.value || '';
@@ -5350,6 +5816,81 @@ async function loadReservations() {
   }
 }
 
+function renderResChecksTable(data) {
+  const tbody = g('res-checks-tbody');
+  if (!tbody) return;
+  if (!data.length) {
+    tbody.innerHTML =
+      '<tr><td colspan="8" style="text-align:center;color:rgba(245,240,232,.3);padding:2rem;font-style:italic">ჩანაწერები არ მოიძებნა (ჩეკიანი ჯავშნები ან ცარიელი ფილტრი)</td></tr>';
+    const rc = g('res-checks-count');
+    if (rc) rc.textContent = '0 ჩანაწერი';
+    return;
+  }
+  tbody.innerHTML = data.map(r => {
+    const idStr = String(r.id);
+    const idAttr = escapeAttr(idStr);
+    const st = r.status || '';
+    const stColor = statusColors[st] || '#c9a84c';
+    const stLabel = escapeHtml(statusLabels[st] || st || '—');
+    return `
+    <tr>
+      <td class="td-name">${escapeHtml(r.name || '—')}</td>
+      <td style="font-size:.78rem;color:rgba(245,240,232,.6)">${escapeHtml(r.phone || '—')}</td>
+      <td style="white-space:nowrap">${escapeHtml(r.date || '—')}</td>
+      <td>${escapeHtml(r.time || '—')}</td>
+      <td style="color:var(--gold)">${escapeHtml(r.table_id || '—')}</td>
+      <td style="vertical-align:top;max-width:18rem">${formatPrecheckCellHtml(r)}</td>
+      <td><span style="font-size:.7rem;padding:2px 7px;border-radius:3px;border:1px solid ${stColor};color:${stColor}">${stLabel}</span></td>
+      <td>
+        <div style="display:flex;gap:.3rem">
+          <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm res-check-status-btn" data-res-id="${idAttr}" data-res-status="confirmed" title="დადასტურება" style="padding:3px 7px">✅</button>
+          <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm res-check-status-btn" data-res-id="${idAttr}" data-res-status="cancelled" title="გაუქმება" style="padding:3px 7px">❌</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+  const rc2 = g('res-checks-count');
+  if (rc2) rc2.textContent = `${data.length} აქტიური ჩეკიანი ჯავშანი (გაუქმებული ურნაშია)`;
+}
+
+async function loadReservationsWithChecks() {
+  const tbody = g('res-checks-tbody');
+  const msgEl = g('res-checks-msg');
+  if (!tbody) return;
+  tbody.innerHTML =
+    '<tr><td colspan="8" style="text-align:center;color:rgba(245,240,232,.3);padding:2rem;font-style:italic">⏳ ჩატვირთვა...</td></tr>';
+  if (msgEl) {
+    msgEl.textContent = '';
+    msgEl.className = 'admin-msg';
+  }
+  try {
+    let data;
+    let useClientSort = false;
+    try {
+      data = await supaFetch(reservationsQueryUrl('order=created_at.desc,id.desc'));
+    } catch (_) {
+      try {
+        data = await supaFetch(reservationsQueryUrl('order=id.desc'));
+      } catch (__) {
+        data = await supaFetch(reservationsQueryUrl(null));
+        useClientSort = true;
+      }
+    }
+    const rows = useClientSort ? sortReservationsNewestFirst(data || []) : data || [];
+    const withCheck = rows.filter(reservationActiveCheckRow);
+    lastResChecksRows = withCheck;
+    renderResChecksTable(withCheck);
+  } catch (e) {
+    lastResChecksRows = [];
+    tbody.innerHTML =
+      '<tr><td colspan="8" style="text-align:center;color:#e74c3c;padding:2rem">❌ Supabase კავშირი ვერ მოხერხდა</td></tr>';
+    if (msgEl) {
+      msgEl.textContent = String((e && e.message) || e || '');
+      msgEl.className = 'admin-msg err';
+    }
+  }
+}
+
 function applyResFilter() {
   loadReservations();
 }
@@ -5357,6 +5898,99 @@ function applyResFilter() {
 const payLabels = {'ნაღდი':'ნაღდი',bog:'საქართველოს ბანკი',tbc:'თიბისი ბანკი',tera:'ტერა ბანკი','გადარიცხვა':'გადარიცხვა',cash:'ნაღდი',transfer:'გადარიცხვა'};
 const statusColors = {pending:'#c9a84c',confirmed:'#2ecc71',cancelled:'#e74c3c'};
 const statusLabels = {pending:'⏳ მომლოდინე',confirmed:'✅ დადასტ.',cancelled:'❌ გაუქმდა'};
+
+function printResChecksReport() {
+  if (!lastResChecksRows.length) {
+    adminMsg('res-checks-msg', '❯ ჯერ დააჭირეთ „ჩვენება“ და დაელოდეთ სიას', 'err');
+    return;
+  }
+  const from = g('res-filter-from')?.value || '';
+  const to = g('res-filter-to')?.value || '';
+  const status = g('res-filter-status')?.value || '';
+  const period = (from || to) ? `პერიოდი: ${from || '—'} — ${to || '—'}` : 'პერიოდი: ყველა';
+  const statusStr = status ? ` | სტატუსი: ${statusLabels[status] || status}` : ' | სტატუსი: ყველა';
+  const blocks = lastResChecksRows.map(r => {
+    const o = parseReservationPrecheck(r.precheck_json);
+    const itemsHtml =
+      o && o.items.length
+        ? o.items
+            .map(it => {
+              const nm = escapeHtml(it.ka || it.en || '—');
+              const lt =
+                it.line != null && Number.isFinite(Number(it.line))
+                  ? Number(it.line)
+                  : Number(it.p) * Number(it.qty || 0);
+              const sum = Number.isFinite(lt) ? lt.toFixed(2) : '—';
+              return `<tr><td>${nm}</td><td style="text-align:center">${escapeHtml(String(it.qty))}</td><td style="text-align:right">₾${sum}</td></tr>`;
+            })
+            .join('')
+        : '<tr><td colspan="3">—</td></tr>';
+    const tot = o && o.total != null && Number.isFinite(Number(o.total)) ? `₾${Number(o.total).toFixed(2)}` : '—';
+    const st = r.status || '';
+    const stLab = escapeHtml(statusLabels[st] || st || '—');
+    return `
+    <div style="margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:1px solid #ddd;page-break-inside:avoid">
+      <div style="font-weight:700;font-size:13px;margin-bottom:6px">${escapeHtml(r.name || '—')} · ${escapeHtml(r.phone || '—')}</div>
+      <div style="font-size:11px;color:#555;margin-bottom:8px">📅 ${escapeHtml(r.date || '—')} ${escapeHtml(r.time || '—')} · 🪑 ${escapeHtml(r.table_id || '—')} · <strong>${stLab}</strong></div>
+      <table style="width:100%;border-collapse:collapse;font-size:11px"><thead><tr><th style="text-align:left;border:1px solid #ccc;padding:4px">კერძი</th><th style="border:1px solid #ccc;padding:4px">რაოდ.</th><th style="text-align:right;border:1px solid #ccc;padding:4px">თანხა</th></tr></thead><tbody>${itemsHtml}</tbody></table>
+      <div style="margin-top:6px;font-weight:600">სულ: ${tot}</div>
+    </div>`;
+  }).join('');
+  const win = window.open('', '_blank');
+  if (!win) {
+    adminMsg('res-checks-msg', '❯ გთხოვთ დაუშვათ pop-up ამ საიტისთვის', 'err');
+    return;
+  }
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>ჯავშნები ჩეკებით</title>
+  <style>body{font-family:sans-serif;font-size:12px;padding:20px;color:#222}h2{margin:0 0 6px}.meta{font-size:10px;color:#666;margin-bottom:16px}</style></head><body>
+  <h2>რესტორანი ტიფლისი — ჯავშნები ჩეკებით</h2>
+  <p class="meta">${period}${statusStr} · ${lastResChecksRows.length} ჩანაწერი · ${toLocaleDateStringGeorgia(new Date())}</p>
+  ${blocks}
+  </body></html>`);
+  win.document.close();
+  setTimeout(() => win.print(), 400);
+}
+
+/** ურნა (ტაბის გვერდით) — ჩეკიანი ჯავშნები → სტატუსი „გაუქმებული“ (ურნა), არა DELETE */
+async function resChecksTrashFromTab() {
+  adminTab('reschecks');
+  if (!lastResChecksRows.length) {
+    adminMsg('res-checks-msg', '❯ ჯერ დააჭირეთ „ჩვენება (იგივე ფილტრები)“', 'err');
+    return;
+  }
+  const n = lastResChecksRows.length;
+  if (
+    !confirm(
+      `ურნა: ${n} ჩეკიანი ჯავშანი გაუქმდეს?\n(სტატუსი → გაუქმებული — ჩანაწერი დარჩება „ჯავშნებში“, აქედან გაქრება.)`
+    )
+  ) {
+    return;
+  }
+  let ok = 0;
+  let fail = 0;
+  for (const r of lastResChecksRows) {
+    try {
+      await supaFetch(`/rest/v1/reservations?id=eq.${encodeURIComponent(String(r.id))}`, 'PATCH', { status: 'cancelled' });
+      ok++;
+    } catch (e) {
+      fail++;
+      console.warn('res cancel (trash)', r.id, e);
+    }
+  }
+  lastResChecksRows = [];
+  adminMsg(
+    'res-checks-msg',
+    fail ? `⚠ გაუქმდა ${ok}, ვერ გაუქმდა ${fail} (RLS UPDATE ან ქსელი)` : `✅ ურნაში გადატანილია ${ok} ჯავშანი (გაუქმებული)`,
+    fail ? 'err' : 'ok'
+  );
+  auditLog('res_checks_trash_cancel', ok + ' ok, ' + fail + ' fail');
+  try {
+    await loadReservations();
+  } catch (_) {}
+  try {
+    await loadReservationsWithChecks();
+  } catch (_) {}
+}
 
 function resAdvanceLocked(r) {
   return (r.advance_amount != null && r.advance_amount !== '') || (r.advance_payment != null && r.advance_payment !== '');
@@ -5432,9 +6066,11 @@ async function changeResStatus(id, status) {
   try {
     await supaFetch(`/rest/v1/reservations?id=eq.${encodeURIComponent(String(id))}`, 'PATCH', {status});
     await loadReservations();
+    await loadReservationsWithChecks();
     auditLog('res_status', id + ' → ' + status);
   } catch (e) {
     adminMsg('res-list-msg', '❌ სტატუსი ვერ განახლდა: ' + (e.message || ''), 'err');
+    adminMsg('res-checks-msg', '❌ სტატუსი ვერ განახლდა: ' + (e.message || ''), 'err');
   }
 }
 
@@ -5463,6 +6099,7 @@ async function saveReservationAdvanceRow(resId) {
     adminMsg('res-list-msg', '✅ შენახულია', 'ok');
     auditLog('res_advance', String(resId));
     lockReservationAdvanceRow(resId);
+    loadReservationsWithChecks();
   } catch (e) {
     adminMsg('res-list-msg', '❌ ვერ შენახა: ' + (e.message || ''), 'err');
   }
