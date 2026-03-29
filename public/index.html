@@ -38,7 +38,7 @@
 
 <title>რესტორანი ტიფლისი — მენიუ & რეზერვაცია</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,400&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
   /* Full UI luxury comfort — softer contrast, warmer paper */
@@ -68,6 +68,12 @@
   --ui-shadow-card: 0 18px 48px rgba(42, 34, 24, 0.08), 0 0 0 1px rgba(223, 214, 200, 0.45);
   --ui-shadow-order: 0 22px 56px rgba(26, 20, 14, 0.35), 0 0 0 1px rgba(61, 155, 147, 0.12);
   --font-display: 'Cormorant', 'Lora', Georgia, serif;
+  --font-menu-ui: 'DM Sans', 'Raleway', system-ui, sans-serif;
+  /* ინსპირაცია „bright menu“ — თბილი აქცენტები მხოლოდ #menu-ში */
+  --menu-blob-gold: rgba(201, 160, 61, 0.16);
+  --menu-blob-teal: rgba(58, 148, 140, 0.11);
+  --menu-blob-warm: rgba(184, 93, 56, 0.07);
+  --menu-item-dot: linear-gradient(135deg, #e8b44a 0%, var(--teal) 100%);
   /* Admin panel — luxury tokens (global: .admin-fab sits outside #admin-modal) */
   --adm-radius: 14px;
   --adm-radius-sm: 9px;
@@ -136,7 +142,7 @@ html.tiflis-full-ui:not(.admin-panel-route) *::selection {
 }
 html.tiflis-full-ui:not(.admin-panel-route) #menu {
   background:
-    linear-gradient(180deg, var(--cream) 0%, #f1ebe0 55%, var(--cream) 100%);
+    linear-gradient(180deg, var(--cream) 0%, #f0e9de 52%, var(--cream) 100%);
 }
 @media (prefers-reduced-transparency: reduce) {
   html.tiflis-full-ui:not(.admin-panel-route) body {
@@ -599,8 +605,231 @@ section { padding: 6rem 0; }
   line-height: 1.7;
 }
 
-/* ===== MENU SECTION ===== */
-#menu { background: var(--cream); }
+/* ===== MENU SECTION (ორგანული ბლობი + „bright“ აქცენტები, ტილი უცვლელი) ===== */
+#menu {
+  background: var(--cream);
+  position: relative;
+  isolation: isolate;
+  overflow-x: clip;
+}
+
+#menu > .container {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+#menu .menu-layout {
+  text-align: left;
+}
+
+#menu::before,
+#menu::after {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 60% 40% 70% 30% / 50% 60% 40% 50%;
+  filter: blur(0.5px);
+}
+
+#menu::before {
+  width: min(68vw, 480px);
+  height: min(68vw, 480px);
+  top: 4%;
+  right: -14%;
+  background:
+    radial-gradient(circle at 35% 35%, var(--menu-blob-gold) 0%, transparent 58%),
+    radial-gradient(circle at 70% 65%, var(--menu-blob-teal) 0%, transparent 52%);
+  opacity: 0.9;
+  animation: tiflisMenuBlobA 16s var(--ease-soft) infinite alternate;
+}
+
+#menu::after {
+  width: min(58vw, 400px);
+  height: min(58vw, 400px);
+  bottom: 12%;
+  left: -16%;
+  border-radius: 40% 60% 30% 70% / 60% 40% 60% 40%;
+  background:
+    radial-gradient(circle at 50% 45%, var(--menu-blob-warm) 0%, transparent 55%),
+    radial-gradient(circle at 30% 70%, var(--menu-blob-teal) 0%, transparent 48%);
+  opacity: 0.85;
+  animation: tiflisMenuBlobB 18s var(--ease-soft) infinite alternate;
+}
+
+@keyframes tiflisMenuBlobA {
+  from {
+    border-radius: 60% 40% 70% 30% / 50% 60% 40% 50%;
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  to {
+    border-radius: 45% 55% 35% 65% / 55% 45% 55% 45%;
+    transform: translate(-12px, 8px) rotate(8deg) scale(1.05);
+  }
+}
+
+@keyframes tiflisMenuBlobB {
+  from {
+    border-radius: 40% 60% 30% 70% / 60% 40% 60% 40%;
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  to {
+    border-radius: 65% 35% 55% 45% / 40% 60% 40% 60%;
+    transform: translate(10px, -14px) rotate(-10deg) scale(1.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #menu::before,
+  #menu::after {
+    animation: none !important;
+  }
+}
+
+@media (max-width: 900px) {
+  #menu::before {
+    width: min(85vw, 320px);
+    height: min(85vw, 320px);
+    right: -20%;
+    opacity: 0.65;
+  }
+  #menu::after {
+    width: min(78vw, 280px);
+    height: min(78vw, 280px);
+    left: -22%;
+    opacity: 0.55;
+  }
+}
+
+#menu .section-label {
+  display: inline-block;
+  padding: 0.38rem 1.15rem;
+  border-radius: 100px;
+  background: rgba(58, 148, 140, 0.1);
+  border: 1px solid rgba(58, 148, 140, 0.22);
+  box-shadow: 0 4px 20px rgba(58, 148, 140, 0.06);
+}
+
+#menu .section-title em {
+  color: var(--gold);
+  text-shadow: 0 1px 0 rgba(255, 253, 248, 0.8);
+}
+
+#menu .section-rule {
+  width: min(200px, 42vw);
+  height: 3px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1.75rem;
+  border-radius: 100px;
+  background: linear-gradient(90deg, transparent, var(--teal) 20%, var(--gold) 80%, transparent);
+}
+
+#menu .menu-item {
+  border-bottom-style: dashed;
+  border-bottom-color: rgba(223, 214, 200, 0.85);
+}
+
+#menu .menu-item:first-child {
+  border-top-style: dashed;
+  border-top-color: rgba(223, 214, 200, 0.85);
+}
+
+#menu .menu-item::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--menu-item-dot);
+  flex-shrink: 0;
+  align-self: center;
+  opacity: 0.88;
+  box-shadow: 0 0 0 1px rgba(255, 253, 248, 0.6);
+}
+
+#menu .menu-item.selected::before {
+  opacity: 1;
+  box-shadow: 0 0 0 2px rgba(58, 148, 140, 0.35);
+}
+
+#menu .menu-item-name {
+  font-family: var(--font-menu-ui);
+  font-weight: 500;
+  font-size: 0.88rem;
+  letter-spacing: 0.03em;
+}
+
+#menu .menu-item-price {
+  font-family: var(--font-menu-ui);
+  font-weight: 600;
+  color: var(--brick-dark);
+}
+
+/* მენიუს სიის რაოდენობა მხოლოდ .menu-dishes-col-ში (შეკვეთის პანელი #menu-შია — არ ერგება დიდი ღილაკები) */
+#menu .menu-dishes-col .qty-ctrl {
+  gap: 0.75rem;
+}
+#menu .menu-dishes-col .qty-btn {
+  width: 3.25rem;
+  height: 3.25rem;
+  min-width: 3.25rem;
+  min-height: 3.25rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1;
+  border-radius: 12px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+}
+#menu .menu-dishes-col .qty-input {
+  width: 4.5rem !important;
+  min-width: 4.5rem !important;
+  max-width: 5.5rem;
+  height: 3.25rem;
+  min-height: 3.25rem;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  padding: 0 0.35rem;
+  border-radius: 10px;
+  font-family: var(--font-menu-ui), 'Raleway', sans-serif;
+}
+
+/* შეკვეთის პანელი: კომპაქტური +/− — ადგილი სახელებისთვის */
+.order-panel .order-line-qty .qty-btn {
+  width: 26px !important;
+  height: 26px !important;
+  min-width: 26px !important;
+  min-height: 26px !important;
+  max-width: 26px !important;
+  max-height: 26px !important;
+  font-size: 14px !important;
+  font-weight: 600;
+  line-height: 1;
+  padding: 0;
+  border-color: rgba(224, 216, 196, 0.35);
+  color: rgba(245, 240, 232, 0.88);
+  background: rgba(255, 253, 248, 0.06);
+}
+.order-panel .order-line-qty .qty-btn:hover {
+  border-color: var(--teal);
+  color: #fff;
+  background: rgba(58, 148, 140, 0.35);
+}
+.order-panel .order-line-qty .qty-input {
+  width: 2.35rem !important;
+  min-width: 2.35rem !important;
+  max-width: 3rem !important;
+  height: 26px !important;
+  min-height: 26px !important;
+  font-size: 0.72rem !important;
+  font-weight: 600;
+  padding: 0 0.1rem !important;
+}
+.order-panel .order-line-qty {
+  gap: 0.28rem;
+}
 
 .lang-toggle {
   display: flex;
@@ -1940,6 +2169,41 @@ footer {
   .qty-ctrl { flex-shrink: 0; gap: 0.25rem; }
   .qty-btn { width: 28px; height: 28px; font-size: 13px; flex-shrink: 0; }
   .qty-input { width: 2.65rem; min-width: 2.4rem; height: 28px; font-size: 0.75rem; }
+
+  #menu .menu-dishes-col .qty-ctrl {
+    gap: 0.85rem;
+  }
+  #menu .menu-dishes-col .qty-btn {
+    width: 3.5rem;
+    height: 3.5rem;
+    min-width: 3.5rem;
+    min-height: 3.5rem;
+    font-size: 1.65rem;
+  }
+  #menu .menu-dishes-col .qty-input {
+    width: 4.75rem !important;
+    min-width: 4.75rem !important;
+    height: 3.5rem;
+    min-height: 3.5rem;
+    font-size: 1.0625rem;
+  }
+
+  .order-panel .order-line-qty .qty-btn {
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+    min-height: 28px !important;
+    max-width: 28px !important;
+    max-height: 28px !important;
+    font-size: 13px !important;
+  }
+  .order-panel .order-line-qty .qty-input {
+    height: 28px !important;
+    min-height: 28px !important;
+    width: 2.45rem !important;
+    min-width: 2.45rem !important;
+    font-size: 0.74rem !important;
+  }
 
   /* ===== ORDER PANEL FIXES ===== */
   .order-panel {
@@ -3498,12 +3762,11 @@ html.admin-panel-route .tiflis-float-rail {
                 <div class="res-guest-presets">
                   <span class="res-guest-presets-label" data-i18n="guests_quick">სწრაფი არჩევა</span>
                   <div class="res-guest-presets-row">
-                    <button type="button" class="guest-preset-chip" onclick="setGuestsN(2)" data-guest-n="2">2</button>
-                    <button type="button" class="guest-preset-chip" onclick="setGuestsN(4)" data-guest-n="4">4</button>
-                    <button type="button" class="guest-preset-chip" onclick="setGuestsN(6)" data-guest-n="6">6</button>
-                    <button type="button" class="guest-preset-chip" onclick="setGuestsN(8)" data-guest-n="8">8</button>
                     <button type="button" class="guest-preset-chip" onclick="setGuestsN(10)" data-guest-n="10">10</button>
-                    <button type="button" class="guest-preset-chip" onclick="setGuestsN(12)" data-guest-n="12">12</button>
+                    <button type="button" class="guest-preset-chip" onclick="setGuestsN(20)" data-guest-n="20">20</button>
+                    <button type="button" class="guest-preset-chip" onclick="setGuestsN(30)" data-guest-n="30">30</button>
+                    <button type="button" class="guest-preset-chip" onclick="setGuestsN(40)" data-guest-n="40">40</button>
+                    <button type="button" class="guest-preset-chip" onclick="setGuestsN(50)" data-guest-n="50">50</button>
                   </div>
                 </div>
               </div>
@@ -4423,9 +4686,9 @@ function renderOrder() {
     return `<div class="order-line">
       <div class="order-line-name">${item[lang]}</div>
       <div class="order-line-qty">
-        <button type="button" class="qty-btn" style="width:20px;height:20px;font-size:11px" onclick="chg(${id},-1)">−</button>
-        <input class="qty-input" type="number" inputmode="numeric" min="0" max="999" step="1" data-order-line-id="${id}" value="${q}" title="რაოდენობა" aria-label="რაოდენობა" style="width:2.4rem;height:20px;font-size:11px" oninput="setQtyFromField(${id}, this.value, 'input')" onblur="setQtyFromField(${id}, this.value, 'blur')">
-        <button type="button" class="qty-btn" style="width:20px;height:20px;font-size:11px" onclick="chg(${id},1)">+</button>
+        <button type="button" class="qty-btn" onclick="chg(${id},-1)">−</button>
+        <input class="qty-input" type="number" inputmode="numeric" min="0" max="999" step="1" data-order-line-id="${id}" value="${q}" title="რაოდენობა" aria-label="რაოდენობა" oninput="setQtyFromField(${id}, this.value, 'input')" onblur="setQtyFromField(${id}, this.value, 'blur')">
+        <button type="button" class="qty-btn" onclick="chg(${id},1)">+</button>
       </div>
       <div class="order-line-price">₾${s.toFixed(2)}</div>
       <button type="button" class="remove-btn" onclick="removeItem(${id})">×</button>

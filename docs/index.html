@@ -602,6 +602,69 @@ section { padding: 6rem 0; }
 /* ===== MENU SECTION ===== */
 #menu { background: var(--cream); }
 
+#menu .menu-dishes-col .qty-ctrl {
+  gap: 0.75rem;
+}
+#menu .menu-dishes-col .qty-btn {
+  width: 3.25rem;
+  height: 3.25rem;
+  min-width: 3.25rem;
+  min-height: 3.25rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1;
+  border-radius: 12px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+}
+#menu .menu-dishes-col .qty-input {
+  width: 4.5rem !important;
+  min-width: 4.5rem !important;
+  max-width: 5.5rem;
+  height: 3.25rem;
+  min-height: 3.25rem;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  padding: 0 0.35rem;
+  border-radius: 10px;
+  font-family: 'Raleway', sans-serif;
+}
+
+.order-panel .order-line-qty .qty-btn {
+  width: 26px !important;
+  height: 26px !important;
+  min-width: 26px !important;
+  min-height: 26px !important;
+  max-width: 26px !important;
+  max-height: 26px !important;
+  font-size: 14px !important;
+  font-weight: 600;
+  line-height: 1;
+  padding: 0;
+  border-color: rgba(224, 216, 196, 0.35);
+  color: rgba(245, 240, 232, 0.88);
+  background: rgba(255, 253, 248, 0.06);
+}
+.order-panel .order-line-qty .qty-btn:hover {
+  border-color: var(--teal);
+  color: #fff;
+  background: rgba(58, 148, 140, 0.35);
+}
+.order-panel .order-line-qty .qty-input {
+  width: 2.35rem !important;
+  min-width: 2.35rem !important;
+  max-width: 3rem !important;
+  height: 26px !important;
+  min-height: 26px !important;
+  font-size: 0.72rem !important;
+  font-weight: 600;
+  padding: 0 0.1rem !important;
+}
+.order-panel .order-line-qty {
+  gap: 0.28rem;
+}
+
 .lang-toggle {
   display: flex;
   gap: 0.25rem;
@@ -1940,6 +2003,41 @@ footer {
   .qty-ctrl { flex-shrink: 0; gap: 0.25rem; }
   .qty-btn { width: 28px; height: 28px; font-size: 13px; flex-shrink: 0; }
   .qty-input { width: 2.65rem; min-width: 2.4rem; height: 28px; font-size: 0.75rem; }
+
+  #menu .menu-dishes-col .qty-ctrl {
+    gap: 0.85rem;
+  }
+  #menu .menu-dishes-col .qty-btn {
+    width: 3.5rem;
+    height: 3.5rem;
+    min-width: 3.5rem;
+    min-height: 3.5rem;
+    font-size: 1.65rem;
+  }
+  #menu .menu-dishes-col .qty-input {
+    width: 4.75rem !important;
+    min-width: 4.75rem !important;
+    height: 3.5rem;
+    min-height: 3.5rem;
+    font-size: 1.0625rem;
+  }
+
+  .order-panel .order-line-qty .qty-btn {
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+    min-height: 28px !important;
+    max-width: 28px !important;
+    max-height: 28px !important;
+    font-size: 13px !important;
+  }
+  .order-panel .order-line-qty .qty-input {
+    height: 28px !important;
+    min-height: 28px !important;
+    width: 2.45rem !important;
+    min-width: 2.45rem !important;
+    font-size: 0.74rem !important;
+  }
 
   /* ===== ORDER PANEL FIXES ===== */
   .order-panel {
@@ -3498,12 +3596,11 @@ html.admin-panel-route .tiflis-float-rail {
                 <div class="res-guest-presets">
                   <span class="res-guest-presets-label" data-i18n="guests_quick">სწრაფი არჩევა</span>
                   <div class="res-guest-presets-row">
-                    <button type="button" class="guest-preset-chip" onclick="setGuestsN(2)" data-guest-n="2">2</button>
-                    <button type="button" class="guest-preset-chip" onclick="setGuestsN(4)" data-guest-n="4">4</button>
-                    <button type="button" class="guest-preset-chip" onclick="setGuestsN(6)" data-guest-n="6">6</button>
-                    <button type="button" class="guest-preset-chip" onclick="setGuestsN(8)" data-guest-n="8">8</button>
                     <button type="button" class="guest-preset-chip" onclick="setGuestsN(10)" data-guest-n="10">10</button>
-                    <button type="button" class="guest-preset-chip" onclick="setGuestsN(12)" data-guest-n="12">12</button>
+                    <button type="button" class="guest-preset-chip" onclick="setGuestsN(20)" data-guest-n="20">20</button>
+                    <button type="button" class="guest-preset-chip" onclick="setGuestsN(30)" data-guest-n="30">30</button>
+                    <button type="button" class="guest-preset-chip" onclick="setGuestsN(40)" data-guest-n="40">40</button>
+                    <button type="button" class="guest-preset-chip" onclick="setGuestsN(50)" data-guest-n="50">50</button>
                   </div>
                 </div>
               </div>
@@ -4423,9 +4520,9 @@ function renderOrder() {
     return `<div class="order-line">
       <div class="order-line-name">${item[lang]}</div>
       <div class="order-line-qty">
-        <button type="button" class="qty-btn" style="width:20px;height:20px;font-size:11px" onclick="chg(${id},-1)">−</button>
-        <input class="qty-input" type="number" inputmode="numeric" min="0" max="999" step="1" data-order-line-id="${id}" value="${q}" title="რაოდენობა" aria-label="რაოდენობა" style="width:2.4rem;height:20px;font-size:11px" oninput="setQtyFromField(${id}, this.value, 'input')" onblur="setQtyFromField(${id}, this.value, 'blur')">
-        <button type="button" class="qty-btn" style="width:20px;height:20px;font-size:11px" onclick="chg(${id},1)">+</button>
+        <button type="button" class="qty-btn" onclick="chg(${id},-1)">−</button>
+        <input class="qty-input" type="number" inputmode="numeric" min="0" max="999" step="1" data-order-line-id="${id}" value="${q}" title="რაოდენობა" aria-label="რაოდენობა" oninput="setQtyFromField(${id}, this.value, 'input')" onblur="setQtyFromField(${id}, this.value, 'blur')">
+        <button type="button" class="qty-btn" onclick="chg(${id},1)">+</button>
       </div>
       <div class="order-line-price">₾${s.toFixed(2)}</div>
       <button type="button" class="remove-btn" onclick="removeItem(${id})">×</button>
