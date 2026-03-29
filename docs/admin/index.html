@@ -124,18 +124,55 @@
       text-decoration: none;
     }
     .back a:hover { text-decoration: underline; }
+    .login-divider {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin: 1.1rem 0 0.85rem;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(245, 240, 230, 0.35);
+    }
+    .login-divider::before,
+    .login-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.12);
+    }
+    #google-btn-host {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      min-height: 44px;
+    }
+    #google-err {
+      display: none;
+      font-size: 0.72rem;
+      color: #e8a598;
+      margin-top: 0.65rem;
+      text-align: center;
+      line-height: 1.45;
+    }
+    #google-section { display: none; }
   </style>
 </head>
 <body>
   <div class="card">
     <h1>ადმინ შესვლა</h1>
-    <p class="sub">რესტორანი ტიფლისი · პაროლის შემდეგ გადამისამართდებით ადმინ პანელზე</p>
+    <p class="sub">რესტორანი ტიფლისი · პაროლი ან Google — შემდეგ ადმინ პანელი</p>
     <form id="login-form" autocomplete="on">
       <label for="pw">პაროლი</label>
       <input type="password" id="pw" name="password" autocomplete="current-password" required />
       <button type="submit" id="btn">შესვლა</button>
       <p class="err" id="err" role="alert">❌ პაროლი არასწორია</p>
     </form>
+    <div id="google-section">
+      <div class="login-divider">ან Google</div>
+      <div id="google-btn-host"></div>
+      <p id="google-err" role="alert"></p>
+    </div>
     <p class="back"><a href="../">← მთავარი გვერდი</a></p>
   </div>
   <script>
@@ -186,6 +223,101 @@
       }
     }
 
+    function goPanel() {
+      var p2 = (location.pathname || '/').replace(/\/+$/, '') || '/';
+      var base = p2.replace(/\/admin(\/index\.html)?$/i, '');
+      var panel = base + '/admin/panel';
+      if (location.hostname.indexOf('github.io') !== -1) panel += '/';
+      window.location.replace(panel);
+    }
+
+    let googleClientInited = null;
+    function loadGsi() {
+      if (window.google && window.google.accounts && window.google.accounts.id) return Promise.resolve();
+      return new Promise(function (resolve, reject) {
+        var s = document.createElement('script');
+        s.src = 'https://accounts.google.com/gsi/client';
+        s.async = true;
+        s.defer = true;
+        s.onload = function () { resolve(); };
+        s.onerror = function () { reject(new Error('gsi')); };
+        document.head.appendChild(s);
+      });
+    }
+
+    async function setupGoogleSignIn() {
+      var section = document.getElementById('google-section');
+      var host = document.getElementById('google-btn-host');
+      var gErr = document.getElementById('google-err');
+      if (!section || !host) return;
+      try {
+        var r = await fetch('/api/auth/google-config');
+        var cfg = await r.json();
+        if (!cfg || !cfg.enabled || !cfg.clientId) {
+          section.style.display = 'none';
+          host.innerHTML = '';
+          return;
+        }
+        section.style.display = 'block';
+        await loadGsi();
+        if (googleClientInited !== cfg.clientId) {
+          google.accounts.id.initialize({
+            client_id: cfg.clientId,
+            callback: function (response) {
+              onGoogleCredential(response, gErr);
+            },
+            auto_select: false,
+            cancel_on_tap_outside: true,
+          });
+          googleClientInited = cfg.clientId;
+        }
+        host.innerHTML = '';
+        google.accounts.id.renderButton(host, {
+          theme: 'filled_black',
+          size: 'large',
+          width: 280,
+          text: 'continue_with',
+          locale: 'ka',
+        });
+      } catch (e) {
+        section.style.display = 'none';
+        host.innerHTML = '';
+      }
+    }
+
+    async function onGoogleCredential(response, errEl) {
+      if (errEl) {
+        errEl.style.display = 'none';
+        errEl.textContent = '';
+      }
+      if (!response || !response.credential) return;
+      try {
+        var r = await fetch('/api/auth/google', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ credential: response.credential }),
+        });
+        var data = await r.json().catch(function () { return {}; });
+        if (!r.ok || !data.ok) {
+          if (errEl) {
+            errEl.textContent = (data && data.error) ? String(data.error) : 'Google შესვლა ვერ მოხერხდა';
+            errEl.style.display = 'block';
+          }
+          return;
+        }
+        sessionStorage.setItem('tiflis_admin_logged', '1');
+        sessionStorage.setItem('tiflis_admin_stay', '1');
+        goPanel();
+      } catch (e) {
+        if (errEl) {
+          errEl.textContent = 'ქსელის შეცდომა — გაუშვით npm start (სერვერი) და სცადეთ თავიდან';
+          errEl.style.display = 'block';
+        }
+      }
+    }
+
+    setupGoogleSignIn();
+
     const form = document.getElementById('login-form');
     const pwEl = document.getElementById('pw');
     const errEl = document.getElementById('err');
@@ -200,11 +332,7 @@
         if (ok) {
           sessionStorage.setItem('tiflis_admin_logged', '1');
           sessionStorage.setItem('tiflis_admin_stay', '1');
-          var p2 = (location.pathname || '/').replace(/\/+$/, '') || '/';
-          var base = p2.replace(/\/admin(\/index\.html)?$/i, '');
-          var panel = base + '/admin/panel';
-          if (location.hostname.indexOf('github.io') !== -1) panel += '/';
-          window.location.replace(panel);
+          goPanel();
         } else {
           errEl.classList.add('show');
           pwEl.value = '';

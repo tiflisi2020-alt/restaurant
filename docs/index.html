@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ka">
+<html lang="ka" class="tiflis-full-ui">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Cache-Control" content="max-age=300">
-<link rel="icon" href="favicon.ico" type="image/png" sizes="any">
+<link rel="icon" href="favicon.ico" type="image/x-icon" sizes="any">
 <link rel="apple-touch-icon" href="logo.png">
 <script>
 (function () {
@@ -41,24 +41,33 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,400&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --cream: #f5f0e6;
-  --warm: #ede8dc;
-  --card: #fffdf8;
-  --teal: #3d9b93;
-  --teal-dark: #2d7870;
-  --teal-light: rgba(61,155,147,0.12);
-  --brick: #c2613a;
-  --brick-dark: #a04e2e;
-  --gold: #d4a843;
-  --ink: #2c2010;
-  --mid: #6b5a48;
-  --muted: #9a8878;
-  --border: #e0d8c4;
-  --dark: #2c2010;
-  --terracotta: #c2613a;
-  --forest: #2c2010;
+  /* Full UI luxury comfort — softer contrast, warmer paper */
+  --cream: #f4efe4;
+  --warm: #ebe4d6;
+  --card: #fffdf9;
+  --teal: #3a948c;
+  --teal-dark: #2a726b;
+  --teal-light: rgba(58,148,140,0.11);
+  --brick: #b85d38;
+  --brick-dark: #9a4f30;
+  --gold: #c9a03d;
+  --ink: #2a2218;
+  --mid: #655845;
+  --muted: #8f8072;
+  --border: #dfd6c8;
+  --dark: #2a2218;
+  --terracotta: #b85d38;
+  --forest: #2a2218;
   --ease-micro: cubic-bezier(0.34, 1.15, 0.64, 1);
   --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Public UI radii & shadows (full pack) */
+  --ui-radius-sm: 10px;
+  --ui-radius: 14px;
+  --ui-radius-lg: 22px;
+  --ui-shadow-soft: 0 14px 42px rgba(42, 34, 24, 0.07);
+  --ui-shadow-card: 0 18px 48px rgba(42, 34, 24, 0.08), 0 0 0 1px rgba(223, 214, 200, 0.45);
+  --ui-shadow-order: 0 22px 56px rgba(26, 20, 14, 0.35), 0 0 0 1px rgba(61, 155, 147, 0.12);
+  --font-display: 'Cormorant', 'Lora', Georgia, serif;
   /* Admin panel — luxury tokens (global: .admin-fab sits outside #admin-modal) */
   --adm-radius: 14px;
   --adm-radius-sm: 9px;
@@ -89,6 +98,50 @@ body {
   font-weight: 400;
   min-height: 100vh;
   overflow-x: hidden;
+}
+
+/* ===== FULL UI LUXURY COMFORT PACK (public site) ===== */
+html.tiflis-full-ui:not(.admin-panel-route) {
+  scrollbar-color: rgba(58, 148, 140, 0.38) rgba(223, 214, 200, 0.4);
+  scrollbar-width: thin;
+}
+html.tiflis-full-ui:not(.admin-panel-route) ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+html.tiflis-full-ui:not(.admin-panel-route) ::-webkit-scrollbar-track {
+  background: rgba(223, 214, 200, 0.4);
+  border-radius: 100px;
+}
+html.tiflis-full-ui:not(.admin-panel-route) ::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(58, 148, 140, 0.5) 0%, rgba(201, 160, 61, 0.25) 100%);
+  border-radius: 100px;
+  border: 2px solid rgba(244, 239, 228, 0.85);
+}
+html.tiflis-full-ui:not(.admin-panel-route) body {
+  font-size: 1.0625rem;
+  line-height: 1.68;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  background:
+    radial-gradient(ellipse 100% 50% at 50% -6%, rgba(58, 148, 140, 0.055) 0%, transparent 45%),
+    radial-gradient(ellipse 65% 35% at 100% 5%, rgba(201, 160, 61, 0.04) 0%, transparent 40%),
+    var(--cream);
+}
+html.tiflis-full-ui:not(.admin-panel-route)::selection,
+html.tiflis-full-ui:not(.admin-panel-route) *::selection {
+  background: rgba(58, 148, 140, 0.24);
+  color: var(--ink);
+}
+html.tiflis-full-ui:not(.admin-panel-route) #menu {
+  background:
+    linear-gradient(180deg, var(--cream) 0%, #f1ebe0 55%, var(--cream) 100%);
+}
+@media (prefers-reduced-transparency: reduce) {
+  html.tiflis-full-ui:not(.admin-panel-route) body {
+    background: var(--cream);
+  }
 }
 
 /* ===== HERO ===== */
@@ -128,7 +181,7 @@ body {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(to bottom, rgba(44,32,16,0.55) 0%, rgba(44,32,16,0.45) 50%, rgba(44,32,16,0.75) 100%);
+    linear-gradient(to bottom, rgba(42,34,24,0.52) 0%, rgba(42,34,24,0.42) 50%, rgba(42,34,24,0.72) 100%);
 }
 
 @keyframes bgPulse {
@@ -162,7 +215,7 @@ body {
 }
 
 .hero-title {
-  font-family: 'Lora', serif;
+  font-family: var(--font-display);
   font-size: clamp(3rem, 8vw, 6.5rem);
   font-weight: 400;
   line-height: 1.05;
@@ -195,7 +248,7 @@ body {
   margin: 0 auto 2.5rem;
   opacity: 0;
   animation: fadeUp 0.8s 0.7s forwards;
-  border-radius: 2px;
+  border-radius: var(--ui-radius-sm);
 }
 
 .hero-cta {
@@ -212,7 +265,7 @@ body {
   background: var(--teal);
   color: white;
   border: none;
-  border-radius: 2px;
+  border-radius: var(--ui-radius-sm);
   font-family: 'Raleway', sans-serif;
   font-size: 0.72rem;
   font-weight: 600;
@@ -243,7 +296,7 @@ body {
   background: transparent;
   color: var(--cream);
   border: 1.5px solid rgba(245,240,230,0.3);
-  border-radius: 2px;
+  border-radius: var(--ui-radius-sm);
   font-family: 'Raleway', sans-serif;
   font-size: 0.72rem;
   font-weight: 400;
@@ -348,14 +401,14 @@ nav {
 }
 
 nav.scrolled {
-  background: rgba(44,32,16,0.96);
+  background: rgba(42,34,24,0.94);
   backdrop-filter: blur(12px);
   padding: 0.6rem 3rem;
   border-bottom: 1px solid rgba(61,155,147,0.2);
 }
 
 .nav-logo {
-  font-family: 'Lora', serif;
+  font-family: var(--font-display);
   font-size: 1.3rem;
   font-weight: 400;
   color: var(--cream);
@@ -427,7 +480,7 @@ nav.scrolled {
 .nav-links a:focus-visible {
   outline: 2px solid var(--teal);
   outline-offset: 6px;
-  border-radius: 2px;
+  border-radius: var(--ui-radius-sm);
   color: var(--teal);
 }
 
@@ -441,7 +494,7 @@ nav.scrolled {
   font-weight: 600;
   cursor: pointer;
   background: transparent;
-  border-radius: 2px;
+  border-radius: var(--ui-radius-sm);
   font-family: 'Raleway', sans-serif;
   transition: background 0.3s var(--ease-soft), color 0.3s var(--ease-soft), transform 0.2s var(--ease-micro), box-shadow 0.35s var(--ease-soft);
   text-decoration: none;
@@ -480,7 +533,7 @@ section { padding: 6rem 0; }
 }
 
 .section-title {
-  font-family: 'Lora', serif;
+  font-family: var(--font-display);
   font-size: clamp(2rem, 4vw, 3.2rem);
   font-weight: 400;
   line-height: 1.15;
@@ -498,7 +551,7 @@ section { padding: 6rem 0; }
   height: 2px;
   background: var(--teal);
   margin-bottom: 2rem;
-  border-radius: 2px;
+  border-radius: var(--ui-radius-sm);
 }
 
 /* ===== ABOUT STRIP ===== */
@@ -533,7 +586,7 @@ section { padding: 6rem 0; }
 .about-icon { font-size: 1.5rem; margin-bottom: 0.85rem; }
 
 .about-item h3 {
-  font-family: 'Lora', serif;
+  font-family: var(--font-display);
   font-size: 1.25rem;
   font-weight: 400;
   color: var(--cream);
@@ -566,7 +619,7 @@ section { padding: 6rem 0; }
   letter-spacing: 0.08em;
   cursor: pointer;
   transition: background 0.25s var(--ease-soft), color 0.25s var(--ease-soft), border-color 0.25s var(--ease-soft), transform 0.2s var(--ease-micro), box-shadow 0.3s var(--ease-soft);
-  border-radius: 2px;
+  border-radius: var(--ui-radius-sm);
 }
 
 .lang-btn.active {
@@ -659,7 +712,7 @@ section { padding: 6rem 0; }
   letter-spacing: 0.05em;
   cursor: pointer;
   transition: background 0.25s var(--ease-soft), color 0.25s var(--ease-soft), border-color 0.25s var(--ease-soft), transform 0.2s var(--ease-micro), box-shadow 0.3s var(--ease-soft);
-  border-radius: 2px;
+  border-radius: var(--ui-radius-sm);
   white-space: nowrap;
 }
 
@@ -712,14 +765,14 @@ section { padding: 6rem 0; }
 .menu-item:hover {
   background: var(--card);
   border-left-color: var(--teal);
-  box-shadow: 0 2px 12px rgba(44, 32, 16, 0.06);
+  box-shadow: 0 4px 20px rgba(42, 34, 24, 0.05);
 }
 .menu-item:active {
   transform: none;
 }
 
 .menu-item-name {
-  font-family: 'Lora', serif;
+  font-family: var(--font-display);
   font-size: 0.85rem;
   font-weight: 400;
   color: var(--ink);
@@ -848,7 +901,7 @@ img:hover {
 .remove-btn:focus-visible {
   outline: 2px solid #e74c3c;
   outline-offset: 2px;
-  border-radius: 2px;
+  border-radius: var(--ui-radius-sm);
 }
 .remove-btn:active {
   transform: scale(0.92);
@@ -867,7 +920,7 @@ img:hover {
   justify-content: center;
   transition: border-color 0.2s var(--ease-soft), color 0.2s var(--ease-soft), background 0.2s var(--ease-soft), transform 0.15s var(--ease-micro);
   flex-shrink: 0;
-  border-radius: 2px;
+  border-radius: var(--ui-radius-sm);
 }
 
 .qty-btn:hover {
@@ -895,7 +948,7 @@ img:hover {
   font-size: 0.78rem;
   text-align: center;
   padding: 0 0.15rem;
-  border-radius: 2px;
+  border-radius: var(--ui-radius-sm);
   transition: border-color 0.2s var(--ease-soft), box-shadow 0.2s var(--ease-soft);
   -moz-appearance: textfield;
 }
@@ -921,11 +974,12 @@ img:hover {
   align-self: start;
   max-height: calc(100vh - 6.5rem);
   overflow-y: auto;
-  background: var(--ink);
+  background: linear-gradient(168deg, #2e2418 0%, var(--ink) 38%, #231a12 100%);
   padding: 1.35rem 1.25rem;
   color: var(--cream);
-  border-radius: 2px;
+  border-radius: var(--ui-radius);
   border-top: 3px solid var(--teal);
+  box-shadow: var(--ui-shadow-order);
 }
 
 .order-header {
@@ -938,7 +992,7 @@ img:hover {
 }
 
 .order-header h3 {
-  font-family: 'Lora', serif;
+  font-family: var(--font-display);
   font-size: 1.1rem;
   font-weight: 400;
   color: var(--cream);
@@ -962,7 +1016,7 @@ img:hover {
 .clear-btn:focus-visible {
   outline: 2px solid var(--brick);
   outline-offset: 3px;
-  border-radius: 2px;
+  border-radius: var(--ui-radius-sm);
 }
 
 .order-items {
@@ -974,9 +1028,9 @@ img:hover {
   text-align: center;
   padding: 1.5rem 0;
   font-size: 0.75rem;
-  color: rgba(245,240,230,0.25);
+  color: rgba(245,240,230,0.32);
   font-style: italic;
-  font-family: 'Lora', serif;
+  font-family: var(--font-display);
 }
 
 .order-item-row {
@@ -1048,7 +1102,7 @@ img:hover {
   padding: 0.4rem 0.5rem;
   font-size: 0.78rem;
   font-family: 'Raleway', sans-serif;
-  border-radius: 2px;
+  border-radius: var(--ui-radius-sm);
 }
 
 
@@ -1072,14 +1126,14 @@ img:hover {
 }
 
 .order-total-label {
-  font-family: 'Lora', serif;
+  font-family: var(--font-display);
   font-size: 1rem;
   font-style: italic;
   color: var(--cream);
 }
 
 .order-total-value {
-  font-family: 'Lora', serif;
+  font-family: var(--font-display);
   font-size: 1.3rem;
   font-weight: 400;
   color: var(--gold);
@@ -1104,7 +1158,7 @@ img:hover {
   text-transform: uppercase;
   cursor: pointer;
   transition: background 0.25s var(--ease-soft), border-color 0.25s var(--ease-soft), color 0.25s var(--ease-soft), transform 0.2s var(--ease-micro), box-shadow 0.3s var(--ease-soft);
-  border-radius: 2px;
+  border-radius: var(--ui-radius-sm);
   text-align: center;
 }
 .order-btn:active {
@@ -1192,7 +1246,7 @@ img:hover {
 }
 
 .success-title {
-  font-family: 'Lora', serif;
+  font-family: var(--font-display);
   font-size: 1.1rem;
   font-style: italic;
   color: var(--cream);
@@ -1213,7 +1267,7 @@ img:hover {
   font-size: 0.75rem;
   text-align: left;
   margin-bottom: 1rem;
-  border-radius: 2px;
+  border-radius: var(--ui-radius-sm);
 }
 
 .receipt-row {
@@ -1244,7 +1298,7 @@ img:hover {
   font-family: 'Raleway', sans-serif;
   cursor: pointer;
   transition: background 0.25s var(--ease-soft), color 0.25s var(--ease-soft), border-color 0.25s var(--ease-soft), transform 0.2s var(--ease-micro), box-shadow 0.3s var(--ease-soft);
-  border-radius: 2px;
+  border-radius: var(--ui-radius-sm);
 }
 
 .success-btn:hover {
@@ -1268,7 +1322,7 @@ img:hover {
   font-size: 0.68rem;
   font-family: 'Raleway', sans-serif;
   cursor: pointer;
-  border-radius: 2px;
+  border-radius: var(--ui-radius-sm);
   transition: color 0.25s var(--ease-soft), border-color 0.25s var(--ease-soft), transform 0.2s var(--ease-micro);
   flex: 1;
 }
@@ -1385,12 +1439,13 @@ img:hover {
   background: var(--card);
   padding: 2.5rem;
   border: 1.5px solid var(--border);
-  border-radius: 2px;
+  border-radius: var(--ui-radius-lg);
   border-top: 3px solid var(--teal);
+  box-shadow: var(--ui-shadow-card);
 }
 
 .form-title {
-  font-family: 'Lora', serif;
+  font-family: var(--font-display);
   font-size: 1.6rem;
   font-weight: 400;
   color: var(--ink);
@@ -1432,7 +1487,7 @@ img:hover {
   font-family: 'Raleway', sans-serif;
   font-size: 0.85rem;
   transition: border-color 0.25s var(--ease-soft), box-shadow 0.25s var(--ease-soft);
-  border-radius: 2px;
+  border-radius: var(--ui-radius-sm);
 }
 
 .form-field input:focus, .form-field select:focus, .form-field textarea:focus {
@@ -1540,7 +1595,7 @@ img:hover {
   background: var(--teal);
   color: white;
   border: none;
-  border-radius: 2px;
+  border-radius: var(--ui-radius-sm);
   font-family: 'Raleway', sans-serif;
   font-size: 0.75rem;
   font-weight: 600;
@@ -1574,12 +1629,13 @@ img:hover {
   padding: 2.5rem;
   background: var(--card);
   border: 1.5px solid var(--border);
-  border-radius: 2px;
+  border-radius: var(--ui-radius-lg);
   border-top: 3px solid var(--teal);
+  box-shadow: var(--ui-shadow-soft);
 }
 
 #res-success .success-icon { background: var(--teal); }
-#res-success .success-title { color: var(--ink); font-family: 'Lora', serif; }
+#res-success .success-title { color: var(--ink); font-family: var(--font-display); }
 #res-success .success-sub { color: var(--muted); }
 
 /* ===== FOOTER ===== */
@@ -1599,7 +1655,7 @@ footer {
 }
 
 .footer-brand h2 {
-  font-family: 'Lora', serif;
+  font-family: var(--font-display);
   font-size: 1.4rem;
   font-weight: 400;
   color: var(--cream);
@@ -1638,7 +1694,7 @@ footer {
   color: var(--teal);
   outline: 2px solid var(--teal);
   outline-offset: 4px;
-  border-radius: 2px;
+  border-radius: var(--ui-radius-sm);
 }
 
 .footer-bottom {
@@ -1664,7 +1720,7 @@ footer {
   text-transform: uppercase;
   cursor: pointer;
   transition: border-color 0.25s var(--ease-soft), color 0.25s var(--ease-soft), transform 0.2s var(--ease-micro), box-shadow 0.3s var(--ease-soft);
-  border-radius: 2px;
+  border-radius: var(--ui-radius-sm);
 }
 .print-menu-btn:hover {
   border-color: var(--teal);
@@ -2475,6 +2531,39 @@ html.admin-panel-route .admin-content {
   line-height: 1.6;
 }
 
+.admin-google-section { margin-top: 0.25rem; }
+.admin-login-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 1rem 0 0.85rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(245, 240, 232, 0.32);
+}
+.admin-login-divider::before,
+.admin-login-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+.admin-google-host {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  min-height: 44px;
+  margin-top: 0.15rem;
+}
+.admin-google-host:empty { min-height: 0; margin-top: 0; }
+#admin-google-err {
+  margin-top: 0.65rem;
+  font-size: 0.72rem;
+  color: #e8a598;
+  line-height: 1.45;
+}
+
 .admin-input {
   width: 100%;
   padding: 0.58rem 0.85rem;
@@ -2676,7 +2765,7 @@ tr.admin-row-flash td {
 .admin-msg.err { background: rgba(194,97,58,0.14); border: 1px solid rgba(194,97,58,0.38); color: #f0b8a8; display: block; }
 .admin-msg.warn { background: rgba(241,196,15,0.1); border: 1px solid rgba(212,160,23,0.4); color: #e8c85c; display: block; }
 
-.badge { display: inline-block; padding: 2px 8px; border-radius: 2px; font-size: 0.68rem; font-weight: 600; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 0.68rem; font-weight: 600; }
 .badge-edit { background: rgba(212,168,67,0.15); color: var(--gold); border: 1px solid rgba(212,168,67,0.3); }
 
 /* Reservations table */
@@ -3068,7 +3157,7 @@ tr.admin-row-flash td {
   backdrop-filter: blur(14px) saturate(1.2);
   border: 1.5px solid rgba(61, 155, 147, 0.5);
   border-right: none;
-  border-radius: 2px 0 0 2px;
+  border-radius: var(--ui-radius-sm) 0 0 var(--ui-radius-sm);
   box-shadow: -6px 10px 32px rgba(44, 32, 16, 0.12);
   overflow: hidden;
   font-family: 'Raleway', sans-serif;
@@ -3131,7 +3220,7 @@ html.admin-panel-route .tiflis-float-rail {
     bottom: 5.5rem;
     transform: none;
     width: 52px;
-    border-radius: 2px 0 0 2px;
+    border-radius: var(--ui-radius-sm) 0 0 var(--ui-radius-sm);
   }
   .tiflis-float-btn {
     height: 52px;
@@ -3499,10 +3588,15 @@ html.admin-panel-route .tiflis-float-rail {
     <div id="admin-login-wrap">
       <div class="admin-login">
         <h3>🔐 შესვლა</h3>
-        <p>ადმინ პანელში შესასვლელად შეიყვანეთ პაროლი</p>
+        <p>ადმინ პანელში შესასვლელად შეიყვანეთ პაროლი ან გამოიყენეთ Google (თუ ჩართულია სერვერზე)</p>
         <input class="admin-input" type="password" id="admin-pw" placeholder="პაროლი" autocomplete="current-password" onkeydown="if(event.key==='Enter')adminLogin()">
         <button type="button" class="admin-btn" onclick="adminLogin()">შესვლა</button>
         <div id="admin-pw-err" style="color:#e74c3c;font-size:.75rem;margin-top:.75rem;display:none">❌ პაროლი არასწორია</div>
+        <div id="admin-google-section" class="admin-google-section" style="display:none">
+          <div class="admin-login-divider">ან Google</div>
+          <div id="admin-google-btn-host" class="admin-google-host"></div>
+          <div id="admin-google-err" style="display:none" role="alert"></div>
+        </div>
         <div id="admin-session-note" class="admin-msg err" style="display:none;margin-top:.75rem;text-align:left">⏱ სესია ამოიწურა — ხელახლა შედით.</div>
       </div>
     </div>
@@ -4616,7 +4710,7 @@ function sharePDF() {
     }
     .pdf-card {
       border: 1px solid #e0d8c4;
-      border-radius: 2px;
+      border-radius: 12px;
       padding: 20px 22px 24px;
       background: #fff;
       box-shadow: 0 1px 0 rgba(44,32,16,0.06);
@@ -5091,6 +5185,7 @@ let adminLastActivity = 0;
 let adminActivityHandlersBound = false;
 let adminKeyListenerOn = false;
 let lastFocusBeforeAdmin = null;
+let adminGoogleInitedClientId = null;
 
 function touchAdminSession() {
   if (sessionStorage.getItem('tiflis_admin_logged') === '1') adminLastActivity = Date.now();
@@ -5658,6 +5753,12 @@ function openAdmin() {
     if (g('admin-logout-btn')) g('admin-logout-btn').style.display = 'none';
     const sn = g('admin-session-note');
     if (sn && sn.style.display !== 'block') sn.style.display = 'none';
+    const gge = g('admin-google-err');
+    if (gge) {
+      gge.style.display = 'none';
+      gge.textContent = '';
+    }
+    ensureAdminGoogleButton();
     setTimeout(() => g('admin-pw').focus(), 100);
   }
   if (!adminKeyListenerOn) {
@@ -5699,6 +5800,9 @@ function closeAdminForce() {
 }
 
 function adminLogout() {
+  try {
+    if (window.google && window.google.accounts && window.google.accounts.id) window.google.accounts.id.cancel();
+  } catch (e) {}
   const isPanel = document.documentElement.classList.contains('admin-panel-route');
   const hadStay = sessionStorage.getItem('tiflis_admin_stay') === '1';
   sessionStorage.removeItem('tiflis_admin_logged');
@@ -5719,25 +5823,118 @@ function adminLogout() {
   updateAdminStayUI();
 }
 
+function completeAdminSessionSuccess(loginAuditTag) {
+  sessionStorage.setItem('tiflis_admin_logged', '1');
+  if (g('admin-pw-err')) g('admin-pw-err').style.display = 'none';
+  const gErr = g('admin-google-err');
+  if (gErr) {
+    gErr.style.display = 'none';
+    gErr.textContent = '';
+  }
+  if (g('admin-session-note')) g('admin-session-note').style.display = 'none';
+  bindAdminActivity();
+  touchAdminSession();
+  auditLog('login', loginAuditTag || 'ok');
+  if (!document.documentElement.classList.contains('admin-panel-route')) {
+    location.replace(adminPanelUrl());
+    return;
+  }
+  showAdminPanel();
+  setTimeout(() => {
+    const list = getAdminFocusables();
+    if (list[0]) list[0].focus();
+  }, 50);
+}
+
+function loadGoogleIdentityScript() {
+  if (window.google && window.google.accounts && window.google.accounts.id) return Promise.resolve();
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'https://accounts.google.com/gsi/client';
+    s.async = true;
+    s.defer = true;
+    s.onload = () => resolve();
+    s.onerror = () => reject(new Error('Google script failed to load'));
+    document.head.appendChild(s);
+  });
+}
+
+async function ensureAdminGoogleButton() {
+  const section = g('admin-google-section');
+  const host = g('admin-google-btn-host');
+  if (!section || !host) return;
+  try {
+    const r = await fetch('/api/auth/google-config');
+    const cfg = await r.json();
+    if (!cfg || !cfg.enabled || !cfg.clientId) {
+      section.style.display = 'none';
+      host.innerHTML = '';
+      adminGoogleInitedClientId = null;
+      return;
+    }
+    section.style.display = 'block';
+    await loadGoogleIdentityScript();
+    const cid = cfg.clientId;
+    if (adminGoogleInitedClientId !== cid) {
+      window.google.accounts.id.initialize({
+        client_id: cid,
+        callback: handleAdminGoogleCredential,
+        auto_select: false,
+        cancel_on_tap_outside: true,
+      });
+      adminGoogleInitedClientId = cid;
+    }
+    host.innerHTML = '';
+    window.google.accounts.id.renderButton(host, {
+      theme: 'filled_black',
+      size: 'large',
+      width: 300,
+      text: 'continue_with',
+      locale: 'ka',
+    });
+  } catch (e) {
+    section.style.display = 'none';
+    host.innerHTML = '';
+  }
+}
+
+async function handleAdminGoogleCredential(response) {
+  const errEl = g('admin-google-err');
+  if (errEl) {
+    errEl.style.display = 'none';
+    errEl.textContent = '';
+  }
+  if (!response || !response.credential) return;
+  try {
+    const r = await fetch('/api/auth/google', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ credential: response.credential }),
+    });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok || !data.ok) {
+      if (errEl) {
+        errEl.textContent = (data && data.error) ? String(data.error) : 'Google შესვლა ვერ მოხერხდა';
+        errEl.style.display = 'block';
+      }
+      auditLog('login', 'google_failed');
+      return;
+    }
+    completeAdminSessionSuccess('google');
+  } catch (e) {
+    if (errEl) {
+      errEl.textContent = 'ქსელის შეცდომა — სერვერი ხომ გაქვთ ჩართული?';
+      errEl.style.display = 'block';
+    }
+    auditLog('login', 'google_failed');
+  }
+}
+
 async function adminLogin() {
   const pw = g('admin-pw').value;
   const correctPw = await getAdminPw();
   if (pw === correctPw) {
-    sessionStorage.setItem('tiflis_admin_logged', '1');
-    g('admin-pw-err').style.display = 'none';
-    if (g('admin-session-note')) g('admin-session-note').style.display = 'none';
-    bindAdminActivity();
-    touchAdminSession();
-    auditLog('login', 'ok');
-    if (!document.documentElement.classList.contains('admin-panel-route')) {
-      location.replace(adminPanelUrl());
-      return;
-    }
-    showAdminPanel();
-    setTimeout(() => {
-      const list = getAdminFocusables();
-      if (list[0]) list[0].focus();
-    }, 50);
+    completeAdminSessionSuccess('password');
   } else {
     g('admin-pw-err').style.display = 'block';
     g('admin-pw').value = '';
