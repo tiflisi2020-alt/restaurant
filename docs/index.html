@@ -6,6 +6,13 @@
 <meta http-equiv="Cache-Control" content="max-age=300">
 <link rel="icon" href="favicon.ico" type="image/x-icon" sizes="any">
 <link rel="apple-touch-icon" href="logo.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#3a948c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TIFLISI RESERVATION">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="TIFLISI RESERVATION">
 <script>
 (function () {
   var host = location.hostname || "";
@@ -2006,6 +2013,113 @@ footer {
   color: rgba(245,240,230,0.2);
   text-align: center;
   letter-spacing: 0.05em;
+}
+
+/* ===== PWA — მობილურზე „დააყენე აპი“ ბანერი ===== */
+.pwa-install-banner {
+  position: fixed;
+  z-index: 9998;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0.65rem 0.75rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+}
+.pwa-install-banner[hidden] {
+  display: none !important;
+}
+.pwa-install-card {
+  pointer-events: auto;
+  width: min(100%, 22rem);
+  background: linear-gradient(165deg, rgba(255, 253, 248, 0.98) 0%, rgba(244, 239, 228, 0.99) 100%);
+  border: 1px solid rgba(58, 148, 140, 0.28);
+  border-radius: var(--ui-radius-lg);
+  box-shadow: 0 -8px 40px rgba(42, 34, 24, 0.18), 0 20px 48px rgba(0, 0, 0, 0.12);
+  padding: 0.85rem 0.95rem 0.75rem;
+  animation: pwaBannerUp 0.55s var(--ease-soft) both;
+}
+@keyframes pwaBannerUp {
+  from { opacity: 0; transform: translateY(110%); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.pwa-install-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+.pwa-install-logo {
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: var(--ui-radius);
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 6px 18px rgba(42, 34, 24, 0.12);
+  border: 1px solid rgba(58, 148, 140, 0.15);
+}
+.pwa-install-name {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.pwa-install-sub {
+  font-size: 0.68rem;
+  color: var(--muted);
+  line-height: 1.45;
+  margin-top: 0.25rem;
+}
+.pwa-ios-steps {
+  font-size: 0.62rem;
+  color: var(--mid);
+  line-height: 1.4;
+  margin-top: 0.35rem;
+}
+.pwa-ios-steps strong { color: var(--teal-dark); font-weight: 600; }
+.pwa-install-actions {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+.pwa-btn {
+  flex: 1;
+  min-width: 5.5rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: var(--ui-radius-sm);
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.2s var(--ease-micro), box-shadow 0.25s var(--ease-soft);
+}
+.pwa-btn-install {
+  background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+  color: #fffdf9;
+  box-shadow: 0 6px 20px rgba(58, 148, 140, 0.35);
+}
+.pwa-btn-install:hover { box-shadow: 0 8px 26px rgba(58, 148, 140, 0.42); }
+.pwa-btn-install:active { transform: scale(0.98); }
+.pwa-btn-dismiss {
+  background: rgba(42, 34, 24, 0.06);
+  color: var(--muted);
+  border: 1px solid var(--border);
+}
+.pwa-btn:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
+@media (min-width: 768px) {
+  .pwa-install-banner { display: none !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pwa-install-card { animation: none; }
 }
 
 /* ===== PRINT MENU (მთავარი გვერდი) ===== */
@@ -4478,7 +4592,31 @@ html.admin-panel-route .tiflis-float-rail {
   </div>
 </footer>
 
+<div id="pwa-install-banner" class="pwa-install-banner" hidden aria-hidden="true" role="dialog" aria-labelledby="pwa-install-title" aria-modal="false">
+  <div class="pwa-install-card">
+    <div class="pwa-install-row">
+      <img class="pwa-install-logo" src="logo.png" width="52" height="52" alt="" decoding="async">
+      <div>
+        <div id="pwa-install-title" class="pwa-install-name">TIFLISI RESERVATION</div>
+        <p class="pwa-install-sub" data-i18n="pwa_banner_sub">სწრაფი წვდომა მენიუსა და ჯავშანზე — დაამატე მთავარ ეკრანზე</p>
+        <p id="pwa-ios-steps" class="pwa-ios-steps" hidden data-i18n-html="pwa_ios_steps">Safari: დააჭირე <strong>გაზიარებას</strong> → <strong>მთავარ ეკრანზე დამატება</strong></p>
+      </div>
+    </div>
+    <div class="pwa-install-actions">
+      <button type="button" class="pwa-btn pwa-btn-install" id="pwa-install-btn" data-i18n="pwa_install">აპის დაყენება</button>
+      <button type="button" class="pwa-btn pwa-btn-dismiss" id="pwa-install-dismiss" data-i18n="pwa_later">მოგვიანებით</button>
+    </div>
+  </div>
+</div>
+
 <script>
+let tiflisPwaDeferredPrompt = null;
+window.addEventListener('beforeinstallprompt', function (e) {
+  e.preventDefault();
+  tiflisPwaDeferredPrompt = e;
+  if (typeof window.__tiflisTryShowPwaBanner === 'function') window.__tiflisTryShowPwaBanner();
+});
+
 // ===== DATA =====
 const CATS=[];
 
@@ -4509,6 +4647,9 @@ const TXT = {
     svc_pct:'მომსახ. %', disc_pct:'ფასდაკლ. %', adv_lbl:'ავანსი ₾', pay_lbl:'გადახდა',
     ft_hours_title:'სამუშაო საათები', ft_everyday:'ყოველდღე', ft_contact:'კონტაქტი',
     ft_addr:'ვ.გორგასალის ქ. 110/18', ft_city:'ბათუმი, საქართველო',
+    pwa_banner_sub:'სწრაფი წვდომა მენიუსა და ჯავშანზე — დაამატე მთავარ ეკრანზე',
+    pwa_install:'აპის დაყენება', pwa_later:'მოგვიანებით',
+    pwa_ios_steps:'Safari: დააჭირე <strong>გაზიარებას</strong> → <strong>მთავარ ეკრანზე დამატება</strong>',
     ft_delivery:'მიტანის სერვისი',
     ft_copy:'© 2025 რესტორანი ტიფლისი · ყველა უფლება დაცულია'
   },
@@ -4536,6 +4677,9 @@ const TXT = {
     svc_pct:'Service %', disc_pct:'Discount %', adv_lbl:'Advance ₾', pay_lbl:'Payment',
     ft_hours_title:'Working Hours', ft_everyday:'Every day', ft_contact:'Contact',
     ft_addr:'V. Gorgasali St. 110/18', ft_city:'Batumi, Georgia',
+    pwa_banner_sub:'Quick access to the menu and reservations — add to your home screen.',
+    pwa_install:'Install app', pwa_later:'Not now',
+    pwa_ios_steps:'Safari: tap <strong>Share</strong> → <strong>Add to Home Screen</strong>',
     ft_delivery:'Delivery service',
     ft_copy:'© 2025 Restaurant Tiflisi · All rights reserved'
   },
@@ -4563,6 +4707,9 @@ const TXT = {
     svc_pct:'Обсл. %', disc_pct:'Скидка %', adv_lbl:'Аванс ₾', pay_lbl:'Оплата',
     ft_hours_title:'Часы работы', ft_everyday:'Ежедневно', ft_contact:'Контакт',
     ft_addr:'ул. В. Горгасали 110/18', ft_city:'Батуми, Грузия',
+    pwa_banner_sub:'Быстрый доступ к меню и бронированию — добавьте на главный экран.',
+    pwa_install:'Установить', pwa_later:'Позже',
+    pwa_ios_steps:'Safari: <strong>Поделиться</strong> → <strong>На экран «Домой»</strong>',
     ft_delivery:'Сервис доставки',
     ft_copy:'© 2025 Ресторан Тифлиси · Все права защищены'
   }
@@ -5539,6 +5686,89 @@ function resetRes() {
   refreshReservationTableSelectState();
 }
 
+function registerTiflisiServiceWorker() {
+  if (!('serviceWorker' in navigator) || location.protocol === 'file:') return;
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('sw.js', { scope: './' }).catch(function () {});
+  });
+}
+
+function initPwaInstallBanner() {
+  if (document.documentElement.classList.contains('admin-panel-route')) return;
+  if (/admin/i.test(location.pathname || '')) return;
+  if (window.matchMedia('(display-mode: standalone)').matches) return;
+  try { if (navigator.standalone === true) return; } catch (e0) {}
+  if (sessionStorage.getItem('tiflis_pwa_banner_v1')) return;
+
+  var mobile = window.matchMedia('(max-width: 767px)').matches ||
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent || '');
+  if (!mobile) return;
+
+  var banner = document.getElementById('pwa-install-banner');
+  if (!banner) return;
+
+  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent || '') ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+  var btnInstall = document.getElementById('pwa-install-btn');
+  var iosSteps = document.getElementById('pwa-ios-steps');
+
+  function reveal() {
+    if (sessionStorage.getItem('tiflis_pwa_banner_v1')) return;
+    banner.hidden = false;
+    banner.setAttribute('aria-hidden', 'false');
+  }
+
+  if (isIOS) {
+    iosSteps.hidden = false;
+    if (btnInstall) btnInstall.style.display = 'none';
+  } else {
+    iosSteps.hidden = true;
+    if (btnInstall) btnInstall.style.display = '';
+  }
+
+  window.__tiflisTryShowPwaBanner = function () {
+    if (sessionStorage.getItem('tiflis_pwa_banner_v1')) return;
+    if (!tiflisPwaDeferredPrompt || isIOS) return;
+    reveal();
+  };
+
+  if (tiflisPwaDeferredPrompt && !isIOS) reveal();
+  else {
+    setTimeout(function () {
+      if (sessionStorage.getItem('tiflis_pwa_banner_v1')) return;
+      reveal();
+    }, isIOS ? 1400 : 2600);
+  }
+
+  if (!isIOS && btnInstall) {
+    setTimeout(function () {
+      if (!tiflisPwaDeferredPrompt && btnInstall.style.display !== 'none') btnInstall.style.display = 'none';
+    }, 4500);
+  }
+
+  var dismiss = document.getElementById('pwa-install-dismiss');
+  if (dismiss) {
+    dismiss.addEventListener('click', function () {
+      sessionStorage.setItem('tiflis_pwa_banner_v1', '1');
+      banner.hidden = true;
+      banner.setAttribute('aria-hidden', 'true');
+    });
+  }
+
+  if (btnInstall) {
+    btnInstall.addEventListener('click', function () {
+      if (!tiflisPwaDeferredPrompt) return;
+      tiflisPwaDeferredPrompt.prompt();
+      tiflisPwaDeferredPrompt.userChoice.catch(function () {});
+      tiflisPwaDeferredPrompt = null;
+      sessionStorage.setItem('tiflis_pwa_banner_v1', '1');
+      banner.hidden = true;
+      banner.setAttribute('aria-hidden', 'true');
+    });
+  }
+}
+
 async function init() {
   const isPanel = document.documentElement.classList.contains('admin-panel-route');
   if (isPanel) {
@@ -5567,6 +5797,7 @@ async function init() {
     return;
   }
   if (g('r-date')) g('r-date').min = todayGeorgia();
+  registerTiflisiServiceWorker();
   applyI18n();
   renderCats();
   renderMenu();
@@ -5602,6 +5833,7 @@ async function init() {
     });
   }
   queueMicrotask(() => refreshReservationTableSelectState());
+  initPwaInstallBanner();
   initRevealAnimations();
 }
 document.addEventListener('DOMContentLoaded', init);
