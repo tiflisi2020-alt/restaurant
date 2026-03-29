@@ -6,8 +6,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 let PORT = Number(process.env.PORT);
 if (!Number.isFinite(PORT) || PORT < 1 || PORT > 65535) PORT = 3000;
-/** 0.0.0.0 = 127.0.0.1 + other PCs on LAN. Override with HOST=127.0.0.1 if needed. */
-const HOST = (process.env.HOST && String(process.env.HOST).trim()) || "0.0.0.0";
+/** 127.0.0.1 = localhost only. Set HOST=0.0.0.0 to allow other PCs on the LAN. */
+const HOST = (process.env.HOST && String(process.env.HOST).trim()) || "127.0.0.1";
 if (process.env.PORT && String(process.env.PORT).trim() !== "" && PORT !== 3000) {
   console.warn(`Note: PORT is ${PORT} (not 3000). Use http://127.0.0.1:${PORT}/ in the browser.`);
 }

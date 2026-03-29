@@ -14,7 +14,7 @@ if not exist "node_modules\express\package.json" (
 echo.
 REM Force port 3000 so the URL always matches (clears a wrong PORT from environment)
 set "PORT=3000"
-set "HOST=0.0.0.0"
+set "HOST=127.0.0.1"
 echo Starting server — keep this window open.
 echo.
 node server.js

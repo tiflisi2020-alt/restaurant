@@ -14,7 +14,7 @@
 
   if (isGh && location.search.indexOf("gh_panel=1") !== -1) {
     document.documentElement.classList.add("admin-panel-route");
-    document.documentElement.style.background = "#0d0905";
+    document.documentElement.style.background = "#080604";
     if (sessionStorage.getItem("tiflis_admin_logged") !== "1") {
       var baseSeg = (p.match(/^(\/[^\/]+)/) || [])[1] || "";
       location.replace(baseSeg + "/admin/");
@@ -29,7 +29,7 @@
 
   if (!/\/admin\/panel$/i.test(p) && !/\/admin\/panel\/index\.html$/i.test(p)) return;
   document.documentElement.classList.add("admin-panel-route");
-  document.documentElement.style.background = "#0d0905";
+  document.documentElement.style.background = "#080604";
   if (sessionStorage.getItem("tiflis_admin_logged") !== "1") {
     location.replace(p.replace(/\/admin\/panel(\/index\.html)?$/i, "/admin"));
   }
@@ -38,7 +38,7 @@
 
 <title>რესტორანი ტიფლისი — მენიუ & რეზერვაცია</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,400&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
   --cream: #f5f0e6;
@@ -59,10 +59,28 @@
   --forest: #2c2010;
   --ease-micro: cubic-bezier(0.34, 1.15, 0.64, 1);
   --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Admin panel — luxury tokens (global: .admin-fab sits outside #admin-modal) */
+  --adm-radius: 14px;
+  --adm-radius-sm: 9px;
+  --adm-radius-lg: 20px;
+  --adm-surface: #0c0906;
+  --adm-elevated: #16120e;
+  --adm-elevated-mid: #1c1712;
+  --adm-border: rgba(201, 168, 107, 0.16);
+  --adm-border-teal: rgba(61, 155, 147, 0.28);
+  --adm-glow: rgba(61, 155, 147, 0.12);
+  --adm-gold-soft: rgba(212, 168, 67, 0.22);
+  --adm-shadow-elevated: 0 32px 72px rgba(0, 0, 0, 0.58), 0 0 0 1px rgba(255, 248, 235, 0.045) inset;
+  --adm-shadow-soft: 0 12px 40px rgba(0, 0, 0, 0.4);
+  --adm-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --adm-font-display: 'Cormorant', 'Lora', Georgia, serif;
+  --adm-font-ui: 'Raleway', system-ui, sans-serif;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
+/* მენიუ + შეკვეთა: ბრაუზერი არ „გადაადგილებს“ scroll-ს შიგთავსის სიმაღლის ცვლილებაზე */
+#menu { overflow-anchor: none; }
 
 body {
   background: var(--cream);
@@ -675,25 +693,29 @@ section { padding: 6rem 0; }
   flex-direction: row;
   align-items: center;
   gap: 0.65rem;
-  padding: 0.65rem 0.5rem;
+  padding: 0.65rem 0.65rem;
   border-bottom: 1px solid var(--border);
   background: transparent;
-  transition: background 0.28s var(--ease-soft), border-left-color 0.28s var(--ease-soft), padding-left 0.28s var(--ease-soft), transform 0.28s var(--ease-soft), box-shadow 0.28s var(--ease-soft);
+  /* padding/transform არ იცვლება hover-ზე — არ „ხტება“ რიგი qty-ს ცვლილებისას */
+  transition: background 0.28s var(--ease-soft), border-left-color 0.28s var(--ease-soft), box-shadow 0.28s var(--ease-soft);
   border-left: 3px solid transparent;
   flex-wrap: nowrap;
 }
 
 .menu-item:first-child { border-top: 1px solid var(--border); }
 
+.menu-item.selected {
+  background: rgba(255, 253, 248, 0.92);
+  border-left-color: var(--teal);
+}
+
 .menu-item:hover {
   background: var(--card);
   border-left-color: var(--teal);
-  padding-left: 0.65rem;
-  transform: translateX(3px);
   box-shadow: 0 2px 12px rgba(44, 32, 16, 0.06);
 }
 .menu-item:active {
-  transform: translateX(1px) scale(0.998);
+  transform: none;
 }
 
 .menu-item-name {
@@ -862,7 +884,9 @@ img:hover {
 }
 
 .qty-input {
-  width: 34px;
+  width: 2.75rem;
+  min-width: 2.5rem;
+  max-width: 4rem;
   height: 26px;
   border: 1.5px solid var(--border);
   background: var(--card);
@@ -870,9 +894,19 @@ img:hover {
   font-family: 'Raleway', sans-serif;
   font-size: 0.78rem;
   text-align: center;
-  padding: 0;
+  padding: 0 0.15rem;
   border-radius: 2px;
   transition: border-color 0.2s var(--ease-soft), box-shadow 0.2s var(--ease-soft);
+  -moz-appearance: textfield;
+}
+.qty-input::-webkit-outer-spin-button,
+.qty-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.order-panel .qty-input {
+  background: rgba(255, 253, 248, 0.96);
+  color: var(--ink);
 }
 .qty-input:focus {
   outline: none;
@@ -1411,6 +1445,95 @@ img:hover {
 
 .qty-ctrl { justify-content: flex-start; }
 
+/* ჯავშანი — სტუმრების რაოდენობა: დიდი +/− ტელეფონისთვის */
+.form-field--guests {
+  grid-column: 1 / -1;
+}
+.res-guest-stepper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 24rem;
+  padding: 0.2rem 0;
+}
+.res-guest-stepper .qty-btn.res-guest-step {
+  width: 3.25rem;
+  height: 3.25rem;
+  min-width: 3.25rem;
+  min-height: 3.25rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1;
+  border-radius: 12px;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+}
+.res-guest-stepper #r-guests.qty-input,
+.res-guest-stepper input#r-guests {
+  width: 4.5rem !important;
+  min-width: 4.5rem !important;
+  max-width: 5.5rem;
+  height: 3.25rem;
+  min-height: 3.25rem;
+  font-size: 1.0625rem;
+  padding: 0 0.35rem;
+  border-radius: 10px;
+  font-weight: 600;
+}
+.res-guest-presets {
+  margin-top: 0.55rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  max-width: 24rem;
+}
+.res-guest-presets-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 600;
+}
+.res-guest-presets-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+}
+.guest-preset-chip {
+  min-width: 2.85rem;
+  min-height: 2.65rem;
+  padding: 0.35rem 0.65rem;
+  border: 1.5px solid var(--border);
+  background: var(--card);
+  color: var(--ink);
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  transition: border-color 0.2s var(--ease-soft), background 0.2s var(--ease-soft), color 0.2s var(--ease-soft), transform 0.15s var(--ease-micro);
+}
+.guest-preset-chip:hover,
+.guest-preset-chip:focus-visible {
+  border-color: var(--teal);
+  color: var(--teal);
+  background: var(--teal-light);
+  outline: none;
+}
+.guest-preset-chip:active {
+  transform: scale(0.96);
+}
+
 .form-submit {
   width: 100%;
   padding: 0.95rem;
@@ -1739,7 +1862,7 @@ footer {
   }
   .menu-list { width: 100%; }
   .menu-item {
-    padding: 0.85rem 0.5rem;
+    padding: 0.85rem 0.65rem;
     width: 100%;
     box-sizing: border-box;
     gap: 0.5rem;
@@ -1760,7 +1883,7 @@ footer {
   }
   .qty-ctrl { flex-shrink: 0; gap: 0.25rem; }
   .qty-btn { width: 28px; height: 28px; font-size: 13px; flex-shrink: 0; }
-  .qty-input { width: 30px; height: 28px; font-size: 0.75rem; }
+  .qty-input { width: 2.65rem; min-width: 2.4rem; height: 28px; font-size: 0.75rem; }
 
   /* ===== ORDER PANEL FIXES ===== */
   .order-panel {
@@ -1795,6 +1918,27 @@ footer {
   }
   .form-submit { padding: 0.88rem; font-size: 0.72rem; }
 
+  .res-guest-stepper { max-width: none; gap: 0.85rem; }
+  .res-guest-stepper .qty-btn.res-guest-step {
+    width: 3.5rem;
+    height: 3.5rem;
+    min-width: 3.5rem;
+    min-height: 3.5rem;
+    font-size: 1.65rem;
+  }
+  .res-guest-stepper #r-guests.qty-input,
+  .res-guest-stepper input#r-guests {
+    height: 3.5rem;
+    min-height: 3.5rem;
+    width: 4.75rem !important;
+    min-width: 4.75rem !important;
+  }
+  .guest-preset-chip {
+    min-width: 3rem;
+    min-height: 2.85rem;
+    font-size: 1rem;
+  }
+
   /* ===== FOOTER ===== */
   .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
   footer { padding: 2.5rem 0 1.5rem; }
@@ -1812,58 +1956,193 @@ footer {
   .container { padding: 0 0.75rem; }
 }
 
-/* ===== ADMIN PANEL ===== */
+/* ===== ADMIN PANEL (luxury comfort pack) ===== */
 #admin-modal {
-  --adm-radius: 10px;
-  --adm-radius-sm: 7px;
-  --adm-surface: #120e0a;
-  --adm-elevated: #1a1510;
-  --adm-border: rgba(61, 155, 147, 0.14);
-  --adm-glow: rgba(61, 155, 147, 0.12);
+  -webkit-tap-highlight-color: transparent;
+}
+#admin-modal ::selection {
+  background: rgba(61, 155, 147, 0.38);
+  color: #fffef8;
 }
 .admin-fab {
   position: fixed; bottom: 2rem; right: 2rem;
-  width: 52px; height: 52px; border-radius: 50%;
-  background: linear-gradient(145deg, #1e1812 0%, #14100c 100%);
-  border: 1px solid rgba(61, 155, 147, 0.45);
-  color: var(--teal); font-size: 1.25rem; cursor: pointer;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: linear-gradient(155deg, #221c16 0%, #120f0b 48%, #1a1510 100%);
+  border: 1px solid rgba(212, 168, 67, 0.35);
+  color: #9ed9d3; font-size: 1.28rem; cursor: pointer;
   z-index: 300; display: flex; align-items: center; justify-content: center;
   box-shadow:
-    0 4px 14px rgba(0, 0, 0, 0.35),
-    0 0 0 1px rgba(255, 255, 255, 0.04) inset;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    var(--adm-shadow-soft),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+    0 0 28px rgba(61, 155, 147, 0.12);
+  transition: transform 0.35s var(--adm-ease), box-shadow 0.35s var(--adm-ease), background 0.35s var(--adm-ease), color 0.25s ease, border-color 0.25s ease;
 }
 .admin-fab:hover {
-  transform: scale(1.06);
-  background: var(--teal);
+  transform: scale(1.07) translateY(-2px);
+  background: linear-gradient(155deg, #3d9b93 0%, #2d7870 100%);
   color: #fff;
-  border-color: var(--teal-dark);
-  box-shadow: 0 8px 28px rgba(61, 155, 147, 0.35);
+  border-color: rgba(255, 248, 235, 0.35);
+  box-shadow: 0 16px 40px rgba(61, 155, 147, 0.42), 0 0 0 1px rgba(255, 255, 255, 0.12) inset;
 }
 .admin-fab:focus-visible {
-  outline: 2px solid var(--teal);
-  outline-offset: 3px;
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
 }
 
 .admin-modal {
   display: none; position: fixed; inset: 0;
-  background: radial-gradient(ellipse 120% 80% at 50% 0%, rgba(61, 155, 147, 0.08) 0%, transparent 55%),
-    rgba(0, 0, 0, 0.78);
+  background:
+    radial-gradient(ellipse 100% 70% at 50% -10%, rgba(61, 155, 147, 0.14) 0%, transparent 52%),
+    radial-gradient(ellipse 80% 50% at 100% 100%, rgba(212, 168, 67, 0.06) 0%, transparent 45%),
+    rgba(0, 0, 0, 0.82);
   z-index: 500; overflow-y: auto;
   align-items: flex-start; justify-content: flex-start;
   padding: clamp(2rem, 6vh, 3.5rem) 1rem 1.25rem;
   box-sizing: border-box;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 .admin-modal.open { display: flex; }
 
+/* Refined scrollbars inside admin */
+#admin-modal .admin-pane::-webkit-scrollbar,
+#admin-modal .admin-body::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+#admin-modal .admin-pane::-webkit-scrollbar-track,
+#admin-modal .admin-body::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.28);
+  border-radius: 100px;
+}
+#admin-modal .admin-pane::-webkit-scrollbar-thumb,
+#admin-modal .admin-body::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(61, 155, 147, 0.55) 0%, rgba(212, 168, 67, 0.28) 100%);
+  border-radius: 100px;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+}
+#admin-modal .admin-pane,
+#admin-modal .admin-body {
+  scrollbar-color: rgba(61, 155, 147, 0.45) rgba(0, 0, 0, 0.3);
+  scrollbar-width: thin;
+}
+#admin-modal button:focus-visible,
+#admin-modal .admin-input:focus-visible,
+#admin-modal select:focus-visible {
+  outline: 2px solid rgba(212, 168, 67, 0.55);
+  outline-offset: 2px;
+}
+
+/* ჩეკის რედაქტორი (ჩეკები ტაბი) */
+.res-check-edit-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100001;
+  background: rgba(4, 3, 2, 0.78);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  align-items: center;
+  justify-content: center;
+  padding: max(0.75rem, env(safe-area-inset-top, 0px)) 0.65rem max(0.75rem, env(safe-area-inset-bottom, 0px));
+  box-sizing: border-box;
+}
+.res-check-edit-overlay.open { display: flex; }
+.res-check-edit-dialog {
+  background: linear-gradient(168deg, #1e1a15 0%, #14110e 100%);
+  border: none;
+  border-radius: var(--adm-radius-lg);
+  max-width: 26rem;
+  width: 100%;
+  max-height: 88vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow:
+    0 32px 72px rgba(0, 0, 0, 0.55),
+    0 0 48px rgba(61, 155, 147, 0.08);
+}
+.res-check-edit-head {
+  flex-shrink: 0;
+  padding: 0.75rem 0.95rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+.res-check-edit-head h3 {
+  margin: 0;
+  font-family: var(--adm-font-display);
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: #b8ebe4;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+}
+.res-check-edit-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.65rem 0.85rem;
+  -webkit-overflow-scrolling: touch;
+}
+.res-check-edit-foot {
+  flex-shrink: 0;
+  display: flex;
+  gap: 0.45rem;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  padding: 0.55rem 0.85rem 0.7rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.res-check-edit-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.35rem;
+  margin: 0.5rem 0 0.35rem;
+  font-size: 0.62rem;
+  color: rgba(245, 240, 232, 0.5);
+}
+.res-check-edit-meta label { display: block; margin-bottom: 0.12rem; }
+.res-check-edit-meta input {
+  width: 100%;
+  margin: 0;
+  padding: 0.28rem 0.35rem;
+  font-size: 0.68rem;
+  box-sizing: border-box;
+}
+.res-check-edit-add-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: flex-end;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.res-check-edit-add-row select {
+  flex: 1;
+  min-width: 10rem;
+  margin: 0;
+  padding: 0.32rem 0.35rem;
+  font-size: 0.68rem;
+  box-sizing: border-box;
+}
+.res-check-edit-add-row input[type="number"] {
+  width: 3.2rem;
+  margin: 0;
+  padding: 0.32rem 0.35rem;
+  font-size: 0.68rem;
+  box-sizing: border-box;
+}
+
 /* /admin/panel — მხოლოდ ადმინის ფენა, საჯარო გვერდი დამალული */
 html.admin-panel-route {
-  background: #0d0905 !important;
+  background: #080604 !important;
 }
 html.admin-panel-route body {
   overflow: hidden;
   margin: 0;
-  background: #0d0905 !important;
+  background:
+    radial-gradient(ellipse 120% 80% at 50% 0%, rgba(61, 155, 147, 0.07) 0%, transparent 50%),
+    radial-gradient(ellipse 90% 60% at 0% 100%, rgba(212, 168, 67, 0.05) 0%, transparent 42%),
+    #080604 !important;
 }
 /* ყველა ძირის შვილი გარდა ადმინის (სკრიპტი უკვე შესრულებულია) */
 html.admin-panel-route body > *:not(#admin-modal) {
@@ -1872,10 +2151,14 @@ html.admin-panel-route body > *:not(#admin-modal) {
 html.admin-panel-route #admin-modal {
   position: fixed;
   inset: 0;
-  padding: max(0.5rem, env(safe-area-inset-top, 0px)) max(0.65rem, env(safe-area-inset-right, 0px)) max(0.5rem, env(safe-area-inset-bottom, 0px)) max(0.65rem, env(safe-area-inset-left, 0px));
+  /* სრული ეკრანი — გარე „ჩარჩოს“ margin-ის გარეშე (მხოლოდ safe-area) */
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
   align-items: stretch;
   justify-content: stretch;
-  background: #0d0905 !important;
+  background:
+    radial-gradient(ellipse 100% 55% at 50% 0%, rgba(61, 155, 147, 0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 45% at 100% 80%, rgba(212, 168, 67, 0.04) 0%, transparent 50%),
+    #080604 !important;
   z-index: 99999;
   isolation: isolate;
   overflow: hidden;
@@ -1885,13 +2168,24 @@ html.admin-panel-route .admin-top {
   flex-shrink: 0;
   position: relative;
   z-index: 10;
-  background: linear-gradient(180deg, #1f1812 0%, #1a1208 100%);
-  border-bottom: 1px solid var(--adm-border);
+  background: #0f0c09;
+  border-bottom: 1px solid rgba(61, 155, 147, 0.1);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset;
-  padding-top: calc(1.1rem + env(safe-area-inset-top, 0px));
-  padding-bottom: 0.65rem;
-  padding-left: clamp(0.85rem, 3vw, 1.35rem);
-  padding-right: clamp(0.85rem, 3vw, 1.35rem);
+  padding-top: calc(1.15rem + env(safe-area-inset-top, 0px));
+  padding-bottom: 0.75rem;
+  padding-left: clamp(0.95rem, 3vw, 1.5rem);
+  padding-right: clamp(0.95rem, 3vw, 1.5rem);
+}
+html.admin-panel-route .admin-top::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(61, 155, 147, 0.35) 50%, transparent 100%);
+  pointer-events: none;
+  opacity: 0.85;
 }
 html.admin-panel-route .admin-box {
   max-width: none;
@@ -1899,8 +2193,9 @@ html.admin-panel-route .admin-box {
   height: 100%;
   max-height: none;
   border-radius: 0;
-  border-left: none;
-  border-right: none;
+  border: none;
+  box-shadow: none;
+  background: #080604;
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -1916,9 +2211,9 @@ html.admin-panel-route #admin-login-wrap {
 }
 html.admin-panel-route #admin-panel-wrap {
   overflow: hidden;
-  margin-top: 0.35rem;
-  border-top: 1px solid rgba(61, 155, 147, 0.08);
-  padding: 0.4rem clamp(0.75rem, 3vw, 1.5rem) 0;
+  margin-top: 0;
+  border-top: none;
+  padding: 0;
   box-sizing: border-box;
 }
 html.admin-panel-route #admin-login-wrap {
@@ -1930,25 +2225,30 @@ html.admin-panel-route .admin-body {
   min-height: 0;
   display: flex;
   flex-direction: column;
-  padding: 0.35rem clamp(0.5rem, 1.5vw, 0.85rem) 0.55rem;
-  background: #0a0705;
+  padding: 0;
+  background: #080604;
   border-top: none;
 }
+/* შიდა „ბარათი“ / inset ჩრდილი — აქ აღარ ჩანს, ერთი ზედაპირია */
 html.admin-panel-route .admin-content {
   flex: 1;
   min-height: 0;
   margin-top: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
 }
 
 .admin-box {
-  background: linear-gradient(165deg, #1e1812 0%, #1a1208 48%, #16120e 100%);
-  color: rgba(245, 240, 230, 0.9);
-  width: 100%; max-width: min(960px, calc(100vw - 2.5rem)); margin-right: auto; border-radius: var(--adm-radius);
-  border: 1px solid rgba(61, 155, 147, 0.22);
+  background: linear-gradient(168deg, #231d17 0%, #1a1510 42%, #14100c 100%);
+  color: rgba(248, 244, 236, 0.92);
+  width: 100%; max-width: min(1024px, calc(100vw - 2.25rem)); margin-right: auto; border-radius: var(--adm-radius-lg);
+  border: none;
   box-shadow:
-    0 24px 48px rgba(0, 0, 0, 0.45),
-    0 0 0 1px rgba(255, 255, 255, 0.03) inset;
-  font-family: 'Raleway', sans-serif; font-size: 0.82rem;
+    0 32px 72px rgba(0, 0, 0, 0.55),
+    0 0 60px rgba(61, 155, 147, 0.06);
+  font-family: var(--adm-font-ui); font-size: 0.84rem;
+  line-height: 1.55;
   color-scheme: light; /* select dropdowns: light bg + dark text for readability */
 }
 #admin-panel-wrap,
@@ -1959,26 +2259,27 @@ html.admin-panel-route .admin-content {
 
 .admin-top {
   display: flex; align-items: flex-start; justify-content: space-between;
-  padding: 0.85rem 1.1rem; border-bottom: 1px solid rgba(61, 155, 147, 0.12);
-  gap: 0.5rem;
+  padding: 0.95rem 1.15rem; border-bottom: 1px solid rgba(61, 155, 147, 0.12);
+  gap: 0.65rem;
 }
 .admin-top-left { flex: 1; min-width: 0; }
 .admin-top h2 {
-  font-family: 'Lora', serif;
-  font-size: 1.18rem;
-  font-weight: 500;
-  color: var(--cream);
-  line-height: 1.2;
-  letter-spacing: 0.01em;
+  font-family: var(--adm-font-display);
+  font-size: 1.42rem;
+  font-weight: 600;
+  color: #faf6ef;
+  line-height: 1.15;
+  letter-spacing: 0.02em;
   margin: 0;
+  text-shadow: 0 2px 24px rgba(61, 155, 147, 0.15);
 }
 .admin-brand-tagline {
-  margin: 0.35rem 0 0 0;
-  font-size: 0.62rem;
+  margin: 0.4rem 0 0 0;
+  font-size: 0.63rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: rgba(245, 240, 232, 0.38);
+  color: rgba(245, 240, 232, 0.42);
 }
 .admin-stay-hint {
   display: none;
@@ -1990,33 +2291,34 @@ html.admin-panel-route .admin-content {
 }
 .admin-top-actions { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
 .admin-logout {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(224, 216, 196, 0.18);
-  color: rgba(245, 240, 230, 0.65);
-  font-size: 0.62rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(224, 216, 196, 0.2);
+  color: rgba(248, 244, 236, 0.72);
+  font-size: 0.63rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   cursor: pointer;
-  padding: 0.42rem 0.8rem;
+  padding: 0.48rem 0.95rem;
   border-radius: var(--adm-radius-sm);
-  font-family: 'Raleway', sans-serif;
-  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  font-family: var(--adm-font-ui);
+  transition: background 0.3s var(--adm-ease), color 0.25s ease, border-color 0.25s ease, box-shadow 0.3s ease;
 }
 .admin-logout:hover {
-  color: var(--cream);
-  border-color: var(--teal);
-  background: rgba(61, 155, 147, 0.1);
+  color: #fffef8;
+  border-color: rgba(61, 155, 147, 0.45);
+  background: rgba(61, 155, 147, 0.14);
+  box-shadow: 0 4px 18px rgba(61, 155, 147, 0.12);
 }
 .admin-close {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid transparent;
-  color: rgba(245, 240, 230, 0.45);
-  font-size: 1.35rem;
-  width: 2.15rem;
-  height: 2.15rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: rgba(245, 240, 230, 0.5);
+  font-size: 1.3rem;
+  width: 2.35rem;
+  height: 2.35rem;
   border-radius: var(--adm-radius-sm);
   cursor: pointer;
-  transition: color 0.2s, background 0.2s, border-color 0.2s;
+  transition: color 0.25s ease, background 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
   line-height: 1;
   padding: 0;
   display: inline-flex;
@@ -2024,21 +2326,22 @@ html.admin-panel-route .admin-content {
   justify-content: center;
 }
 .admin-close:hover {
-  color: var(--brick);
-  background: rgba(194, 97, 58, 0.12);
-  border-color: rgba(194, 97, 58, 0.25);
+  color: #f0c4b2;
+  background: rgba(194, 97, 58, 0.14);
+  border-color: rgba(194, 97, 58, 0.3);
+  transform: scale(1.05);
 }
 
 .admin-body {
   display: flex;
   flex-direction: column;
-  min-height: 240px;
-  max-height: min(78vh, 820px);
+  min-height: 260px;
+  max-height: min(78vh, 840px);
   overflow: hidden;
-  padding: 0.65rem clamp(0.65rem, 2.5vw, 1rem) 0.55rem;
+  padding: 0.7rem clamp(0.7rem, 2.5vw, 1.05rem) 0.6rem;
   box-sizing: border-box;
-  background: #0a0705;
-  border-top: 1px solid rgba(61, 155, 147, 0.08);
+  background: linear-gradient(180deg, #0b0907 0%, #080604 100%);
+  border-top: 1px solid rgba(61, 155, 147, 0.1);
 }
 .admin-content {
   flex: 1;
@@ -2047,21 +2350,23 @@ html.admin-panel-route .admin-content {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid rgba(61, 155, 147, 0.16);
+  border: none;
   border-radius: var(--adm-radius);
-  background: linear-gradient(180deg, rgba(22, 18, 14, 0.98) 0%, rgba(14, 11, 8, 0.99) 100%);
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2) inset;
+  background: linear-gradient(175deg, rgba(26, 22, 18, 0.97) 0%, rgba(12, 10, 8, 0.99) 55%, rgba(10, 8, 6, 1) 100%);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.35) inset,
+    0 20px 48px rgba(0, 0, 0, 0.28);
 }
 .admin-content > .admin-tabs {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   align-items: stretch;
-  gap: 0.28rem;
-  padding: 0.45rem 0.5rem;
+  gap: 0.32rem;
+  padding: 0.55rem 0.6rem;
   margin: 0;
-  border-bottom: 1px solid rgba(61, 155, 147, 0.12);
-  background: rgba(0, 0, 0, 0.22);
+  border-bottom: 1px solid rgba(61, 155, 147, 0.14);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.38) 0%, rgba(0, 0, 0, 0.22) 100%);
   flex-shrink: 0;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
@@ -2074,31 +2379,34 @@ html.admin-panel-route .admin-content {
   width: auto;
   flex: 0 0 auto;
   text-align: center;
-  min-height: 2.15rem;
-  padding: 0.38rem 0.62rem;
+  min-height: 2.35rem;
+  padding: 0.42rem 0.78rem;
   line-height: 1.25;
-  background: transparent;
-  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: var(--adm-radius-sm);
-  color: rgba(245, 240, 230, 0.48);
-  font-size: 0.68rem;
+  color: rgba(245, 240, 230, 0.52);
+  font-size: 0.69rem;
   font-weight: 600;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.04em;
   cursor: pointer;
-  font-family: 'Raleway', sans-serif;
-  transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s;
+  font-family: var(--adm-font-ui);
+  transition: background 0.3s var(--adm-ease), color 0.25s ease, border-color 0.25s ease, box-shadow 0.3s ease, transform 0.2s ease;
   white-space: nowrap;
 }
 .admin-content .admin-tab.on {
-  color: #f5f0e8;
-  background: linear-gradient(180deg, rgba(61, 155, 147, 0.28) 0%, rgba(61, 155, 147, 0.14) 100%);
-  border-color: rgba(61, 155, 147, 0.45);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset;
+  color: #fffef8;
+  background: linear-gradient(165deg, rgba(61, 155, 147, 0.38) 0%, rgba(61, 155, 147, 0.16) 100%);
+  border-color: rgba(61, 155, 147, 0.5);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.1) inset,
+    0 6px 20px rgba(61, 155, 147, 0.18);
 }
 .admin-content .admin-tab:hover:not(.on) {
-  color: rgba(245, 240, 230, 0.88);
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.06);
+  color: rgba(248, 244, 236, 0.92);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(212, 168, 67, 0.15);
+  transform: translateY(-1px);
 }
 
 .admin-content .admin-tab-group {
@@ -2131,7 +2439,7 @@ html.admin-panel-route .admin-content {
 
 .admin-pane {
   display: none;
-  padding: 1rem 1rem 1.15rem;
+  padding: 1.15rem 1.15rem 1.35rem;
   flex: 1;
   min-height: 0;
   overflow-y: auto;
@@ -2141,46 +2449,49 @@ html.admin-panel-route .admin-content {
 .admin-pane.on { display: block; }
 
 .admin-login {
-  max-width: 340px;
-  margin: 1.5rem auto;
+  max-width: 380px;
+  margin: 1.75rem auto;
   text-align: center;
-  padding: 1.35rem 1.25rem 1.5rem;
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(61, 155, 147, 0.2);
-  border-radius: var(--adm-radius);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+  padding: 1.65rem 1.5rem 1.75rem;
+  background: linear-gradient(165deg, rgba(30, 26, 20, 0.95) 0%, rgba(14, 12, 10, 0.98) 100%);
+  border: none;
+  border-radius: var(--adm-radius-lg);
+  box-shadow:
+    0 32px 72px rgba(0, 0, 0, 0.55),
+    0 0 48px rgba(61, 155, 147, 0.08);
 }
 .admin-login h3 {
-  font-family: 'Lora', serif;
-  font-size: 1.12rem;
-  font-weight: 500;
-  color: var(--cream);
-  margin: 0 0 0.4rem 0;
-  letter-spacing: 0.02em;
+  font-family: var(--adm-font-display);
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: #faf6ef;
+  margin: 0 0 0.45rem 0;
+  letter-spacing: 0.03em;
 }
 .admin-login p {
-  font-size: 0.7rem;
-  color: rgba(245, 240, 230, 0.42);
-  margin: 0 0 1.1rem 0;
-  line-height: 1.5;
+  font-size: 0.72rem;
+  color: rgba(245, 240, 230, 0.48);
+  margin: 0 0 1.2rem 0;
+  line-height: 1.6;
 }
 
 .admin-input {
   width: 100%;
-  padding: 0.52rem 0.75rem;
+  padding: 0.58rem 0.85rem;
   margin-bottom: 0.55rem;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(224, 216, 196, 0.16);
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(224, 216, 196, 0.18);
   color: var(--cream);
-  font-family: 'Raleway', sans-serif;
-  font-size: 0.82rem;
+  font-family: var(--adm-font-ui);
+  font-size: 0.84rem;
   border-radius: var(--adm-radius-sm);
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition: border-color 0.3s var(--adm-ease), box-shadow 0.3s var(--adm-ease), background 0.25s ease;
 }
 .admin-input:focus {
   outline: none;
-  border-color: var(--teal);
-  box-shadow: 0 0 0 3px rgba(61, 155, 147, 0.15);
+  border-color: rgba(61, 155, 147, 0.65);
+  background: rgba(61, 155, 147, 0.06);
+  box-shadow: 0 0 0 3px rgba(61, 155, 147, 0.18), 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 /* Native select dropdown: OS often uses light bg — dark text for readability */
 select option,
@@ -2191,40 +2502,46 @@ select option,
 }
 
 .admin-btn {
-  padding: 0.52rem 1rem;
-  background: linear-gradient(180deg, #3d9b93 0%, #358a83 100%);
+  padding: 0.58rem 1.1rem;
+  background: linear-gradient(165deg, #45ada5 0%, #358a83 42%, #2d7870 100%);
   color: #fff;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: var(--adm-radius-sm);
-  font-family: 'Raleway', sans-serif;
-  font-size: 0.66rem;
+  font-family: var(--adm-font-ui);
+  font-size: 0.67rem;
   font-weight: 600;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.08em;
   cursor: pointer;
-  transition: background 0.15s, box-shadow 0.15s, transform 0.12s;
+  transition: background 0.3s var(--adm-ease), box-shadow 0.3s var(--adm-ease), transform 0.2s var(--adm-ease), border-color 0.25s ease;
   width: 100%;
-  box-shadow: 0 2px 8px rgba(61, 155, 147, 0.25);
+  box-shadow:
+    0 4px 16px rgba(61, 155, 147, 0.32),
+    0 1px 0 rgba(255, 255, 255, 0.12) inset;
 }
 .admin-btn:hover {
-  background: linear-gradient(180deg, var(--teal-dark) 0%, #2a6f69 100%);
-  box-shadow: 0 4px 14px rgba(61, 155, 147, 0.3);
+  background: linear-gradient(165deg, #4dbfb6 0%, #3d9b93 45%, #2d7870 100%);
+  box-shadow:
+    0 8px 28px rgba(61, 155, 147, 0.4),
+    0 1px 0 rgba(255, 255, 255, 0.18) inset;
+  transform: translateY(-1px);
 }
-.admin-btn:active { transform: translateY(1px); }
-.admin-btn-sm { padding: 0.32rem 0.65rem; font-size: 0.62rem; width: auto; }
+.admin-btn:active { transform: translateY(0); }
+.admin-btn-sm { padding: 0.36rem 0.72rem; font-size: 0.63rem; width: auto; }
 .admin-btn-ghost {
-  background: transparent;
+  background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(224, 216, 196, 0.22);
-  color: rgba(245, 240, 230, 0.65);
+  color: rgba(248, 244, 236, 0.72);
   border-radius: var(--adm-radius-sm);
-  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  transition: background 0.3s var(--adm-ease), border-color 0.25s ease, color 0.25s ease, box-shadow 0.3s ease;
 }
 .admin-btn-ghost:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--cream);
-  border-color: rgba(61, 155, 147, 0.35);
+  background: rgba(255, 255, 255, 0.09);
+  color: #fffef8;
+  border-color: rgba(212, 168, 67, 0.28);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
 }
-.admin-btn-danger { border-color: rgba(194,97,58,0.4); color: var(--brick); }
-.admin-btn-danger:hover { background: rgba(194,97,58,0.15); }
+.admin-btn-danger { border-color: rgba(194,97,58,0.45); color: #e8a090; }
+.admin-btn-danger:hover { background: rgba(194,97,58,0.18); color: #ffd4c8; }
 
 .admin-toolbar {
   display: flex; gap: 0.4rem; margin-bottom: 0.6rem; flex-wrap: wrap; align-items: center;
@@ -2243,40 +2560,40 @@ select option,
 }
 .admin-search:focus {
   outline: none;
-  border-color: var(--teal);
-  box-shadow: 0 0 0 3px rgba(61, 155, 147, 0.12);
+  border-color: rgba(61, 155, 147, 0.55);
+  box-shadow: 0 0 0 3px rgba(61, 155, 147, 0.14);
 }
 .admin-cat-filter {
-  padding: 0.42rem 0.6rem;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(224, 216, 196, 0.15);
+  padding: 0.45rem 0.65rem;
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(224, 216, 196, 0.16);
   color: var(--cream);
-  font-family: 'Raleway', sans-serif;
-  font-size: 0.72rem;
+  font-family: var(--adm-font-ui);
+  font-size: 0.73rem;
   border-radius: var(--adm-radius-sm);
 }
 
-.admin-table { width: 100%; border-collapse: collapse; font-size: 0.74rem; }
+.admin-table { width: 100%; border-collapse: collapse; font-size: 0.76rem; }
 .admin-table thead tr {
-  border-bottom: 1px solid rgba(61, 155, 147, 0.22);
-  background: rgba(61, 155, 147, 0.07);
+  border-bottom: 1px solid rgba(61, 155, 147, 0.28);
+  background: linear-gradient(180deg, rgba(61, 155, 147, 0.14) 0%, rgba(61, 155, 147, 0.05) 100%);
 }
 .admin-table th {
-  padding: 0.5rem 0.6rem;
+  padding: 0.58rem 0.68rem;
   text-align: left;
-  font-size: 0.58rem;
+  font-size: 0.59rem;
   font-weight: 700;
-  letter-spacing: 0.11em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(111, 189, 182, 0.95);
+  color: rgba(140, 214, 206, 0.98);
 }
 .admin-table td {
-  padding: 0.48rem 0.6rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  padding: 0.52rem 0.65rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.045);
   vertical-align: middle;
 }
-.admin-table tbody tr:nth-child(even) td { background: rgba(255, 255, 255, 0.02); }
-.admin-table tr:hover td { background: rgba(61, 155, 147, 0.06) !important; }
+.admin-table tbody tr:nth-child(even) td { background: rgba(255, 255, 255, 0.025); }
+.admin-table tr:hover td { background: rgba(61, 155, 147, 0.09) !important; }
 .admin-table tr.adm-menu-group td {
   background: rgba(61,155,147,0.08);
   font-size: 0.6rem;
@@ -2288,7 +2605,7 @@ select option,
   border-bottom: 1px solid rgba(61,155,147,0.15);
 }
 .admin-table tr.adm-menu-group:hover td { background: rgba(61,155,147,0.1); }
-.td-name { font-family: 'Lora', serif; font-size: 0.82rem; }
+.td-name { font-family: var(--adm-font-display); font-size: 0.88rem; font-weight: 500; letter-spacing: 0.01em; }
 .td-acts { display: flex; gap: 0.3rem; flex-wrap: wrap; align-items: center; }
 tr.admin-row-flash td {
   animation: adminRowFlash 1.4s ease-out 1;
@@ -2301,23 +2618,24 @@ tr.admin-row-flash td {
 .admin-section-title {
   display: flex;
   align-items: center;
-  gap: 0.55rem;
-  font-family: 'Lora', serif;
-  font-size: 1.02rem;
-  font-weight: 500;
-  color: var(--cream);
-  margin: 0 0 0.7rem 0;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid rgba(61, 155, 147, 0.14);
+  gap: 0.62rem;
+  font-family: var(--adm-font-display);
+  font-size: 1.12rem;
+  font-weight: 600;
+  color: #faf6ef;
+  margin: 0 0 0.78rem 0;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid rgba(201, 168, 107, 0.18);
   letter-spacing: 0.02em;
 }
 .admin-section-title::before {
   content: '';
-  width: 3px;
-  height: 1.05em;
-  border-radius: 2px;
-  background: linear-gradient(180deg, var(--teal) 0%, rgba(212, 168, 67, 0.85) 100%);
+  width: 4px;
+  height: 1.15em;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #5ec4ba 0%, var(--teal) 45%, rgba(212, 168, 67, 0.9) 100%);
   flex-shrink: 0;
+  box-shadow: 0 0 16px rgba(61, 155, 147, 0.35);
 }
 
 .admin-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-bottom: 0.65rem; }
@@ -2328,29 +2646,35 @@ tr.admin-row-flash td {
   color: var(--teal); font-weight: 600;
 }
 .admin-field input, .admin-field select, .admin-field textarea {
-  padding: 0.42rem 0.6rem;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(224, 216, 196, 0.15);
+  padding: 0.48rem 0.68rem;
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(224, 216, 196, 0.16);
   color: var(--cream);
-  font-family: 'Raleway', sans-serif;
-  font-size: 0.76rem;
+  font-family: var(--adm-font-ui);
+  font-size: 0.78rem;
   border-radius: var(--adm-radius-sm);
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition: border-color 0.3s var(--adm-ease), box-shadow 0.3s var(--adm-ease), background 0.25s ease;
 }
-.admin-field input:focus, .admin-field select:focus { outline: none; border-color: var(--teal); }
+.admin-field input:focus, .admin-field select:focus, .admin-field textarea:focus {
+  outline: none;
+  border-color: rgba(61, 155, 147, 0.55);
+  background: rgba(61, 155, 147, 0.05);
+  box-shadow: 0 0 0 3px rgba(61, 155, 147, 0.12);
+}
 
 .admin-form-actions { display: flex; gap: 0.45rem; margin-top: 0.35rem; flex-wrap: wrap; }
 
 .admin-msg {
-  padding: 0.5rem 0.75rem;
+  padding: 0.58rem 0.85rem;
   border-radius: var(--adm-radius-sm);
-  font-size: 0.7rem;
-  margin-bottom: 0.5rem;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  margin-bottom: 0.55rem;
   display: none;
 }
-.admin-msg.ok { background: rgba(61,155,147,0.15); border: 1px solid rgba(61,155,147,0.3); color: var(--teal); display: block; }
-.admin-msg.err { background: rgba(194,97,58,0.15); border: 1px solid rgba(194,97,58,0.3); color: var(--brick); display: block; }
-.admin-msg.warn { background: rgba(241,196,15,0.12); border: 1px solid rgba(212,160,23,0.35); color: #d4a017; display: block; }
+.admin-msg.ok { background: rgba(61,155,147,0.16); border: 1px solid rgba(61,155,147,0.38); color: #9ed9d3; display: block; box-shadow: 0 4px 18px rgba(61,155,147,0.1); }
+.admin-msg.err { background: rgba(194,97,58,0.14); border: 1px solid rgba(194,97,58,0.38); color: #f0b8a8; display: block; }
+.admin-msg.warn { background: rgba(241,196,15,0.1); border: 1px solid rgba(212,160,23,0.4); color: #e8c85c; display: block; }
 
 .badge { display: inline-block; padding: 2px 8px; border-radius: 2px; font-size: 0.68rem; font-weight: 600; }
 .badge-edit { background: rgba(212,168,67,0.15); color: var(--gold); border: 1px solid rgba(212,168,67,0.3); }
@@ -2373,13 +2697,14 @@ tr.admin-row-flash td {
   color: rgba(245,240,232,0.34);
 }
 .admin-compact-card {
-  border-radius: 4px;
-  padding: 0.6rem 0.7rem;
-  margin-bottom: 0.75rem;
+  border-radius: var(--adm-radius-sm);
+  padding: 0.72rem 0.82rem;
+  margin-bottom: 0.8rem;
 }
 .admin-compact-card--tg {
-  background: rgba(0, 136, 204, 0.06);
-  border: 1px solid rgba(0, 136, 204, 0.2);
+  background: linear-gradient(165deg, rgba(0, 136, 204, 0.09) 0%, rgba(0, 0, 0, 0.15) 100%);
+  border: 1px solid rgba(0, 136, 204, 0.28);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.18);
 }
 .admin-compact-card--tg h4 {
   font-size: 0.68rem;
@@ -2415,10 +2740,10 @@ tr.admin-row-flash td {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-  padding-bottom: 0.65rem;
-  border-bottom: 1px solid rgba(61, 155, 147, 0.14);
+  gap: 0.85rem;
+  margin-bottom: 1.05rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(201, 168, 107, 0.16);
 }
 .dashboard-title-plain {
   margin-bottom: 0 !important;
@@ -2430,18 +2755,24 @@ tr.admin-row-flash td {
 }
 .dashboard-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
-  gap: 0.75rem;
-  margin-bottom: 1.1rem;
+  grid-template-columns: repeat(auto-fill, minmax(156px, 1fr));
+  gap: 0.88rem;
+  margin-bottom: 1.2rem;
 }
 .dashboard-card {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(145deg, rgba(61, 155, 147, 0.1) 0%, rgba(20, 16, 12, 0.65) 100%);
-  border: 1px solid rgba(61, 155, 147, 0.22);
-  border-radius: var(--adm-radius-sm);
-  padding: 0.85rem 0.95rem;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(155deg, rgba(61, 155, 147, 0.12) 0%, rgba(24, 20, 16, 0.92) 48%, rgba(14, 12, 10, 0.95) 100%);
+  border: 1px solid rgba(201, 168, 107, 0.16);
+  border-radius: var(--adm-radius);
+  padding: 1rem 1.05rem;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+  transition: transform 0.35s var(--adm-ease), box-shadow 0.35s var(--adm-ease), border-color 0.3s ease;
+}
+.dashboard-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(61, 155, 147, 0.32);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.4), 0 0 32px rgba(61, 155, 147, 0.1);
 }
 .dashboard-card::before {
   content: '';
@@ -2449,26 +2780,28 @@ tr.admin-row-flash td {
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--teal) 0%, rgba(212, 168, 67, 0.7) 100%);
-  opacity: 0.9;
+  height: 4px;
+  background: linear-gradient(90deg, rgba(212, 168, 67, 0.5) 0%, var(--teal) 50%, rgba(212, 168, 67, 0.45) 100%);
+  opacity: 0.95;
 }
 .dashboard-card-value {
-  font-size: 1.65rem;
+  font-size: 1.75rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
-  color: #7fd4cc;
-  line-height: 1.15;
+  font-family: var(--adm-font-display);
+  color: #9ee8df;
+  line-height: 1.12;
   letter-spacing: -0.02em;
+  text-shadow: 0 2px 20px rgba(61, 155, 147, 0.25);
 }
 .dashboard-card-label {
-  font-size: 0.58rem;
+  font-size: 0.59rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.11em;
   text-transform: uppercase;
-  color: rgba(245, 240, 232, 0.48);
-  margin-top: 0.35rem;
-  line-height: 1.35;
+  color: rgba(245, 240, 232, 0.52);
+  margin-top: 0.4rem;
+  line-height: 1.4;
 }
 .dashboard-quicklinks {
   display: flex;
@@ -2495,11 +2828,11 @@ tr.admin-row-flash td {
   }
 }
 .admin-form-card {
-  background: rgba(0, 0, 0, 0.18);
-  border: 1px solid rgba(61, 155, 147, 0.16);
-  border-radius: 8px;
-  padding: 0.85rem 0.95rem 0.95rem;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(165deg, rgba(28, 24, 20, 0.9) 0%, rgba(12, 10, 8, 0.92) 100%);
+  border: 1px solid rgba(201, 168, 107, 0.14);
+  border-radius: var(--adm-radius);
+  padding: 1rem 1.05rem 1.05rem;
+  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.32), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
 }
 .admin-form-card .admin-section-title {
   margin-top: 0.15rem;
@@ -2521,12 +2854,13 @@ tr.admin-row-flash td {
   justify-content: center;
 }
 .admin-preview-pane {
-  background: rgba(14, 11, 8, 0.85);
-  border: 1px solid rgba(61, 155, 147, 0.2);
-  border-radius: 8px;
-  padding: 0.7rem 0.8rem 0.8rem;
+  background: linear-gradient(180deg, rgba(22, 18, 14, 0.95) 0%, rgba(10, 8, 6, 0.98) 100%);
+  border: 1px solid rgba(201, 168, 107, 0.16);
+  border-radius: var(--adm-radius);
+  padding: 0.85rem 0.9rem 0.95rem;
   position: sticky;
   top: 0;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
 }
 @media (max-width: 719px) {
   .admin-preview-pane { position: relative; top: auto; }
@@ -2592,20 +2926,26 @@ tr.admin-row-flash td {
 .admin-cat-card {
   display: flex;
   align-items: center;
-  gap: 0.45rem;
-  padding: 0.5rem 0.65rem;
-  margin-bottom: 0.35rem;
+  gap: 0.5rem;
+  padding: 0.58rem 0.72rem;
+  margin-bottom: 0.4rem;
   flex-wrap: wrap;
-  background: rgba(0, 0, 0, 0.15);
-  border: 1px solid rgba(61, 155, 147, 0.12);
-  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(201, 168, 107, 0.12);
+  border-radius: var(--adm-radius-sm);
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+.admin-cat-card:hover {
+  border-color: rgba(61, 155, 147, 0.22);
+  background: rgba(61, 155, 147, 0.05);
 }
 .admin-cat-card .admin-cat-name {
   flex: 1;
   min-width: 120px;
-  font-family: 'Lora', serif;
-  font-size: 0.92rem;
-  color: rgba(245, 240, 232, 0.88);
+  font-family: var(--adm-font-display);
+  font-size: 0.98rem;
+  font-weight: 500;
+  color: rgba(248, 244, 236, 0.9);
 }
 .admin-cat-card .admin-cat-meta {
   font-size: 0.68rem;
@@ -2632,10 +2972,10 @@ tr.admin-row-flash td {
     max-height: none;
   }
   .admin-top {
-    padding: 0.65rem 0.75rem;
+    padding: 0.7rem 0.8rem;
     position: sticky;
     top: 0;
-    background: #1a1208;
+    background: linear-gradient(180deg, #1c1712 0%, #14100c 100%);
     z-index: 10;
   }
   .admin-body {
@@ -2647,11 +2987,11 @@ tr.admin-row-flash td {
     gap: 0.35rem;
   }
   html.admin-panel-route .admin-body {
-    padding: 0.35rem clamp(0.5rem, 3vw, 1rem) 0.45rem;
+    padding: 0;
   }
   html.admin-panel-route #admin-panel-wrap {
-    margin-top: 0.3rem;
-    padding: 0.3rem clamp(0.5rem, 3vw, 1rem) 0;
+    margin-top: 0;
+    padding: 0;
     box-sizing: border-box;
   }
   .admin-content {
@@ -3059,12 +3399,23 @@ html.admin-panel-route .tiflis-float-rail {
                 <label data-i18n="f_email">ელ. ფოსტა</label>
                 <input type="email" id="r-email" placeholder="email@example.com">
               </div>
-              <div class="form-field">
-                <label data-i18n="f_guests">სტუმრების რაოდენობა</label>
-                <div class="qty-ctrl" style="justify-content:flex-start">
-                  <button class="qty-btn" onclick="adjGuests(-1)" type="button">−</button>
-                  <input class="qty-input" type="number" id="r-guests" min="1" max="300" value="2" style="width:60px;text-align:center" oninput="clampGuests(this)">
-                  <button class="qty-btn" onclick="adjGuests(1)" type="button">+</button>
+              <div class="form-field form-field--guests">
+                <label id="lbl-r-guests" for="r-guests" data-i18n="f_guests">სტუმრების რაოდენობა</label>
+                <div class="res-guest-stepper" role="group" aria-labelledby="lbl-r-guests">
+                  <button type="button" class="qty-btn res-guest-step" onclick="adjGuests(-1)" data-i18n-aria="guests_aria_minus" aria-label="ერთი სტუმრით ნაკლები">−</button>
+                  <input class="qty-input" type="number" id="r-guests" inputmode="numeric" min="1" max="300" step="1" value="2" autocomplete="off" oninput="clampGuests(this)" onblur="clampGuests(this)" aria-labelledby="lbl-r-guests">
+                  <button type="button" class="qty-btn res-guest-step" onclick="adjGuests(1)" data-i18n-aria="guests_aria_plus" aria-label="ერთი სტუმრით მეტი">+</button>
+                </div>
+                <div class="res-guest-presets">
+                  <span class="res-guest-presets-label" data-i18n="guests_quick">სწრაფი არჩევა</span>
+                  <div class="res-guest-presets-row">
+                    <button type="button" class="guest-preset-chip" onclick="setGuestsN(2)" data-guest-n="2">2</button>
+                    <button type="button" class="guest-preset-chip" onclick="setGuestsN(4)" data-guest-n="4">4</button>
+                    <button type="button" class="guest-preset-chip" onclick="setGuestsN(6)" data-guest-n="6">6</button>
+                    <button type="button" class="guest-preset-chip" onclick="setGuestsN(8)" data-guest-n="8">8</button>
+                    <button type="button" class="guest-preset-chip" onclick="setGuestsN(10)" data-guest-n="10">10</button>
+                    <button type="button" class="guest-preset-chip" onclick="setGuestsN(12)" data-guest-n="12">12</button>
+                  </div>
                 </div>
               </div>
               <div class="form-field">
@@ -3407,7 +3758,7 @@ html.admin-panel-route .tiflis-float-rail {
       <!-- RESERVATIONS + PRECHECK (ჩეკი) TAB -->
       <div id="at-reschecks" class="admin-pane" role="tabpanel">
         <div class="admin-section-title">ჯავშნები ჩეკებით</div>
-        <p class="admin-compact-hint" style="margin:0 0 0.65rem">ზედა: აქტიური ჩეკები (თარიღი „დან/მდე“). გაუქმებისას ჩეკი იწერება ცალკე ცხრილში <code style="font-size:.65rem">res_checks_trash</code> (არ იშლება). ქვედა ურნა აჩვენებს ამ არქივს. ტაბის 🗑 — მთელი სიის გაუქმება + არქივი. SQL: <code style="font-size:.65rem">public/sql/res_checks_trash.sql</code> (საქაღალდე public → sql).</p>
+        <p class="admin-compact-hint" style="margin:0 0 0.65rem">ზედა: აქტიური ჩეკები (თარიღი „დან/მდე“). <strong>✎</strong> — ჩეკის რედაქტირება: კერძის დამატება, რაოდენობა, წაშლა, ფასდაკლება/სერვისი/ავანსი. გაუქმებისას ჩეკი იწერება ცალკე ცხრილში <code style="font-size:.65rem">res_checks_trash</code> (არ იშლება). ქვედა ურნა აჩვენებს ამ არქივს. ტაბის 🗑 — მთელი სიის გაუქმება + არქივი. SQL: <code style="font-size:.65rem">public/sql/res_checks_trash.sql</code> (საქაღალდე public → sql).</p>
         <div class="admin-filter-row">
           <button type="button" class="admin-btn admin-btn-sm" style="width:auto" onclick="loadReservationsWithChecks()">ჩვენება (თარიღი „ჯავშნებიდან“)</button>
           <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" style="width:auto" onclick="printResChecksReport()">🖨 ბეჭდვა</button>
@@ -3505,6 +3856,42 @@ html.admin-panel-route .tiflis-float-rail {
       </div><!-- /.admin-content -->
       </div><!-- /.admin-body -->
     </div>
+
+    <div id="res-check-edit-overlay" class="res-check-edit-overlay" aria-hidden="true" role="presentation">
+      <div class="res-check-edit-dialog" role="dialog" aria-modal="true" aria-labelledby="res-check-edit-title">
+        <div class="res-check-edit-head">
+          <h3 id="res-check-edit-title">ჩეკის რედაქტირება</h3>
+        </div>
+        <div class="res-check-edit-body">
+          <div class="res-check-edit-add-row">
+            <select id="res-check-edit-add-select" class="admin-input" aria-label="კერძის არჩევა"></select>
+            <label style="font-size:.62rem;color:rgba(245,240,232,.45);width:auto"><span style="display:block;margin-bottom:.1rem">რაოდ.</span>
+              <input type="number" id="res-check-edit-add-qty" class="admin-input" min="1" max="999" value="1">
+            </label>
+            <button type="button" class="admin-btn admin-btn-sm" style="width:auto" onclick="resCheckEditorAddFromSelect()">➕ დამატება</button>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="admin-table" style="font-size:.72rem">
+              <thead><tr><th>კერძი</th><th>რაოდ.</th><th>ჯამი</th><th></th></tr></thead>
+              <tbody id="res-check-edit-lines"></tbody>
+            </table>
+          </div>
+          <div class="res-check-edit-meta">
+            <div><label for="res-check-edit-disc">ფასდაკლ. %</label><input type="number" id="res-check-edit-disc" class="admin-input" min="0" max="100" step="0.5" oninput="syncResCheckEditMetaFromDom()" onchange="syncResCheckEditMetaFromDom()"></div>
+            <div><label for="res-check-edit-svc">სერვისი %</label><input type="number" id="res-check-edit-svc" class="admin-input" min="0" max="100" step="0.5" oninput="syncResCheckEditMetaFromDom()" onchange="syncResCheckEditMetaFromDom()"></div>
+            <div><label for="res-check-edit-adv">ავანსი ₾</label><input type="number" id="res-check-edit-adv" class="admin-input" min="0" step="0.5" oninput="syncResCheckEditMetaFromDom()" onchange="syncResCheckEditMetaFromDom()"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.35rem;font-size:.75rem">
+            <span style="color:rgba(245,240,232,.45)">ქვეჯამი <strong id="res-check-edit-sub" style="color:rgba(245,240,232,.85)">₾0.00</strong></span>
+            <span style="color:var(--teal)">სულ <strong id="res-check-edit-total">₾0.00</strong></span>
+          </div>
+        </div>
+        <div class="res-check-edit-foot">
+          <button type="button" class="admin-btn admin-btn-ghost" style="width:auto" onclick="closeResCheckEditor()">დახურვა</button>
+          <button type="button" class="admin-btn" style="width:auto" onclick="saveResCheckEditor()">💾 შენახვა</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -3589,6 +3976,7 @@ const TXT = {
     contact_addr:'ბათუმი, ვ.გორგასალის ქ. 110/18', contact_hours:'ყოველდღე: 10:00 — 24:00', contact_groups:'ჯგუფები: +995 568 76 76 38',
     form_title:'სარეზერვაციო<br>ფორმა', form_sub:'შეავსეთ ფორმა · ჩვენ დაგიდასტურებთ',
     f_name:'სახელი და გვარი *', f_phone:'ტელეფონი *', f_email:'ელ. ფოსტა', f_guests:'სტუმრების რაოდენობა',
+    guests_quick:'სწრაფი არჩევა', guests_aria_minus:'ერთი სტუმრით ნაკლები', guests_aria_plus:'ერთი სტუმრით მეტი',
     f_pay:'გადახდის მეთოდი', f_date:'თარიღი *', f_time:'დრო *', f_table:'სასურველი მაგიდა', f_note:'განსაკუთრებული სურვილი',
     f_name_ph:'თქვენი სახელი', f_note_ph:'ალერგია, დაბადების დღე, სხვა სურვილი...',
     f_pay_sel:'— აირჩიეთ —', f_table_sel:'— აირჩიეთ მაგიდა —', pay_transfer:'🔁 გადმორიცხვა', pay_cash:'💵 ნაღდი',
@@ -3615,6 +4003,7 @@ const TXT = {
     contact_addr:'Batumi, V. Gorgasali St. 110/18', contact_hours:'Every day: 10:00 — 24:00', contact_groups:'Groups: +995 568 76 76 38',
     form_title:'Reservation<br>Form', form_sub:'Fill in the form · We will confirm',
     f_name:'Full Name *', f_phone:'Phone *', f_email:'Email', f_guests:'Number of Guests',
+    guests_quick:'Quick select', guests_aria_minus:'One fewer guest', guests_aria_plus:'One more guest',
     f_pay:'Payment Method', f_date:'Date *', f_time:'Time *', f_table:'Preferred Table', f_note:'Special Request',
     f_name_ph:'Your name', f_note_ph:'Allergy, birthday, other wishes...',
     f_pay_sel:'— Select —', f_table_sel:'— Select a Table —', pay_transfer:'🔁 Transfer', pay_cash:'💵 Cash',
@@ -3641,6 +4030,7 @@ const TXT = {
     contact_addr:'Батуми, ул. В. Горгасали 110/18', contact_hours:'Ежедневно: 10:00 — 24:00', contact_groups:'Группы: +995 568 76 76 38',
     form_title:'Форма<br>бронирования', form_sub:'Заполните форму · Мы подтвердим',
     f_name:'Имя и фамилия *', f_phone:'Телефон *', f_email:'Эл. почта', f_guests:'Количество гостей',
+    guests_quick:'Быстрый выбор', guests_aria_minus:'На одного гостя меньше', guests_aria_plus:'На одного гостя больше',
     f_pay:'Способ оплаты', f_date:'Дата *', f_time:'Время *', f_table:'Предпочтительный стол', f_note:'Особые пожелания',
     f_name_ph:'Ваше имя', f_note_ph:'Аллергия, день рождения, другие пожелания...',
     f_pay_sel:'— Выберите —', f_table_sel:'— Выберите стол —', pay_transfer:'🔁 Перевод', pay_cash:'💵 Наличные',
@@ -3761,14 +4151,6 @@ function initRevealAnimations() {
   });
 }
 
-function revealObserveMenuList(container) {
-  if (!tiflisRevealIO || !container) return;
-  container.querySelectorAll('.menu-item.reveal-up').forEach(el => {
-    if (el.classList.contains('is-visible')) return;
-    tiflisRevealIO.observe(el);
-  });
-}
-
 function setLang(l) {
   lang = l;
   // Update lang-btn active state
@@ -3783,6 +4165,10 @@ function setLang(l) {
 
 function applyI18n() {
   const t = TXT[lang] || TXT.ka;
+  document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+    const key = el.getAttribute('data-i18n-aria');
+    if (t[key] !== undefined) el.setAttribute('aria-label', t[key]);
+  });
   // Text content
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
@@ -3818,7 +4204,7 @@ function selCat(i) {
   if (!CATS.length) return;
   catIdx = i;
   renderCats();
-  renderMenu();
+  preservePageScroll(() => renderMenu());
 }
 
 function renderMenu() {
@@ -3832,46 +4218,109 @@ function renderMenu() {
   const catId = CATS[catIdx].id;
   const items = MENU.filter(m => m.cat === catId);
   if (!items.length) { listEl.innerHTML = '<div style="padding:2rem;color:var(--muted);font-style:italic">—</div>'; return; }
+  /* არა reveal-up: ყოველ ხელახლა რენდერზე აღარ ირბენს fade-up ანიმაცია (არ „ხტება“ გვერდი) */
   listEl.innerHTML = items.map(m => {
     const q = order[m.id] || 0;
-    return `<div class="menu-item reveal-up${q>0?' selected':''}">
+    return `<div class="menu-item${q>0?' selected':''}">
       <div class="menu-item-name">${m[lang]}</div>
       <div class="menu-item-price">₾${m.p%1===0?m.p:m.p.toFixed(2)}</div>
       <div class="qty-ctrl">
-        <button class="qty-btn" onclick="chg(${m.id},-1)">−</button>
-        <input class="qty-input" type="number" min="0" value="${q||''}" placeholder="0" oninput="setQ(${m.id},this.value)">
-        <button class="qty-btn" onclick="chg(${m.id},1)">+</button>
+        <button type="button" class="qty-btn" onclick="chg(${m.id},-1)">−</button>
+        <input class="qty-input" type="number" inputmode="numeric" min="0" max="999" step="1" value="${q || ''}" placeholder="0" title="რაოდენობა — აკრიფება ან +/−" aria-label="რაოდენობა" oninput="setQtyFromField(${m.id}, this.value, 'input')" onblur="setQtyFromField(${m.id}, this.value, 'blur')">
+        <button type="button" class="qty-btn" onclick="chg(${m.id},1)">+</button>
       </div>
     </div>`;
   }).join('');
-  revealObserveMenuList(listEl);
+}
+
+/** qty/შეკვეთის განახლების შემდეგ scroll-ის შენახვა (layout-ის ცვლილება არ არხევს გვერდს) */
+function preservePageScroll(run) {
+  const y = window.scrollY;
+  run();
+  requestAnimationFrame(() => {
+    window.scrollTo(0, y);
+  });
 }
 
 function chg(id, d) {
-  const nv = Math.max(0, (order[id]||0)+d);
-  if (nv === 0) delete order[id]; else order[id] = nv;
-  renderMenu(); renderOrder();
+  preservePageScroll(() => {
+    const nv = Math.max(0, (order[id]||0)+d);
+    if (nv === 0) delete order[id]; else order[id] = nv;
+    renderMenu();
+    renderOrder();
+  });
 }
 
-function setQ(id, v) {
-  const nv = parseInt(v)||0;
-  if (nv <= 0) delete order[id]; else order[id] = nv;
-  renderMenu();
-  renderOrder();
+/**
+ * რაოდენობის ველი: ხელით აკრეფისას oninput-ზე არ ვხატავთ მთელ მენიუს (ფოკუსი ინახება);
+ * შეკვეთის ჯამი იგრძნობა renderOrder/recalc-ით. blur-ზე სინქი + მენიუს selected მდგომარეობა.
+ */
+function setQtyFromField(id, value, phase) {
+  const raw = String(value ?? '').trim();
+  if (phase === 'input') {
+    if (raw === '') {
+      delete order[id];
+      renderOrder();
+      return;
+    }
+    const nv = parseInt(raw, 10);
+    if (!Number.isFinite(nv) || nv < 0) return;
+    if (nv === 0) delete order[id];
+    else order[id] = Math.min(999, nv);
+    renderOrder();
+    return;
+  }
+  preservePageScroll(() => {
+    if (raw === '') {
+      delete order[id];
+    } else {
+      let nv = parseInt(raw, 10);
+      if (!Number.isFinite(nv) || nv < 0) nv = 0;
+      if (nv <= 0) delete order[id];
+      else order[id] = Math.min(999, nv);
+    }
+    renderMenu();
+    renderOrder();
+  });
 }
 
-function clearAll() { order = {}; renderMenu(); renderOrder(); }
+function clearAll() {
+  preservePageScroll(() => {
+    order = {};
+    renderMenu();
+    renderOrder();
+  });
+}
 
-function removeItem(id) { delete order[id]; renderMenu(); renderOrder(); }
+function removeItem(id) {
+  preservePageScroll(() => {
+    delete order[id];
+    renderMenu();
+    renderOrder();
+  });
+}
 
 function renderOrder() {
   const el = g('order-list');
   if (!el) return;
+  const active = document.activeElement;
+  let restoreLineId = null;
+  let restoreCaret = 0;
+  if (active && active.classList.contains('qty-input') && el.contains(active)) {
+    restoreLineId = active.getAttribute('data-order-line-id');
+    try {
+      restoreCaret =
+        active.selectionStart != null ? active.selectionStart : String(active.value || '').length;
+    } catch (e) {
+      restoreCaret = String(active.value || '').length;
+    }
+  }
   const ids = Object.keys(order).map(Number);
   const t = TXT[lang];
   if (!ids.length) {
     el.innerHTML = `<div class="order-empty">${t.empty}</div>`;
-    recalc(); return;
+    recalc();
+    return;
   }
   el.innerHTML = ids.map(id => {
     const item = MENU.find(m => m.id === id);
@@ -3880,15 +4329,28 @@ function renderOrder() {
     return `<div class="order-line">
       <div class="order-line-name">${item[lang]}</div>
       <div class="order-line-qty">
-        <button class="qty-btn" style="width:20px;height:20px;font-size:11px" onclick="chg(${id},-1)">−</button>
-        <span style="font-size:.75rem;color:rgba(245,240,232,.6);min-width:16px;text-align:center">${q}</span>
-        <button class="qty-btn" style="width:20px;height:20px;font-size:11px" onclick="chg(${id},1)">+</button>
+        <button type="button" class="qty-btn" style="width:20px;height:20px;font-size:11px" onclick="chg(${id},-1)">−</button>
+        <input class="qty-input" type="number" inputmode="numeric" min="0" max="999" step="1" data-order-line-id="${id}" value="${q}" title="რაოდენობა" aria-label="რაოდენობა" style="width:2.4rem;height:20px;font-size:11px" oninput="setQtyFromField(${id}, this.value, 'input')" onblur="setQtyFromField(${id}, this.value, 'blur')">
+        <button type="button" class="qty-btn" style="width:20px;height:20px;font-size:11px" onclick="chg(${id},1)">+</button>
       </div>
       <div class="order-line-price">₾${s.toFixed(2)}</div>
-      <button class="remove-btn" onclick="removeItem(${id})">×</button>
+      <button type="button" class="remove-btn" onclick="removeItem(${id})">×</button>
     </div>`;
   }).join('');
   recalc();
+  if (restoreLineId != null && restoreLineId !== '') {
+    const inp = el.querySelector(`input[data-order-line-id="${String(restoreLineId).replace(/"/g, '')}"]`);
+    if (inp) {
+      requestAnimationFrame(() => {
+        inp.focus();
+        try {
+          const len = inp.value.length;
+          const pos = Math.min(Math.max(0, restoreCaret), len);
+          inp.setSelectionRange(pos, pos);
+        } catch (e) {}
+      });
+    }
+  }
 }
 
 function recalc() {
@@ -4371,13 +4833,21 @@ async function supaFetch(path, method='GET', body=null, fetchOpts) {
 // guests stepper
 function adjGuests(d) {
   const el = g('r-guests');
-  let v = parseInt(el.value)||1;
-  el.value = Math.max(1, Math.min(300, v+d));
+  if (!el) return;
+  let v = parseInt(el.value, 10) || 1;
+  el.value = String(Math.max(1, Math.min(300, v + d)));
+  recalc();
+}
+function setGuestsN(n) {
+  const el = g('r-guests');
+  if (!el) return;
+  const v = Math.max(1, Math.min(300, Math.floor(Number(n)) || 1));
+  el.value = String(v);
   recalc();
 }
 function clampGuests(el) {
-  let v = parseInt(el.value)||1;
-  el.value = Math.max(1, Math.min(300, v));
+  let v = parseInt(el.value, 10) || 1;
+  el.value = String(Math.max(1, Math.min(300, v)));
   recalc();
 }
 
@@ -4707,6 +5177,12 @@ function getAdminFocusables() {
 function adminModalKeydownHandler(e) {
   const admModal = g('admin-modal');
   if (!admModal || !admModal.classList.contains('open')) return;
+  const recOvl = g('res-check-edit-overlay');
+  if (recOvl && recOvl.classList.contains('open') && e.key === 'Escape') {
+    e.preventDefault();
+    closeResCheckEditor();
+    return;
+  }
   if (e.key === 'Escape') {
     e.preventDefault();
     closeAdmin();
@@ -5199,6 +5675,7 @@ function closeAdmin() {
 }
 
 function closeAdminForce() {
+  closeResCheckEditor();
   const isPanel = document.documentElement.classList.contains('admin-panel-route');
   const modal = g('admin-modal');
   modal.classList.remove('open');
@@ -5993,6 +6470,9 @@ let allReservations = [];
 let filteredReservations = [];
 /** ბოლო ჩეკიანი ჯავშნების სია — ბეჭდვისთვის */
 let lastResChecksRows = [];
+let resCheckEditReservationId = null;
+let resCheckEditDraft = null;
+let resCheckEditorDelegated = false;
 
 function parseReservationPrecheck(raw) {
   if (raw == null || raw === '') return null;
@@ -6216,6 +6696,268 @@ function formatPrecheckCellHtml(r) {
   return `<div>${lines}${meta}${subLine}${totalLine}</div>`;
 }
 
+function recalcPrecheckDraft(d) {
+  if (!d || !Array.isArray(d.items)) return d;
+  let sub = 0;
+  d.items.forEach(it => {
+    const p = Number(it.p) || 0;
+    let q = Math.floor(Number(it.qty) || 0);
+    if (q < 1) q = 1;
+    if (q > 999) q = 999;
+    it.qty = q;
+    it.line = p * q;
+    sub += it.line;
+  });
+  let disc = parseFloat(d.disc_pct);
+  if (!Number.isFinite(disc) || disc < 0) disc = 0;
+  if (disc > 100) disc = 100;
+  let svc = parseFloat(d.svc_pct);
+  if (!Number.isFinite(svc) || svc < 0) svc = 0;
+  if (svc > 100) svc = 100;
+  let adv = parseFloat(d.advance);
+  if (!Number.isFinite(adv) || adv < 0) adv = 0;
+  d.disc_pct = disc;
+  d.svc_pct = svc;
+  d.advance = adv;
+  const dA = sub * disc / 100;
+  const afterD = sub - dA;
+  const sA = afterD * svc / 100;
+  d.subtotal = sub;
+  d.total = Math.max(0, afterD + sA - adv);
+  d.saved_at = new Date().toISOString();
+  return d;
+}
+
+function buildResCheckMenuSelectHtml() {
+  sortCatsInPlace();
+  const parts = ['<option value="">— აირჩიეთ კერძი —</option>'];
+  for (const c of CATS) {
+    const items = MENU.filter(m => m.cat === c.id).slice().sort((a, b) => String(a.ka || '').localeCompare(String(b.ka || '')));
+    if (!items.length) continue;
+    parts.push(`<optgroup label="${escapeAttr(c.ka || c.en || String(c.id))}">`);
+    for (const m of items) {
+      parts.push(
+        `<option value="${escapeAttr(String(m.id))}">${escapeHtml(m.ka || m.en || '—')} — ₾${Number(m.p).toFixed(2)}</option>`
+      );
+    }
+    parts.push('</optgroup>');
+  }
+  return parts.join('');
+}
+
+function updateResCheckEditorTotals() {
+  if (!resCheckEditDraft) return;
+  recalcPrecheckDraft(resCheckEditDraft);
+  const subEl = g('res-check-edit-sub');
+  const totEl = g('res-check-edit-total');
+  if (subEl) subEl.textContent = '₾' + Number(resCheckEditDraft.subtotal).toFixed(2);
+  if (totEl) totEl.textContent = '₾' + Number(resCheckEditDraft.total).toFixed(2);
+}
+
+function renderResCheckEditorLines() {
+  const tb = g('res-check-edit-lines');
+  if (!tb || !resCheckEditDraft) return;
+  recalcPrecheckDraft(resCheckEditDraft);
+  const items = resCheckEditDraft.items;
+  if (!items.length) {
+    tb.innerHTML =
+      '<tr><td colspan="4" style="text-align:center;color:rgba(245,240,232,.35);padding:.85rem;font-size:.72rem;font-style:italic">კერძები არ არის — ზემოთ დაამატეთ</td></tr>';
+  } else {
+    tb.innerHTML = items
+      .map((it, idx) => {
+        const nm = escapeHtml(it.ka || it.en || '—');
+        const line = Number(it.line).toFixed(2);
+        return `<tr data-rce-idx="${idx}">
+        <td style="font-size:.72rem;max-width:11rem">${nm}</td>
+        <td style="white-space:nowrap">
+          <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost res-check-eqty" data-delta="-1" style="padding:2px 6px" aria-label="მინუს ერთი">−</button>
+          <input type="number" class="admin-input res-check-eqty-inp" min="1" max="999" value="${it.qty}" style="width:3rem;margin:0 .2rem;padding:.2rem;font-size:.7rem" aria-label="რაოდენობა">
+          <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost res-check-eqty" data-delta="1" style="padding:2px 6px" aria-label="პლიუს ერთი">+</button>
+        </td>
+        <td style="font-size:.72rem;color:var(--teal)">₾${line}</td>
+        <td><button type="button" class="admin-btn admin-btn-sm admin-btn-ghost res-check-erem" style="padding:2px 8px;color:#e98a7a" title="წაშლა" aria-label="წაშლა">✕</button></td>
+      </tr>`;
+      })
+      .join('');
+  }
+  updateResCheckEditorTotals();
+}
+
+function syncResCheckEditMetaFromDom() {
+  if (!resCheckEditDraft) return;
+  resCheckEditDraft.disc_pct = parseFloat(g('res-check-edit-disc')?.value) || 0;
+  resCheckEditDraft.svc_pct = parseFloat(g('res-check-edit-svc')?.value) || 0;
+  resCheckEditDraft.advance = parseFloat(g('res-check-edit-adv')?.value) || 0;
+  updateResCheckEditorTotals();
+}
+
+function closeResCheckEditor() {
+  const ovl = g('res-check-edit-overlay');
+  if (ovl) {
+    ovl.classList.remove('open');
+    ovl.setAttribute('aria-hidden', 'true');
+  }
+  resCheckEditDraft = null;
+  resCheckEditReservationId = null;
+}
+
+async function openResCheckEditor(id) {
+  ensureResCheckEditorDelegation();
+  const row = await resolveReservationRowForAdmin(id);
+  if (!row || !reservationHasPrecheck(row)) {
+    adminMsg('res-checks-msg', '❌ ჩეკი ვერ ჩაიტვირთა', 'err');
+    return;
+  }
+  if (isReservationCancelled(row)) {
+    adminMsg('res-checks-msg', '❯ გაუქმებული ჩეკის რედაქტირება — ჯერ აღადგინეთ ურნიდან (↩ / ✅)', 'err');
+    return;
+  }
+  const base = parseReservationPrecheck(row.precheck_json);
+  resCheckEditReservationId = String(row.id);
+  resCheckEditDraft = {
+    items: (base.items || []).map(it => ({
+      id: it.id,
+      ka: it.ka,
+      en: it.en,
+      ru: it.ru,
+      p: Number(it.p) || 0,
+      qty: Math.max(1, Math.floor(Number(it.qty) || 1)),
+      line: Number(it.line) || 0,
+    })),
+    disc_pct: Number(base.disc_pct) || 0,
+    svc_pct: Number(base.svc_pct) || 0,
+    advance: Number(base.advance) || 0,
+  };
+  recalcPrecheckDraft(resCheckEditDraft);
+  const title = g('res-check-edit-title');
+  if (title) title.textContent = 'ჩეკის რედაქტირება — ' + (row.name || '—');
+  const sel = g('res-check-edit-add-select');
+  if (sel) sel.innerHTML = buildResCheckMenuSelectHtml();
+  const qInp = g('res-check-edit-add-qty');
+  if (qInp) qInp.value = '1';
+  if (g('res-check-edit-disc')) g('res-check-edit-disc').value = String(resCheckEditDraft.disc_pct);
+  if (g('res-check-edit-svc')) g('res-check-edit-svc').value = String(resCheckEditDraft.svc_pct);
+  if (g('res-check-edit-adv')) g('res-check-edit-adv').value = String(resCheckEditDraft.advance);
+  renderResCheckEditorLines();
+  const ovl = g('res-check-edit-overlay');
+  if (ovl) {
+    ovl.classList.add('open');
+    ovl.setAttribute('aria-hidden', 'false');
+  }
+}
+
+function resCheckEditorAddFromSelect() {
+  if (!resCheckEditDraft) return;
+  const sel = g('res-check-edit-add-select');
+  const qInp = g('res-check-edit-add-qty');
+  const id = sel && sel.value ? parseInt(sel.value, 10) : NaN;
+  let q = Math.max(1, Math.floor(parseInt(qInp && qInp.value, 10) || 1));
+  if (!Number.isFinite(id)) {
+    adminMsg('res-checks-msg', '❯ აირჩიეთ კერძი სიიდან', 'warn');
+    return;
+  }
+  const m = MENU.find(x => x.id === id);
+  if (!m) {
+    adminMsg('res-checks-msg', '❯ კერძი მენიუში არ მოიძებნა', 'err');
+    return;
+  }
+  const ex = resCheckEditDraft.items.findIndex(x => Number(x.id) === id);
+  if (ex >= 0) {
+    resCheckEditDraft.items[ex].qty = Math.min(999, Math.floor(Number(resCheckEditDraft.items[ex].qty) + q));
+  } else {
+    resCheckEditDraft.items.push({
+      id: m.id,
+      ka: m.ka,
+      en: m.en,
+      ru: m.ru,
+      p: Number(m.p) || 0,
+      qty: q,
+      line: (Number(m.p) || 0) * q,
+    });
+  }
+  if (qInp) qInp.value = '1';
+  renderResCheckEditorLines();
+}
+
+async function saveResCheckEditor() {
+  if (!resCheckEditReservationId || !resCheckEditDraft) return;
+  syncResCheckEditMetaFromDom();
+  recalcPrecheckDraft(resCheckEditDraft);
+  const items = resCheckEditDraft.items.filter(it => (Number(it.qty) || 0) > 0);
+  if (!items.length) {
+    if (!confirm('ცარიელი ჩეკი — ჯავშანი „ჩეკები“ სიიდან გაქრება (precheck_json ცარიელი იქნება). გაგრძელება?')) return;
+  }
+  const snap = {
+    items,
+    disc_pct: resCheckEditDraft.disc_pct,
+    svc_pct: resCheckEditDraft.svc_pct,
+    advance: resCheckEditDraft.advance,
+    subtotal: resCheckEditDraft.subtotal,
+    total: resCheckEditDraft.total,
+    saved_at: new Date().toISOString(),
+  };
+  try {
+    await supaFetch(`/rest/v1/reservations?id=eq.${encodeURIComponent(resCheckEditReservationId)}`, 'PATCH', {
+      precheck_json: snap,
+    });
+    adminMsg('res-checks-msg', '✅ ჩეკი შენახულია', 'ok');
+    auditLog('precheck_edit', resCheckEditReservationId);
+    closeResCheckEditor();
+    await loadReservationsWithChecks();
+  } catch (e) {
+    adminMsg('res-checks-msg', '❌ ვერ შენახა: ' + (e.message || ''), 'err');
+  }
+}
+
+function ensureResCheckEditorDelegation() {
+  if (resCheckEditorDelegated) return;
+  const ovl = g('res-check-edit-overlay');
+  const dlg = ovl && ovl.querySelector('.res-check-edit-dialog');
+  if (!ovl || !dlg) return;
+  resCheckEditorDelegated = true;
+  ovl.addEventListener('click', function (e) {
+    if (e.target === ovl) closeResCheckEditor();
+  });
+  dlg.addEventListener('click', function (e) {
+    const rem = e.target.closest && e.target.closest('.res-check-erem');
+    if (rem && dlg.contains(rem)) {
+      const tr = rem.closest('tr[data-rce-idx]');
+      const idx = tr ? parseInt(tr.getAttribute('data-rce-idx'), 10) : NaN;
+      if (resCheckEditDraft && Number.isFinite(idx)) {
+        resCheckEditDraft.items.splice(idx, 1);
+        renderResCheckEditorLines();
+      }
+      return;
+    }
+    const dq = e.target.closest && e.target.closest('.res-check-eqty[data-delta]');
+    if (dq && dlg.contains(dq)) {
+      const tr = dq.closest('tr[data-rce-idx]');
+      const idx = tr ? parseInt(tr.getAttribute('data-rce-idx'), 10) : NaN;
+      const delta = parseInt(dq.getAttribute('data-delta'), 10);
+      if (!Number.isFinite(delta)) return;
+      if (resCheckEditDraft && Number.isFinite(idx) && resCheckEditDraft.items[idx]) {
+        let nq = Math.floor(Number(resCheckEditDraft.items[idx].qty) + delta);
+        if (nq < 1) nq = 1;
+        if (nq > 999) nq = 999;
+        resCheckEditDraft.items[idx].qty = nq;
+        renderResCheckEditorLines();
+      }
+    }
+  });
+  dlg.addEventListener('change', function (e) {
+    const inp = e.target.closest && e.target.closest('.res-check-eqty-inp');
+    if (!inp || !dlg.contains(inp)) return;
+    const tr = inp.closest('tr[data-rce-idx]');
+    const idx = tr ? parseInt(tr.getAttribute('data-rce-idx'), 10) : NaN;
+    if (!resCheckEditDraft || !Number.isFinite(idx) || !resCheckEditDraft.items[idx]) return;
+    let q = Math.floor(parseInt(inp.value, 10) || 1);
+    if (q < 1) q = 1;
+    if (q > 999) q = 999;
+    resCheckEditDraft.items[idx].qty = q;
+    renderResCheckEditorLines();
+  });
+}
+
 /** უახლესი ჯავშანი ზევით: created_at / inserted_at, სარეზერვო — რიცხვობრივი id */
 function sortReservationsNewestFirst(rows) {
   if (!Array.isArray(rows)) return [];
@@ -6274,6 +7016,12 @@ function ensureResChecksTableDelegation() {
     if (!table || table.dataset.resChecksDelegated === '1') return;
     table.dataset.resChecksDelegated = '1';
     table.addEventListener('click', function (e) {
+      const edBtn = e.target.closest && e.target.closest('.res-check-edit-btn');
+      if (edBtn && table.contains(edBtn)) {
+        const id = edBtn.getAttribute('data-res-id');
+        if (id) openResCheckEditor(id);
+        return;
+      }
       const stBtn = e.target.closest && e.target.closest('.res-check-status-btn');
       if (stBtn && table.contains(stBtn)) {
         const id = stBtn.getAttribute('data-res-id');
@@ -6371,7 +7119,8 @@ function renderResChecksTable(data) {
       <td style="vertical-align:top;max-width:18rem">${formatPrecheckCellHtml(r)}</td>
       <td><span style="font-size:.7rem;padding:2px 7px;border-radius:3px;border:1px solid ${stColor};color:${stColor}">${stLabel}</span></td>
       <td>
-        <div style="display:flex;gap:.3rem">
+        <div style="display:flex;gap:.3rem;flex-wrap:wrap">
+          <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm res-check-edit-btn" data-res-id="${idAttr}" title="ჩეკის რედაქტირება" style="padding:3px 7px">✎</button>
           <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm res-check-status-btn" data-res-id="${idAttr}" data-res-status="confirmed" title="დადასტურება" style="padding:3px 7px">✅</button>
           <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm res-check-status-btn" data-res-id="${idAttr}" data-res-status="cancelled" title="გაუქმება" style="padding:3px 7px">❌</button>
         </div>
