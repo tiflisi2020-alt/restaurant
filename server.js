@@ -12,12 +12,14 @@ const adminGoogleEmails = (process.env.ADMIN_GOOGLE_EMAILS || "tiflisi2020@gmail
   .filter(Boolean);
 const oauth2Client = new OAuth2Client();
 const app = express();
+/** Default dev port for this app (change with env PORT=…). */
+const DEFAULT_PORT = 8844;
 let PORT = Number(process.env.PORT);
-if (!Number.isFinite(PORT) || PORT < 1 || PORT > 65535) PORT = 3000;
-/** 127.0.0.1 = localhost only. Set HOST=0.0.0.0 to allow other PCs on the LAN. */
-const HOST = (process.env.HOST && String(process.env.HOST).trim()) || "127.0.0.1";
-if (process.env.PORT && String(process.env.PORT).trim() !== "" && PORT !== 3000) {
-  console.warn(`Note: PORT is ${PORT} (not 3000). Use http://127.0.0.1:${PORT}/ in the browser.`);
+if (!Number.isFinite(PORT) || PORT < 1 || PORT > 65535) PORT = DEFAULT_PORT;
+/** localhost only by default. Set HOST=0.0.0.0 to allow other PCs on the LAN. */
+const HOST = (process.env.HOST && String(process.env.HOST).trim()) || "localhost";
+if (process.env.PORT && String(process.env.PORT).trim() !== "" && PORT !== DEFAULT_PORT) {
+  console.warn(`Note: PORT is ${PORT} (default for this app is ${DEFAULT_PORT}). Open http://localhost:${PORT}/`);
 }
 
 app.use(express.json());
@@ -104,10 +106,10 @@ function onListen() {
   const boundPort = typeof addr === "object" && addr ? addr.port : PORT;
   console.log("");
   console.log("========== Restaurant Tiflis — site server ==========");
-  console.log(`Listening on ${HOST}:${boundPort}`);
-  console.log(`  Site:  http://127.0.0.1:${boundPort}/`);
-  console.log(`  Admin: http://127.0.0.1:${boundPort}/admin`);
-  console.log(`  Check: http://127.0.0.1:${boundPort}/ping.txt  (must show: ok)`);
+  console.log(`Listening on http://${HOST}:${boundPort}`);
+  console.log(`  Site:  http://localhost:${boundPort}/`);
+  console.log(`  Admin: http://localhost:${boundPort}/admin`);
+  console.log(`  Check: http://localhost:${boundPort}/ping.txt  (must show: ok)`);
   if (googleClientId) {
     console.log("  Google admin sign-in: enabled (ADMIN_GOOGLE_EMAILS / default tiflisi2020@gmail.com)");
   } else {
@@ -121,7 +123,7 @@ function onListen() {
 function onListenError(err) {
   if (err.code === "EADDRINUSE") {
     console.error(
-      `Port ${PORT} is already in use. Close the other app using it, or in PowerShell run: $env:PORT='3001'; npm start`
+      `Port ${PORT} is already in use. Close the other app using it, or in PowerShell run: $env:PORT='8845'; npm start  (then open http://localhost:8845/)`
     );
   } else {
     console.error(err);

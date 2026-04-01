@@ -18,8 +18,8 @@ npm install
 npm start
 ```
 
-Or double-click `start-server.bat` (port **3000**).
+Or double-click `start-server.bat` (port **8844**).
 
-Open: `http://127.0.0.1:3000/`
+Open: `http://localhost:8844/`
 
 If an empty `web-server` folder remains in your user directory, you can delete it manually.

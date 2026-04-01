@@ -12,9 +12,9 @@ if not exist "node_modules\express\package.json" (
   )
 )
 echo.
-REM Force port 3000 so the URL always matches (clears a wrong PORT from environment)
-set "PORT=3000"
-set "HOST=127.0.0.1"
+REM Dedicated port for Restaurant Tiflis (override: set PORT=… before running)
+set "PORT=8844"
+set "HOST=localhost"
 REM Optional: Google Sign-In for /admin (same Client ID as in Google Cloud Console)
 REM set "GOOGLE_CLIENT_ID=YOUR_CLIENT_ID.apps.googleusercontent.com"
 REM Optional: allow more than one admin Google account (comma-separated, lowercase)

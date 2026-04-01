@@ -22,6 +22,12 @@
   if (isGh && location.search.indexOf("gh_panel=1") !== -1) {
     document.documentElement.classList.add("admin-panel-route");
     document.documentElement.style.background = "#080604";
+    try {
+      if (localStorage.getItem("tiflis_admin_theme") === "light") {
+        document.documentElement.classList.add("admin-theme-light");
+        document.documentElement.style.background = "#f3efe6";
+      }
+    } catch (e) {}
     if (sessionStorage.getItem("tiflis_admin_logged") !== "1") {
       var baseSeg = (p.match(/^(\/[^\/]+)/) || [])[1] || "";
       location.replace(baseSeg + "/admin/");
@@ -37,6 +43,12 @@
   if (!/\/admin\/panel$/i.test(p) && !/\/admin\/panel\/index\.html$/i.test(p)) return;
   document.documentElement.classList.add("admin-panel-route");
   document.documentElement.style.background = "#080604";
+  try {
+    if (localStorage.getItem("tiflis_admin_theme") === "light") {
+      document.documentElement.classList.add("admin-theme-light");
+      document.documentElement.style.background = "#f3efe6";
+    }
+  } catch (e) {}
   if (sessionStorage.getItem("tiflis_admin_logged") !== "1") {
     location.replace(p.replace(/\/admin\/panel(\/index\.html)?$/i, "/admin"));
   }
@@ -2858,6 +2870,24 @@ html.admin-panel-route .admin-content {
   background: rgba(61, 155, 147, 0.14);
   box-shadow: 0 4px 18px rgba(61, 155, 147, 0.12);
 }
+.admin-theme-toggle {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(224, 216, 196, 0.2);
+  color: rgba(248, 244, 236, 0.72);
+  font-size: 1.05rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.48rem 0.72rem;
+  border-radius: var(--adm-radius-sm);
+  font-family: var(--adm-font-ui);
+  transition: background 0.3s var(--adm-ease), color 0.25s ease, border-color 0.25s ease, box-shadow 0.3s ease;
+}
+.admin-theme-toggle:hover {
+  color: #fffef8;
+  border-color: rgba(212, 168, 67, 0.35);
+  background: rgba(212, 168, 67, 0.12);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+}
 .admin-close {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.06);
@@ -3635,6 +3665,450 @@ tr.admin-row-flash td {
   }
 }
 
+/* ===== ADMIN LIGHT THEME (#admin-modal + /admin/panel) ===== */
+html.admin-theme-light #admin-modal ::selection {
+  background: rgba(61, 155, 147, 0.28);
+  color: #1a1510;
+}
+html.admin-theme-light:not(.admin-panel-route) #admin-modal.admin-modal {
+  background:
+    radial-gradient(ellipse 100% 70% at 50% -10%, rgba(61, 155, 147, 0.12) 0%, transparent 52%),
+    radial-gradient(ellipse 80% 50% at 100% 100%, rgba(212, 168, 67, 0.08) 0%, transparent 45%),
+    rgba(255, 252, 248, 0.94);
+}
+html.admin-theme-light.admin-panel-route {
+  background: #f3efe6 !important;
+}
+html.admin-theme-light.admin-panel-route body {
+  background:
+    radial-gradient(ellipse 120% 80% at 50% 0%, rgba(61, 155, 147, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 90% 60% at 0% 100%, rgba(212, 168, 67, 0.06) 0%, transparent 42%),
+    #f3efe6 !important;
+}
+html.admin-theme-light.admin-panel-route #admin-modal {
+  background:
+    radial-gradient(ellipse 100% 55% at 50% 0%, rgba(61, 155, 147, 0.1) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 45% at 100% 80%, rgba(212, 168, 67, 0.06) 0%, transparent 50%),
+    #f3efe6 !important;
+}
+html.admin-theme-light.admin-panel-route .admin-top {
+  background: #faf8f4;
+  border-bottom: 1px solid rgba(42, 34, 24, 0.1);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset;
+}
+html.admin-theme-light.admin-panel-route .admin-top::after {
+  background: linear-gradient(90deg, transparent 0%, rgba(61, 155, 147, 0.25) 50%, transparent 100%);
+}
+html.admin-theme-light.admin-panel-route .admin-box {
+  background: #faf8f4;
+}
+html.admin-theme-light.admin-panel-route .admin-body {
+  background: #f5f1ea;
+  border-top: 1px solid rgba(42, 34, 24, 0.08);
+}
+html.admin-theme-light #admin-modal .admin-box {
+  background: linear-gradient(168deg, #fffefb 0%, #faf6f0 42%, #f5f0e8 100%);
+  color: rgba(30, 24, 18, 0.92);
+  box-shadow:
+    0 32px 72px rgba(42, 34, 24, 0.12),
+    0 0 60px rgba(61, 155, 147, 0.05);
+}
+html.admin-theme-light.admin-panel-route #admin-modal .admin-box {
+  box-shadow: none;
+  background: #faf8f4;
+}
+html.admin-theme-light #admin-modal .admin-top {
+  border-bottom-color: rgba(42, 34, 24, 0.1);
+}
+html.admin-theme-light #admin-modal .admin-top h2 {
+  color: #1a1510;
+  text-shadow: none;
+}
+html.admin-theme-light #admin-modal .admin-brand-tagline {
+  color: rgba(42, 34, 24, 0.45);
+}
+html.admin-theme-light #admin-modal .admin-stay-hint {
+  color: rgba(42, 34, 24, 0.5);
+}
+html.admin-theme-light #admin-modal .admin-body {
+  background: linear-gradient(180deg, #fdfbf8 0%, #f5f1ea 100%);
+  border-top-color: rgba(42, 34, 24, 0.1);
+}
+html.admin-theme-light #admin-modal .admin-content {
+  background: linear-gradient(175deg, #ffffff 0%, #faf6ef 55%, #f3ede4 100%);
+  box-shadow:
+    0 0 0 1px rgba(42, 34, 24, 0.08) inset,
+    0 20px 48px rgba(42, 34, 24, 0.06);
+}
+html.admin-theme-light #admin-modal .admin-content > .admin-tabs {
+  border-bottom-color: rgba(61, 155, 147, 0.2);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(245, 241, 234, 0.9) 100%);
+}
+html.admin-theme-light #admin-modal .admin-content .admin-tab {
+  background: rgba(42, 34, 24, 0.04);
+  border-color: rgba(42, 34, 24, 0.08);
+  color: rgba(42, 34, 24, 0.45);
+}
+html.admin-theme-light #admin-modal .admin-content .admin-tab.on {
+  color: #0d4a45;
+  background: linear-gradient(165deg, rgba(61, 155, 147, 0.22) 0%, rgba(61, 155, 147, 0.1) 100%);
+  border-color: rgba(61, 155, 147, 0.45);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.8) inset,
+    0 4px 16px rgba(61, 155, 147, 0.12);
+}
+html.admin-theme-light #admin-modal .admin-content .admin-tab:hover:not(.on) {
+  color: #1a1510;
+  background: rgba(42, 34, 24, 0.06);
+  border-color: rgba(212, 168, 67, 0.25);
+}
+html.admin-theme-light #admin-modal .admin-content .admin-tab-trash {
+  color: rgba(42, 34, 24, 0.4);
+}
+html.admin-theme-light #admin-modal .admin-logout,
+html.admin-theme-light #admin-modal .admin-theme-toggle {
+  background: rgba(42, 34, 24, 0.04);
+  border-color: rgba(42, 34, 24, 0.14);
+  color: rgba(30, 24, 18, 0.75);
+}
+html.admin-theme-light #admin-modal .admin-logout:hover,
+html.admin-theme-light #admin-modal .admin-theme-toggle:hover {
+  color: #1a1510;
+  border-color: rgba(61, 155, 147, 0.4);
+  background: rgba(61, 155, 147, 0.1);
+  box-shadow: 0 4px 14px rgba(61, 155, 147, 0.1);
+}
+html.admin-theme-light #admin-modal .admin-theme-toggle:hover {
+  border-color: rgba(212, 168, 67, 0.35);
+}
+html.admin-theme-light #admin-modal .admin-close {
+  background: rgba(42, 34, 24, 0.04);
+  border-color: rgba(42, 34, 24, 0.1);
+  color: rgba(42, 34, 24, 0.45);
+}
+html.admin-theme-light #admin-modal .admin-close:hover {
+  color: #9a4f30;
+  background: rgba(194, 97, 58, 0.1);
+  border-color: rgba(194, 97, 58, 0.28);
+}
+html.admin-theme-light #admin-modal .admin-login {
+  background: linear-gradient(165deg, #ffffff 0%, #f5f1ea 100%);
+  box-shadow:
+    0 24px 56px rgba(42, 34, 24, 0.1),
+    0 0 32px rgba(61, 155, 147, 0.06);
+}
+html.admin-theme-light #admin-modal .admin-login h3 {
+  color: #1a1510;
+}
+html.admin-theme-light #admin-modal .admin-login p {
+  color: rgba(42, 34, 24, 0.55);
+}
+html.admin-theme-light #admin-modal .admin-login-divider {
+  color: rgba(42, 34, 24, 0.35);
+}
+html.admin-theme-light #admin-modal .admin-login-divider::before,
+html.admin-theme-light #admin-modal .admin-login-divider::after {
+  background: rgba(42, 34, 24, 0.12);
+}
+html.admin-theme-light #admin-modal #admin-google-err {
+  color: #a34a38;
+}
+html.admin-theme-light #admin-modal .admin-input {
+  background: #fff;
+  border-color: rgba(42, 34, 24, 0.15);
+  color: #1a1510;
+}
+html.admin-theme-light #admin-modal .admin-input:focus {
+  border-color: rgba(61, 155, 147, 0.55);
+  background: #fafdfb;
+  box-shadow: 0 0 0 3px rgba(61, 155, 147, 0.15), 0 8px 24px rgba(42, 34, 24, 0.06);
+}
+html.admin-theme-light #admin-modal .admin-btn-ghost {
+  background: rgba(42, 34, 24, 0.04);
+  border-color: rgba(42, 34, 24, 0.14);
+  color: rgba(30, 24, 18, 0.78);
+}
+html.admin-theme-light #admin-modal .admin-btn-ghost:hover {
+  color: #1a1510;
+  background: rgba(42, 34, 24, 0.07);
+}
+html.admin-theme-light #admin-modal .admin-btn-danger {
+  color: #a34a38;
+}
+html.admin-theme-light #admin-modal .admin-btn-danger:hover {
+  color: #7a2e22;
+}
+html.admin-theme-light #admin-modal .admin-search {
+  background: #fff;
+  border-color: rgba(42, 34, 24, 0.12);
+  color: #1a1510;
+}
+html.admin-theme-light #admin-modal .admin-cat-filter {
+  background: #fff;
+  border-color: rgba(42, 34, 24, 0.12);
+  color: #1a1510;
+}
+html.admin-theme-light #admin-modal .admin-table thead tr {
+  border-bottom-color: rgba(61, 155, 147, 0.35);
+  background: linear-gradient(180deg, rgba(61, 155, 147, 0.14) 0%, rgba(61, 155, 147, 0.06) 100%);
+}
+html.admin-theme-light #admin-modal .admin-table th {
+  color: #1f6d66;
+}
+html.admin-theme-light #admin-modal .admin-table td {
+  border-bottom-color: rgba(42, 34, 24, 0.08);
+  color: rgba(26, 21, 16, 0.88);
+}
+html.admin-theme-light #admin-modal .admin-table tbody tr:nth-child(even) td {
+  background: rgba(42, 34, 24, 0.03);
+}
+html.admin-theme-light #admin-modal .admin-table tr:hover td {
+  background: rgba(61, 155, 147, 0.08) !important;
+}
+html.admin-theme-light #admin-modal .admin-table tr.adm-menu-group td {
+  background: rgba(61, 155, 147, 0.1);
+  border-bottom-color: rgba(61, 155, 147, 0.2);
+}
+html.admin-theme-light #admin-modal .td-name {
+  color: #1a1510;
+}
+html.admin-theme-light #admin-modal .admin-section-title {
+  color: #1a1510;
+  border-bottom-color: rgba(201, 168, 107, 0.35);
+}
+html.admin-theme-light #admin-modal .admin-field label {
+  color: #2a7a72;
+}
+html.admin-theme-light #admin-modal .admin-field input,
+html.admin-theme-light #admin-modal .admin-field select,
+html.admin-theme-light #admin-modal .admin-field textarea {
+  background: #fff;
+  border-color: rgba(42, 34, 24, 0.14);
+  color: #1a1510;
+}
+html.admin-theme-light #admin-modal .admin-field input:focus,
+html.admin-theme-light #admin-modal .admin-field select:focus,
+html.admin-theme-light #admin-modal .admin-field textarea:focus {
+  background: #fafdfb;
+}
+html.admin-theme-light #admin-modal .admin-msg.ok {
+  color: #1a5c56;
+}
+html.admin-theme-light #admin-modal .admin-msg.err {
+  color: #8b3a2a;
+}
+html.admin-theme-light #admin-modal .admin-msg.warn {
+  color: #7a5f1a;
+}
+html.admin-theme-light #admin-modal .admin-filter-label {
+  color: rgba(42, 34, 24, 0.45);
+}
+html.admin-theme-light #admin-modal .admin-compact-hint {
+  color: rgba(42, 34, 24, 0.45);
+}
+html.admin-theme-light #admin-modal .admin-compact-card--tg {
+  background: linear-gradient(165deg, rgba(0, 136, 204, 0.08) 0%, rgba(255, 255, 255, 0.6) 100%);
+  border-color: rgba(0, 136, 204, 0.22);
+  box-shadow: 0 6px 22px rgba(42, 34, 24, 0.05);
+}
+html.admin-theme-light #admin-modal .admin-compact-card--risk {
+  background: rgba(194, 97, 58, 0.06);
+  border-color: rgba(194, 97, 58, 0.22);
+}
+html.admin-theme-light #admin-modal .admin-reassign-bar {
+  background: rgba(61, 155, 147, 0.08);
+  border-color: rgba(61, 155, 147, 0.22);
+}
+html.admin-theme-light #admin-modal .dashboard-header {
+  border-bottom-color: rgba(201, 168, 107, 0.25);
+}
+html.admin-theme-light #admin-modal .dashboard-card {
+  background: linear-gradient(155deg, rgba(61, 155, 147, 0.1) 0%, #fff 48%, #faf6f0 100%);
+  border-color: rgba(42, 34, 24, 0.1);
+  box-shadow: 0 8px 28px rgba(42, 34, 24, 0.06), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+}
+html.admin-theme-light #admin-modal .dashboard-card:hover {
+  box-shadow: 0 14px 40px rgba(42, 34, 24, 0.08), 0 0 32px rgba(61, 155, 147, 0.08);
+}
+html.admin-theme-light #admin-modal .dashboard-card-value {
+  color: #1f756d;
+  text-shadow: none;
+}
+html.admin-theme-light #admin-modal .dashboard-card-label {
+  color: rgba(42, 34, 24, 0.5);
+}
+html.admin-theme-light #admin-modal .admin-form-card {
+  background: linear-gradient(165deg, #ffffff 0%, #faf6f0 100%);
+  border-color: rgba(42, 34, 24, 0.1);
+  box-shadow: 0 10px 36px rgba(42, 34, 24, 0.06), 0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+}
+html.admin-theme-light #admin-modal .admin-form-actions--dish {
+  border-top-color: rgba(61, 155, 147, 0.15);
+}
+html.admin-theme-light #admin-modal .admin-preview-pane {
+  background: linear-gradient(180deg, #ffffff 0%, #f5f1ea 100%);
+  border-color: rgba(42, 34, 24, 0.1);
+  box-shadow: 0 8px 28px rgba(42, 34, 24, 0.05);
+}
+html.admin-theme-light #admin-modal .admin-preview-label {
+  color: rgba(42, 34, 24, 0.45);
+}
+html.admin-theme-light #admin-modal .admin-preview-skin {
+  --pv-ink: rgba(26, 21, 16, 0.95);
+  --pv-muted: rgba(42, 34, 24, 0.55);
+  --pv-border: rgba(61, 155, 147, 0.22);
+  --pv-card: rgba(42, 34, 24, 0.04);
+  border-color: rgba(61, 155, 147, 0.15);
+  background: rgba(255, 252, 248, 0.9);
+}
+html.admin-theme-light #admin-modal .admin-preview-langs {
+  color: rgba(42, 34, 24, 0.45);
+}
+html.admin-theme-light #admin-modal .admin-cat-card {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(42, 34, 24, 0.08);
+}
+html.admin-theme-light #admin-modal .admin-cat-card:hover {
+  border-color: rgba(61, 155, 147, 0.25);
+  box-shadow: 0 6px 20px rgba(42, 34, 24, 0.06);
+}
+html.admin-theme-light #admin-modal .admin-cat-card .admin-cat-name {
+  color: #1a1510;
+}
+html.admin-theme-light #admin-modal .admin-cat-card .admin-cat-meta {
+  color: rgba(42, 34, 24, 0.45);
+}
+html.admin-theme-light #admin-modal .admin-pane {
+  color: rgba(26, 21, 16, 0.9);
+}
+html.admin-theme-light #admin-modal .res-check-edit-overlay {
+  background: rgba(250, 248, 244, 0.92);
+}
+html.admin-theme-light #admin-modal .res-check-edit-dialog {
+  background: linear-gradient(168deg, #ffffff 0%, #f5f1ea 100%);
+  box-shadow: 0 32px 72px rgba(42, 34, 24, 0.12);
+}
+html.admin-theme-light #admin-modal .res-check-edit-head {
+  border-bottom-color: rgba(42, 34, 24, 0.1);
+}
+html.admin-theme-light #admin-modal .res-check-edit-head h3 {
+  color: #1f756d;
+}
+html.admin-theme-light #admin-modal .res-check-edit-foot {
+  border-top-color: rgba(42, 34, 24, 0.1);
+}
+html.admin-theme-light #admin-modal .res-check-edit-meta {
+  color: rgba(42, 34, 24, 0.5);
+}
+html.admin-theme-light #admin-modal .res-check-edit-add-row {
+  border-bottom-color: rgba(42, 34, 24, 0.08);
+}
+html.admin-theme-light #admin-modal .res-check-edit-body label {
+  color: rgba(42, 34, 24, 0.55) !important;
+}
+html.admin-theme-light #admin-modal .badge-edit {
+  background: rgba(212, 168, 67, 0.12);
+  color: #8a6f24;
+  border-color: rgba(212, 168, 67, 0.35);
+}
+
+/* Inline styles: ღია ტექსტი rgba(245,240,232,*) ნათელ ფონზე თითქმის უჩინარია */
+html.admin-theme-light #admin-modal [style*="245,240,232,.85)"] {
+  color: rgba(26, 21, 16, 0.92) !important;
+}
+html.admin-theme-light #admin-modal [style*="245,240,232,.75)"] {
+  color: rgba(42, 34, 24, 0.82) !important;
+}
+html.admin-theme-light #admin-modal [style*="245,240,232,.6)"] {
+  color: rgba(42, 34, 24, 0.7) !important;
+}
+html.admin-theme-light #admin-modal [style*="245,240,232,.5)"] {
+  color: rgba(42, 34, 24, 0.64) !important;
+}
+html.admin-theme-light #admin-modal [style*="245,240,232,.45)"] {
+  color: rgba(42, 34, 24, 0.58) !important;
+}
+html.admin-theme-light #admin-modal [style*="245,240,232,.4)"] {
+  color: rgba(42, 34, 24, 0.55) !important;
+}
+html.admin-theme-light #admin-modal [style*="245,240,232,.38)"] {
+  color: rgba(42, 34, 24, 0.52) !important;
+}
+html.admin-theme-light #admin-modal [style*="245,240,232,.35)"] {
+  color: rgba(42, 34, 24, 0.5) !important;
+}
+html.admin-theme-light #admin-modal [style*="245,240,232,.3)"] {
+  color: rgba(42, 34, 24, 0.48) !important;
+}
+html.admin-theme-light #admin-modal [style*="245,240,232,.28)"] {
+  color: rgba(42, 34, 24, 0.45) !important;
+}
+html.admin-theme-light #admin-modal [style*="245,240,232,.25)"] {
+  color: rgba(42, 34, 24, 0.44) !important;
+}
+html.admin-theme-light #admin-modal [style*="245,240,232,.22)"] {
+  color: rgba(42, 34, 24, 0.4) !important;
+}
+html.admin-theme-light #admin-modal [style*="rgba(255,255,255,.04)"] {
+  border-bottom-color: rgba(42, 34, 24, 0.08) !important;
+}
+html.admin-theme-light #admin-modal [style*="rgba(255,255,255,0.06)"] {
+  border-top-color: rgba(42, 34, 24, 0.1) !important;
+}
+html.admin-theme-light #admin-modal [style*="rgba(255,255,255,.05)"] {
+  border-top-color: rgba(42, 34, 24, 0.1) !important;
+}
+html.admin-theme-light #admin-modal code {
+  background: rgba(42, 34, 24, 0.07);
+  color: #2a2218;
+  border-radius: 3px;
+}
+html.admin-theme-light #admin-modal .admin-msg.ok {
+  background: rgba(61, 155, 147, 0.12);
+  border-color: rgba(61, 155, 147, 0.32);
+  color: #0f524c !important;
+}
+html.admin-theme-light #admin-modal .admin-msg.err {
+  background: rgba(194, 97, 58, 0.1);
+  border-color: rgba(194, 97, 58, 0.28);
+  color: #7a2e22 !important;
+}
+html.admin-theme-light #admin-modal .admin-msg.warn {
+  background: rgba(241, 196, 15, 0.12);
+  border-color: rgba(212, 160, 23, 0.35);
+  color: #6b5510 !important;
+}
+html.admin-theme-light #admin-modal #adm-audit-list {
+  border: 1px solid rgba(42, 34, 24, 0.08);
+  border-radius: var(--adm-radius-sm);
+  padding: 0.35rem 0.45rem;
+  background: rgba(255, 255, 255, 0.45);
+}
+html.admin-theme-light #admin-modal select optgroup {
+  color: #2a2218;
+  background: #faf8f4;
+  font-weight: 600;
+}
+
+html.admin-theme-light #admin-modal .admin-pane::-webkit-scrollbar-track,
+html.admin-theme-light #admin-modal .admin-body::-webkit-scrollbar-track {
+  background: rgba(42, 34, 24, 0.06);
+}
+html.admin-theme-light #admin-modal .admin-pane::-webkit-scrollbar-thumb,
+html.admin-theme-light #admin-modal .admin-body::-webkit-scrollbar-thumb {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+html.admin-theme-light #admin-modal .admin-pane,
+html.admin-theme-light #admin-modal .admin-body {
+  scrollbar-color: rgba(61, 155, 147, 0.45) rgba(42, 34, 24, 0.06);
+}
+
+@media (max-width: 700px) {
+  html.admin-theme-light #admin-modal .admin-top {
+    background: linear-gradient(180deg, #fffefb 0%, #f5f1ea 100%);
+  }
+}
+
 /* ===== FLOAT CONTACT RAIL (glass — ფერები როგორც .nav-reserve „მაგიდის დაჯავშნა“) ===== */
 .tiflis-float-rail {
   position: fixed;
@@ -4122,6 +4596,7 @@ html.admin-panel-route .tiflis-float-rail {
         <p id="admin-stay-hint" class="admin-stay-hint" role="note">დასასრულებლად დააჭირეთ „გასვლა“ — პანელი იხურება მხოლოდ გასვლის შემდეგ.</p>
       </div>
       <div class="admin-top-actions">
+        <button type="button" id="admin-theme-toggle" class="admin-theme-toggle" onclick="toggleAdminTheme()" aria-pressed="false" title="ნათელი / მუქი რეჟიმი" aria-label="ნათელი რეჟიმის ჩართვა">☀</button>
         <button type="button" id="admin-logout-btn" class="admin-logout" onclick="adminLogout()" style="display:none" aria-label="ადმინიდან გასვლა">გასვლა</button>
         <button type="button" id="admin-close-btn" class="admin-close" onclick="closeAdmin()" aria-label="დახურვა">×</button>
       </div>
@@ -4505,7 +4980,7 @@ html.admin-panel-route .tiflis-float-rail {
             <label style="font-size:.62rem;color:rgba(245,240,232,.45);width:auto"><span style="display:block;margin-bottom:.1rem">რაოდ.</span>
               <input type="number" id="res-check-edit-add-qty" class="admin-input" min="1" max="999" value="1">
             </label>
-            <button type="button" class="admin-btn admin-btn-sm" style="width:auto" onclick="resCheckEditorAddFromSelect()">➕ დამატება</button>
+            <button type="button" class="admin-btn admin-btn-sm" id="res-check-edit-add-btn" style="width:auto">➕ დამატება</button>
           </div>
           <div style="overflow-x:auto">
             <table class="admin-table" style="font-size:.72rem">
@@ -5772,6 +6247,7 @@ function initPwaInstallBanner() {
 async function init() {
   const isPanel = document.documentElement.classList.contains('admin-panel-route');
   if (isPanel) {
+    applyStoredAdminTheme();
     document.title = 'ადმინ პანელი — რესტორანი ტიფლისი';
     try {
       await Promise.race([
@@ -6380,11 +6856,46 @@ function goAdminEntry() {
   else location.href = adminLoginUrl();
 }
 
+function syncAdminThemeToggleUI() {
+  const btn = g('admin-theme-toggle');
+  if (!btn) return;
+  const light = document.documentElement.classList.contains('admin-theme-light');
+  btn.setAttribute('aria-pressed', light ? 'true' : 'false');
+  btn.textContent = light ? '☾' : '☀';
+  btn.setAttribute('aria-label', light ? 'მუქი რეჟიმის ჩართვა' : 'ნათელი რეჟიმის ჩართვა');
+  btn.title = light ? 'მუქი რეჟიმი' : 'ნათელი რეჟიმი';
+}
+
+function applyStoredAdminTheme() {
+  let light = false;
+  try {
+    light = localStorage.getItem('tiflis_admin_theme') === 'light';
+  } catch (e) {}
+  document.documentElement.classList.toggle('admin-theme-light', light);
+  if (document.documentElement.classList.contains('admin-panel-route')) {
+    document.documentElement.style.background = light ? '#f3efe6' : '#080604';
+  }
+  syncAdminThemeToggleUI();
+}
+
+function toggleAdminTheme() {
+  const light = !document.documentElement.classList.contains('admin-theme-light');
+  document.documentElement.classList.toggle('admin-theme-light', light);
+  if (document.documentElement.classList.contains('admin-panel-route')) {
+    document.documentElement.style.background = light ? '#f3efe6' : '#080604';
+  }
+  try {
+    localStorage.setItem('tiflis_admin_theme', light ? 'light' : 'dark');
+  } catch (e) {}
+  syncAdminThemeToggleUI();
+}
+
 function openAdmin() {
   if (sessionStorage.getItem('tiflis_admin_logged') === '1' && !document.documentElement.classList.contains('admin-panel-route')) {
     location.replace(adminPanelUrl());
     return;
   }
+  applyStoredAdminTheme();
   lastFocusBeforeAdmin = document.activeElement;
   const modal = g('admin-modal');
   modal.classList.add('open');
@@ -7586,14 +8097,46 @@ function recalcPrecheckDraft(d) {
   return d;
 }
 
+/** კატეგორიის id ↔ menu_items.cat (სტრინგი/რიცხვი/JSON-იდან განსხვავებული ტიპები) */
+function menuCatMatchesMenuItem(mCat, categoryId) {
+  if (mCat == null || categoryId == null) return false;
+  const na = Number(mCat);
+  const nb = Number(categoryId);
+  if (Number.isFinite(na) && Number.isFinite(nb) && na === nb) return true;
+  return String(mCat).trim() === String(categoryId).trim();
+}
+
+function menuItemByIdFromSelect(raw) {
+  if (raw == null || String(raw).trim() === '') return null;
+  const s = String(raw).trim();
+  const n = Number(s);
+  if (Number.isFinite(n)) {
+    const byNum = MENU.find(x => Number(x.id) === n);
+    if (byNum) return byNum;
+  }
+  return MENU.find(x => String(x.id) === s);
+}
+
 function buildResCheckMenuSelectHtml() {
   sortCatsInPlace();
   const parts = ['<option value="">— აირჩიეთ კერძი —</option>'];
+  const dishSort = (a, b) => String(a.ka || '').localeCompare(String(b.ka || ''));
+  let optionCount = 0;
   for (const c of CATS) {
-    const items = MENU.filter(m => m.cat === c.id).slice().sort((a, b) => String(a.ka || '').localeCompare(String(b.ka || '')));
+    const items = MENU.filter(m => menuCatMatchesMenuItem(m.cat, c.id)).slice().sort(dishSort);
     if (!items.length) continue;
+    optionCount += items.length;
     parts.push(`<optgroup label="${escapeAttr(c.ka || c.en || String(c.id))}">`);
     for (const m of items) {
+      parts.push(
+        `<option value="${escapeAttr(String(m.id))}">${escapeHtml(m.ka || m.en || '—')} — ₾${Number(m.p).toFixed(2)}</option>`
+      );
+    }
+    parts.push('</optgroup>');
+  }
+  if (optionCount === 0 && MENU.length) {
+    parts.push('<optgroup label="მენიუ (ყველა კერძი)">');
+    for (const m of MENU.slice().sort(dishSort)) {
       parts.push(
         `<option value="${escapeAttr(String(m.id))}">${escapeHtml(m.ka || m.en || '—')} — ₾${Number(m.p).toFixed(2)}</option>`
       );
@@ -7708,20 +8251,21 @@ function resCheckEditorAddFromSelect() {
   if (!resCheckEditDraft) return;
   const sel = g('res-check-edit-add-select');
   const qInp = g('res-check-edit-add-qty');
-  const id = sel && sel.value ? parseInt(sel.value, 10) : NaN;
+  const raw = sel && sel.value != null ? String(sel.value).trim() : '';
   let q = Math.max(1, Math.floor(parseInt(qInp && qInp.value, 10) || 1));
-  if (!Number.isFinite(id)) {
+  if (!raw) {
     adminMsg('res-checks-msg', '❯ აირჩიეთ კერძი სიიდან', 'warn');
     return;
   }
-  const m = MENU.find(x => x.id === id);
+  const m = menuItemByIdFromSelect(raw);
   if (!m) {
     adminMsg('res-checks-msg', '❯ კერძი მენიუში არ მოიძებნა', 'err');
     return;
   }
-  const ex = resCheckEditDraft.items.findIndex(x => Number(x.id) === id);
+  const ex = resCheckEditDraft.items.findIndex(x => String(x.id) === String(m.id));
   if (ex >= 0) {
     resCheckEditDraft.items[ex].qty = Math.min(999, Math.floor(Number(resCheckEditDraft.items[ex].qty) + q));
+    resCheckEditDraft.items[ex].p = Number(m.p) || Number(resCheckEditDraft.items[ex].p) || 0;
   } else {
     resCheckEditDraft.items.push({
       id: m.id,
@@ -7736,6 +8280,7 @@ function resCheckEditorAddFromSelect() {
   if (qInp) qInp.value = '1';
   renderResCheckEditorLines();
 }
+window.resCheckEditorAddFromSelect = resCheckEditorAddFromSelect;
 
 async function saveResCheckEditor() {
   if (!resCheckEditReservationId || !resCheckEditDraft) return;
@@ -7777,6 +8322,12 @@ function ensureResCheckEditorDelegation() {
     if (e.target === ovl) closeResCheckEditor();
   });
   dlg.addEventListener('click', function (e) {
+    const addBtn = e.target.closest && e.target.closest('#res-check-edit-add-btn');
+    if (addBtn && dlg.contains(addBtn)) {
+      e.preventDefault();
+      resCheckEditorAddFromSelect();
+      return;
+    }
     const rem = e.target.closest && e.target.closest('.res-check-erem');
     if (rem && dlg.contains(rem)) {
       const tr = rem.closest('tr[data-rce-idx]');
