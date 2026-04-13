@@ -2195,7 +2195,7 @@ footer {
 .pm-brand-name span { color: #b8922e; font-style: italic; }
 .pm-brand-sub { font-size: 0.7rem; color: #6b5a48; margin-top: 0.25rem; }
 .pm-contact { font-size: 0.72rem; color: #6b5a48; text-align: right; line-height: 1.5; }
-.pm-cat { margin-bottom: 1.25rem; page-break-inside: avoid; }
+.pm-cat { margin-bottom: 1.25rem; page-break-inside: auto; break-inside: auto; }
 .pm-cat-title {
   font-size: 0.85rem;
   font-weight: 600;
@@ -4199,17 +4199,28 @@ html.admin-panel-route .tiflis-float-rail {
 }
 @media print {
   .tiflis-float-rail { display: none !important; }
+  body.printing-menu {
+    height: auto !important;
+    overflow: visible !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
   body.printing-menu * { visibility: hidden !important; }
   body.printing-menu #print-menu-overlay,
   body.printing-menu #print-menu-overlay * { visibility: visible !important; }
   body.printing-menu #print-menu-overlay {
-    position: absolute !important;
-    left: 0 !important;
-    top: 0 !important;
+    position: static !important;
+    inset: auto !important;
+    left: auto !important;
+    top: auto !important;
     width: 100% !important;
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
     display: block !important;
     background: #fff !important;
-    z-index: 0 !important;
+    z-index: auto !important;
+    padding: 1rem !important;
   }
 }
 @media (max-width: 600px) {
@@ -5694,16 +5705,21 @@ function printMenu() {
     alert('მენიუ ჯერ იტვირთება — გთხოვთ რამდენიმე წამში სცადოთ ხელახლა.');
     return;
   }
+  sortCatsInPlace();
   const printLang = lang;
+  const dishSortPrint = (a, b) =>
+    String(menuDishLabelForLang(a, printLang)).localeCompare(String(menuDishLabelForLang(b, printLang)), undefined, {
+      sensitivity: 'base',
+    });
   let catsHTML = '';
   CATS.forEach(cat => {
-    const items = MENU.filter(m => m.cat === cat.id);
+    const items = MENU.filter(m => menuCatMatchesMenuItem(m.cat, cat.id)).slice().sort(dishSortPrint);
     if (!items.length) return;
     const itemsHTML = items
       .map(
         m =>
           `<div class="pm-item">
-        <span class="pm-item-name">${escapeHtml(m[printLang] || m.ka)}</span>
+        <span class="pm-item-name">${escapeHtml(menuDishLabelForLang(m, printLang))}</span>
         <span class="pm-item-dots"></span>
         <span class="pm-item-price">&#8382;${m.p % 1 === 0 ? m.p : m.p.toFixed(2)}</span>
       </div>`
@@ -5711,6 +5727,10 @@ function printMenu() {
       .join('');
     catsHTML += `<div class="pm-cat"><div class="pm-cat-title">${escapeHtml(cat[printLang] || cat.ka)}</div>${itemsHTML}</div>`;
   });
+  if (!catsHTML.trim()) {
+    alert('მენიუ ცარიელია ან კატეგორიებთან დაკავშირება ვერ მოხერხდა — განაახლეთ გვერდი.');
+    return;
+  }
   overlay.innerHTML = `
     <div class="pm-header">
       <div class="pm-brand">
