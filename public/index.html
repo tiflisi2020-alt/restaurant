@@ -6116,6 +6116,21 @@ function normalizePhoneDigitsWa(raw) {
   return String(raw == null ? '' : raw).replace(/\D/g, '');
 }
 
+/** სტუმრისთვის WA ჩეკში — Google შეფასება (ერთი შეხებით იხსნება ტელეფონში) */
+const TIFLIS_GOOGLE_REVIEW_URL = 'https://g.page/r/CcKkKc1ypmCgEAE/review';
+
+function googleReviewInviteForWa(lang) {
+  const u = TIFLIS_GOOGLE_REVIEW_URL;
+  const L = lang === 'en' || lang === 'ru' ? lang : 'ka';
+  if (L === 'en') {
+    return `\n\nWe hope you had a wonderful time with us! ✨\n\nYour opinion means a great deal to us. If you could spare a minute to share your experience on Google, it would really help us grow.\n\nOne tap here: ${u}\n\nThank you for choosing us! ❤️`;
+  }
+  if (L === 'ru') {
+    return `\n\nНадеемся, вам у нас было приятно! ✨\n\nВаше мнение очень важно для нас. Если уделите минуту и поделитесь впечатлением в Google, это очень поможет нам расти.\n\nОдно нажатие по ссылке: ${u}\n\nСпасибо, что выбираете нас! ❤️`;
+  }
+  return `\n\nიმედია, ჩვენთან სასიამოვნო დრო გაატარეთ! ✨\n\nთქვენი აზრი ჩვენთვის ძალიან მნიშვნელოვანია. თუ დაგვითმობთ ერთ წუთს და თქვენს შთაბეჭდილებას Google-ზე გაგვიზიარებთ, ამით ძალიან დაგვეხმარებით ზრდაში.\n\nერთი შეხებით აქ: ${u}\n\nმადლობა, რომ გვირჩევთ! ❤️`;
+}
+
 function buildReservationCustomerWaText(row, lgOpt) {
   const L = lgOpt || (typeof lang !== 'undefined' ? lang : null) || 'ka';
   const name = (row.name != null ? String(row.name) : '').trim() || '—';
@@ -6159,10 +6174,14 @@ function buildReservationCustomerWaText(row, lgOpt) {
     receiptLines += `  💰 *${totLab}: ₾${orderTotal.toFixed(2)}*`;
   }
 
+  const reviewKa = receiptLines ? googleReviewInviteForWa('ka') : '';
+  const reviewEn = receiptLines ? googleReviewInviteForWa('en') : '';
+  const reviewRu = receiptLines ? googleReviewInviteForWa('ru') : '';
+
   const orderSection = {
-    ka: receiptLines ? `\n\n🧾 *წინასწარი შეკვეთა:*\n${receiptLines}` : '',
-    en: receiptLines ? `\n\n🧾 *Pre-order:*\n${receiptLines}` : '',
-    ru: receiptLines ? `\n\n🧾 *Предзаказ:*\n${receiptLines}` : ''
+    ka: receiptLines ? `\n\n🧾 *წინასწარი შეკვეთა:*\n${receiptLines}${reviewKa}` : '',
+    en: receiptLines ? `\n\n🧾 *Pre-order:*\n${receiptLines}${reviewEn}` : '',
+    ru: receiptLines ? `\n\n🧾 *Предзаказ:*\n${receiptLines}${reviewRu}` : ''
   };
 
   const st = String(row.status || 'pending')
