@@ -4679,6 +4679,7 @@ html.admin-panel-route .tiflis-float-rail {
           <button type="button" role="tab" class="admin-tab" onclick="adminTab('reschecks')" aria-selected="false">ჩეკები</button>
           <button type="button" class="admin-tab-trash" onclick="resChecksTrashFromTab()" title="ურნა — ჩეკის არქივი ცხრილში (res_checks_trash) + ჯავშნის გაუქმება; წაშლა არა" aria-label="ურნა">🗑</button>
         </div>
+        <button type="button" role="tab" class="admin-tab" onclick="adminTab('savedchecks')" aria-selected="false">შენახული ჩეკები</button>
         <button type="button" role="tab" class="admin-tab" onclick="adminTab('settings')" aria-selected="false">პარამეტრები</button>
       </div>
       <!-- DASHBOARD TAB -->
@@ -4688,6 +4689,7 @@ html.admin-panel-route .tiflis-float-rail {
           <div class="dashboard-quicklinks">
             <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="adminTab('reservations')">📋 ჯავშნები</button>
             <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="adminTab('reschecks')">🧾 ჩეკები</button>
+            <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="adminTab('savedchecks')">💾 შენახული ჩეკები</button>
             <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="adminTab('map')">🗺 მაგიდები</button>
             <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="adminTab('menu')">🍽 მენიუ</button>
             <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="adminTab('add')">➕ კერძის დამატება</button>
@@ -4969,6 +4971,28 @@ html.admin-panel-route .tiflis-float-rail {
           </table>
         </div>
         <div id="res-checks-trash-count" style="margin-top:.45rem;font-size:.65rem;color:rgba(245,240,232,.28)"></div>
+      </div>
+
+      <!-- SAVED CHECKS (guest „შენახვა“ — localStorage) -->
+      <div id="at-savedchecks" class="admin-pane" role="tabpanel">
+        <div class="admin-section-title">შენახული ჩეკები</div>
+        <p class="admin-compact-hint" style="margin:0 0 0.65rem">
+          სტუმრის მხრიდან შეკვეთის <strong>შენახვა</strong> იწერება ამ ბრაუზერში (<code style="font-size:.65rem">localStorage · tiflis_orders</code>) — სერვერზე არ იგზავნება. აქ ხედავთ სიას, შეგიძლიათ ხაზის წაშლა ან სრული გასუფთავება.
+        </p>
+        <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.5rem;align-items:center">
+          <button type="button" class="admin-btn admin-btn-sm" style="width:auto" onclick="renderSavedChecksTable()">↻ განახლება</button>
+          <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" style="width:auto" onclick="clearSavedChecksLocal()">ყველას გასუფთავება</button>
+        </div>
+        <div id="savedchecks-msg" class="admin-msg" style="display:none"></div>
+        <div style="overflow-x:auto">
+          <table class="admin-table">
+            <thead><tr>
+              <th>თარიღი</th><th>დრო</th><th>სახელი</th><th>ტელეფონი</th><th>სტუმრები</th>
+              <th style="min-width:12rem">კერძები</th><th>სულ ₾</th><th>შენახული</th><th></th>
+            </tr></thead>
+            <tbody id="savedchecks-tbody"><tr><td colspan="9" style="text-align:center;color:rgba(245,240,232,.28);padding:1.25rem;font-style:italic;font-size:.72rem">ჩატვირთვა…</td></tr></tbody>
+          </table>
+        </div>
       </div>
 
       <!-- SETTINGS TAB -->
@@ -5268,6 +5292,8 @@ const TXT = {
 
 let lang = 'ka', catIdx = 0, order = {};
 const g = id => document.getElementById(id);
+/** სტუმრის „შენახული შეკვეთები“ (ადმინი → შენახული ჩეკები) */
+const TIFLIS_SAVED_ORDERS_KEY = 'tiflis_orders';
 
 /** მენიუს დასახელება UI/WA/PDF-ში იგივე ლოგიკით (არჩეული ენა → სხვა ენების ფოლბეკი) */
 function menuDishLabelForLang(item, lgOpt) {
@@ -5775,7 +5801,7 @@ function saveOrder() {
   if (!g('order-wrap')) return;
   if (!Object.keys(order).length) { alert(TXT[lang].empty); return; }
   try {
-    const ex = JSON.parse(localStorage.getItem('tiflis_orders')||'[]');
+    const ex = JSON.parse(localStorage.getItem(TIFLIS_SAVED_ORDERS_KEY) || '[]');
     const name = g('r-name')?.value||'სტუმარი';
     const svc=parseFloat(g('f-svc')?.value)||0, disc=parseFloat(g('f-disc')?.value)||0, adv=parseFloat(g('f-adv')?.value)||0;
     let sub=0;
@@ -5785,7 +5811,7 @@ function saveOrder() {
     }).filter(Boolean);
     const dA=sub*disc/100,afterD=sub-dA,sA=afterD*svc/100,total=Math.max(0,afterD+sA-adv);
     ex.unshift({id:Date.now(),name,date:g('r-date')?.value,time:g('r-time')?.value,guests:g('r-guests')?.value,phone:g('r-phone')?.value,items,sub,total,savedAt:new Date().toISOString()});
-    localStorage.setItem('tiflis_orders',JSON.stringify(ex));
+    localStorage.setItem(TIFLIS_SAVED_ORDERS_KEY, JSON.stringify(ex));
   } catch(e) {}
   const sname = g('s-name'), ssub = g('s-sub'), rec = g('receipt'), so = g('success-overlay'), ow = g('order-wrap');
   if (sname) sname.textContent = TXT[lang].saved + ' — ' + (g('r-name')?.value||'');
@@ -7404,7 +7430,7 @@ function showAdminPanel() {
 }
 
 function adminTab(t) {
-  const tabs = ['dashboard','menu','add','cats','map','reservations','reschecks','settings'];
+  const tabs = ['dashboard', 'menu', 'add', 'cats', 'map', 'reservations', 'reschecks', 'savedchecks', 'settings'];
   document.querySelectorAll('.admin-tab').forEach((b, i) => {
     const on = tabs[i] === t;
     b.classList.toggle('on', on);
@@ -7423,8 +7449,74 @@ function adminTab(t) {
   if (t === 'map') loadMapTables();
   if (t === 'reservations') loadReservations();
   if (t === 'reschecks') loadReservationsWithChecks();
+  if (t === 'savedchecks') renderSavedChecksTable();
   if (t === 'settings') adminRenderAudit();
   touchAdminSession();
+}
+
+function loadSavedChecksFromStorage() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(TIFLIS_SAVED_ORDERS_KEY) || '[]');
+    return Array.isArray(raw) ? raw : [];
+  } catch (_) {
+    return [];
+  }
+}
+
+function renderSavedChecksTable() {
+  const tb = g('savedchecks-tbody');
+  if (!tb) return;
+  const rows = loadSavedChecksFromStorage();
+  if (!rows.length) {
+    tb.innerHTML =
+      '<tr><td colspan="9" style="text-align:center;color:rgba(245,240,232,.3);padding:1.5rem;font-style:italic">ჩანაწერები არ არის — სტუმარმა შეკვეთიდან დააჭიროს „შენახვა“</td></tr>';
+    return;
+  }
+  tb.innerHTML = rows
+    .map(r => {
+      const lines = (Array.isArray(r.items) ? r.items : [])
+        .map(it => `${escapeHtml(it.ka || '—')} ×${escapeHtml(String(it.qty != null ? it.qty : ''))}`)
+        .join(', ');
+      const when = r.savedAt
+        ? escapeHtml(
+            new Date(r.savedAt).toLocaleString('ka-GE', { timeZone: 'Asia/Tbilisi' })
+          )
+        : '—';
+      const onDel = escapeAttr('deleteSavedCheckRow(' + JSON.stringify(r.id) + ')');
+      return `<tr>
+      <td style="white-space:nowrap">${escapeHtml(r.date || '—')}</td>
+      <td>${escapeHtml(r.time || '—')}</td>
+      <td>${escapeHtml(r.name || '—')}</td>
+      <td style="font-size:.74rem;color:rgba(245,240,232,.65)">${escapeHtml(r.phone || '—')}</td>
+      <td style="text-align:center">${escapeHtml(String(r.guests != null && r.guests !== '' ? r.guests : '—'))}</td>
+      <td style="max-width:16rem;font-size:.68rem;line-height:1.35;color:rgba(245,240,232,.78)">${lines || '—'}</td>
+      <td style="white-space:nowrap">₾${Number(r.total || 0).toFixed(2)}</td>
+      <td style="font-size:.62rem;color:rgba(245,240,232,.4)">${when}</td>
+      <td><button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="${onDel}" title="წაშლა" style="padding:2px 8px">✕</button></td>
+    </tr>`;
+    })
+    .join('');
+}
+
+function deleteSavedCheckRow(id) {
+  if (!confirm('წავშალოთ ეს ჩანაწერი?')) return;
+  const next = loadSavedChecksFromStorage().filter(r => String(r.id) !== String(id));
+  localStorage.setItem(TIFLIS_SAVED_ORDERS_KEY, JSON.stringify(next));
+  renderSavedChecksTable();
+  try {
+    auditLog('saved_checks_row_delete', String(id));
+  } catch (_) {}
+}
+
+function clearSavedChecksLocal() {
+  if (!loadSavedChecksFromStorage().length) return;
+  if (!confirm('ყველა შენახული ჩეკის წაშლა ამ ბრაუზერში — გაგრძელება?')) return;
+  localStorage.removeItem(TIFLIS_SAVED_ORDERS_KEY);
+  renderSavedChecksTable();
+  adminMsg('savedchecks-msg', '✅ გასუფთავებულია', 'ok');
+  try {
+    auditLog('saved_checks_clear_all', 'local');
+  } catch (_) {}
 }
 
 async function loadDashboardData() {
@@ -7892,7 +7984,7 @@ async function adminSaveSettings() {
 
 function adminResetData() {
   if (!confirm('ლოკალური პარამეტრები, პაროლი (ლოკალური), Telegram ველები, ჯავშნების ლოკალური ისტორია და აუდიტი წაიშლება. გვერდი ხელახლა ჩაიტვირთება. გაგრძელება?')) return;
-  ['tiflis_settings', 'tiflis_admin_pw', 'tg_token', 'tg_chatid', 'tiflis_orders', AUDIT_KEY].forEach(k => localStorage.removeItem(k));
+  ['tiflis_settings', 'tiflis_admin_pw', 'tg_token', 'tg_chatid', TIFLIS_SAVED_ORDERS_KEY, AUDIT_KEY].forEach(k => localStorage.removeItem(k));
   sessionStorage.removeItem('tiflis_admin_logged');
   sessionStorage.removeItem('tiflis_admin_expired');
   location.reload();
