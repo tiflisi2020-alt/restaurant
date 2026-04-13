@@ -4485,7 +4485,10 @@ html.admin-panel-route .tiflis-float-rail {
           <div class="success-icon">✓</div>
           <div class="success-title" data-i18n="res_ok_title">ჯავშანი მიღებულია!</div>
           <div class="success-sub" data-i18n="res_ok_sub">მალე დაგიკავშირდებით დასადასტურებლად</div>
-          <button class="success-btn" onclick="resetRes()" style="margin-top:1rem;max-width:200px" data-i18n="res_new">ახალი ჯავშანი</button>
+          <div style="display:flex;flex-direction:column;gap:.55rem;margin-top:1rem;align-items:stretch;max-width:240px;width:100%">
+            <button type="button" class="success-btn" onclick="resendGuestReservationWhatsApp()" data-i18n="res_wa_resend">WhatsApp (ხელახლა)</button>
+            <button type="button" class="success-btn" onclick="resetRes()" data-i18n="res_new">ახალი ჯავშანი</button>
+          </div>
         </div>
 
         <div id="res-form-wrap">
@@ -4870,9 +4873,29 @@ html.admin-panel-route .tiflis-float-rail {
       <!-- RESERVATIONS + PRECHECK (ჩეკი) TAB -->
       <div id="at-reschecks" class="admin-pane" role="tabpanel">
         <div class="admin-section-title">ჯავშნები ჩეკებით</div>
-        <p class="admin-compact-hint" style="margin:0 0 0.65rem">ზედა: აქტიური ჩეკები (თარიღი „დან/მდე“). <strong>✎</strong> — ჩეკის რედაქტირება: კერძის დამატება, რაოდენობა, წაშლა, ფასდაკლება/სერვისი/ავანსი. გაუქმებისას ჩეკი იწერება ცალკე ცხრილში <code style="font-size:.65rem">res_checks_trash</code> (არ იშლება). ქვედა ურნა აჩვენებს ამ არქივს. ტაბის 🗑 — მთელი სიის გაუქმება + არქივი. SQL: <code style="font-size:.65rem">public/sql/res_checks_trash.sql</code> (საქაღალდე public → sql).</p>
-        <div class="admin-filter-row">
-          <button type="button" class="admin-btn admin-btn-sm" style="width:auto" onclick="loadReservationsWithChecks()">ჩვენება (თარიღი „ჯავშნებიდან“)</button>
+        <p class="admin-compact-hint" style="margin:0 0 0.65rem">ზედა: აქტიური ჩეკები. ფილტრი: თარიღი „დან/მდე“, სტატუსი, ტექსტური ძებნა (სახელი, ტელეფონი, მაგიდა, ჩეკის ტექსტი) — ძებნა ბოლო ჩატვირთულ სიაზე მოქმედებს. ცარიელი თარიღი აქ = იგივე ველები ჯავშნების ტაბში (თუ შევსებულია). <strong>✎</strong> — ჩეკის რედაქტირება. გაუქმებისას ჩეკი იწერება <code style="font-size:.65rem">res_checks_trash</code>-ში. ტაბის 🗑 — ზედა სიის გაუქმება + არქივი. SQL: <code style="font-size:.65rem">public/sql/res_checks_trash.sql</code>.</p>
+        <div class="admin-filter-row" style="flex-wrap:wrap;align-items:flex-end;gap:.5rem">
+          <div class="admin-filter-field">
+            <span class="admin-filter-label">დან</span>
+            <input type="date" id="res-checks-filter-from" class="admin-input" style="width:auto;margin:0;padding:.35rem .55rem;font-size:.74rem">
+          </div>
+          <div class="admin-filter-field">
+            <span class="admin-filter-label">მდე</span>
+            <input type="date" id="res-checks-filter-to" class="admin-input" style="width:auto;margin:0;padding:.35rem .55rem;font-size:.74rem">
+          </div>
+          <div class="admin-filter-field">
+            <span class="admin-filter-label">სტატუსი</span>
+            <select id="res-checks-filter-status" class="admin-input" style="width:auto;margin:0;padding:.35rem .55rem;font-size:.74rem" onchange="loadReservationsWithChecks()">
+              <option value="">ყველა (აქტიური ჩეკი)</option>
+              <option value="pending">მომლოდინე</option>
+              <option value="confirmed">დადასტურებული</option>
+            </select>
+          </div>
+          <div class="admin-filter-field" style="min-width:10rem;flex:1 1 12rem">
+            <span class="admin-filter-label">ძებნა</span>
+            <input type="search" id="res-checks-filter-search" class="admin-input" placeholder="სახელი, ტელეფონი, მაგიდა…" style="width:100%;min-width:8rem;margin:0;padding:.35rem .55rem;font-size:.74rem" oninput="applyResChecksClientFilter()">
+          </div>
+          <button type="button" class="admin-btn admin-btn-sm" style="width:auto" onclick="loadReservationsWithChecks()">ჩვენება</button>
           <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" style="width:auto" onclick="printResChecksReport()">🖨 ბეჭდვა</button>
         </div>
         <div id="res-checks-msg" class="admin-msg"></div>
@@ -5119,6 +5142,7 @@ const TXT = {
     btn_res_order:'📋 რეზერვაცია + შეკვეთა', btn_save:'💾 შენახვა', btn_print_check:'🖨 ბეჭდვა', btn_pdf_check:'📄 PDF',
     btn_back:'← უკან',
     res_ok_title:'ჯავშანი მიღებულია!', res_ok_sub:'მალე დაგიკავშირდებით დასადასტურებლად', res_new:'ახალი ჯავშანი',
+    res_wa_resend:'WhatsApp (ხელახლა)', res_wa_no_phone:'ტელეფონი არ არის — WhatsApp ვერ გაიხსნება',
     svc_pct:'მომსახ. %', disc_pct:'ფასდაკლ. %', adv_lbl:'ავანსი ₾', pay_lbl:'გადახდა',
     ft_hours_title:'სამუშაო საათები', ft_everyday:'ყოველდღე', ft_contact:'კონტაქტი',
     ft_addr:'ვ.გორგასალის ქ. 110/18', ft_city:'ბათუმი, საქართველო',
@@ -5149,6 +5173,7 @@ const TXT = {
     btn_res_order:'📋 Reservation + Order', btn_save:'💾 Save', btn_print_check:'🖨 Print', btn_pdf_check:'📄 PDF',
     btn_back:'← Back',
     res_ok_title:'Reservation Received!', res_ok_sub:'We will contact you shortly to confirm', res_new:'New Reservation',
+    res_wa_resend:'WhatsApp (resend)', res_wa_no_phone:'No phone number — cannot open WhatsApp',
     svc_pct:'Service %', disc_pct:'Discount %', adv_lbl:'Advance ₾', pay_lbl:'Payment',
     ft_hours_title:'Working Hours', ft_everyday:'Every day', ft_contact:'Contact',
     ft_addr:'V. Gorgasali St. 110/18', ft_city:'Batumi, Georgia',
@@ -5179,6 +5204,7 @@ const TXT = {
     btn_res_order:'📋 Резервация + заказ', btn_save:'💾 Сохранить', btn_print_check:'🖨 Печать', btn_pdf_check:'📄 PDF',
     btn_back:'← Назад',
     res_ok_title:'Бронь принята!', res_ok_sub:'Скоро свяжемся с вами для подтверждения', res_new:'Новая бронь',
+    res_wa_resend:'WhatsApp (ещё раз)', res_wa_no_phone:'Нет номера телефона — WhatsApp не открыть',
     svc_pct:'Обсл. %', disc_pct:'Скидка %', adv_lbl:'Аванс ₾', pay_lbl:'Оплата',
     ft_hours_title:'Часы работы', ft_everyday:'Ежедневно', ft_contact:'Контакт',
     ft_addr:'ул. В. Горгасали 110/18', ft_city:'Батуми, Грузия',
@@ -6026,6 +6052,143 @@ function buildReservationPrecheckSnapshot() {
   };
 }
 
+/** ბოლო წარმატებული ჯავშნის სტუმრისთვის WA ტექსტის ასაგებად (ხელახლა გაგზავნა) */
+let lastGuestReservationWaRow = null;
+
+function normalizePhoneDigitsWa(raw) {
+  return String(raw == null ? '' : raw).replace(/\D/g, '');
+}
+
+function buildReservationCustomerWaText(row, lgOpt) {
+  const L = lgOpt || (typeof lang !== 'undefined' ? lang : null) || 'ka';
+  const name = (row.name != null ? String(row.name) : '').trim() || '—';
+  const date = row.date != null ? String(row.date) : '';
+  const time = row.time != null ? String(row.time) : '';
+  const guests = row.guests != null ? String(row.guests) : '2';
+  const table = (row.table_id != null ? String(row.table_id) : '').trim() || '—';
+  const payment = row.payment != null ? String(row.payment).trim() : '';
+  const payLabelsInline = {'ნაღდი':'ნაღდი',bog:'საქართველოს ბანკი',tbc:'თიბისი ბანკი',tera:'ტერა ბანკი','გადარიცხვა':'გადარიცხვა',cash:'ნაღდი',transfer:'გადარიცხვა'};
+  const payLine = payment ? `\n💳 ${payLabelsInline[payment] || payment}` : '';
+
+  let receiptLines = '';
+  const o = parseReservationPrecheck(row.precheck_json);
+  if (o && Array.isArray(o.items) && o.items.length) {
+    const discVal = Number(o.disc_pct) || 0;
+    const svcVal = Number(o.svc_pct) || 0;
+    const advVal = Number(o.advance) || 0;
+    let orderSub = 0;
+    o.items.forEach(it => {
+      const p = Number(it.p) || 0;
+      let q = Math.floor(Number(it.qty) || 0);
+      if (q < 1) q = 1;
+      const lt =
+        it.line != null && Number.isFinite(Number(it.line)) ? Number(it.line) : p * q;
+      orderSub += lt;
+      const dishLabel = String(it[L] || it.ka || it.en || it.ru || '—');
+      receiptLines += `  • ${dishLabel} ×${q} — ₾${lt.toFixed(2)}\n`;
+    });
+    const dA = (orderSub * discVal) / 100;
+    const afterD = orderSub - dA;
+    const sA = (afterD * svcVal) / 100;
+    const orderTotal =
+      o.total != null && Number.isFinite(Number(o.total))
+        ? Number(o.total)
+        : Math.max(0, afterD + sA - advVal);
+    const T = TXT[L] || TXT.ka;
+    if (discVal > 0) receiptLines += `  ➖ ${T.disc} ${discVal}% — −₾${dA.toFixed(2)}\n`;
+    if (svcVal > 0) receiptLines += `  ➕ ${T.svc} ${svcVal}% — ₾${sA.toFixed(2)}\n`;
+    if (advVal > 0) receiptLines += `  ➖ ${T.adv} — −₾${advVal.toFixed(2)}\n`;
+    const totLab = { ka: 'სულ', en: 'Total', ru: 'Итого' }[L] || 'Total';
+    receiptLines += `  💰 *${totLab}: ₾${orderTotal.toFixed(2)}*`;
+  }
+
+  const orderSection = {
+    ka: receiptLines ? `\n\n🧾 *წინასწარი შეკვეთა:*\n${receiptLines}` : '',
+    en: receiptLines ? `\n\n🧾 *Pre-order:*\n${receiptLines}` : '',
+    ru: receiptLines ? `\n\n🧾 *Предзаказ:*\n${receiptLines}` : ''
+  };
+
+  const st = String(row.status || 'pending')
+    .trim()
+    .toLowerCase();
+  let midKa, midEn, midRu, tailKa, tailEn, tailRu;
+  if (st === 'confirmed') {
+    midKa = `გამარჯობა, *${name}*! 👋\nთქვენი ჯავშანი *დადასტურებულია* ✅`;
+    midEn = `Hello, *${name}*! 👋\nYour reservation is *confirmed* ✅`;
+    midRu = `Здравствуйте, *${name}*! 👋\nВаша бронь *подтверждена* ✅`;
+    tailKa = '\n\nველოდებით თქვენს ვიზიტს!';
+    tailEn = '\n\nWe look forward to your visit!';
+    tailRu = '\n\nЖдём вас в гости!';
+  } else if (st === 'cancelled' || st === 'canceled') {
+    midKa = `გამარჯობა, *${name}*! 👋\nთქვენი ჯავშანი *გაუქმებულია*.`;
+    midEn = `Hello, *${name}*! 👋\nYour reservation has been *cancelled*.`;
+    midRu = `Здравствуйте, *${name}*! 👋\nВаша бронь *отменена*.`;
+    tailKa = '';
+    tailEn = '';
+    tailRu = '';
+  } else {
+    midKa = `გამარჯობა, *${name}*! 👋\nთქვენი ჯავშანი მიღებულია ✅`;
+    midEn = `Hello, *${name}*! 👋\nYour reservation has been received ✅`;
+    midRu = `Здравствуйте, *${name}*! 👋\nВаша бронь принята ✅`;
+    tailKa = '\n\nმალე დაგიდასტურებთ!';
+    tailEn = '\n\nWe will confirm shortly!';
+    tailRu = '\n\nСкоро подтвердим!';
+  }
+
+  const titles = {
+    ka: `🍃 *რესტორანი ტიფლისი*\n\n${midKa}\n\n📅 ${date}  🕐 ${time}\n👥 ${guests} სტუმარი\n🪑 ${table}${payLine}${orderSection.ka}${tailKa}\n━━━━━━━━━━━━━━━\nბათუმი, ვ.გორგასალის ქ. 110/18\n📞 +995 568 76 76 38`,
+    en: `🍃 *Restaurant Tiflisi*\n\n${midEn}\n\n📅 ${date}  🕐 ${time}\n👥 ${guests} guest(s)\n🪑 ${table}${payLine}${orderSection.en}${tailEn}\n━━━━━━━━━━━━━━━\nBatumi, V. Gorgasali St. 110/18\n📞 +995 568 76 76 38`,
+    ru: `🍃 *Ресторан Тифлиси*\n\n${midRu}\n\n📅 ${date}  🕐 ${time}\n👥 ${guests} гост.\n🪑 ${table}${payLine}${orderSection.ru}${tailRu}\n━━━━━━━━━━━━━━━\nБатуми, ул. В. Горгасали 110/18\n📞 +995 568 76 76 38`
+  };
+  return titles[L] || titles.ka;
+}
+
+function openReservationCustomerWhatsApp(row, lgOpt, opts) {
+  const digits = normalizePhoneDigitsWa(row.phone);
+  if (!digits) {
+    if (!opts || !opts.silent) {
+      const t = TXT[(typeof lang !== 'undefined' && lang) || 'ka'] || TXT.ka;
+      alert(t.res_wa_no_phone || 'ტელეფონი არ არის');
+    }
+    return false;
+  }
+  const body = buildReservationCustomerWaText(row, lgOpt);
+  window.open(`https://wa.me/${digits}?text=${encodeURIComponent(body)}`, '_blank');
+  return true;
+}
+
+function resendGuestReservationWhatsApp() {
+  const L = typeof lang !== 'undefined' ? lang : 'ka';
+  if (lastGuestReservationWaRow) {
+    openReservationCustomerWhatsApp(lastGuestReservationWaRow, L);
+    return;
+  }
+  const name = g('r-name')?.value?.trim();
+  const phone = g('r-phone')?.value?.trim();
+  const date = g('r-date')?.value;
+  const time = g('r-time')?.value;
+  const guests = String(parseInt(g('r-guests')?.value, 10) || 2);
+  const table = g('r-table')?.value || '';
+  const payment = g('r-payment')?.value || '';
+  const note = g('r-note')?.value || '';
+  const snap = buildReservationPrecheckSnapshot();
+  openReservationCustomerWhatsApp(
+    {
+      name,
+      phone,
+      date,
+      time,
+      guests,
+      table_id: table || '—',
+      payment,
+      note,
+      precheck_json: snap.items.length > 0 ? snap : null,
+      status: 'pending'
+    },
+    L
+  );
+}
+
 // Reservation Form
 async function submitReservation() {
   const name = g('r-name').value.trim();
@@ -6047,12 +6210,13 @@ async function submitReservation() {
   const note = g('r-note').value;
   const email = g('r-email')?.value||'';
   const payment = g('r-payment').value;
+  const snap = buildReservationPrecheckSnapshot();
+  const guestWaPrecheck = snap.items.length > 0 ? snap : null;
 
   // Save to Supabase
   try {
     const advance_amount = parseFloat(g('f-adv')?.value)||0;
     const advance_payment = (advance_amount > 0 && payment) ? payment : null;
-    const snap = buildReservationPrecheckSnapshot();
     const payload = {
       name, phone, date, time, guests, table_id: table||'—', payment, note, status:'pending',
       advance_amount: advance_amount||null, advance_payment,
@@ -6077,27 +6241,21 @@ async function submitReservation() {
     if (table) await supaFetch(`/rest/v1/tables?id=eq.${table}`, 'PATCH', { status:'reserved' });
   } catch(e) { console.warn('Supabase error', e); }
 
-  // Build WA message
-  const payLabels = {'ნაღდი':'ნაღდი',bog:'საქართველოს ბანკი',tbc:'თიბისი ბანკი',tera:'ტერა ბანკი','გადარიცხვა':'გადარიცხვა',cash:'ნაღდი',transfer:'გადარიცხვა'};
-  let text = `🍃 *რესტორანი ტიფლისი — ჯავშანი*\n━━━━━━━━━━━━━━━\n`;
-  text += `👤 *${name}*\n📞 ${phone}\n`;
-  if(email) text += `✉️ ${email}\n`;
-  text += `\n📅 ${date}  🕐 ${time}\n👥 ${guests} სტუმარი\n`;
-  if(table) text += `🪑 მაგიდა: ${table}\n`;
-  if(payment) text += `💳 ${payLabels[payment]||payment}\n`;
-  if (Object.keys(order).length > 0) {
-    text += `\n*წინასწარი შეკვეთა:*\n`;
-    let sub = 0;
-    Object.keys(order).map(Number).forEach(id => {
-      const item = MENU.find(m=>m.id===id); if(!item) return;
-      const q=order[id],lt=item.p*q; sub+=lt;
-      text+=`  • ${item.ka} ×${q} — ₾${lt.toFixed(2)}\n`;
-    });
-    text+=`\nსავარაუდო: ₾${sub.toFixed(2)}\n`;
-  }
-  if(note) text += `\n📝 ${note}`;
+  lastGuestReservationWaRow = {
+    name,
+    phone,
+    date,
+    time,
+    guests: String(guests),
+    table_id: table || '—',
+    payment,
+    note,
+    precheck_json: guestWaPrecheck,
+    status: 'pending'
+  };
 
   // Send Telegram notification to admin
+  const payLabels = {'ნაღდი':'ნაღდი',bog:'საქართველოს ბანკი',tbc:'თიბისი ბანკი',tera:'ტერა ბანკი','გადარიცხვა':'გადარიცხვა',cash:'ნაღდი',transfer:'გადარიცხვა'};
   const orderLines = Object.keys(order).length > 0
     ? '\n🛒 ' + Object.keys(order).map(Number).map(id => {
         const item = MENU.find(m=>m.id===id); if(!item) return '';
@@ -6110,48 +6268,16 @@ async function submitReservation() {
   g('res-form-wrap').style.display = 'none';
   g('res-success').style.display = 'flex';
 
-  // Send WhatsApp to CUSTOMER's phone number with reservation + order receipt
-  const customerPhone = phone.replace(/\D/g, '');
+  const customerPhone = normalizePhoneDigitsWa(phone);
   if (customerPhone) {
     setTimeout(() => {
-      // Build order receipt lines
-      let receiptLines = '';
-      let orderSub = 0;
-      const svcVal = parseFloat(g('f-svc')?.value)||0;
-      const discVal = parseFloat(g('f-disc')?.value)||0;
-      const advVal = parseFloat(g('f-adv')?.value)||0;
-      if (Object.keys(order).length > 0) {
-        Object.keys(order).map(Number).forEach(id => {
-          const item = MENU.find(m=>m.id===id); if(!item) return;
-          const q=order[id], lt=item.p*q; orderSub+=lt;
-          receiptLines += `  • ${item[lang]||item.ka} ×${q} — ₾${lt.toFixed(2)}\n`;
-        });
-        const dA=orderSub*discVal/100, afterD=orderSub-dA, sA=afterD*svcVal/100;
-        const orderTotal=Math.max(0,afterD+sA-advVal);
-        if(discVal>0) receiptLines+=`  ➖ ${TXT[lang].disc} ${discVal}% — −₾${dA.toFixed(2)}\n`;
-        if(svcVal>0) receiptLines+=`  ➕ ${TXT[lang].svc} ${svcVal}% — ₾${sA.toFixed(2)}\n`;
-        if(advVal>0) receiptLines+=`  ➖ ${TXT[lang].adv} — −₾${advVal.toFixed(2)}\n`;
-        receiptLines+=`  💰 *${{ka:'სულ',en:'Total',ru:'Итого'}[lang]}: ₾${orderTotal.toFixed(2)}*`;
-      }
-
-      const orderSection = {
-        ka: receiptLines ? `\n\n🧾 *წინასწარი შეკვეთა:*\n${receiptLines}` : '',
-        en: receiptLines ? `\n\n🧾 *Pre-order:*\n${receiptLines}` : '',
-        ru: receiptLines ? `\n\n🧾 *Предзаказ:*\n${receiptLines}` : ''
-      };
-
-      const confirmMsgs = {
-        ka: `🍃 *რესტორანი ტიფლისი*\n\nგამარჯობა, *${name}*! 👋\nთქვენი ჯავშანი მიღებულია ✅\n\n📅 ${date}  🕐 ${time}\n👥 ${guests} სტუმარი\n🪑 ${table||'—'}${payment?'\n💳 '+(payLabels[payment]||payment):''}${orderSection.ka}\n\nმალე დაგიდასტურებთ!\n━━━━━━━━━━━━━━━\nბათუმი, ვ.გორგასალის ქ. 110/18\n📞 +995 568 76 76 38`,
-        en: `🍃 *Restaurant Tiflisi*\n\nHello, *${name}*! 👋\nYour reservation has been received ✅\n\n📅 ${date}  🕐 ${time}\n👥 ${guests} guest(s)\n🪑 ${table||'—'}${payment?'\n💳 '+(payLabels[payment]||payment):''}${orderSection.en}\n\nWe will confirm shortly!\n━━━━━━━━━━━━━━━\nBatumi, V. Gorgasali St. 110/18\n📞 +995 568 76 76 38`,
-        ru: `🍃 *Ресторан Тифлиси*\n\nЗдравствуйте, *${name}*! 👋\nВаша бронь принята ✅\n\n📅 ${date}  🕐 ${time}\n👥 ${guests} гост.\n🪑 ${table||'—'}${payment?'\n💳 '+(payLabels[payment]||payment):''}${orderSection.ru}\n\nСкоро подтвердим!\n━━━━━━━━━━━━━━━\nБатуми, ул. В. Горгасали 110/18\n📞 +995 568 76 76 38`
-      };
-      const confirmText = confirmMsgs[lang] || confirmMsgs.ka;
-      window.open(`https://wa.me/${customerPhone}?text=${encodeURIComponent(confirmText)}`, '_blank');
+      openReservationCustomerWhatsApp(lastGuestReservationWaRow, lang);
     }, 600);
   }
 }
 
 function resetRes() {
+  lastGuestReservationWaRow = null;
   g('res-form-wrap').style.display = 'block';
   g('res-success').style.display = 'none';
   ['r-name','r-phone','r-email','r-note'].forEach(id => { if(g(id)) g(id).value=''; });
@@ -7839,6 +7965,8 @@ let allReservations = [];
 let filteredReservations = [];
 /** ბოლო ჩეკიანი ჯავშნების სია — ბეჭდვისთვის */
 let lastResChecksRows = [];
+/** ჩეკები ტაბი: ბოლო ჩატვირთული სიები (ტექსტური ძებნამდე) */
+let resChecksClientFilterCache = { active: null, trash: null };
 let resCheckEditReservationId = null;
 let resCheckEditDraft = null;
 let resCheckEditorDelegated = false;
@@ -8006,9 +8134,52 @@ async function deleteResCheckTrashByReservationId(resId) {
   }
 }
 
+function getResChecksDateFrom() {
+  const v = (g('res-checks-filter-from')?.value || '').trim();
+  if (v) return v;
+  return (g('res-filter-from')?.value || '').trim();
+}
+function getResChecksDateTo() {
+  const v = (g('res-checks-filter-to')?.value || '').trim();
+  if (v) return v;
+  return (g('res-filter-to')?.value || '').trim();
+}
+function getResChecksStatus() {
+  const v = (g('res-checks-filter-status')?.value || '').trim();
+  return v;
+}
+
+function precheckSearchBlob(r) {
+  const o = parseReservationPrecheck(r.precheck_json);
+  if (!o || !o.items || !o.items.length) return '';
+  return o.items
+    .map(it => [it.ka, it.en, it.ru].filter(Boolean).join(' '))
+    .join(' ');
+}
+
+function resChecksRowMatchesSearch(r, q) {
+  if (!q) return true;
+  const blob = [r.name, r.phone, r.table_id, r.note, precheckSearchBlob(r)]
+    .map(x => String(x || '').toLowerCase())
+    .join(' ');
+  return blob.includes(q);
+}
+
+function applyResChecksClientFilter() {
+  if (!resChecksClientFilterCache.active) return;
+  const q = (g('res-checks-filter-search')?.value || '').trim().toLowerCase();
+  const act = resChecksClientFilterCache.active;
+  const tr = resChecksClientFilterCache.trash || [];
+  const active = q ? act.filter(r => resChecksRowMatchesSearch(r, q)) : act.slice();
+  const trash = q ? tr.filter(r => resChecksRowMatchesSearch(r, q)) : tr.slice();
+  lastResChecksRows = active;
+  renderResChecksTable(active);
+  renderResChecksTrashTable(trash);
+}
+
 function resChecksTrashListUrl(orderParam) {
-  const from = g('res-filter-from')?.value || '';
-  const to = g('res-filter-to')?.value || '';
+  const from = getResChecksDateFrom();
+  const to = getResChecksDateTo();
   const parts = [];
   if (from) parts.push(`res_date=gte.${from}`);
   if (to) parts.push(`res_date=lte.${to}`);
@@ -8040,6 +8211,29 @@ async function resolveReservationRowForAdmin(id) {
   if (row) return row;
   row = lastResChecksRows.find(r => String(r.id) === sid);
   return row || null;
+}
+
+async function openAdminReservationWhatsApp(resId, msgPane) {
+  const id = resId != null ? String(resId) : '';
+  if (!id) return;
+  const pane = msgPane === 'checks' ? 'checks' : 'res';
+  const row = await resolveReservationRowForAdmin(id);
+  if (!row) {
+    if (pane === 'checks') adminMsg('res-checks-msg', '❯ ხაზი ვერ მოიძებნა', 'err');
+    else adminMsg('res-list-msg', '❯ ხაზი ვერ მოიძებნა', 'err');
+    return;
+  }
+  const ok = openReservationCustomerWhatsApp(row, 'ka', { silent: true });
+  if (!ok) {
+    const t = '❯ სტუმრის ტელეფონი არ არის WhatsApp-ისთვის';
+    if (pane === 'checks') adminMsg('res-checks-msg', t, 'warn');
+    else adminMsg('res-list-msg', t, 'warn');
+    return;
+  }
+  auditLog('res_wa_resend', id);
+  const okT = '✅ WhatsApp გახსნილია სტუმრის ნომერზე';
+  if (pane === 'checks') adminMsg('res-checks-msg', okT, 'ok');
+  else adminMsg('res-list-msg', okT, 'ok');
 }
 
 function formatPrecheckCellHtml(r) {
@@ -8407,6 +8601,14 @@ function ensureReservationsTableDelegation() {
       const id = stBtn.getAttribute('data-res-id');
       const st = stBtn.getAttribute('data-res-status');
       if (id && st) changeResStatus(id, st);
+      return;
+    }
+    const waBtn = e.target.closest && e.target.closest('.res-wa-resend-btn');
+    if (waBtn && table.contains(waBtn)) {
+      const id = waBtn.getAttribute('data-res-id');
+      const pane = waBtn.getAttribute('data-wa-pane') || 'res';
+      if (id) openAdminReservationWhatsApp(id, pane);
+      return;
     }
   });
   table.addEventListener('keydown', function (e) {
@@ -8436,6 +8638,14 @@ function ensureResChecksTableDelegation() {
         const id = stBtn.getAttribute('data-res-id');
         const st = stBtn.getAttribute('data-res-status');
         if (id && st) changeResStatus(id, st);
+        return;
+      }
+      const waBtn = e.target.closest && e.target.closest('.res-wa-resend-btn');
+      if (waBtn && table.contains(waBtn)) {
+        const id = waBtn.getAttribute('data-res-id');
+        const pane = waBtn.getAttribute('data-wa-pane') || 'checks';
+        if (id) openAdminReservationWhatsApp(id, pane);
+        return;
       }
     });
   };
@@ -8455,21 +8665,23 @@ function reservationsQueryUrl(orderParam) {
   return '/rest/v1/reservations' + (parts.length ? '?' + parts.join('&') : '');
 }
 
-/** ჩეკების ზედა სია: იგივე თარიღი, სტატუსის dropdown არა — ყველა არაგაუქმებული ჩეკი ჩანს */
+/** ჩეკების ზედა სია: თარიღი + არასავალდებულო სტატუსი (pending/confirmed) */
 function reservationsQueryUrlForChecksTab(orderParam) {
-  const from = g('res-filter-from')?.value || '';
-  const to = g('res-filter-to')?.value || '';
+  const from = getResChecksDateFrom();
+  const to = getResChecksDateTo();
+  const status = getResChecksStatus();
   const parts = [];
   if (from) parts.push(`date=gte.${from}`);
   if (to) parts.push(`date=lte.${to}`);
+  if (status) parts.push(`status=eq.${status}`);
   if (orderParam) parts.push(orderParam);
   return '/rest/v1/reservations' + (parts.length ? '?' + parts.join('&') : '');
 }
 
-/** ჩეკების ურნა: მხოლოდ გაუქმებული, იგივე თარიღი (admin სტატუსის select-ს არ იყენებს) */
+/** ჩეკების ურნა: მხოლოდ გაუქმებული, იგივე თარიღი */
 function reservationsCancelledInRangeQueryUrl(orderParam) {
-  const from = g('res-filter-from')?.value || '';
-  const to = g('res-filter-to')?.value || '';
+  const from = getResChecksDateFrom();
+  const to = getResChecksDateTo();
   const parts = ['status=eq.cancelled'];
   if (from) parts.push(`date=gte.${from}`);
   if (to) parts.push(`date=lte.${to}`);
@@ -8529,6 +8741,7 @@ function renderResChecksTable(data) {
       <td><span style="font-size:.7rem;padding:2px 7px;border-radius:3px;border:1px solid ${stColor};color:${stColor}">${stLabel}</span></td>
       <td>
         <div style="display:flex;gap:.3rem;flex-wrap:wrap">
+          <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm res-wa-resend-btn" data-res-id="${idAttr}" data-wa-pane="checks" title="WhatsApp სტუმართან" style="padding:3px 7px">📲</button>
           <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm res-check-edit-btn" data-res-id="${idAttr}" title="ჩეკის რედაქტირება" style="padding:3px 7px">✎</button>
           <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm res-check-status-btn" data-res-id="${idAttr}" data-res-status="confirmed" title="დადასტურება" style="padding:3px 7px">✅</button>
           <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm res-check-status-btn" data-res-id="${idAttr}" data-res-status="cancelled" title="გაუქმება" style="padding:3px 7px">❌</button>
@@ -8567,6 +8780,7 @@ function renderResChecksTrashTable(data) {
       <td><span style="font-size:.7rem;padding:2px 7px;border-radius:3px;border:1px solid ${stColor};color:${stColor}">${stLabel}</span></td>
       <td>
         <div style="display:flex;gap:.3rem;flex-wrap:wrap">
+          <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm res-wa-resend-btn" data-res-id="${idAttr}" data-wa-pane="checks" title="WhatsApp სტუმართან" style="padding:3px 7px">📲</button>
           <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm res-check-status-btn" data-res-id="${idAttr}" data-res-status="pending" title="აღდგენა (მომლოდინე)" style="padding:3px 7px">↩</button>
           <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm res-check-status-btn" data-res-id="${idAttr}" data-res-status="confirmed" title="დადასტურება" style="padding:3px 7px">✅</button>
         </div>
@@ -8581,6 +8795,7 @@ async function loadReservationsWithChecks() {
   const tbody = g('res-checks-tbody');
   const msgEl = g('res-checks-msg');
   if (!tbody) return;
+  resChecksClientFilterCache = { active: null, trash: null };
   tbody.innerHTML =
     '<tr><td colspan="8" style="text-align:center;color:rgba(245,240,232,.3);padding:2rem;font-style:italic">⏳ ჩატვირთვა...</td></tr>';
   if (msgEl) {
@@ -8602,8 +8817,6 @@ async function loadReservationsWithChecks() {
     }
     const rows = useClientSort ? sortReservationsNewestFirst(data || []) : data || [];
     const withCheck = rows.filter(reservationActiveCheckRow);
-    lastResChecksRows = withCheck;
-    renderResChecksTable(withCheck);
 
     try {
       let trashList;
@@ -8614,7 +8827,8 @@ async function loadReservationsWithChecks() {
       }
       const arr = sortTrashRowsByCancelledAt(Array.isArray(trashList) ? trashList : []);
       const mapped = arr.map(trashArchiveRowToReservationShape).filter(Boolean);
-      renderResChecksTrashTable(mapped);
+      resChecksClientFilterCache = { active: withCheck, trash: mapped };
+      applyResChecksClientFilter();
     } catch (trashErr) {
       console.warn('res_checks_trash load, fallback reservations', trashErr);
       try {
@@ -8631,9 +8845,13 @@ async function loadReservationsWithChecks() {
           }
         }
         const trashRows = trashUseSort ? sortReservationsNewestFirst(trashRaw || []) : trashRaw || [];
-        renderResChecksTrashTable(trashRows.filter(reservationTrashCheckRow));
+        const mappedFb = trashRows.filter(reservationTrashCheckRow);
+        resChecksClientFilterCache = { active: withCheck, trash: mappedFb };
+        applyResChecksClientFilter();
       } catch (e2) {
         console.warn('res checks trash fallback', e2);
+        resChecksClientFilterCache = { active: withCheck, trash: [] };
+        applyResChecksClientFilter();
         const tt = g('res-checks-trash-tbody');
         if (tt) {
           tt.innerHTML =
@@ -8645,6 +8863,7 @@ async function loadReservationsWithChecks() {
     }
   } catch (e) {
     lastResChecksRows = [];
+    resChecksClientFilterCache = { active: null, trash: null };
     renderResChecksTrashTable([]);
     tbody.innerHTML =
       '<tr><td colspan="8" style="text-align:center;color:#e74c3c;padding:2rem">❌ Supabase კავშირი ვერ მოხერხდა</td></tr>';
@@ -8668,10 +8887,13 @@ function printResChecksReport() {
     adminMsg('res-checks-msg', '❯ ჯერ დააჭირეთ „ჩვენება“ და დაელოდეთ სიას', 'err');
     return;
   }
-  const from = g('res-filter-from')?.value || '';
-  const to = g('res-filter-to')?.value || '';
+  const from = getResChecksDateFrom();
+  const to = getResChecksDateTo();
   const period = (from || to) ? `პერიოდი: ${from || '—'} — ${to || '—'}` : 'პერიოდი: ყველა';
-  const statusStr = ' | აქტიური ჩეკები (მომლოდინე + დადასტურებული)';
+  const st = getResChecksStatus();
+  const statusStr = st
+    ? ` | სტატუსი: ${statusLabels[st] || st}`
+    : ' | აქტიური ჩეკები (მომლოდინე + დადასტურებული)';
   const blocks = lastResChecksRows.map(r => {
     const o = parseReservationPrecheck(r.precheck_json);
     const itemsHtml =
@@ -8718,7 +8940,7 @@ function printResChecksReport() {
 async function resChecksTrashFromTab() {
   adminTab('reschecks');
   if (!lastResChecksRows.length) {
-    adminMsg('res-checks-msg', '❯ ჯერ დააჭირეთ „ჩვენება (თარიღი „ჯავშნებიდან“)“', 'err');
+    adminMsg('res-checks-msg', '❯ ჯერ დააჭირეთ „ჩვენება“ ჩეკების ტაბში', 'err');
     return;
   }
   const n = lastResChecksRows.length;
@@ -8821,7 +9043,8 @@ function renderResTable(data) {
       <td style="font-size:.75rem;color:rgba(245,240,232,.45);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escapeAttr(r.note || '')}">${escapeHtml(r.note || '—')}</td>
       <td><span style="font-size:.7rem;padding:2px 7px;border-radius:3px;border:1px solid ${stColor};color:${stColor}">${stLabel}</span></td>
       <td>
-        <div style="display:flex;gap:.3rem">
+        <div style="display:flex;gap:.3rem;flex-wrap:wrap">
+          <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm res-wa-resend-btn" data-res-id="${idAttr}" data-wa-pane="res" title="WhatsApp სტუმართან" style="padding:3px 7px">📲</button>
           <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm res-status-btn" data-res-id="${idAttr}" data-res-status="confirmed" title="დადასტურება" style="padding:3px 7px">✅</button>
           <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm res-status-btn" data-res-id="${idAttr}" data-res-status="cancelled" title="გაუქმება" style="padding:3px 7px">❌</button>
         </div>
