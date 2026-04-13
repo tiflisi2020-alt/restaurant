@@ -5612,6 +5612,10 @@ function buildText() {
   if(adv>0) t+=`ავანსი: −₾${adv.toFixed(2)}\n`;
   t += `*სულ: ₾${total.toFixed(2)}*\n1 სტუმარზე: ₾${(total/Math.max(1,parseInt(guests))).toFixed(2)}`;
   if(note) t+=`\n\n📝 ${note}`;
+  if (lines.trim()) {
+    const L = typeof lang !== 'undefined' ? lang : 'ka';
+    t += googleReviewInviteForWa(L);
+  }
   return t;
 }
 
@@ -6117,7 +6121,7 @@ function normalizePhoneDigitsWa(raw) {
 }
 
 /** Google შეფასება — სტუმრისთვის WA ტექსტში (g.page → იგივე writereview placeid) */
-const TIFLIS_GOOGLE_REVIEW_URL = 'https://g.page/r/CcKkKc1ypmCgEBM/review';
+const TIFLIS_GOOGLE_REVIEW_URL = 'https://g.page/r/CcKkKc1ypmCgEAE/review';
 
 function googleReviewInviteForWa(lang) {
   const u = TIFLIS_GOOGLE_REVIEW_URL;
@@ -6174,9 +6178,15 @@ function buildReservationCustomerWaText(row, lgOpt) {
     receiptLines += `  💰 *${totLab}: ₾${orderTotal.toFixed(2)}*`;
   }
 
-  const reviewKa = receiptLines ? googleReviewInviteForWa('ka') : '';
-  const reviewEn = receiptLines ? googleReviewInviteForWa('en') : '';
-  const reviewRu = receiptLines ? googleReviewInviteForWa('ru') : '';
+  const st = String(row.status || 'pending')
+    .trim()
+    .toLowerCase();
+  /** დადასტურებულზე Google უკვე mid-შია; გაუქმებულზე არ ვთხოვთ შეფასებას */
+  const reviewAfterPrecheck =
+    !!receiptLines && st !== 'confirmed' && st !== 'cancelled' && st !== 'canceled';
+  const reviewKa = reviewAfterPrecheck ? googleReviewInviteForWa('ka') : '';
+  const reviewEn = reviewAfterPrecheck ? googleReviewInviteForWa('en') : '';
+  const reviewRu = reviewAfterPrecheck ? googleReviewInviteForWa('ru') : '';
 
   const orderSection = {
     ka: receiptLines ? `\n\n🧾 *წინასწარი შეკვეთა:*\n${receiptLines}${reviewKa}` : '',
@@ -6184,17 +6194,15 @@ function buildReservationCustomerWaText(row, lgOpt) {
     ru: receiptLines ? `\n\n🧾 *Предзаказ:*\n${receiptLines}${reviewRu}` : ''
   };
 
-  const st = String(row.status || 'pending')
-    .trim()
-    .toLowerCase();
+  const uRev = TIFLIS_GOOGLE_REVIEW_URL;
   let midKa, midEn, midRu, tailKa, tailEn, tailRu;
   if (st === 'confirmed') {
-    midKa = `გამარჯობა, *${name}*! 👋\nთქვენი ჯავშანი *დადასტურებულია* ✅`;
-    midEn = `Hello, *${name}*! 👋\nYour reservation is *confirmed* ✅`;
-    midRu = `Здравствуйте, *${name}*! 👋\nВаша бронь *подтверждена* ✅`;
-    tailKa = '\n\nველოდებით თქვენს ვიზიტს!';
-    tailEn = '\n\nWe look forward to your visit!';
-    tailRu = '\n\nЖдём вас в гости!';
+    midKa = `გამარჯობა, *${name}*! 👋\n\nთქვენი ჯავშანი დადასტურებულია! ✨\n\nმოუთმენლად ველოდებით თქვენს მასპინძლობას. ჩვენი გუნდი ყველაფერს გააკეთებს, რომ თქვენმა წვეულებამ საუკეთესოდ ჩაიაროს. 🥂\n\nთუ ყველაფრით კმაყოფილი დარჩებით, ღონისძიების შემდეგ თქვენი შთაბეჭდილების გაზიარება Google-ზე ჩვენთვის ძალიან მნიშვნელოვანი იქნება:\n${uRev}\n\nშეხვედრამდე!`;
+    midEn = `Hello, *${name}*! 👋\n\nYour reservation is confirmed! ✨\n\nWe look forward to hosting you. Our team will do everything we can so your celebration goes perfectly. 🥂\n\nIf you leave happy, sharing your experience on Google after your visit would mean a lot to us:\n${uRev}\n\nSee you soon!`;
+    midRu = `Здравствуйте, *${name}*! 👋\n\nВаша бронь подтверждена! ✨\n\nЖдём вас в гости. Мы сделаем всё, чтобы ваш вечер прошёл отлично. 🥂\n\nЕсли всё понравится, короткий отзыв в Google после визита для нас очень важен:\n${uRev}\n\nДо встречи!`;
+    tailKa = '';
+    tailEn = '';
+    tailRu = '';
   } else if (st === 'cancelled' || st === 'canceled') {
     midKa = `გამარჯობა, *${name}*! 👋\nთქვენი ჯავშანი *გაუქმებულია*.`;
     midEn = `Hello, *${name}*! 👋\nYour reservation has been *cancelled*.`;
