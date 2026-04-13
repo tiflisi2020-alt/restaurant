@@ -8355,7 +8355,27 @@ function precheckItemUnitPrice(it) {
 
 function formatPrecheckCellHtml(r) {
   const o = parseReservationPrecheck(r.precheck_json);
-  if (!o || !o.items.length) return '<span style="color:rgba(245,240,232,.22)">—</span>';
+  const stConf = String(r.status || '').trim().toLowerCase() === 'confirmed';
+  const fromRowAdv = r.advance_amount != null && r.advance_amount !== '' ? Number(r.advance_amount) : NaN;
+  const fromLegacyAdv = r.advance != null && r.advance !== '' ? Number(r.advance) : NaN;
+  const fromPrecheckAdv = o && Number(o.advance) > 0 ? Number(o.advance) : NaN;
+  let advBadgeAmt = NaN;
+  if (Number.isFinite(fromRowAdv) && fromRowAdv > 0) advBadgeAmt = fromRowAdv;
+  else if (Number.isFinite(fromLegacyAdv) && fromLegacyAdv > 0) advBadgeAmt = fromLegacyAdv;
+  else if (Number.isFinite(fromPrecheckAdv) && fromPrecheckAdv > 0) advBadgeAmt = fromPrecheckAdv;
+  const hasCheckLines = !!(o && o.items.length);
+  const advBadgeMt = hasCheckLines ? '.35rem' : '0';
+  let advBadgeHtml = '';
+  if (stConf && Number.isFinite(advBadgeAmt) && advBadgeAmt > 0) {
+    const payRaw = (r.advance_payment != null && r.advance_payment !== '') ? String(r.advance_payment).trim() : '';
+    const payMap = {'ნაღდი':'ნაღდი',bog:'საქართველოს ბანკი',tbc:'თიბისი ბანკი',tera:'ტერა ბანკი','გადარიცხვა':'გადარიცხვა',cash:'ნაღდი',transfer:'გადარიცხვა'};
+    const payLab = payRaw ? escapeHtml(payMap[payRaw] || payRaw) : '';
+    advBadgeHtml = `<div style="font-size:.62rem;margin-top:${advBadgeMt};padding:.3rem .45rem;border-radius:4px;background:rgba(46,204,113,.1);border:1px solid rgba(46,204,113,.32);color:#b8efd0;line-height:1.35">დადასტურებულია · ავანსი დატოვებული: <strong>₾${advBadgeAmt.toFixed(2)}</strong>${payLab ? ' · ' + payLab : ''}</div>`;
+  }
+  if (!hasCheckLines) {
+    if (advBadgeHtml) return advBadgeHtml;
+    return '<span style="color:rgba(245,240,232,.22)">—</span>';
+  }
   const lines = o.items.map(it => {
     const nm = escapeHtml(it.ka || it.en || it.ru || '—');
     const lt =
@@ -8375,7 +8395,7 @@ function formatPrecheckCellHtml(r) {
   }
   const totalLine = tot != null ? `<div style="margin-top:.35rem;font-weight:600;color:var(--teal);font-size:.7rem">სულ: ₾${tot}</div>` : '';
   const subLine = sub != null && sub !== tot ? `<div style="font-size:.58rem;color:rgba(245,240,232,.4)">ქვეჯამი: ₾${sub}</div>` : '';
-  return `<div>${lines}${meta}${subLine}${totalLine}</div>`;
+  return `<div>${lines}${meta}${subLine}${totalLine}${advBadgeHtml}</div>`;
 }
 
 function recalcPrecheckDraft(d) {
@@ -9075,12 +9095,20 @@ function printResChecksReport() {
     const advD = Number.isFinite(a) ? escapeHtml(a.toFixed(2)) : '';
     const advBits = [payD, advD ? `₾${advD}` : ''].filter(Boolean);
     const advSeg = advBits.length ? ` · 💰 ${advBits.join(' · ')}` : '';
+    const advPrecheckPrint = o && Number(o.advance) > 0 ? Number(o.advance) : NaN;
+    const advForPrintBadge =
+      Number.isFinite(a) && a > 0 ? a : Number.isFinite(advPrecheckPrint) && advPrecheckPrint > 0 ? advPrecheckPrint : NaN;
+    const resStLow = String(r.status || '').trim().toLowerCase();
+    const printConfAdv =
+      resStLow === 'confirmed' && Number.isFinite(advForPrintBadge) && advForPrintBadge > 0
+        ? `<div style="margin-top:4px;font-size:10px;color:#1a6b42;font-weight:600">დადასტურებულია · ავანსი დატოვებული: ₾${advForPrintBadge.toFixed(2)}${payD ? ' · ' + payD : ''}</div>`
+        : '';
     return `
     <div style="margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:1px solid #ddd;page-break-inside:avoid">
       <div style="font-weight:700;font-size:13px;margin-bottom:6px">${escapeHtml(r.name || '—')} · ${escapeHtml(r.phone || '—')}</div>
       <div style="font-size:11px;color:#555;margin-bottom:8px">📅 ${escapeHtml(r.date || '—')} ${escapeHtml(r.time || '—')} · 🪑 ${escapeHtml(r.table_id || '—')}${guestSeg}${advSeg} · <strong>${stLab}</strong>${noteSeg}</div>
       <table style="width:100%;border-collapse:collapse;font-size:11px"><thead><tr><th style="text-align:left;border:1px solid #ccc;padding:4px">კერძი</th><th style="text-align:right;border:1px solid #ccc;padding:4px">ერთ. ₾</th><th style="border:1px solid #ccc;padding:4px">რაოდ.</th><th style="text-align:right;border:1px solid #ccc;padding:4px">თანხა</th></tr></thead><tbody>${itemsHtml}</tbody></table>
-      <div style="margin-top:6px;font-weight:600">სულ: ${tot}</div>
+      <div style="margin-top:6px;font-weight:600">სულ: ${tot}</div>${printConfAdv}
     </div>`;
   }).join('');
   const win = window.open('', '_blank');
