@@ -5180,6 +5180,7 @@ const TXT = {
     res_ok_title:'ჯავშანი მიღებულია!', res_ok_sub:'მალე დაგიკავშირდებით დასადასტურებლად', res_new:'ახალი ჯავშანი',
     res_wa_resend:'WhatsApp (ხელახლა)', res_wa_no_phone:'ტელეფონი არ არის — WhatsApp ვერ გაიხსნება',
     svc_pct:'მომსახ. %', disc_pct:'ფასდაკლ. %', adv_lbl:'ავანსი ₾', pay_lbl:'გადახდა',
+    wa_share_brand:'🍃 *რესტორანი ტიფლისი* 🍃', wa_share_guests:'სტუმარი',
     ft_hours_title:'სამუშაო საათები', ft_everyday:'ყოველდღე', ft_contact:'კონტაქტი',
     ft_addr:'ვ.გორგასალის ქ. 110/18', ft_city:'ბათუმი, საქართველო',
     pwa_banner_sub:'სწრაფი წვდომა მენიუსა და ჯავშანზე — დაამატე მთავარ ეკრანზე',
@@ -5211,6 +5212,7 @@ const TXT = {
     res_ok_title:'Reservation Received!', res_ok_sub:'We will contact you shortly to confirm', res_new:'New Reservation',
     res_wa_resend:'WhatsApp (resend)', res_wa_no_phone:'No phone number — cannot open WhatsApp',
     svc_pct:'Service %', disc_pct:'Discount %', adv_lbl:'Advance ₾', pay_lbl:'Payment',
+    wa_share_brand:'🍃 *Restaurant Tiflisi* 🍃', wa_share_guests:'guest(s)',
     ft_hours_title:'Working Hours', ft_everyday:'Every day', ft_contact:'Contact',
     ft_addr:'V. Gorgasali St. 110/18', ft_city:'Batumi, Georgia',
     pwa_banner_sub:'Quick access to the menu and reservations — add to your home screen.',
@@ -5242,6 +5244,7 @@ const TXT = {
     res_ok_title:'Бронь принята!', res_ok_sub:'Скоро свяжемся с вами для подтверждения', res_new:'Новая бронь',
     res_wa_resend:'WhatsApp (ещё раз)', res_wa_no_phone:'Нет номера телефона — WhatsApp не открыть',
     svc_pct:'Обсл. %', disc_pct:'Скидка %', adv_lbl:'Аванс ₾', pay_lbl:'Оплата',
+    wa_share_brand:'🍃 *Ресторан Тифлиси* 🍃', wa_share_guests:'гост.',
     ft_hours_title:'Часы работы', ft_everyday:'Ежедневно', ft_contact:'Контакт',
     ft_addr:'ул. В. Горгасали 110/18', ft_city:'Батуми, Грузия',
     pwa_banner_sub:'Быстрый доступ к меню и бронированию — добавьте на главный экран.',
@@ -5589,6 +5592,8 @@ function recalc() {
 }
 
 function buildText() {
+  const L = typeof lang !== 'undefined' && (lang === 'en' || lang === 'ru') ? lang : 'ka';
+  const T = TXT[L] || TXT.ka;
   const name = g('r-name')?.value||'—';
   const phone = g('r-phone')?.value||'—';
   const date = g('r-date')?.value||'—';
@@ -5603,18 +5608,20 @@ function buildText() {
     const item = MENU.find(m => m.id === id);
     if (!item) return;
     const q = order[id], lt = item.p*q; sub += lt;
-    lines += `  • ${item.ka} ×${q} — ₾${lt.toFixed(2)}\n`;
+    const dish = String(item[L] || item.en || item.ru || item.ka || '—');
+    lines += `  • ${dish} ×${q} — ₾${lt.toFixed(2)}\n`;
   });
   const dA=sub*disc/100, afterD=sub-dA, sA=afterD*svc/100, total=Math.max(0,afterD+sA-adv);
-  let t = `🍃 *რესტორანი ტიფლისი* 🍃\n━━━━━━━━━━━━━━━━━━━\n*${name}* | 📅 ${date} 🕐 ${time}\n👥 ${guests} სტუმარი${phone!=='—'?'\n📞 '+phone:''}\n\n*შეკვეთა:*\n${lines}───────────────────\n`;
-  t += `ქვეჯამი: ₾${sub.toFixed(2)}\n`;
-  if(disc>0) t+=`ფასდაკლება ${disc}%: −₾${dA.toFixed(2)}\n`;
-  if(svc>0) t+=`მომსახურება ${svc}%: ₾${sA.toFixed(2)}\n`;
-  if(adv>0) t+=`ავანსი: −₾${adv.toFixed(2)}\n`;
-  t += `*სულ: ₾${total.toFixed(2)}*\n1 სტუმარზე: ₾${(total/Math.max(1,parseInt(guests))).toFixed(2)}`;
+  const brand = T.wa_share_brand || TXT.ka.wa_share_brand;
+  const gSuffix = T.wa_share_guests || TXT.ka.wa_share_guests;
+  let t = `${brand}\n━━━━━━━━━━━━━━━━━━━\n*${name}* | 📅 ${date} 🕐 ${time}\n👥 ${guests} ${gSuffix}${phone!=='—'?'\n📞 '+phone:''}\n\n*${T.order}:*\n${lines}───────────────────\n`;
+  t += `${T.sub}: ₾${sub.toFixed(2)}\n`;
+  if(disc>0) t+=`${T.disc} ${disc}%: −₾${dA.toFixed(2)}\n`;
+  if(svc>0) t+=`${T.svc} ${svc}%: ₾${sA.toFixed(2)}\n`;
+  if(adv>0) t+=`${T.adv}: −₾${adv.toFixed(2)}\n`;
+  t += `*${T.total}: ₾${total.toFixed(2)}*\n${T.pp}: ₾${(total/Math.max(1,parseInt(guests))).toFixed(2)}`;
   if(note) t+=`\n\n📝 ${note}`;
-  const Lwa = typeof lang !== 'undefined' ? lang : 'ka';
-  t += googleReviewInviteForWa(Lwa);
+  t += googleReviewInviteForWa(L);
   return t;
 }
 
@@ -6358,10 +6365,12 @@ async function submitReservation() {
 
   // Send Telegram notification to admin
   const payLabels = {'ნაღდი':'ნაღდი',bog:'საქართველოს ბანკი',tbc:'თიბისი ბანკი',tera:'ტერა ბანკი','გადარიცხვა':'გადარიცხვა',cash:'ნაღდი',transfer:'გადარიცხვა'};
+  const Ltg = lang === 'en' || lang === 'ru' ? lang : 'ka';
   const orderLines = Object.keys(order).length > 0
     ? '\n🛒 ' + Object.keys(order).map(Number).map(id => {
         const item = MENU.find(m=>m.id===id); if(!item) return '';
-        return `${item.ka} ×${order[id]}`;
+        const dn = String(item[Ltg] || item.en || item.ru || item.ka || '');
+        return `${dn} ×${order[id]}`;
       }).filter(Boolean).join(', ')
     : '';
   const tgMsg = `🔔 <b>ახალი ჯავშანი — რესტორანი ტიფლისი</b>\n━━━━━━━━━━━━━━━\n👤 <b>${name}</b>\n📞 ${phone}\n📅 ${date} · 🕐 ${time}\n👥 ${guests} სტუმარი\n🪑 ${table||'—'}\n💳 ${(payLabels[payment]||payment||'—')}${orderLines}\n📝 ${note||'—'}`;
@@ -8327,7 +8336,8 @@ async function openAdminReservationWhatsApp(resId, msgPane) {
     else adminMsg('res-list-msg', '❯ ხაზი ვერ მოიძებნა', 'err');
     return;
   }
-  const ok = openReservationCustomerWhatsApp(row, 'ka', { silent: true });
+  const LwaAdm = typeof lang !== 'undefined' && (lang === 'en' || lang === 'ru') ? lang : 'ka';
+  const ok = openReservationCustomerWhatsApp(row, LwaAdm, { silent: true });
   if (!ok) {
     const t = '❯ სტუმრის ტელეფონი არ არის WhatsApp-ისთვის';
     if (pane === 'checks') adminMsg('res-checks-msg', t, 'warn');
