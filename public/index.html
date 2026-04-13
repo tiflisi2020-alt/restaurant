@@ -3263,6 +3263,24 @@ tr.admin-row-flash td {
   box-shadow: 0 0 16px rgba(61, 155, 147, 0.35);
 }
 
+.admin-reschecks-brand {
+  text-align: center;
+  margin: 0 0 0.55rem 0;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid rgba(201, 168, 107, 0.14);
+}
+.admin-reschecks-brand img {
+  height: 3.15rem;
+  width: auto;
+  max-width: min(220px, 100%);
+  object-fit: contain;
+  display: inline-block;
+  vertical-align: middle;
+}
+html.admin-theme-light #admin-modal .admin-reschecks-brand {
+  border-bottom-color: rgba(42, 34, 24, 0.1);
+}
+
 .admin-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-bottom: 0.65rem; }
 .admin-field { display: flex; flex-direction: column; gap: 0.25rem; }
 .admin-field.span2 { grid-column: 1/-1; }
@@ -4885,8 +4903,11 @@ html.admin-panel-route .tiflis-float-rail {
 
       <!-- RESERVATIONS + PRECHECK (ჩეკი) TAB -->
       <div id="at-reschecks" class="admin-pane" role="tabpanel">
+        <div class="admin-reschecks-brand">
+          <img id="admin-reschecks-logo" src="" width="200" height="200" alt="რესტორანი ტიფლისი" decoding="async" />
+        </div>
         <div class="admin-section-title">ჯავშნები ჩეკებით</div>
-        <p class="admin-compact-hint" style="margin:0 0 0.65rem">ზედა: აქტიური ჩეკები. ფილტრი: თარიღი „დან/მდე“, სტატუსი, ტექსტური ძებნა (სახელი, ტელეფონი, მაგიდა, ჩეკის ტექსტი) — ძებნა ბოლო ჩატვირთულ სიაზე მოქმედებს. ცარიელი თარიღი აქ = იგივე ველები ჯავშნების ტაბში (თუ შევსებულია). <strong>✎</strong> — ჩეკის რედაქტირება. გაუქმებისას ჩეკი იწერება <code style="font-size:.65rem">res_checks_trash</code>-ში. ტაბის 🗑 — ზედა სიის გაუქმება + არქივი. SQL: <code style="font-size:.65rem">public/sql/res_checks_trash.sql</code>.</p>
+        <p class="admin-compact-hint" style="margin:0 0 0.65rem">ზედა: აქტიური ჩეკები. ფილტრი: თარიღი „დან/მდე“, სტატუსი, ტექსტური ძებნა (სახელი, ტელეფონი, მაგიდა, სტუმრები, შენიშვნა, ჩეკის ტექსტი) — ძებნა ბოლო ჩატვირთულ სიაზე მოქმედებს. ცარიელი თარიღი აქ = იგივე ველები ჯავშნების ტაბში (თუ შევსებულია). <strong>✎</strong> — ჩეკის რედაქტირება. გაუქმებისას ჩეკი იწერება <code style="font-size:.65rem">res_checks_trash</code>-ში. ტაბის 🗑 — ზედა სიის გაუქმება + არქივი. SQL: <code style="font-size:.65rem">public/sql/res_checks_trash.sql</code>.</p>
         <div class="admin-filter-row" style="flex-wrap:wrap;align-items:flex-end;gap:.5rem">
           <div class="admin-filter-field">
             <span class="admin-filter-label">დან</span>
@@ -4906,7 +4927,7 @@ html.admin-panel-route .tiflis-float-rail {
           </div>
           <div class="admin-filter-field" style="min-width:10rem;flex:1 1 12rem">
             <span class="admin-filter-label">ძებნა</span>
-            <input type="search" id="res-checks-filter-search" class="admin-input" placeholder="სახელი, ტელეფონი, მაგიდა…" style="width:100%;min-width:8rem;margin:0;padding:.35rem .55rem;font-size:.74rem" oninput="applyResChecksClientFilter()">
+            <input type="search" id="res-checks-filter-search" class="admin-input" placeholder="სახელი, ტელეფონი, მაგიდა, სტუმრები, შენიშვნა…" style="width:100%;min-width:8rem;margin:0;padding:.35rem .55rem;font-size:.74rem" oninput="applyResChecksClientFilter()">
           </div>
           <button type="button" class="admin-btn admin-btn-sm" style="width:auto" onclick="loadReservationsWithChecks()">ჩვენება</button>
           <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" style="width:auto" onclick="printResChecksReport()">🖨 ბეჭდვა</button>
@@ -4916,9 +4937,10 @@ html.admin-panel-route .tiflis-float-rail {
           <table class="admin-table" id="res-checks-table">
             <thead><tr>
               <th>სახელი</th><th>ტელეფონი</th><th>თარიღი</th><th>დრო</th>
-              <th>მაგიდა</th><th style="min-width:14rem">ჩეკი (შეკვეთა)</th><th>სტატუსი</th><th></th>
+              <th>სტუმ.</th><th>მაგიდა</th><th title="ავანსის გადახდის მეთოდი და თანხა">ავანსი</th><th>შენიშვნა</th>
+              <th style="min-width:14rem">ჩეკი (შეკვეთა)</th><th>სტატუსი</th><th></th>
             </tr></thead>
-            <tbody id="res-checks-tbody"><tr><td colspan="8" style="text-align:center;color:rgba(245,240,232,.3);padding:2rem;font-style:italic">ჩატვირთვა...</td></tr></tbody>
+            <tbody id="res-checks-tbody"><tr><td colspan="11" style="text-align:center;color:rgba(245,240,232,.3);padding:2rem;font-style:italic">ჩატვირთვა...</td></tr></tbody>
           </table>
         </div>
         <div id="res-checks-count" style="margin-top:.45rem;font-size:.65rem;color:rgba(245,240,232,.28)"></div>
@@ -4929,9 +4951,10 @@ html.admin-panel-route .tiflis-float-rail {
           <table class="admin-table" id="res-checks-trash-table">
             <thead><tr>
               <th>სახელი</th><th>ტელეფონი</th><th>თარიღი</th><th>დრო</th>
-              <th>მაგიდა</th><th style="min-width:14rem">ჩეკი</th><th>სტატუსი</th><th></th>
+              <th>სტუმ.</th><th>მაგიდა</th><th title="არქივში არ ინახება — ცარიელია თუ ცხრილი ძველია">ავანსი</th><th>შენიშვნა</th>
+              <th style="min-width:14rem">ჩეკი</th><th>სტატუსი</th><th></th>
             </tr></thead>
-            <tbody id="res-checks-trash-tbody"><tr><td colspan="8" style="text-align:center;color:rgba(245,240,232,.25);padding:1rem;font-size:.72rem;font-style:italic">ჩვენების შემდეგ</td></tr></tbody>
+            <tbody id="res-checks-trash-tbody"><tr><td colspan="11" style="text-align:center;color:rgba(245,240,232,.25);padding:1rem;font-size:.72rem;font-style:italic">ჩვენების შემდეგ</td></tr></tbody>
           </table>
         </div>
         <div id="res-checks-trash-count" style="margin-top:.45rem;font-size:.65rem;color:rgba(245,240,232,.28)"></div>
@@ -5020,7 +5043,7 @@ html.admin-panel-route .tiflis-float-rail {
           </div>
           <div style="overflow-x:auto">
             <table class="admin-table" style="font-size:.72rem">
-              <thead><tr><th>კერძი</th><th>რაოდ.</th><th>ჯამი</th><th></th></tr></thead>
+              <thead><tr><th>კერძი</th><th style="text-align:right">ერთ. ₾</th><th>რაოდ.</th><th style="text-align:right">ჯამი</th><th></th></tr></thead>
               <tbody id="res-check-edit-lines"></tbody>
             </table>
           </div>
@@ -5744,10 +5767,31 @@ function goBackToOrder() {
   if (ow) ow.style.display = 'block';
 }
 
-/** ახალ ფანჯარაში (about:blank) relative logo.png არ მუშაობს — სრული URL */
+/**
+ * იგივე საქაღალდე სადაც index.html + logo.png (არა /admin/panel/).
+ * about:blank / PDF / ბეჭდვა — აბსოლუტური URL სწორი უნდა იყოს.
+ */
+function tiflisAppDirectoryHref() {
+  const u = new URL(window.location.href);
+  let p = u.pathname || '/';
+  p = p.replace(/\/+$/, '') || '/';
+  p = p.replace(/\/index\.html$/i, '');
+  p = p.replace(/\/admin\/panel$/i, '');
+  if (!p || p === '/') {
+    u.pathname = '/';
+  } else {
+    u.pathname = p.endsWith('/') ? p : p + '/';
+  }
+  u.search = '';
+  u.hash = '';
+  return u.href;
+}
+
+/** სტატიკური ფაილი (logo.png …) — ბაზა = აპის root, არა მიმდინარე path */
 function tiflisAssetUrl(relPath) {
   try {
-    return new URL(relPath, window.location.href).href;
+    const rel = String(relPath || '').replace(/^\/+/, '');
+    return new URL(rel, tiflisAppDirectoryHref()).href;
   } catch (e) {
     return relPath;
   }
@@ -7258,6 +7302,8 @@ function showAdminPanel() {
   g('admin-login-wrap').style.display = 'none';
   g('admin-panel-wrap').style.display = 'flex';
   if (g('admin-logout-btn')) g('admin-logout-btn').style.display = 'block';
+  const rsLogo = g('admin-reschecks-logo');
+  if (rsLogo) rsLogo.src = tiflisAssetUrl('logo.png');
   adminPopulateCatFilter();
   adminPopulateCatSelect();
   adminRenderMenu();
@@ -8172,7 +8218,7 @@ function precheckSearchBlob(r) {
 
 function resChecksRowMatchesSearch(r, q) {
   if (!q) return true;
-  const blob = [r.name, r.phone, r.table_id, r.note, precheckSearchBlob(r)]
+  const blob = [r.name, r.phone, r.table_id, r.guests, r.note, precheckSearchBlob(r)]
     .map(x => String(x || '').toLowerCase())
     .join(' ');
   return blob.includes(q);
@@ -8249,6 +8295,19 @@ async function openAdminReservationWhatsApp(resId, msgPane) {
   else adminMsg('res-list-msg', okT, 'ok');
 }
 
+/** ჩეკის ხაზი: ერთეულის ფასი (p ან ჯამი/რაოდ.) */
+function precheckItemUnitPrice(it) {
+  const p = Number(it && it.p);
+  if (Number.isFinite(p)) return p;
+  const qty = Math.max(1, Math.floor(Number(it && it.qty) || 1));
+  const lt =
+    it.line != null && Number.isFinite(Number(it.line))
+      ? Number(it.line)
+      : NaN;
+  if (Number.isFinite(lt) && qty > 0) return lt / qty;
+  return NaN;
+}
+
 function formatPrecheckCellHtml(r) {
   const o = parseReservationPrecheck(r.precheck_json);
   if (!o || !o.items.length) return '<span style="color:rgba(245,240,232,.22)">—</span>';
@@ -8259,7 +8318,9 @@ function formatPrecheckCellHtml(r) {
         ? Number(it.line)
         : Number(it.p) * Number(it.qty || 0);
     const sum = Number.isFinite(lt) ? lt.toFixed(2) : '—';
-    return `<div style="font-size:.64rem;line-height:1.35;color:rgba(245,240,232,.75)">${nm} <span style="color:rgba(245,240,232,.4)">×${escapeHtml(String(it.qty))}</span> · ₾${sum}</div>`;
+    const unit = precheckItemUnitPrice(it);
+    const unitStr = Number.isFinite(unit) ? unit.toFixed(2) : '—';
+    return `<div style="font-size:.64rem;line-height:1.35;color:rgba(245,240,232,.75)">${nm} <span style="color:rgba(245,240,232,.48)">₾${unitStr}</span> <span style="color:rgba(245,240,232,.4)">×${escapeHtml(String(it.qty))}</span> · <span style="color:rgba(245,240,232,.88)">₾${sum}</span></div>`;
   }).join('');
   const tot = o.total != null && Number.isFinite(Number(o.total)) ? Number(o.total).toFixed(2) : null;
   const sub = o.subtotal != null && Number.isFinite(Number(o.subtotal)) ? Number(o.subtotal).toFixed(2) : null;
@@ -8369,20 +8430,23 @@ function renderResCheckEditorLines() {
   const items = resCheckEditDraft.items;
   if (!items.length) {
     tb.innerHTML =
-      '<tr><td colspan="4" style="text-align:center;color:rgba(245,240,232,.35);padding:.85rem;font-size:.72rem;font-style:italic">კერძები არ არის — ზემოთ დაამატეთ</td></tr>';
+      '<tr><td colspan="5" style="text-align:center;color:rgba(245,240,232,.35);padding:.85rem;font-size:.72rem;font-style:italic">კერძები არ არის — ზემოთ დაამატეთ</td></tr>';
   } else {
     tb.innerHTML = items
       .map((it, idx) => {
         const nm = escapeHtml(it.ka || it.en || '—');
         const line = Number(it.line).toFixed(2);
+        const unit = precheckItemUnitPrice(it);
+        const unitStr = Number.isFinite(unit) ? unit.toFixed(2) : '—';
         return `<tr data-rce-idx="${idx}">
         <td style="font-size:.72rem;max-width:11rem">${nm}</td>
+        <td style="font-size:.72rem;text-align:right;color:rgba(245,240,232,.55);white-space:nowrap">₾${unitStr}</td>
         <td style="white-space:nowrap">
           <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost res-check-eqty" data-delta="-1" style="padding:2px 6px" aria-label="მინუს ერთი">−</button>
           <input type="number" class="admin-input res-check-eqty-inp" min="1" max="999" value="${it.qty}" style="width:3rem;margin:0 .2rem;padding:.2rem;font-size:.7rem" aria-label="რაოდენობა">
           <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost res-check-eqty" data-delta="1" style="padding:2px 6px" aria-label="პლიუს ერთი">+</button>
         </td>
-        <td style="font-size:.72rem;color:var(--teal)">₾${line}</td>
+        <td style="font-size:.72rem;text-align:right;color:var(--teal)">₾${line}</td>
         <td><button type="button" class="admin-btn admin-btn-sm admin-btn-ghost res-check-erem" style="padding:2px 8px;color:#e98a7a" title="წაშლა" aria-label="წაშლა">✕</button></td>
       </tr>`;
       })
@@ -8732,7 +8796,7 @@ function renderResChecksTable(data) {
   if (!tbody) return;
   if (!data.length) {
     tbody.innerHTML =
-      '<tr><td colspan="8" style="text-align:center;color:rgba(245,240,232,.3);padding:2rem;font-style:italic">ჩანაწერები არ მოიძებნა (ჩეკიანი ჯავშნები ან ცარიელი ფილტრი)</td></tr>';
+      '<tr><td colspan="11" style="text-align:center;color:rgba(245,240,232,.3);padding:2rem;font-style:italic">ჩანაწერები არ მოიძებნა (ჩეკიანი ჯავშნები ან ცარიელი ფილტრი)</td></tr>';
     const rc = g('res-checks-count');
     if (rc) rc.textContent = '0 ჩანაწერი';
     return;
@@ -8749,7 +8813,10 @@ function renderResChecksTable(data) {
       <td style="font-size:.78rem;color:rgba(245,240,232,.6)">${escapeHtml(r.phone || '—')}</td>
       <td style="white-space:nowrap">${escapeHtml(r.date || '—')}</td>
       <td>${escapeHtml(r.time || '—')}</td>
+      <td style="text-align:center">${escapeHtml(String(r.guests != null && r.guests !== '' ? r.guests : '—'))}</td>
       <td style="color:var(--gold)">${escapeHtml(r.table_id || '—')}</td>
+      <td style="min-width:6.5rem;vertical-align:middle">${formatResChecksAdvanceReadonlyHtml(r)}</td>
+      <td style="font-size:.75rem;color:rgba(245,240,232,.45);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escapeAttr(r.note || '')}">${escapeHtml(r.note || '—')}</td>
       <td style="vertical-align:top;max-width:18rem">${formatPrecheckCellHtml(r)}</td>
       <td><span style="font-size:.7rem;padding:2px 7px;border-radius:3px;border:1px solid ${stColor};color:${stColor}">${stLabel}</span></td>
       <td>
@@ -8771,7 +8838,7 @@ function renderResChecksTrashTable(data) {
   if (!tbody) return;
   if (!data.length) {
     tbody.innerHTML =
-      '<tr><td colspan="8" style="text-align:center;color:rgba(245,240,232,.3);padding:1.25rem;font-style:italic">ურნა ცარიელია (ამ პერიოდში გაუქმებული ჩეკიანი არ არის)</td></tr>';
+      '<tr><td colspan="11" style="text-align:center;color:rgba(245,240,232,.3);padding:1.25rem;font-style:italic">ურნა ცარიელია (ამ პერიოდში გაუქმებული ჩეკიანი არ არის)</td></tr>';
     const rc = g('res-checks-trash-count');
     if (rc) rc.textContent = '0 ჩანაწერი ურნაში';
     return;
@@ -8788,7 +8855,10 @@ function renderResChecksTrashTable(data) {
       <td style="font-size:.78rem;color:rgba(245,240,232,.6)">${escapeHtml(r.phone || '—')}</td>
       <td style="white-space:nowrap">${escapeHtml(r.date || '—')}</td>
       <td>${escapeHtml(r.time || '—')}</td>
+      <td style="text-align:center">${escapeHtml(String(r.guests != null && r.guests !== '' ? r.guests : '—'))}</td>
       <td style="color:var(--gold)">${escapeHtml(r.table_id || '—')}</td>
+      <td style="min-width:6.5rem;vertical-align:middle">${formatResChecksAdvanceReadonlyHtml(r)}</td>
+      <td style="font-size:.75rem;color:rgba(245,240,232,.45);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escapeAttr(r.note || '')}">${escapeHtml(r.note || '—')}</td>
       <td style="vertical-align:top;max-width:18rem">${formatPrecheckCellHtml(r)}</td>
       <td><span style="font-size:.7rem;padding:2px 7px;border-radius:3px;border:1px solid ${stColor};color:${stColor}">${stLabel}</span></td>
       <td>
@@ -8810,7 +8880,7 @@ async function loadReservationsWithChecks() {
   if (!tbody) return;
   resChecksClientFilterCache = { active: null, trash: null };
   tbody.innerHTML =
-    '<tr><td colspan="8" style="text-align:center;color:rgba(245,240,232,.3);padding:2rem;font-style:italic">⏳ ჩატვირთვა...</td></tr>';
+    '<tr><td colspan="11" style="text-align:center;color:rgba(245,240,232,.3);padding:2rem;font-style:italic">⏳ ჩატვირთვა...</td></tr>';
   if (msgEl) {
     msgEl.textContent = '';
     msgEl.className = 'admin-msg';
@@ -8868,7 +8938,7 @@ async function loadReservationsWithChecks() {
         const tt = g('res-checks-trash-tbody');
         if (tt) {
           tt.innerHTML =
-            '<tr><td colspan="8" style="text-align:center;color:#e74c3c;padding:1.25rem;font-size:.75rem">❌ ურნა ვერ ჩაიტვირთა — შექმენით ცხრილი <code style="font-size:.65rem">res_checks_trash</code> (იხ. public/sql/res_checks_trash.sql) ან RLS SELECT</td></tr>';
+            '<tr><td colspan="11" style="text-align:center;color:#e74c3c;padding:1.25rem;font-size:.75rem">❌ ურნა ვერ ჩაიტვირთა — შექმენით ცხრილი <code style="font-size:.65rem">res_checks_trash</code> (იხ. public/sql/res_checks_trash.sql) ან RLS SELECT</td></tr>';
         }
         const trc = g('res-checks-trash-count');
         if (trc) trc.textContent = '';
@@ -8879,7 +8949,7 @@ async function loadReservationsWithChecks() {
     resChecksClientFilterCache = { active: null, trash: null };
     renderResChecksTrashTable([]);
     tbody.innerHTML =
-      '<tr><td colspan="8" style="text-align:center;color:#e74c3c;padding:2rem">❌ Supabase კავშირი ვერ მოხერხდა</td></tr>';
+      '<tr><td colspan="11" style="text-align:center;color:#e74c3c;padding:2rem">❌ Supabase კავშირი ვერ მოხერხდა</td></tr>';
     if (msgEl) {
       msgEl.textContent = String((e && e.message) || e || '');
       msgEl.className = 'admin-msg err';
@@ -8895,11 +8965,30 @@ const payLabels = {'ნაღდი':'ნაღდი',bog:'საქართ�
 const statusColors = {pending:'#c9a84c',confirmed:'#2ecc71',cancelled:'#e74c3c'};
 const statusLabels = {pending:'⏳ მომლოდინე',confirmed:'✅ დადასტ.',cancelled:'❌ გაუქმდა'};
 
+/** ჩეკების ტაბი: ავანსი (იგივე ველები რაც ჯავშნებში, წაკითხვადი უჯრა) */
+function formatResChecksAdvanceReadonlyHtml(r) {
+  const pay = (r.advance_payment != null && r.advance_payment !== '') ? String(r.advance_payment).trim() : '';
+  const payLab = pay ? escapeHtml(payLabels[pay] || pay) : '';
+  const a =
+    r.advance_amount != null && r.advance_amount !== ''
+      ? Number(r.advance_amount)
+      : r.advance != null && r.advance !== ''
+        ? Number(r.advance)
+        : NaN;
+  const amt = Number.isFinite(a) ? escapeHtml(a.toFixed(2)) : '';
+  if (!payLab && !amt) return '<span style="color:rgba(245,240,232,.22)">—</span>';
+  const parts = [];
+  if (payLab) parts.push(`<span style="color:rgba(245,240,232,.72)">${payLab}</span>`);
+  if (amt) parts.push(`<span style="color:var(--gold)">₾${amt}</span>`);
+  return `<div style="font-size:.68rem;line-height:1.35">${parts.join(' · ')}</div>`;
+}
+
 function printResChecksReport() {
   if (!lastResChecksRows.length) {
     adminMsg('res-checks-msg', '❯ ჯერ დააჭირეთ „ჩვენება“ და დაელოდეთ სიას', 'err');
     return;
   }
+  const logoSrc = tiflisAssetUrl('logo.png');
   const from = getResChecksDateFrom();
   const to = getResChecksDateTo();
   const period = (from || to) ? `პერიოდი: ${from || '—'} — ${to || '—'}` : 'პერიოდი: ყველა';
@@ -8913,24 +9002,39 @@ function printResChecksReport() {
       o && o.items.length
         ? o.items
             .map(it => {
-              const nm = escapeHtml(it.ka || it.en || '—');
+              const nm = escapeHtml(it.ka || it.en || it.ru || '—');
               const lt =
                 it.line != null && Number.isFinite(Number(it.line))
                   ? Number(it.line)
                   : Number(it.p) * Number(it.qty || 0);
               const sum = Number.isFinite(lt) ? lt.toFixed(2) : '—';
-              return `<tr><td>${nm}</td><td style="text-align:center">${escapeHtml(String(it.qty))}</td><td style="text-align:right">₾${sum}</td></tr>`;
+              const unit = precheckItemUnitPrice(it);
+              const unitStr = Number.isFinite(unit) ? unit.toFixed(2) : '—';
+              return `<tr><td style="border:1px solid #ccc;padding:4px">${nm}</td><td style="text-align:right;border:1px solid #ccc;padding:4px">₾${unitStr}</td><td style="text-align:center;border:1px solid #ccc;padding:4px">${escapeHtml(String(it.qty))}</td><td style="text-align:right;border:1px solid #ccc;padding:4px">₾${sum}</td></tr>`;
             })
             .join('')
-        : '<tr><td colspan="3">—</td></tr>';
+        : '<tr><td colspan="4">—</td></tr>';
     const tot = o && o.total != null && Number.isFinite(Number(o.total)) ? `₾${Number(o.total).toFixed(2)}` : '—';
     const st = r.status || '';
     const stLab = escapeHtml(statusLabels[st] || st || '—');
+    const guestSeg = r.guests != null && r.guests !== '' ? ` · 👥 ${escapeHtml(String(r.guests))}` : '';
+    const noteSeg = r.note != null && String(r.note).trim() ? ` · 📝 ${escapeHtml(String(r.note).trim())}` : '';
+    const pay = (r.advance_payment != null && r.advance_payment !== '') ? String(r.advance_payment).trim() : '';
+    const payD = pay ? escapeHtml(payLabels[pay] || pay) : '';
+    const a =
+      r.advance_amount != null && r.advance_amount !== ''
+        ? Number(r.advance_amount)
+        : r.advance != null && r.advance !== ''
+          ? Number(r.advance)
+          : NaN;
+    const advD = Number.isFinite(a) ? escapeHtml(a.toFixed(2)) : '';
+    const advBits = [payD, advD ? `₾${advD}` : ''].filter(Boolean);
+    const advSeg = advBits.length ? ` · 💰 ${advBits.join(' · ')}` : '';
     return `
     <div style="margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:1px solid #ddd;page-break-inside:avoid">
       <div style="font-weight:700;font-size:13px;margin-bottom:6px">${escapeHtml(r.name || '—')} · ${escapeHtml(r.phone || '—')}</div>
-      <div style="font-size:11px;color:#555;margin-bottom:8px">📅 ${escapeHtml(r.date || '—')} ${escapeHtml(r.time || '—')} · 🪑 ${escapeHtml(r.table_id || '—')} · <strong>${stLab}</strong></div>
-      <table style="width:100%;border-collapse:collapse;font-size:11px"><thead><tr><th style="text-align:left;border:1px solid #ccc;padding:4px">კერძი</th><th style="border:1px solid #ccc;padding:4px">რაოდ.</th><th style="text-align:right;border:1px solid #ccc;padding:4px">თანხა</th></tr></thead><tbody>${itemsHtml}</tbody></table>
+      <div style="font-size:11px;color:#555;margin-bottom:8px">📅 ${escapeHtml(r.date || '—')} ${escapeHtml(r.time || '—')} · 🪑 ${escapeHtml(r.table_id || '—')}${guestSeg}${advSeg} · <strong>${stLab}</strong>${noteSeg}</div>
+      <table style="width:100%;border-collapse:collapse;font-size:11px"><thead><tr><th style="text-align:left;border:1px solid #ccc;padding:4px">კერძი</th><th style="text-align:right;border:1px solid #ccc;padding:4px">ერთ. ₾</th><th style="border:1px solid #ccc;padding:4px">რაოდ.</th><th style="text-align:right;border:1px solid #ccc;padding:4px">თანხა</th></tr></thead><tbody>${itemsHtml}</tbody></table>
       <div style="margin-top:6px;font-weight:600">სულ: ${tot}</div>
     </div>`;
   }).join('');
@@ -8940,7 +9044,8 @@ function printResChecksReport() {
     return;
   }
   win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>ჯავშნები ჩეკებით</title>
-  <style>body{font-family:sans-serif;font-size:12px;padding:20px;color:#222}h2{margin:0 0 6px}.meta{font-size:10px;color:#666;margin-bottom:16px}</style></head><body>
+  <style>body{font-family:sans-serif;font-size:12px;padding:20px;color:#222}.print-brand{text-align:center;margin:0 0 12px}.print-brand img{max-height:52px;width:auto;max-width:220px;object-fit:contain}h2{margin:0 0 6px;text-align:center;font-size:15px}.meta{font-size:10px;color:#666;margin-bottom:16px;text-align:center}</style></head><body>
+  <div class="print-brand"><img src="${logoSrc}" alt="რესტორანი ტიფლისი"></div>
   <h2>რესტორანი ტიფლისი — ჯავშნები ჩეკებით</h2>
   <p class="meta">${period}${statusStr} · ${lastResChecksRows.length} ჩანაწერი · ${toLocaleDateStringGeorgia(new Date())}</p>
   ${blocks}
