@@ -6212,9 +6212,10 @@ function buildReservationCustomerWaText(row, lgOpt) {
   const uRev = TIFLIS_GOOGLE_REVIEW_URL;
   let midKa, midEn, midRu, tailKa, tailEn, tailRu;
   if (st === 'confirmed') {
-    midKa = `გამარჯობა, *${name}*! 👋\n\nთქვენი ჯავშანი დადასტურებულია! ✨\n\nმოუთმენლად ველოდებით თქვენს მასპინძლობას. ჩვენი გუნდი ყველაფერს გააკეთებს, რომ თქვენმა წვეულებამ საუკეთესოდ ჩაიაროს. 🥂\n\nთუ ყველაფრით კმაყოფილი დარჩებით, ღონისძიების შემდეგ თქვენი შთაბეჭდილების გაზიარება Google-ზე ჩვენთვის ძალიან მნიშვნელოვანი იქნება:\n${uRev}\n\nშეხვედრამდე!`;
-    midEn = `Hello, *${name}*! 👋\n\nYour reservation is confirmed! ✨\n\nWe look forward to hosting you. Our team will do everything we can so your celebration goes perfectly. 🥂\n\nIf you leave happy, sharing your experience on Google after your visit would mean a lot to us:\n${uRev}\n\nSee you soon!`;
-    midRu = `Здравствуйте, *${name}*! 👋\n\nВаша бронь подтверждена! ✨\n\nЖдём вас в гости. Мы сделаем всё, чтобы ваш вечер прошёл отлично. 🥂\n\nЕсли всё понравится, короткий отзыв в Google после визита для нас очень важен:\n${uRev}\n\nДо встречи!`;
+    /** ემოჯების გარეშე — ზოგიერთ WhatsApp/ტელეფონზე ჩანს როგორც */
+    midKa = `გამარჯობა, *${name}*!\n\nთქვენი ჯავშანი დადასტურებულია!\n\nმოუთმენლად ველოდებით თქვენს მასპინძლობას. ჩვენი გუნდი ყველაფერს გააკეთებს, რომ თქვენმა წვეულებამ საუკეთესოდ ჩაიაროს.\n\nთუ ყველაფრით კმაყოფილი დარჩებით, ღონისძიების შემდეგ თქვენი შთაბეჭდილების გაზიარება Google-ზე ჩვენთვის ძალიან მნიშვნელოვანი იქნება:\n${uRev}\n\nშეხვედრამდე!`;
+    midEn = `Hello, *${name}*!\n\nYour reservation is confirmed!\n\nWe look forward to hosting you. Our team will do everything we can so your celebration goes perfectly.\n\nIf you leave happy, sharing your experience on Google after your visit would mean a lot to us:\n${uRev}\n\nSee you soon!`;
+    midRu = `Здравствуйте, *${name}*!\n\nВаша бронь подтверждена!\n\nЖдём вас в гости. Мы сделаем всё, чтобы ваш вечер прошёл отлично.\n\nЕсли всё понравится, короткий отзыв в Google после визита для нас очень важен:\n${uRev}\n\nДо встречи!`;
     tailKa = '';
     tailEn = '';
     tailRu = '';
@@ -6234,10 +6235,13 @@ function buildReservationCustomerWaText(row, lgOpt) {
     tailRu = '\n\nСкоро подтвердим!';
   }
 
+  const headKa = st === 'confirmed' ? '*რესტორანი ტიფლისი*' : '🍃 *რესტორანი ტიფლისი*';
+  const headEn = st === 'confirmed' ? '*Restaurant Tiflisi*' : '🍃 *Restaurant Tiflisi*';
+  const headRu = st === 'confirmed' ? '*Ресторан Тифлиси*' : '🍃 *Ресторан Тифлиси*';
   const titles = {
-    ka: `🍃 *რესტორანი ტიფლისი*\n\n${midKa}\n\n📅 ${date}  🕐 ${time}\n👥 ${guests} სტუმარი\n🪑 ${table}${payLine}${orderSection.ka}${tailKa}\n━━━━━━━━━━━━━━━\nბათუმი, ვ.გორგასალის ქ. 110/18\n📞 +995 568 76 76 38`,
-    en: `🍃 *Restaurant Tiflisi*\n\n${midEn}\n\n📅 ${date}  🕐 ${time}\n👥 ${guests} guest(s)\n🪑 ${table}${payLine}${orderSection.en}${tailEn}\n━━━━━━━━━━━━━━━\nBatumi, V. Gorgasali St. 110/18\n📞 +995 568 76 76 38`,
-    ru: `🍃 *Ресторан Тифлиси*\n\n${midRu}\n\n📅 ${date}  🕐 ${time}\n👥 ${guests} гост.\n🪑 ${table}${payLine}${orderSection.ru}${tailRu}\n━━━━━━━━━━━━━━━\nБатуми, ул. В. Горгасали 110/18\n📞 +995 568 76 76 38`
+    ka: `${headKa}\n\n${midKa}\n\n📅 ${date}  🕐 ${time}\n👥 ${guests} სტუმარი\n🪑 ${table}${payLine}${orderSection.ka}${tailKa}\n━━━━━━━━━━━━━━━\nბათუმი, ვ.გორგასალის ქ. 110/18\n📞 +995 568 76 76 38`,
+    en: `${headEn}\n\n${midEn}\n\n📅 ${date}  🕐 ${time}\n👥 ${guests} guest(s)\n🪑 ${table}${payLine}${orderSection.en}${tailEn}\n━━━━━━━━━━━━━━━\nBatumi, V. Gorgasali St. 110/18\n📞 +995 568 76 76 38`,
+    ru: `${headRu}\n\n${midRu}\n\n📅 ${date}  🕐 ${time}\n👥 ${guests} гост.\n🪑 ${table}${payLine}${orderSection.ru}${tailRu}\n━━━━━━━━━━━━━━━\nБатуми, ул. В. Горгасали 110/18\n📞 +995 568 76 76 38`
   };
   return titles[L] || titles.ka;
 }
