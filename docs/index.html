@@ -5613,10 +5613,8 @@ function buildText() {
   if(adv>0) t+=`ავანსი: −₾${adv.toFixed(2)}\n`;
   t += `*სულ: ₾${total.toFixed(2)}*\n1 სტუმარზე: ₾${(total/Math.max(1,parseInt(guests))).toFixed(2)}`;
   if(note) t+=`\n\n📝 ${note}`;
-  if (lines.trim()) {
-    const L = typeof lang !== 'undefined' ? lang : 'ka';
-    t += googleReviewInviteForWa(L);
-  }
+  const Lwa = typeof lang !== 'undefined' ? lang : 'ka';
+  t += googleReviewInviteForWa(Lwa);
   return t;
 }
 
