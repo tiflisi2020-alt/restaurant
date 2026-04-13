@@ -6119,19 +6119,19 @@ function normalizePhoneDigitsWa(raw) {
   return String(raw == null ? '' : raw).replace(/\D/g, '');
 }
 
-/** Google შეფასება — სტუმრისთვის WA ტექსტში (g.page → იგივე writereview placeid) */
+/** დადასტურების + Google-ის ბლოკი — WA (შეკვეთა/მცურავი/წინასწარი შეკვეთა), ბმული TIFLIS_GOOGLE_REVIEW_URL */
 const TIFLIS_GOOGLE_REVIEW_URL = 'https://g.page/r/CcKkKc1ypmCgEAE/review';
 
 function googleReviewInviteForWa(lang) {
   const u = TIFLIS_GOOGLE_REVIEW_URL;
   const L = lang === 'en' || lang === 'ru' ? lang : 'ka';
   if (L === 'en') {
-    return `\n\nWe hope you had a wonderful time with us! ✨\n\nYour opinion means a great deal to us. If you could spare a minute to share your experience on Google, it would really help us grow.\n\nOne tap here: ${u}\n\nThank you for choosing us! ❤️`;
+    return `\n\nYour reservation is confirmed! ✨\n\nWe look forward to hosting you. Our team will do everything we can so your celebration goes perfectly. 🥂\n\nIf you're fully satisfied, sharing your experience on Google after your visit would mean a lot to us:\n${u}\n\nSee you soon!`;
   }
   if (L === 'ru') {
-    return `\n\nНадеемся, вам у нас было приятно! ✨\n\nВаше мнение очень важно для нас. Если уделите минуту и поделитесь впечатлением в Google, это очень поможет нам расти.\n\nОдно нажатие по ссылке: ${u}\n\nСпасибо, что выбираете нас! ❤️`;
+    return `\n\nВаша бронь подтверждена! ✨\n\nЖдём вас в гости. Мы сделаем всё, чтобы ваш вечер прошёл отлично. 🥂\n\nЕсли всё понравится, короткий отзыв в Google после визита для нас очень важен:\n${u}\n\nДо встречи!`;
   }
-  return `\n\nიმედია, ჩვენთან სასიამოვნო დრო გაატარეთ! ✨\n\nთქვენი აზრი ჩვენთვის ძალიან მნიშვნელოვანია. თუ დაგვითმობთ ერთ წუთს და თქვენს შთაბეჭდილებას Google-ზე გაგვიზიარებთ, ამით ძალიან დაგვეხმარებით ზრდაში.\n\nერთი შეხებით აქ: ${u}\n\nმადლობა, რომ გვირჩევთ! ❤️`;
+  return `\n\nთქვენი ჯავშანი დადასტურებულია! ✨\n\nმოუთმენლად ველოდებით თქვენს მასპინძლობას. ჩვენი გუნდი ყველაფერს გააკეთებს, რომ თქვენმა წვეულებამ საუკეთესოდ ჩაიაროს. 🥂\n\nთუ ყველაფრით კმაყოფილი დარჩებით, ღონისძიების შემდეგ თქვენი შთაბეჭდილების გაზიარება Google-ზე ჩვენთვის ძალიან მნიშვნელოვანი იქნება:\n${u}\n\nშეხვედრამდე!`;
 }
 
 const TIFLIS_WA_BUSINESS_NUMBER = '995568767638';
@@ -6212,10 +6212,9 @@ function buildReservationCustomerWaText(row, lgOpt) {
   const uRev = TIFLIS_GOOGLE_REVIEW_URL;
   let midKa, midEn, midRu, tailKa, tailEn, tailRu;
   if (st === 'confirmed') {
-    /** ემოჯების გარეშე — ზოგიერთ WhatsApp/ტელეფონზე ჩანს როგორც */
-    midKa = `გამარჯობა, *${name}*!\n\nთქვენი ჯავშანი დადასტურებულია!\n\nმოუთმენლად ველოდებით თქვენს მასპინძლობას. ჩვენი გუნდი ყველაფერს გააკეთებს, რომ თქვენმა წვეულებამ საუკეთესოდ ჩაიაროს.\n\nთუ ყველაფრით კმაყოფილი დარჩებით, ღონისძიების შემდეგ თქვენი შთაბეჭდილების გაზიარება Google-ზე ჩვენთვის ძალიან მნიშვნელოვანი იქნება:\n${uRev}\n\nშეხვედრამდე!`;
-    midEn = `Hello, *${name}*!\n\nYour reservation is confirmed!\n\nWe look forward to hosting you. Our team will do everything we can so your celebration goes perfectly.\n\nIf you leave happy, sharing your experience on Google after your visit would mean a lot to us:\n${uRev}\n\nSee you soon!`;
-    midRu = `Здравствуйте, *${name}*!\n\nВаша бронь подтверждена!\n\nЖдём вас в гости. Мы сделаем всё, чтобы ваш вечер прошёл отлично.\n\nЕсли всё понравится, короткий отзыв в Google после визита для нас очень важен:\n${uRev}\n\nДо встречи!`;
+    midKa = `გამარჯობა, *${name}*!\n\nთქვენი ჯავშანი დადასტურებულია! ✨\n\nმოუთმენლად ველოდებით თქვენს მასპინძლობას. ჩვენი გუნდი ყველაფერს გააკეთებს, რომ თქვენმა წვეულებამ საუკეთესოდ ჩაიაროს. 🥂\n\nთუ ყველაფრით კმაყოფილი დარჩებით, ღონისძიების შემდეგ თქვენი შთაბეჭდილების გაზიარება Google-ზე ჩვენთვის ძალიან მნიშვნელოვანი იქნება:\n${uRev}\n\nშეხვედრამდე!`;
+    midEn = `Hello, *${name}*!\n\nYour reservation is confirmed! ✨\n\nWe look forward to hosting you. Our team will do everything we can so your celebration goes perfectly. 🥂\n\nIf you're fully satisfied, sharing your experience on Google after your visit would mean a lot to us:\n${uRev}\n\nSee you soon!`;
+    midRu = `Здравствуйте, *${name}*!\n\nВаша бронь подтверждена! ✨\n\nЖдём вас в гости. Мы сделаем всё, чтобы ваш вечер прошёл отлично. 🥂\n\nЕсли всё понравится, короткий отзыв в Google после визита для нас очень важен:\n${uRev}\n\nДо встречи!`;
     tailKa = '';
     tailEn = '';
     tailRu = '';
