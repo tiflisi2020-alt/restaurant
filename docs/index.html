@@ -6116,8 +6116,8 @@ function normalizePhoneDigitsWa(raw) {
   return String(raw == null ? '' : raw).replace(/\D/g, '');
 }
 
-/** სტუმრისთვის WA ჩეკში — Google შეფასება (ერთი შეხებით იხსნება ტელეფონში) */
-const TIFLIS_GOOGLE_REVIEW_URL = 'https://g.page/r/CcKkKc1ypmCgEAE/review';
+/** Google შეფასება — სტუმრისთვის WA ტექსტში (g.page → იგივე writereview placeid) */
+const TIFLIS_GOOGLE_REVIEW_URL = 'https://g.page/r/CcKkKc1ypmCgEBM/review';
 
 function googleReviewInviteForWa(lang) {
   const u = TIFLIS_GOOGLE_REVIEW_URL;
