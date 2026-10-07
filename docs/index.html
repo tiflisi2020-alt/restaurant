@@ -4797,7 +4797,7 @@ html.admin-panel-route .tiflis-float-rail {
       <div class="menu-dishes-col">
         <div id="menu-list" class="menu-list"></div>
       </div>
-      <aside class="order-panel">
+      <aside class="order-panel" id="order">
         <div id="order-wrap">
           <div class="order-header">
             <h3 data-i18n="order">შეკვეთა</h3>
@@ -8304,6 +8304,12 @@ function applySavedCheckRecord(row) {
     order[id] = qty;
     applied += 1;
   });
+  const firstId = Object.keys(order).map(Number).find(id => MENU.some(m => Number(m.id) === id));
+  if (firstId) {
+    const dish = MENU.find(m => Number(m.id) === firstId);
+    const catAt = dish ? CATS.findIndex(c => Number(c.id) === Number(dish.cat)) : -1;
+    if (catAt >= 0) catIdx = catAt;
+  }
   const setVal = (elId, val) => {
     const el = g(elId);
     if (!el || val == null || val === '') return;
@@ -8321,9 +8327,17 @@ function applySavedCheckRecord(row) {
   if (g('f-svc')) g('f-svc').value = String(row.svc != null ? row.svc : 0);
   if (g('f-disc')) g('f-disc').value = String(row.disc != null ? row.disc : 0);
   if (g('f-adv')) g('f-adv').value = String(row.adv != null ? row.adv : 0);
+  renderCats();
   renderMenu();
   renderOrder();
   return { applied, missing };
+}
+
+function revealRestoredOrder() {
+  const panel = document.querySelector('.order-panel');
+  const target = panel || g('menu');
+  if (!target) return;
+  setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 280);
 }
 
 function consumeRestoredSavedCheck() {
@@ -8337,9 +8351,16 @@ function consumeRestoredSavedCheck() {
     return;
   }
   if (!row || typeof row !== 'object') return;
+  document.documentElement.classList.remove('admin-panel-route');
   const result = applySavedCheckRecord(row);
-  const menu = g('menu');
-  if (menu) setTimeout(() => menu.scrollIntoView({ behavior: 'smooth', block: 'start' }), 250);
+  try {
+    const u = new URL(location.href);
+    if (u.searchParams.has('restore_check')) {
+      u.searchParams.delete('restore_check');
+      history.replaceState(null, '', u.pathname + (u.search || '') + '#order');
+    }
+  } catch (_) {}
+  revealRestoredOrder();
   if (!result.applied) {
     alert('ჩეკი დაბრუნდა, მაგრამ კერძები მენიუში აღარ მოიძებნა.');
   }
@@ -8347,17 +8368,27 @@ function consumeRestoredSavedCheck() {
 
 function returnSavedCheck(id) {
   const row = findSavedCheck(id);
-  if (!row) return;
+  if (!row) {
+    alert('ჩეკი ვერ მოიძებნა. დააჭირეთ „განახლება“.');
+    return;
+  }
   if (!confirm('ეს ჩეკი დაბრუნდება მიმდინარე შეკვეთაში. გაგრძელება?')) return;
   if (document.documentElement.classList.contains('admin-panel-route')) {
-    sessionStorage.setItem(SAVED_CHECK_RESTORE_KEY, JSON.stringify(row));
-    location.href = adminPublicHomeUrl() + '#menu';
+    try {
+      sessionStorage.setItem(SAVED_CHECK_RESTORE_KEY, JSON.stringify(row));
+    } catch (_) {
+      alert('ჩეკის დაბრუნება ვერ მოხერხდა.');
+      return;
+    }
+    const url = new URL(adminPublicHomeUrl(), location.origin);
+    url.searchParams.set('restore_check', String(Date.now()));
+    url.hash = 'order';
+    location.assign(url.href);
     return;
   }
   const result = applySavedCheckRecord(row);
   if (typeof closeAdminForce === 'function') closeAdminForce();
-  const menu = g('menu');
-  if (menu) menu.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  revealRestoredOrder();
   if (!result.applied) alert('ჩეკი დაბრუნდა, მაგრამ კერძები მენიუში აღარ მოიძებნა.');
 }
 
