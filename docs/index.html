@@ -3562,6 +3562,7 @@ html.admin-theme-light #admin-modal .admin-reschecks-brand {
 .dashboard-card:nth-child(4)::before {
   background: linear-gradient(90deg, #8a6240 0%, #c9a03d 100%);
 }
+.dashboard-card-value--money { font-size: 1.35rem; }
 .dashboard-card-value {
   font-size: 1.75rem;
   font-weight: 700;
@@ -5124,6 +5125,60 @@ html.admin-panel-route .tiflis-float-rail {
             <div class="dashboard-card-value" id="dash-cats">0</div>
             <div class="dashboard-card-label">კატეგორია</div>
           </div>
+          <div class="dashboard-card dashboard-card--link" onclick="adminTab('reservations')" role="link">
+            <div class="dashboard-card-kicker">დღეს</div>
+            <div class="dashboard-card-value" id="dash-confirmed">—</div>
+            <div class="dashboard-card-label">დადასტურებული</div>
+          </div>
+          <div class="dashboard-card dashboard-card--link" onclick="adminTab('reservations')" role="link">
+            <div class="dashboard-card-kicker">დღეს</div>
+            <div class="dashboard-card-value" id="dash-guests">—</div>
+            <div class="dashboard-card-label">სტუმარი ჯავშანში</div>
+          </div>
+          <div class="dashboard-card dashboard-card--link" onclick="adminTab('map')" role="link">
+            <div class="dashboard-card-kicker">დღეს</div>
+            <div class="dashboard-card-value" id="dash-tables">—</div>
+            <div class="dashboard-card-label">დაკავებული მაგიდა</div>
+          </div>
+          <div class="dashboard-card dashboard-card--link" onclick="adminTab('reschecks')" role="link">
+            <div class="dashboard-card-kicker">ჩეკი</div>
+            <div class="dashboard-card-value dashboard-card-value--money" id="dash-check-sum">—</div>
+            <div class="dashboard-card-label">დღის ჩეკების ჯამი</div>
+          </div>
+          <div class="dashboard-card dashboard-card--link" onclick="adminTab('reschecks')" role="link">
+            <div class="dashboard-card-kicker">ჩეკი</div>
+            <div class="dashboard-card-value" id="dash-checks">—</div>
+            <div class="dashboard-card-label">ჩეკიანი ჯავშანი დღეს</div>
+          </div>
+          <div class="dashboard-card dashboard-card--link" onclick="adminTab('savedchecks')" role="link">
+            <div class="dashboard-card-kicker">შენახული</div>
+            <div class="dashboard-card-value" id="dash-saved">—</div>
+            <div class="dashboard-card-label">შენახული ჩეკი</div>
+          </div>
+          <div class="dashboard-card dashboard-card--link" onclick="adminTab('reservations')" role="link">
+            <div class="dashboard-card-kicker">ხვალ</div>
+            <div class="dashboard-card-value" id="dash-tomorrow">—</div>
+            <div class="dashboard-card-label">აქტიური ჯავშანი</div>
+          </div>
+        </div>
+        <div class="admin-section-title" style="margin-top:.35rem">სტატისტიკა დროის მიხედვით</div>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead><tr>
+              <th>დრო</th><th>ჯავშანი</th><th>სტუმარი</th><th>ჩეკი ₾</th>
+            </tr></thead>
+            <tbody id="dash-time-tbody"><tr><td colspan="4" style="text-align:center;color:rgba(245,240,232,.28);padding:1rem;font-style:italic;font-size:.72rem">ჩატვირთვა…</td></tr></tbody>
+          </table>
+        </div>
+        <div class="admin-section-title" style="margin-top:1rem">ყველაზე გაყიდვადი კერძები</div>
+        <p class="admin-compact-hint" style="margin:0 0 0.55rem">რაოდენობა ითვლება აქტიური ჯავშნების ჩეკებიდან.</p>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead><tr>
+              <th style="width:2.2rem">#</th><th>კერძი</th><th>რაოდენობა</th><th>ჯამი ₾</th>
+            </tr></thead>
+            <tbody id="dash-dishes-tbody"><tr><td colspan="4" style="text-align:center;color:rgba(245,240,232,.28);padding:1rem;font-style:italic;font-size:.72rem">ჩატვირთვა…</td></tr></tbody>
+          </table>
         </div>
         <div id="dashboard-msg" class="admin-msg"></div>
       </div>
@@ -8673,33 +8728,164 @@ function clearSavedChecksLocal() {
   });
 }
 
+function georgiaPlusDays(iso, days) {
+  const parts = String(iso || '').split('-').map(Number);
+  if (parts.length !== 3 || parts.some(n => !Number.isFinite(n))) return iso;
+  const dt = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2]));
+  dt.setUTCDate(dt.getUTCDate() + days);
+  return dt.toISOString().slice(0, 10);
+}
+
+function dashSet(id, value) {
+  const el = g(id);
+  if (el) el.textContent = value;
+}
+
+function renderDashboardDishStats(rows) {
+  const tb = g('dash-dishes-tbody');
+  if (!tb) return;
+  const map = new Map();
+  (rows || []).forEach(r => {
+    const pre = parseReservationPrecheck(r.precheck_json);
+    if (!pre || !Array.isArray(pre.items)) return;
+    pre.items.forEach(it => {
+      const qty = Math.floor(Number(it.qty) || 0);
+      if (qty < 1) return;
+      const name = String(it.ka || it.en || it.ru || '—').trim() || '—';
+      const key = it.id != null && String(it.id).trim() !== '' ? 'id:' + String(it.id) : 'ka:' + name;
+      const line = Number(it.line);
+      const unit = Number(it.p);
+      const sum = Number.isFinite(line) ? line : (Number.isFinite(unit) ? unit * qty : 0);
+      if (!map.has(key)) map.set(key, { name, qty: 0, sum: 0 });
+      const row = map.get(key);
+      row.qty += qty;
+      row.sum += Number.isFinite(sum) ? sum : 0;
+      if (name !== '—') row.name = name;
+    });
+  });
+  const ranked = [...map.values()].sort((a, b) => b.qty - a.qty || b.sum - a.sum).slice(0, 10);
+  if (!ranked.length) {
+    tb.innerHTML = '<tr><td colspan="4" style="text-align:center;color:rgba(245,240,232,.3);padding:1rem;font-style:italic;font-size:.72rem">ჩეკებში კერძები ჯერ არ არის</td></tr>';
+    return;
+  }
+  const topQty = ranked[0].qty || 1;
+  tb.innerHTML = ranked.map((dish, i) => {
+    const pct = Math.max(6, Math.round((dish.qty / topQty) * 100));
+    return `<tr>
+      <td style="text-align:center;color:rgba(245,240,232,.45)">${i + 1}</td>
+      <td>${escapeHtml(dish.name)}</td>
+      <td style="white-space:nowrap;min-width:7.5rem">
+        <span style="display:inline-block;min-width:1.6rem;font-variant-numeric:tabular-nums">${dish.qty}</span>
+        <span style="display:inline-block;width:4.5rem;height:6px;margin-left:.35rem;vertical-align:middle;border-radius:99px;background:rgba(58,148,140,.18);overflow:hidden" aria-hidden="true"><span style="display:block;height:100%;width:${pct}%;background:#2a726b"></span></span>
+      </td>
+      <td style="white-space:nowrap">₾${dish.sum.toFixed(2)}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderDashboardTimeStats(rows) {
+  const tb = g('dash-time-tbody');
+  if (!tb) return;
+  const map = new Map();
+  (rows || []).forEach(r => {
+    const raw = r.time == null ? '' : String(r.time).trim();
+    const time = raw ? raw.slice(0, 5) : '—';
+    if (!map.has(time)) map.set(time, { n: 0, guests: 0, sum: 0 });
+    const slot = map.get(time);
+    slot.n += 1;
+    const guests = Number(r.guests);
+    if (Number.isFinite(guests)) slot.guests += guests;
+    const pre = parseReservationPrecheck(r.precheck_json);
+    const total = pre && Number(pre.total);
+    if (Number.isFinite(total)) slot.sum += total;
+  });
+  const times = [...map.keys()].sort((a, b) => a.localeCompare(b));
+  if (!times.length) {
+    tb.innerHTML = '<tr><td colspan="4" style="text-align:center;color:rgba(245,240,232,.3);padding:1rem;font-style:italic;font-size:.72rem">დღეს აქტიური ჯავშანი არ არის</td></tr>';
+    return;
+  }
+  tb.innerHTML = times.map(time => {
+    const slot = map.get(time);
+    return `<tr>
+      <td style="white-space:nowrap">${escapeHtml(time)}</td>
+      <td style="text-align:center">${slot.n}</td>
+      <td style="text-align:center">${slot.guests}</td>
+      <td style="white-space:nowrap">₾${slot.sum.toFixed(2)}</td>
+    </tr>`;
+  }).join('');
+}
+
 async function loadDashboardData() {
   const today = todayGeorgia();
+  const tomorrow = georgiaPlusDays(today, 1);
   await clearOldReservationsFromTables();
   const dashMsg = g('dashboard-msg');
   if (g('dash-menu')) g('dash-menu').textContent = String((MENU || []).length);
   if (g('dash-cats')) g('dash-cats').textContent = String((CATS || []).length);
-  if (g('dash-date')) {
-    g('dash-date').textContent = georgianAdminDate();
+  if (g('dash-date')) g('dash-date').textContent = georgianAdminDate();
+  ['dash-today', 'dash-pending', 'dash-confirmed', 'dash-guests', 'dash-tables', 'dash-check-sum', 'dash-checks', 'dash-saved', 'dash-tomorrow'].forEach(id => dashSet(id, '…'));
+  const timeBody = g('dash-time-tbody');
+  if (timeBody) {
+    timeBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:rgba(245,240,232,.28);padding:1rem;font-style:italic;font-size:.72rem">ჩატვირთვა…</td></tr>';
   }
-  if (g('dash-today')) g('dash-today').textContent = '…';
-  if (g('dash-pending')) g('dash-pending').textContent = '…';
-  try {
-    const [todayRows, pendingRows] = await Promise.all([
-      supaFetch(`/rest/v1/reservations?date=eq.${today}&status=neq.cancelled&select=id`),
-      supaFetch(`/rest/v1/reservations?status=eq.pending&select=id`)
-    ]);
-    if (g('dash-today')) g('dash-today').textContent = String(Array.isArray(todayRows) ? todayRows.length : 0);
-    if (g('dash-pending')) g('dash-pending').textContent = String(Array.isArray(pendingRows) ? pendingRows.length : 0);
+  const dishBody = g('dash-dishes-tbody');
+  if (dishBody) {
+    dishBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:rgba(245,240,232,.28);padding:1rem;font-style:italic;font-size:.72rem">ჩატვირთვა…</td></tr>';
+  }
+  const [todayRes, pendingRes, tomorrowRes, savedRes, dishRes] = await Promise.allSettled([
+    supaFetch(`/rest/v1/reservations?date=eq.${today}&status=neq.cancelled&select=id,status,guests,table_id,time,precheck_json`),
+    supaFetch('/rest/v1/reservations?status=eq.pending&select=id'),
+    supaFetch(`/rest/v1/reservations?date=eq.${tomorrow}&status=neq.cancelled&select=id`),
+    supaFetch('/rest/v1/saved_checks?select=id'),
+    supaFetch('/rest/v1/reservations?status=neq.cancelled&precheck_json=not.is.null&select=precheck_json')
+  ]);
+  if (todayRes.status !== 'fulfilled') {
+    ['dash-today', 'dash-confirmed', 'dash-guests', 'dash-tables', 'dash-check-sum', 'dash-checks'].forEach(id => dashSet(id, '—'));
+    renderDashboardTimeStats([]);
+    const tb = g('dash-time-tbody');
+    if (tb) tb.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#e74c3c;padding:1rem;font-size:.72rem">სტატისტიკა ვერ ჩაიტვირთა</td></tr>';
+    adminMsg('dashboard-msg', '❌ ჯავშნების მონაცემები ვერ ჩაიტვირთა', 'err');
+  } else {
+    const rows = Array.isArray(todayRes.value) ? todayRes.value : [];
+    let guests = 0;
+    let confirmed = 0;
+    let checks = 0;
+    let checkSum = 0;
+    const tables = new Set();
+    rows.forEach(r => {
+      const n = Number(r.guests);
+      if (Number.isFinite(n)) guests += n;
+      if (String(r.status || '').trim().toLowerCase() === 'confirmed') confirmed += 1;
+      const table = r.table_id == null ? '' : String(r.table_id).trim();
+      if (table && table !== '—') tables.add(table);
+      const pre = parseReservationPrecheck(r.precheck_json);
+      if (pre && Array.isArray(pre.items) && pre.items.length) {
+        checks += 1;
+        const total = Number(pre.total);
+        if (Number.isFinite(total)) checkSum += total;
+      }
+    });
+    dashSet('dash-today', String(rows.length));
+    dashSet('dash-confirmed', String(confirmed));
+    dashSet('dash-guests', String(guests));
+    dashSet('dash-tables', String(tables.size));
+    dashSet('dash-checks', String(checks));
+    dashSet('dash-check-sum', '₾' + checkSum.toFixed(2));
+    renderDashboardTimeStats(rows);
     if (dashMsg) {
       dashMsg.style.display = 'none';
       dashMsg.textContent = '';
       dashMsg.className = 'admin-msg';
     }
-  } catch (e) {
-    if (g('dash-today')) g('dash-today').textContent = '—';
-    if (g('dash-pending')) g('dash-pending').textContent = '—';
-    adminMsg('dashboard-msg', '❌ ჯავშნების მონაცემები ვერ ჩაიტვირთა', 'err');
+  }
+  dashSet('dash-pending', pendingRes.status === 'fulfilled' && Array.isArray(pendingRes.value) ? String(pendingRes.value.length) : '—');
+  dashSet('dash-tomorrow', tomorrowRes.status === 'fulfilled' && Array.isArray(tomorrowRes.value) ? String(tomorrowRes.value.length) : '—');
+  dashSet('dash-saved', savedRes.status === 'fulfilled' && Array.isArray(savedRes.value) ? String(savedRes.value.length) : '—');
+  if (dishRes.status === 'fulfilled') {
+    renderDashboardDishStats(Array.isArray(dishRes.value) ? dishRes.value : []);
+  } else {
+    const dishes = g('dash-dishes-tbody');
+    if (dishes) dishes.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#e74c3c;padding:1rem;font-size:.72rem">გაყიდვადი კერძები ვერ ჩაიტვირთა</td></tr>';
   }
 }
 
