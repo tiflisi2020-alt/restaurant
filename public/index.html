@@ -2619,7 +2619,7 @@ footer {
   background: linear-gradient(168deg, #1e1a15 0%, #14110e 100%);
   border: none;
   border-radius: var(--adm-radius-lg);
-  max-width: 26rem;
+  max-width: 42rem;
   width: 100%;
   max-height: 88vh;
   overflow: hidden;
@@ -2637,7 +2637,11 @@ footer {
   margin-bottom: 0.7rem;
 }
 .saved-check-edit-guest .admin-field label { margin-bottom: 0.15rem; }
-.saved-check-edit-guest input { margin-bottom: 0; }
+.saved-check-edit-guest input,
+.saved-check-edit-guest select,
+.saved-check-edit-guest textarea { margin-bottom: 0; }
+.saved-check-edit-guest textarea { min-height: 3.4rem; resize: vertical; }
+.saved-check-edit-guest .span-2 { grid-column: 1 / -1; }
 @media (max-width: 640px) {
   .saved-check-edit-guest { grid-template-columns: 1fr; }
 }
@@ -5478,6 +5482,36 @@ html.admin-panel-route .tiflis-float-rail {
           <h3 id="res-check-edit-title">ჩეკის რედაქტირება</h3>
         </div>
         <div class="res-check-edit-body">
+          <div class="saved-check-edit-guest">
+            <div class="admin-field">
+              <label for="rce-name">სახელი</label>
+              <input type="text" id="rce-name" class="admin-input" autocomplete="off">
+            </div>
+            <div class="admin-field">
+              <label for="rce-phone">ტელეფონი</label>
+              <input type="tel" id="rce-phone" class="admin-input" autocomplete="off">
+            </div>
+            <div class="admin-field">
+              <label for="rce-date">თარიღი</label>
+              <input type="date" id="rce-date" class="admin-input">
+            </div>
+            <div class="admin-field">
+              <label for="rce-time">დრო</label>
+              <input type="time" id="rce-time" class="admin-input">
+            </div>
+            <div class="admin-field">
+              <label for="rce-guests">სტუმ.</label>
+              <input type="number" id="rce-guests" class="admin-input" min="1" max="300" step="1">
+            </div>
+            <div class="admin-field">
+              <label for="rce-table">მაგიდა</label>
+              <select id="rce-table" class="admin-input"></select>
+            </div>
+            <div class="admin-field span-2">
+              <label for="rce-note">შენიშვნა</label>
+              <textarea id="rce-note" class="admin-input" rows="2"></textarea>
+            </div>
+          </div>
           <div class="res-check-edit-add-row">
             <select id="res-check-edit-add-select" class="admin-input" aria-label="კერძის არჩევა"></select>
             <label style="font-size:.62rem;color:rgba(245,240,232,.45);width:auto"><span style="display:block;margin-bottom:.1rem">რაოდ.</span>
@@ -9697,6 +9731,74 @@ function menuItemByIdFromSelect(raw) {
   return MENU.find(x => String(x.id) === s);
 }
 
+function reservationDateForInput(v) {
+  const s = v == null ? '' : String(v).trim();
+  const m = s.match(/^(\d{4}-\d{2}-\d{2})/);
+  return m ? m[1] : '';
+}
+
+function reservationTimeForInput(v) {
+  const s = v == null ? '' : String(v).trim();
+  const m = s.match(/^(\d{1,2}):(\d{2})/);
+  if (!m) return '';
+  return String(m[1]).padStart(2, '0') + ':' + m[2];
+}
+
+function buildResCheckTableSelectHtml(current) {
+  const cur = current && current !== '—' ? String(current).trim() : '';
+  const groups = [
+    ['ჰოლი', MAP_ALL_TABLE_IDS.filter(id => id.startsWith('H-'))],
+    ['ანტრესოლი', MAP_ALL_TABLE_IDS.filter(id => id.startsWith('A-'))],
+    ['ვერანდა', MAP_ALL_TABLE_IDS.filter(id => id.startsWith('V-'))]
+  ];
+  const known = new Set(MAP_ALL_TABLE_IDS);
+  let html = '<option value="">— მაგიდა —</option>';
+  groups.forEach(([label, ids]) => {
+    if (!ids.length) return;
+    html += `<optgroup label="${escapeAttr(label)}">`;
+    ids.forEach(id => {
+      html += `<option value="${escapeAttr(id)}"${id === cur ? ' selected' : ''}>${escapeHtml(id)}</option>`;
+    });
+    html += '</optgroup>';
+  });
+  if (cur && !known.has(cur)) {
+    html += `<option value="${escapeAttr(cur)}" selected>${escapeHtml(cur)}</option>`;
+  }
+  return html;
+}
+
+function fillResCheckGuestFields(row) {
+  if (g('rce-name')) g('rce-name').value = row.name || '';
+  if (g('rce-phone')) g('rce-phone').value = row.phone || '';
+  if (g('rce-date')) g('rce-date').value = reservationDateForInput(row.date);
+  if (g('rce-time')) g('rce-time').value = reservationTimeForInput(row.time);
+  if (g('rce-guests')) g('rce-guests').value = row.guests != null && row.guests !== '' ? String(row.guests) : '';
+  const table = row.table_id && row.table_id !== '—' ? String(row.table_id) : '';
+  const sel = g('rce-table');
+  if (sel) {
+    sel.innerHTML = buildResCheckTableSelectHtml(table);
+    sel.value = table;
+  }
+  if (g('rce-note')) g('rce-note').value = row.note || '';
+}
+
+function readResCheckGuestFields() {
+  const name = (g('rce-name')?.value || '').trim();
+  const phone = (g('rce-phone')?.value || '').trim();
+  const date = reservationDateForInput(g('rce-date')?.value);
+  const time = reservationTimeForInput(g('rce-time')?.value);
+  const guestsRaw = parseInt(g('rce-guests')?.value, 10);
+  const guests = Number.isFinite(guestsRaw) ? Math.max(1, Math.min(300, guestsRaw)) : null;
+  const table = (g('rce-table')?.value || '').trim();
+  const note = g('rce-note')?.value || '';
+  if (!name) { alert('შეიყვანეთ სახელი'); return null; }
+  if (!phone) { alert('შეიყვანეთ ტელეფონი'); return null; }
+  if (!date) { alert('აირჩიეთ თარიღი'); return null; }
+  if (!time) { alert('აირჩიეთ დრო'); return null; }
+  if (guests == null) { alert('მიუთითეთ სტუმრების რაოდენობა'); return null; }
+  return { name, phone, date, time, guests, table_id: table || '—', note };
+}
+
 function buildResCheckMenuSelectHtml() {
   sortCatsInPlace();
   const parts = ['<option value="">— აირჩიეთ კერძი —</option>'];
@@ -9822,6 +9924,7 @@ async function openResCheckEditor(id) {
   if (g('res-check-edit-disc')) g('res-check-edit-disc').value = String(resCheckEditDraft.disc_pct);
   if (g('res-check-edit-svc')) g('res-check-edit-svc').value = String(resCheckEditDraft.svc_pct);
   if (g('res-check-edit-adv')) g('res-check-edit-adv').value = String(resCheckEditDraft.advance);
+  fillResCheckGuestFields(row);
   renderResCheckEditorLines();
   const ovl = g('res-check-edit-overlay');
   if (ovl) {
@@ -9882,8 +9985,17 @@ async function saveResCheckEditor() {
     total: resCheckEditDraft.total,
     saved_at: new Date().toISOString(),
   };
+  const guest = readResCheckGuestFields();
+  if (!guest) return;
   try {
     await supaFetch(`/rest/v1/reservations?id=eq.${encodeURIComponent(resCheckEditReservationId)}`, 'PATCH', {
+      name: guest.name,
+      phone: guest.phone,
+      date: guest.date,
+      time: guest.time,
+      guests: guest.guests,
+      table_id: guest.table_id,
+      note: guest.note,
       precheck_json: snap,
     });
     adminMsg('res-checks-msg', '✅ ჩეკი შენახულია', 'ok');
