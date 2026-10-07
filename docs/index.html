@@ -5381,11 +5381,11 @@ html.admin-panel-route .tiflis-float-rail {
         <div id="res-checks-trash-count" style="margin-top:.45rem;font-size:.65rem;color:rgba(245,240,232,.28)"></div>
       </div>
 
-      <!-- SAVED CHECKS (guest „შენახვა“ — localStorage) -->
+      <!-- SAVED CHECKS (guest „შენახვა“ — Supabase saved_checks) -->
       <div id="at-savedchecks" class="admin-pane" role="tabpanel">
         <div class="admin-section-title">შენახული ჩეკები</div>
         <p class="admin-compact-hint" style="margin:0 0 0.65rem">
-          სტუმრის <strong>შენახვა</strong> იწერება ამ ბრაუზერში (<code style="font-size:.65rem">localStorage · tiflis_orders</code>). <strong>დაბრუნება</strong> ჩეკს ისევ შეკვეთაში აბრუნებს. <strong>რედაქტირება</strong> ცვლის სტუმარს, კერძებს და რაოდენობას.
+          სტუმრის <strong>შენახვა</strong> იწერება Supabase-ში (<code style="font-size:.65rem">saved_checks</code>) და ყველა მოწყობილობაზე ერთნაირად ჩანს. <strong>დაბრუნება</strong> ჩეკს ისევ შეკვეთაში აბრუნებს. <strong>რედაქტირება</strong> ცვლის სტუმარს, კერძებს და რაოდენობას. პირველად: <code style="font-size:.65rem">public/sql/saved_checks.sql</code>.
         </p>
         <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.5rem;align-items:center">
           <button type="button" class="admin-btn admin-btn-sm" style="width:auto" onclick="renderSavedChecksTable()">↻ განახლება</button>
@@ -6282,7 +6282,6 @@ function saveOrder() {
   if (!g('order-wrap')) return;
   if (!Object.keys(order).length) { alert(TXT[lang].empty); return; }
   try {
-    const ex = JSON.parse(localStorage.getItem(TIFLIS_SAVED_ORDERS_KEY) || '[]');
     const name = g('r-name')?.value||'სტუმარი';
     const svc=parseFloat(g('f-svc')?.value)||0, disc=parseFloat(g('f-disc')?.value)||0, adv=parseFloat(g('f-adv')?.value)||0;
     let sub=0;
@@ -6291,7 +6290,7 @@ function saveOrder() {
       sub+=item.p*q; return{id:parseInt(id),ka:item.ka,price:item.p,qty:q};
     }).filter(Boolean);
     const dA=sub*disc/100,afterD=sub-dA,sA=afterD*svc/100,total=Math.max(0,afterD+sA-adv);
-    ex.unshift({
+    const record = {
       id: Date.now(),
       name,
       date: g('r-date')?.value,
@@ -6305,8 +6304,8 @@ function saveOrder() {
       disc, svc, adv,
       items, sub, total,
       savedAt: new Date().toISOString()
-    });
-    localStorage.setItem(TIFLIS_SAVED_ORDERS_KEY, JSON.stringify(ex));
+    };
+    enqueueSavedCheckJob(() => rememberSavedCheck(record));
   } catch(e) {}
   const sname = g('s-name'), ssub = g('s-sub'), rec = g('receipt'), so = g('success-overlay'), ow = g('order-wrap');
   if (sname) sname.textContent = TXT[lang].saved + ' — ' + (g('r-name')?.value||'');
@@ -8001,7 +8000,17 @@ function adminTab(t) {
   touchAdminSession();
 }
 
-function loadSavedChecksFromStorage() {
+let savedChecksCache = null;
+let savedChecksRemoteMissing = false;
+let savedChecksJob = Promise.resolve();
+
+function enqueueSavedCheckJob(fn) {
+  const run = savedChecksJob.then(fn, fn);
+  savedChecksJob = run.then(() => {}, () => {});
+  return run;
+}
+
+function readLocalSavedChecks() {
   try {
     const raw = JSON.parse(localStorage.getItem(TIFLIS_SAVED_ORDERS_KEY) || '[]');
     return Array.isArray(raw) ? raw : [];
@@ -8010,7 +8019,169 @@ function loadSavedChecksFromStorage() {
   }
 }
 
-function renderSavedChecksTable() {
+function writeLocalSavedChecks(rows) {
+  savedChecksCache = Array.isArray(rows) ? rows : [];
+  try {
+    localStorage.setItem(TIFLIS_SAVED_ORDERS_KEY, JSON.stringify(savedChecksCache));
+  } catch (_) {}
+}
+
+function loadSavedChecksFromStorage() {
+  if (Array.isArray(savedChecksCache)) return savedChecksCache;
+  return readLocalSavedChecks();
+}
+
+function savedCheckStamp(row) {
+  const t = Date.parse((row && (row.editedAt || row.savedAt)) || '');
+  return Number.isFinite(t) ? t : 0;
+}
+
+function savedCheckDateOrNull(v) {
+  const s = v == null ? '' : String(v).trim();
+  return /^\d{4}-\d{2}-\d{2}$/.test(s) ? s : null;
+}
+
+function savedCheckGuestsOrNull(v) {
+  if (v == null || v === '') return null;
+  const n = parseInt(v, 10);
+  return Number.isFinite(n) ? n : null;
+}
+
+function savedCheckToDbRow(r) {
+  return {
+    id: Number(r.id),
+    name: r.name || '',
+    phone: r.phone || '',
+    email: r.email || '',
+    res_date: savedCheckDateOrNull(r.date),
+    time_slot: r.time || '',
+    guests: savedCheckGuestsOrNull(r.guests),
+    payment: r.payment || '',
+    table_id: r.table || '',
+    note: r.note || '',
+    disc: Number(r.disc) || 0,
+    svc: Number(r.svc) || 0,
+    adv: Number(r.adv) || 0,
+    items: Array.isArray(r.items) ? r.items : [],
+    subtotal: Number(r.sub) || 0,
+    total: Number(r.total) || 0,
+    saved_at: r.savedAt || new Date().toISOString(),
+    edited_at: r.editedAt || null
+  };
+}
+
+function dbRowToSavedCheck(row) {
+  return {
+    id: row.id,
+    name: row.name || '',
+    phone: row.phone || '',
+    email: row.email || '',
+    date: row.res_date || '',
+    time: row.time_slot || '',
+    guests: row.guests != null ? row.guests : '',
+    payment: row.payment || '',
+    table: row.table_id || '',
+    note: row.note || '',
+    disc: row.disc != null ? Number(row.disc) : 0,
+    svc: row.svc != null ? Number(row.svc) : 0,
+    adv: row.adv != null ? Number(row.adv) : 0,
+    items: Array.isArray(row.items) ? row.items : [],
+    sub: row.subtotal != null ? Number(row.subtotal) : 0,
+    total: row.total != null ? Number(row.total) : 0,
+    savedAt: row.saved_at || null,
+    editedAt: row.edited_at || null
+  };
+}
+
+function isMissingSavedChecksTable(e) {
+  const msg = String((e && (e.message || e.code)) || '');
+  if (msg.includes('Could not find the table') && msg.includes('saved_checks')) return true;
+  if (msg.includes('schema cache') && msg.includes('saved_checks')) return true;
+  if (e && e.status === 404 && msg.toLowerCase().includes('saved_checks')) return true;
+  return false;
+}
+
+function showSavedChecksNotice(msg, type, sticky) {
+  const el = g('savedchecks-msg');
+  if (!el) return;
+  el.textContent = msg;
+  el.className = 'admin-msg ' + (type || 'ok');
+  el.style.display = 'block';
+  if (!sticky) {
+    setTimeout(() => {
+      if (el.textContent === msg) el.style.display = 'none';
+    }, 3000);
+  }
+}
+
+async function upsertSavedCheckRemote(record) {
+  await supaFetch('/rest/v1/saved_checks?on_conflict=id', 'POST', savedCheckToDbRow(record), {
+    prefer: 'resolution=merge-duplicates,return=minimal'
+  });
+  savedChecksRemoteMissing = false;
+}
+
+async function rememberSavedCheck(record) {
+  const rows = loadSavedChecksFromStorage().filter(r => String(r.id) !== String(record.id));
+  rows.unshift(record);
+  writeLocalSavedChecks(rows);
+  if (g('at-savedchecks') && g('at-savedchecks').classList.contains('on')) paintSavedChecksTable();
+  try {
+    await upsertSavedCheckRemote(record);
+  } catch (e) {
+    if (isMissingSavedChecksTable(e)) {
+      savedChecksRemoteMissing = true;
+      console.warn('saved_checks: ცხრილი არ არსებობს — public/sql/saved_checks.sql');
+    } else {
+      console.warn('saved_checks upsert', e && e.message);
+    }
+  }
+}
+
+async function syncSavedChecksFromRemote() {
+  try {
+    const remote = await supaFetch('/rest/v1/saved_checks?select=*&order=saved_at.desc');
+    savedChecksRemoteMissing = false;
+    let rows = (Array.isArray(remote) ? remote : []).map(dbRowToSavedCheck);
+    const remoteById = new Map(rows.map(r => [String(r.id), r]));
+    const local = readLocalSavedChecks();
+    const pending = local.filter(r => {
+      if (!r || r.id == null || !Number.isFinite(Number(r.id))) return false;
+      const found = remoteById.get(String(r.id));
+      return !found || savedCheckStamp(r) > savedCheckStamp(found);
+    });
+    const failed = [];
+    for (const row of pending) {
+      try {
+        await upsertSavedCheckRemote(row);
+      } catch (e) {
+        failed.push(row);
+        console.warn('saved_checks migrate', e && e.message);
+      }
+    }
+    if (pending.length > failed.length) {
+      const again = await supaFetch('/rest/v1/saved_checks?select=*&order=saved_at.desc');
+      rows = (Array.isArray(again) ? again : []).map(dbRowToSavedCheck);
+    }
+    failed.forEach(row => {
+      const idx = rows.findIndex(r => String(r.id) === String(row.id));
+      if (idx >= 0) rows[idx] = row;
+      else rows.unshift(row);
+    });
+    writeLocalSavedChecks(rows);
+    return { ok: true, missing: false };
+  } catch (e) {
+    if (isMissingSavedChecksTable(e)) {
+      savedChecksRemoteMissing = true;
+      savedChecksCache = readLocalSavedChecks();
+      return { ok: false, missing: true };
+    }
+    savedChecksCache = readLocalSavedChecks();
+    return { ok: false, missing: false, error: (e && e.message) || 'ჩატვირთვა ვერ მოხერხდა' };
+  }
+}
+
+function paintSavedChecksTable() {
   const tb = g('savedchecks-tbody');
   if (!tb) return;
   const rows = loadSavedChecksFromStorage();
@@ -8052,14 +8223,51 @@ function renderSavedChecksTable() {
     .join('');
 }
 
+async function renderSavedChecksTable() {
+  const tb = g('savedchecks-tbody');
+  if (!tb) return;
+  tb.innerHTML =
+    '<tr><td colspan="9" style="text-align:center;color:rgba(245,240,232,.28);padding:1.25rem;font-style:italic;font-size:.72rem">ჩატვირთვა…</td></tr>';
+  const result = await enqueueSavedCheckJob(() => syncSavedChecksFromRemote());
+  paintSavedChecksTable();
+  if (result && result.missing) {
+    showSavedChecksNotice(
+      'Supabase-ში ცხრილი saved_checks ჯერ არ არის. Dashboard → SQL Editor → გაუშვით public/sql/saved_checks.sql. სანამ ეს არ გაკეთდება, ჩეკები მხოლოდ ამ ბრაუზერში ჩანს.',
+      'err',
+      true
+    );
+  } else if (result && result.error) {
+    showSavedChecksNotice('❌ ' + result.error, 'err', true);
+  }
+}
+
 function deleteSavedCheckRow(id) {
-  if (!confirm('წავშალოთ ეს ჩანაწერი?')) return;
-  const next = loadSavedChecksFromStorage().filter(r => String(r.id) !== String(id));
-  localStorage.setItem(TIFLIS_SAVED_ORDERS_KEY, JSON.stringify(next));
-  renderSavedChecksTable();
-  try {
-    auditLog('saved_checks_row_delete', String(id));
-  } catch (_) {}
+  if (!confirm('წავშალოთ ეს ჩანაწერი ყველა მოწყობილობაზე?')) return;
+  enqueueSavedCheckJob(async () => {
+    try {
+      if (!savedChecksRemoteMissing) {
+        await supaFetch(
+          '/rest/v1/saved_checks?id=eq.' + encodeURIComponent(String(id)),
+          'DELETE',
+          null,
+          { prefer: 'return=minimal' }
+        );
+      }
+    } catch (e) {
+      if (isMissingSavedChecksTable(e)) {
+        savedChecksRemoteMissing = true;
+      } else {
+        showSavedChecksNotice('❌ წაშლა ვერ მოხერხდა: ' + ((e && e.message) || ''), 'err', true);
+        return;
+      }
+    }
+    const next = loadSavedChecksFromStorage().filter(r => String(r.id) !== String(id));
+    writeLocalSavedChecks(next);
+    paintSavedChecksTable();
+    try {
+      auditLog('saved_checks_row_delete', String(id));
+    } catch (_) {}
+  });
 }
 
 const SAVED_CHECK_RESTORE_KEY = 'tiflis_restore_saved_check';
@@ -8321,10 +8529,10 @@ function saveSavedCheckEditor() {
   const idx = rows.findIndex(r => String(r.id) === String(savedCheckEditId));
   if (idx < 0) {
     closeSavedCheckEditor();
-    renderSavedChecksTable();
+    paintSavedChecksTable();
     return;
   }
-  rows[idx] = {
+  const updated = {
     ...rows[idx],
     name: savedCheckDraft.name,
     phone: savedCheckDraft.phone,
@@ -8344,22 +8552,60 @@ function saveSavedCheckEditor() {
     total: totals.total,
     editedAt: new Date().toISOString()
   };
-  localStorage.setItem(TIFLIS_SAVED_ORDERS_KEY, JSON.stringify(rows));
   closeSavedCheckEditor();
-  renderSavedChecksTable();
-  adminMsg('savedchecks-msg', '✅ ჩეკი განახლდა', 'ok');
-  try { auditLog('saved_checks_edit', String(rows[idx].id)); } catch (_) {}
+  enqueueSavedCheckJob(async () => {
+    const list = loadSavedChecksFromStorage();
+    const at = list.findIndex(r => String(r.id) === String(updated.id));
+    if (at < 0) {
+      list.unshift(updated);
+    } else {
+      list[at] = updated;
+    }
+    writeLocalSavedChecks(list);
+    paintSavedChecksTable();
+    try {
+      await upsertSavedCheckRemote(updated);
+      showSavedChecksNotice('✅ ჩეკი განახლდა', 'ok');
+    } catch (e) {
+      if (isMissingSavedChecksTable(e)) {
+        savedChecksRemoteMissing = true;
+        showSavedChecksNotice(
+          'ცხრილი saved_checks არ არის — ცვლილება მხოლოდ ამ ბრაუზერშია. SQL: public/sql/saved_checks.sql',
+          'err',
+          true
+        );
+      } else {
+        showSavedChecksNotice('❌ განახლება ვერ აიტვირთა: ' + ((e && e.message) || ''), 'err', true);
+      }
+    }
+  });
+  try { auditLog('saved_checks_edit', String(updated.id)); } catch (_) {}
 }
 
 function clearSavedChecksLocal() {
   if (!loadSavedChecksFromStorage().length) return;
-  if (!confirm('ყველა შენახული ჩეკის წაშლა ამ ბრაუზერში — გაგრძელება?')) return;
-  localStorage.removeItem(TIFLIS_SAVED_ORDERS_KEY);
-  renderSavedChecksTable();
-  adminMsg('savedchecks-msg', '✅ გასუფთავებულია', 'ok');
-  try {
-    auditLog('saved_checks_clear_all', 'local');
-  } catch (_) {}
+  if (!confirm('ყველა შენახული ჩეკი წაიშლება ყველა მოწყობილობაზე. გაგრძელება?')) return;
+  enqueueSavedCheckJob(async () => {
+    try {
+      if (!savedChecksRemoteMissing) {
+        await supaFetch('/rest/v1/saved_checks?id=not.is.null', 'DELETE', null, { prefer: 'return=minimal' });
+      }
+    } catch (e) {
+      if (isMissingSavedChecksTable(e)) {
+        savedChecksRemoteMissing = true;
+      } else {
+        showSavedChecksNotice('❌ გასუფთავება ვერ მოხერხდა: ' + ((e && e.message) || ''), 'err', true);
+        return;
+      }
+    }
+    savedChecksCache = [];
+    try { localStorage.removeItem(TIFLIS_SAVED_ORDERS_KEY); } catch (_) {}
+    paintSavedChecksTable();
+    showSavedChecksNotice('✅ გასუფთავებულია', 'ok');
+    try {
+      auditLog('saved_checks_clear_all', 'supabase');
+    } catch (_) {}
+  });
 }
 
 async function loadDashboardData() {
