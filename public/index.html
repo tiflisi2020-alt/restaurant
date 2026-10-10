@@ -5471,18 +5471,18 @@ html.admin-panel-route .tiflis-float-rail {
           <div class="admin-form-grid" style="margin-bottom:0.35rem">
             <div class="admin-field">
               <label>Bot Token</label>
-              <input type="text" id="tg-token" placeholder="123456:ABC…" oninput="saveTgSettings()">
+              <input type="text" id="tg-token" placeholder="123456:ABC…" autocomplete="off" autocapitalize="off" spellcheck="false" data-lpignore="true" oninput="saveTgSettings()">
             </div>
             <div class="admin-field">
               <label>Chat ID</label>
-              <input type="text" id="tg-chatid" placeholder="-100…" oninput="saveTgSettings()">
+              <input type="text" id="tg-chatid" placeholder="-100…" autocomplete="off" autocapitalize="off" spellcheck="false" data-lpignore="true" oninput="saveTgSettings()">
             </div>
           </div>
           <div style="display:flex;align-items:center;gap:0.45rem;flex-wrap:wrap">
             <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" style="width:auto" onclick="testTelegramBot()">ტესტი</button>
             <span id="tg-status" style="font-size:.62rem;color:rgba(245,240,232,.38)"></span>
           </div>
-          <p class="admin-compact-hint">@BotFather /newbot · Chat ID: @userinfobot</p>
+          <p class="admin-compact-hint">ინახება Supabase-ში (<code style="font-size:.65rem">settings</code>) და ყველა მოწყობილობიდან ერთნაირად მუშაობს. პირველად: <code style="font-size:.65rem">public/sql/telegram_settings.sql</code>. @BotFather /newbot · Chat ID: @userinfobot</p>
         </div>
 
         <div class="admin-form-grid">
@@ -5519,7 +5519,7 @@ html.admin-panel-route .tiflis-float-rail {
         </div>
         <div class="admin-compact-card admin-compact-card--risk">
           <div style="font-size:.62rem;color:var(--brick);font-weight:600;margin-bottom:0.25rem">უსაფრთხოება</div>
-          <p class="admin-compact-hint" style="margin:0">პაროლი/Token ბრაუზერშია — პროდაქშენში გამოიყენეთ სერვერი/RLS. ნაგულისხმევი პაროლი შეცვალეთ.</p>
+          <p class="admin-compact-hint" style="margin:0">Telegram Token და Chat ID Supabase-შია. პაროლი ბრაუზერშიც რჩება — ნაგულისხმევი პაროლი შეცვალეთ.</p>
         </div>
         <div class="admin-section-title" style="font-size:0.92rem;margin-top:0;margin-bottom:0.45rem">აუდიტი</div>
         <div id="adm-audit-list" style="max-height:140px;overflow-y:auto;margin-bottom:0.65rem;padding-right:0.2rem"></div>
@@ -7121,6 +7121,7 @@ function initPwaInstallBanner() {
 }
 
 async function init() {
+  loadTgSettings();
   const isPanel = document.documentElement.classList.contains('admin-panel-route');
   if (isPanel) {
     applyStoredAdminTheme();
@@ -7657,22 +7658,157 @@ async function saveCatSortOrderToSupabase(cat) {
   }
 }
 
-// ===== TELEGRAM BOT =====
-function saveTgSettings() {
-  localStorage.setItem('tg_token', g('tg-token')?.value || '');
-  localStorage.setItem('tg_chatid', g('tg-chatid')?.value || '');
+// ===== TELEGRAM BOT (Supabase settings — ყველა მოწყობილობა) =====
+let tgConfig = { token: '', chatid: '' };
+let tgConfigReady = null;
+let tgConfigLoaded = false;
+let tgLoadSettled = false;
+let tgUserEdited = false;
+let tgSaveTimer = null;
+
+function readTgFields() {
+  return {
+    token: (g('tg-token')?.value || '').trim(),
+    chatid: (g('tg-chatid')?.value || '').trim()
+  };
+}
+
+function applyTgFields(token, chatid) {
+  tgConfig.token = token || '';
+  tgConfig.chatid = chatid || '';
+  const tokenEl = g('tg-token');
+  const chatEl = g('tg-chatid');
+  if (tokenEl && !(tgUserEdited && document.activeElement === tokenEl)) tokenEl.value = tgConfig.token;
+  if (chatEl && !(tgUserEdited && document.activeElement === chatEl)) chatEl.value = tgConfig.chatid;
+}
+
+function clearLocalTgSettings() {
+  try {
+    localStorage.removeItem('tg_token');
+    localStorage.removeItem('tg_chatid');
+  } catch (_) {}
+}
+
+async function upsertSetting(key, value) {
+  const existing = await supaFetch(`/rest/v1/settings?key=eq.${encodeURIComponent(key)}&select=key`);
+  if (Array.isArray(existing) && existing.length) {
+    await supaFetch(`/rest/v1/settings?key=eq.${encodeURIComponent(key)}`, 'PATCH', { value });
+  } else {
+    await supaFetch('/rest/v1/settings', 'POST', { key, value });
+  }
+}
+
+async function fetchTgFromSupabase() {
+  const data = await supaFetch('/rest/v1/settings?key=in.(tg_token,tg_chatid)&select=key,value');
+  const out = { token: '', chatid: '' };
+  (Array.isArray(data) ? data : []).forEach(row => {
+    if (row.key === 'tg_token') out.token = row.value || '';
+    if (row.key === 'tg_chatid') out.chatid = row.value || '';
+  });
+  return out;
+}
+
+async function pullTgSettings() {
+  let remote = null;
+  try {
+    remote = await fetchTgFromSupabase();
+  } catch (e) {
+    console.warn('Telegram load', e);
+  }
+  let localToken = '';
+  let localChat = '';
+  try {
+    localToken = localStorage.getItem('tg_token') || '';
+    localChat = localStorage.getItem('tg_chatid') || '';
+  } catch (_) {}
+
+  if (!remote) {
+    if (!tgUserEdited) applyTgFields(localToken, localChat);
+    tgLoadSettled = true;
+    return;
+  }
+
+  let token = remote.token || '';
+  let chatid = remote.chatid || '';
+  let migratedOk = true;
+  if (!token && localToken) {
+    try {
+      await upsertSetting('tg_token', localToken);
+      token = localToken;
+    } catch (e) {
+      migratedOk = false;
+      token = localToken;
+      console.warn('Telegram migrate token', e);
+    }
+  }
+  if (!chatid && localChat) {
+    try {
+      await upsertSetting('tg_chatid', localChat);
+      chatid = localChat;
+    } catch (e) {
+      migratedOk = false;
+      chatid = localChat;
+      console.warn('Telegram migrate chat', e);
+    }
+  }
+  if (!tgUserEdited) applyTgFields(token, chatid);
+  if (migratedOk) clearLocalTgSettings();
+  tgConfigLoaded = true;
+  tgLoadSettled = true;
 }
 
 function loadTgSettings() {
-  const token = localStorage.getItem('tg_token') || '';
-  const chatid = localStorage.getItem('tg_chatid') || '';
-  if (g('tg-token')) g('tg-token').value = token;
-  if (g('tg-chatid')) g('tg-chatid').value = chatid;
+  if (tgConfigLoaded) {
+    applyTgFields(tgConfig.token, tgConfig.chatid);
+    return Promise.resolve();
+  }
+  if (!tgConfigReady) {
+    tgConfigReady = pullTgSettings().finally(() => {
+      if (!tgConfigLoaded) tgConfigReady = null;
+    });
+  }
+  return tgConfigReady;
+}
+
+function saveTgSettings() {
+  if (!tgLoadSettled) return;
+  tgUserEdited = true;
+  const fields = readTgFields();
+  tgConfig.token = fields.token;
+  tgConfig.chatid = fields.chatid;
+  clearTimeout(tgSaveTimer);
+  tgSaveTimer = setTimeout(() => { persistTgSettings(); }, 450);
+}
+
+async function persistTgSettings() {
+  clearTimeout(tgSaveTimer);
+  tgSaveTimer = null;
+  const token = tgConfig.token;
+  const chatid = tgConfig.chatid;
+  try {
+    await Promise.all([
+      upsertSetting('tg_token', token),
+      upsertSetting('tg_chatid', chatid)
+    ]);
+    clearLocalTgSettings();
+    tgConfigLoaded = true;
+    const st = g('tg-status');
+    if (st && !st.textContent.startsWith('✅') && !st.textContent.startsWith('❌') && !st.textContent.startsWith('⏳')) {
+      st.textContent = '✓ შენახულია ყველა მოწყობილობისთვის';
+    }
+    return true;
+  } catch (e) {
+    console.warn('Telegram save', e);
+    const st = g('tg-status');
+    if (st) st.textContent = '⚠ Supabase-ში ვერ შეინახა';
+    return false;
+  }
 }
 
 async function sendTelegramMsg(text) {
-  const token = localStorage.getItem('tg_token') || '';
-  const chatid = localStorage.getItem('tg_chatid') || '';
+  await loadTgSettings();
+  const token = tgConfig.token;
+  const chatid = tgConfig.chatid;
   if (!token || !chatid) return;
   try {
     await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
@@ -7685,16 +7821,20 @@ async function sendTelegramMsg(text) {
 
 async function testTelegramBot() {
   const st = g('tg-status');
-  const token = localStorage.getItem('tg_token') || '';
-  const chatid = localStorage.getItem('tg_chatid') || '';
   if (!st) return;
-  if (!token || !chatid) { st.textContent = '❌ Token და Chat ID შეავსეთ'; return; }
+  tgUserEdited = true;
+  const fields = readTgFields();
+  tgConfig.token = fields.token;
+  tgConfig.chatid = fields.chatid;
+  if (!tgConfig.token || !tgConfig.chatid) { st.textContent = '❌ Token და Chat ID შეავსეთ'; return; }
   st.textContent = '⏳ იგზავნება...';
+  const saved = await persistTgSettings();
+  if (!saved) return;
   try {
-    const r = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    const r = await fetch(`https://api.telegram.org/bot${tgConfig.token}/sendMessage`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({chat_id: chatid, text: '✅ რესტორანი ტიფლისი — Telegram Bot მუშაობს!', parse_mode: 'HTML'})
+      body: JSON.stringify({chat_id: tgConfig.chatid, text: '✅ რესტორანი ტიფლისი — Telegram Bot მუშაობს!', parse_mode: 'HTML'})
     });
     const data = await r.json();
     st.textContent = data.ok ? '✅ წარმატებით გაიგზავნა!' : '❌ შეცდომა: ' + data.description;
@@ -9309,7 +9449,11 @@ async function adminSaveSettings() {
     hours: g('st-hours').value
   };
   localStorage.setItem('tiflis_settings', JSON.stringify(s));
-  saveTgSettings();
+  tgUserEdited = true;
+  const tgFields = readTgFields();
+  tgConfig.token = tgFields.token;
+  tgConfig.chatid = tgFields.chatid;
+  const tgRemoteOk = await persistTgSettings();
   const newPw = g('st-pw').value;
   let pwRemoteOk = true;
   if (newPw.trim()) {
@@ -9318,6 +9462,8 @@ async function adminSaveSettings() {
   }
   if (newPw.trim() && !pwRemoteOk) {
     adminMsg('adm-msg-settings', '⚠ პაროლი ლოკალურად შეინახა; Supabase ვერ განახლდა', 'err');
+  } else if (!tgRemoteOk) {
+    adminMsg('adm-msg-settings', '⚠ Telegram Supabase-ში ვერ შეინახა', 'err');
   } else {
     adminMsg('adm-msg-settings', '✅ პარამეტრები შენახულია', 'ok');
   }
@@ -9326,7 +9472,7 @@ async function adminSaveSettings() {
 }
 
 function adminResetData() {
-  if (!confirm('ლოკალური პარამეტრები, პაროლი (ლოკალური), Telegram ველები, ჯავშნების ლოკალური ისტორია და აუდიტი წაიშლება. გვერდი ხელახლა ჩაიტვირთება. გაგრძელება?')) return;
+  if (!confirm('ლოკალური პარამეტრები, პაროლი (ლოკალური), ჯავშნების ლოკალური ისტორია და აუდიტი წაიშლება. Telegram ბოტი Supabase-ში რჩება. გვერდი ხელახლა ჩაიტვირთება. გაგრძელება?')) return;
   ['tiflis_settings', 'tiflis_admin_pw', 'tg_token', 'tg_chatid', TIFLIS_SAVED_ORDERS_KEY, AUDIT_KEY].forEach(k => localStorage.removeItem(k));
   sessionStorage.removeItem('tiflis_admin_logged');
   sessionStorage.removeItem('tiflis_admin_expired');
