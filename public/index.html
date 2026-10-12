@@ -2456,7 +2456,7 @@ footer {
   .order-panel {
     margin-top: 1.5rem;
     border-top: 3px solid var(--teal);
-    position: static !important;
+    position: static;
     width: 100% !important;
     box-sizing: border-box !important;
     padding: 1.25rem 1rem;
@@ -4654,6 +4654,69 @@ html.admin-panel-route .tiflis-float-rail {
     filter: brightness(1.02) contrast(1.04) saturate(0.9);
   }
 }
+/* ===== 2026 UX refinement layer ===== */
+:root { --ui-ink-strong:#201912; --ui-surface:rgba(255,253,249,.92); --ui-accent:#277d76; --ui-accent-warm:#c48e2c; }
+html { scroll-padding-top:82px; }
+body { letter-spacing:.005em; }
+#nav { height:76px; padding:0 clamp(1rem,4vw,4rem); background:rgba(30,24,18,.82); border-bottom:1px solid rgba(255,255,255,.12); box-shadow:0 10px 30px rgba(23,17,11,.12); backdrop-filter:blur(18px) saturate(1.1); -webkit-backdrop-filter:blur(18px) saturate(1.1); }
+.nav-links { gap:clamp(1rem,2.5vw,2.25rem); }
+.nav-links a { font-size:.7rem; letter-spacing:.11em; }
+.nav-reserve { border-radius:999px; padding:.72rem 1.1rem; box-shadow:0 8px 20px rgba(58,148,140,.22); }
+.lang-toggle { border-radius:999px; padding:.2rem; background:rgba(255,255,255,.08); }
+.lang-btn { border-radius:999px; min-width:2rem; }
+.hero { min-height:min(760px,100svh); }
+.hero::before { content:''; position:absolute; inset:0; z-index:1; pointer-events:none; background:radial-gradient(circle at 50% 45%, transparent 0 25%, rgba(12,8,4,.22) 76%, rgba(12,8,4,.46) 100%); }
+.hero-content { max-width:780px; }
+.hero-eyebrow { display:inline-flex; align-items:center; gap:.65rem; padding:.55rem .8rem; border:1px solid rgba(201,160,61,.34); border-radius:999px; background:rgba(24,17,10,.28); }
+.hero-eyebrow::before,.hero-eyebrow::after { content:''; width:22px; height:1px; background:var(--gold); opacity:.7; }
+.hero-title { text-shadow:0 16px 42px rgba(0,0,0,.26); }
+.hero-subtitle { max-width:560px; margin-inline:auto; letter-spacing:.12em; }
+.hero-cta { gap:.75rem; }
+.btn-primary,.btn-outline { min-height:48px; border-radius:999px; padding-inline:1.35rem; }
+.about-strip { position:relative; z-index:3; margin-top:-1px; border-top:1px solid rgba(201,160,61,.24); border-bottom:1px solid var(--border); }
+.about-item { padding:2.15rem 1.5rem; }
+.about-item h3 { font-size:.95rem; letter-spacing:.02em; }
+.section-label { letter-spacing:.24em; }
+.section-title { text-wrap:balance; }
+#menu,#reservation { scroll-margin-top:82px; }
+.menu-layout { align-items:start; gap:clamp(1rem,2vw,2rem); }
+.menu-nav-col { position:sticky; top:96px; }
+.cat-tab { border-radius:999px; padding:.72rem .9rem; }
+.menu-item { border-radius:var(--ui-radius); background:rgba(255,253,249,.72); border:1px solid rgba(223,214,200,.9); box-shadow:0 10px 28px rgba(42,34,24,.045); }
+.menu-item:hover { border-color:rgba(58,148,140,.4); box-shadow:0 16px 32px rgba(42,34,24,.09); }
+.order-panel { border-radius:var(--ui-radius-lg); overflow-x:hidden; overflow-y:auto; max-height:calc(100vh - 6.5rem); -webkit-overflow-scrolling:touch; overscroll-behavior:contain; touch-action:pan-y; scrollbar-width:thin; }
+.order-header { padding-bottom:.85rem; border-bottom:1px solid rgba(223,214,200,.85); }
+.order-btn-main,.form-submit { min-height:50px; border-radius:12px; font-weight:600; box-shadow:0 10px 24px rgba(58,148,140,.16); }
+.reservation-grid { gap:clamp(2rem,6vw,6.5rem); align-items:start; }
+.reservation-info { position:sticky; top:110px; }
+.info-list { padding-top:.5rem; }
+.info-list li::before { color:var(--ui-accent-warm); }
+.res-form { border-radius:var(--ui-radius-lg); border:1px solid rgba(255,255,255,.16); box-shadow:0 24px 60px rgba(42,34,24,.2); }
+.form-title { font-size:clamp(2rem,4vw,3.3rem); }
+.form-field label { font-size:.68rem; letter-spacing:.08em; font-weight:600; }
+.form-field input,.form-field select,.form-field textarea { min-height:46px; border-radius:10px; border:1px solid rgba(223,214,200,.95); background:rgba(255,255,255,.74); transition:border-color .2s ease,box-shadow .2s ease,background .2s ease; }
+.form-field textarea { min-height:110px; }
+.form-field input:focus,.form-field select:focus,.form-field textarea:focus { background:#fff; border-color:var(--ui-accent); box-shadow:0 0 0 4px rgba(58,148,140,.12); outline:none; }
+.form-submit { border-radius:999px; }
+footer { border-top:1px solid rgba(201,160,61,.22); }
+.footer-grid { gap:3rem; }
+.footer-col a { text-underline-offset:3px; }
+.tiflis-float-btn { box-shadow:0 8px 20px rgba(23,17,11,.16); }
+:focus-visible { outline:3px solid rgba(196,142,44,.72); outline-offset:3px; }
+@media (max-width:900px) { #nav { height:auto; min-height:68px; padding-block:.75rem; flex-wrap:wrap; gap:.7rem; } .nav-links { display:flex; order:3; width:100%; justify-content:center; gap:1rem; padding-top:.35rem; } .nav-logo { margin-right:auto; } .nav-reserve { padding:.62rem .9rem; font-size:.66rem; } .menu-nav-col,.reservation-info { position:static; } .cat-tabs { overflow-x:auto; flex-wrap:nowrap; padding-bottom:.35rem; scrollbar-width:none; } .cat-tabs::-webkit-scrollbar { display:none; } .cat-tab { flex:0 0 auto; } }
+@media (max-width:600px) { #nav { padding-inline:.85rem; } .nav-links a { font-size:.66rem; letter-spacing:.06em; } .nav-reserve { display:none; } .lang-toggle { margin-left:.5rem; } .hero { min-height:720px; } .hero-content { padding:1.25rem; } .hero-eyebrow { font-size:.8rem; letter-spacing:.08em; } .hero-title { font-size:clamp(3.5rem,17vw,5.3rem); } .hero-subtitle { font-size:.66rem; line-height:1.8; letter-spacing:.08em; } .hero-cta { flex-direction:column; width:min(100%,290px); margin-inline:auto; } .hero-cta a { width:100%; text-align:center; } .about-item { padding:1.5rem 1rem; } .menu-layout { gap:1.25rem; } .menu-dishes-col { order:1; } .order-panel { order:2; position:sticky; bottom:.75rem; z-index:10; max-height:min(70vh, 560px); overflow-x:hidden; overflow-y:auto; -webkit-overflow-scrolling:touch; box-shadow:0 20px 42px rgba(23,17,11,.22); } .reservation-grid { gap:1.6rem; } .res-form { padding:1.15rem !important; } .form-grid { grid-template-columns:1fr !important; } .form-field.full { grid-column:auto !important; } .tiflis-float-rail { bottom:6.6rem; } }
+@media (prefers-reduced-motion:reduce) { .hero-bg { animation:none; } }
+/* ===== Admin operations refinement ===== */
+.admin-dashboard-today-wrap { margin-bottom: .35rem; }
+.admin-dashboard-today-table td, .admin-dashboard-today-table th { vertical-align: middle; }
+.admin-dashboard-today-table .td-name { min-width: 9rem; }
+[data-map-table] { cursor: grab !important; user-select: none; }
+[data-map-table]:active { cursor: grabbing !important; opacity: .74; }
+[data-map-table]:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,.16); }
+@media (max-width: 720px) {
+  .admin-reservation-search-field { flex: 1 1 100%; }
+  .admin-reservation-search-field .admin-input { width: 100% !important; }
+}
 </style>
 </head>
 <body>
@@ -4903,15 +4966,15 @@ html.admin-panel-route .tiflis-float-rail {
 
             <div class="form-grid">
               <div class="form-field">
-                <label data-i18n="f_name">სახელი და გვარი *</label>
+                <label for="r-name" data-i18n="f_name">სახელი და გვარი *</label>
                 <input type="text" id="r-name" data-i18n-ph="f_name_ph" placeholder="თქვენი სახელი">
               </div>
               <div class="form-field">
-                <label data-i18n="f_phone">ტელეფონი *</label>
+                <label for="r-phone" data-i18n="f_phone">ტელეფონი *</label>
                 <input type="tel" id="r-phone" placeholder="+995...">
               </div>
               <div class="form-field">
-                <label data-i18n="f_email">ელ. ფოსტა</label>
+                <label for="r-email" data-i18n="f_email">ელ. ფოსტა</label>
                 <input type="email" id="r-email" placeholder="email@example.com">
               </div>
               <div class="form-field form-field--guests">
@@ -4933,7 +4996,7 @@ html.admin-panel-route .tiflis-float-rail {
                 </div>
               </div>
               <div class="form-field">
-                <label data-i18n="f_pay">გადახდის მეთოდი</label>
+                <label for="r-payment" data-i18n="f_pay">გადახდის მეთოდი</label>
                 <select id="r-payment">
                   <option value="" data-i18n="f_pay_sel">— აირჩიეთ —</option>
                   <option value="cash">💵 CASH</option>
@@ -4948,15 +5011,15 @@ html.admin-panel-route .tiflis-float-rail {
                 <input type="number" id="f-adv" min="0" step="0.5" value="0" oninput="recalc()" inputmode="decimal" placeholder="0">
               </div>
               <div class="form-field">
-                <label data-i18n="f_date">თარიღი *</label>
+                <label for="r-date" data-i18n="f_date">თარიღი *</label>
                 <input type="date" id="r-date" onchange="refreshReservationTableSelectState()">
               </div>
               <div class="form-field">
-                <label data-i18n="f_time">დრო *</label>
+                <label for="r-time" data-i18n="f_time">დრო *</label>
                 <input type="time" id="r-time" value="19:00">
               </div>
               <div class="form-field full">
-                <label data-i18n="f_table">სასურველი მაგიდა</label>
+                <label for="r-table" data-i18n="f_table">სასურველი მაგიდა</label>
                 <select id="r-table">
                   <option value="" data-i18n="f_table_sel">— აირჩიეთ მაგიდა —</option>
                   <optgroup label="🏠 ჰოლი (H-11 – H-19)">
@@ -4976,7 +5039,7 @@ html.admin-panel-route .tiflis-float-rail {
                 </select>
               </div>
               <div class="form-field full">
-                <label data-i18n="f_note">განსაკუთრებული სურვილი</label>
+                <label for="r-note" data-i18n="f_note">განსაკუთრებული სურვილი</label>
                 <textarea id="r-note" data-i18n-ph="f_note_ph" placeholder="ალერგია, დაბადების დღე, სხვა სურვილი..."></textarea>
               </div>
             </div>
@@ -5161,7 +5224,13 @@ html.admin-panel-route .tiflis-float-rail {
             <div class="dashboard-card-label">აქტიური ჯავშანი</div>
           </div>
         </div>
-        <div class="admin-section-title" style="margin-top:.35rem">სტატისტიკა დროის მიხედვით</div>
+        <div class="admin-section-title" style="margin-top:1.1rem">დღევანდელი ჯავშნები</div>
+        <div class="admin-table-wrap admin-dashboard-today-wrap">
+          <table class="admin-table admin-dashboard-today-table">
+            <thead><tr><th>დრო</th><th>სტუმარი</th><th>სტუმ.</th><th>მაგიდა</th><th>სტატუსი</th><th>ქმედება</th></tr></thead>
+            <tbody id="dash-today-res-tbody"><tr><td colspan="6" style="text-align:center;color:rgba(245,240,232,.28);padding:1rem;font-style:italic;font-size:.72rem">ჩატვირთვა…</td></tr></tbody>
+          </table>
+        </div>        <div class="admin-section-title" style="margin-top:.35rem">სტატისტიკა დროის მიხედვით</div>
         <div class="admin-table-wrap">
           <table class="admin-table">
             <thead><tr>
@@ -5364,7 +5433,10 @@ html.admin-panel-route .tiflis-float-rail {
               <option value="cancelled">გაუქმებული</option>
             </select>
           </div>
-          <button type="button" class="admin-btn admin-btn-sm" style="width:auto" onclick="loadReservations()">ჩვენება</button>
+          <div class="admin-filter-field admin-reservation-search-field">
+            <span class="admin-filter-label">ძებნა</span>
+            <input type="search" id="res-filter-search" class="admin-input" placeholder="სახელი ან ტელეფონი" style="width:13rem;margin:0;padding:.35rem .55rem;font-size:.74rem" oninput="applyReservationsClientFilter()">
+          </div>          <button type="button" class="admin-btn admin-btn-sm" style="width:auto" onclick="loadReservations()">ჩვენება</button>
           <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" style="width:auto" onclick="exportResPDF()">PDF</button>
           <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" style="width:auto" onclick="exportResXLSX()">XLSX</button>
         </div>
@@ -5384,7 +5456,7 @@ html.admin-panel-route .tiflis-float-rail {
       <!-- RESERVATIONS + PRECHECK (ჩეკი) TAB -->
       <div id="at-reschecks" class="admin-pane" role="tabpanel">
         <div class="admin-reschecks-brand">
-          <img id="admin-reschecks-logo" src="" width="200" height="200" alt="რესტორანი ტიფლისი" decoding="async" />
+          <img id="admin-reschecks-logo" src="logo.png" width="200" height="200" alt="რესტორანი ტიფლისი" decoding="async" />
         </div>
         <div class="admin-section-title">ჯავშნები ჩეკებით</div>
         <p class="admin-compact-hint" style="margin:0 0 0.65rem">ზედა: აქტიური ჩეკები. ფილტრი: თარიღი „დან/მდე“, სტატუსი, ტექსტური ძებნა (სახელი, ტელეფონი, მაგიდა, სტუმრები, შენიშვნა, ჩეკის ტექსტი) — ძებნა ბოლო ჩატვირთულ სიაზე მოქმედებს. ცარიელი თარიღი აქ = იგივე ველები ჯავშნების ტაბში (თუ შევსებულია). <strong>✎</strong> — ჩეკის რედაქტირება. გაუქმებისას ჩეკი იწერება <code style="font-size:.65rem">res_checks_trash</code>-ში. ტაბის 🗑 — ზედა სიის გაუქმება + არქივი. SQL: <code style="font-size:.65rem">public/sql/res_checks_trash.sql</code>.</p>
@@ -5846,7 +5918,23 @@ const TXT = {
   }
 };
 
-let lang = 'ka', catIdx = 0, order = {};
+let lang = 'ka', catIdx = 0, order = {}, orderSequence = [];
+
+function syncOrderSequence() {
+  const activeIds = new Set(Object.keys(order).map(Number).filter(id => Number.isFinite(id) && Number(order[id]) > 0));
+  orderSequence = orderSequence.filter(id => activeIds.has(Number(id)));
+  activeIds.forEach(id => { if (!orderSequence.includes(id)) orderSequence.push(id); });
+}
+
+function markOrderItem(id) {
+  const n = Number(id);
+  if (Number.isFinite(n) && !orderSequence.includes(n)) orderSequence.push(n);
+}
+
+function getOrderIds() {
+  syncOrderSequence();
+  return orderSequence.slice();
+}
 const g = id => document.getElementById(id);
 /** სტუმრის „შენახული შეკვეთები“ (ადმინი → შენახული ჩეკები) */
 const TIFLIS_SAVED_ORDERS_KEY = 'tiflis_orders';
@@ -6075,7 +6163,7 @@ function preservePageScroll(run) {
 function chg(id, d) {
   preservePageScroll(() => {
     const nv = Math.max(0, (order[id]||0)+d);
-    if (nv === 0) delete order[id]; else order[id] = nv;
+    if (nv === 0) delete order[id]; else { order[id] = nv; markOrderItem(id); }
     renderMenu();
     renderOrder();
   });
@@ -6096,7 +6184,7 @@ function setQtyFromField(id, value, phase) {
     const nv = parseInt(raw, 10);
     if (!Number.isFinite(nv) || nv < 0) return;
     if (nv === 0) delete order[id];
-    else order[id] = Math.min(999, nv);
+    else { order[id] = Math.min(999, nv); markOrderItem(id); }
     renderOrder();
     return;
   }
@@ -6107,7 +6195,7 @@ function setQtyFromField(id, value, phase) {
       let nv = parseInt(raw, 10);
       if (!Number.isFinite(nv) || nv < 0) nv = 0;
       if (nv <= 0) delete order[id];
-      else order[id] = Math.min(999, nv);
+      else { order[id] = Math.min(999, nv); markOrderItem(id); }
     }
     renderMenu();
     renderOrder();
@@ -6145,7 +6233,8 @@ function renderOrder() {
       restoreCaret = String(active.value || '').length;
     }
   }
-  const ids = Object.keys(order).map(Number);
+  syncOrderSequence();
+  const ids = orderSequence.slice();
   const t = TXT[lang];
   if (!ids.length) {
     el.innerHTML = `<div class="order-empty">${t.empty}</div>`;
@@ -6192,7 +6281,7 @@ function recalc() {
   const adv = parseFloat(g('f-adv')?.value)||0;
   const guests = parseInt(g('r-guests')?.value||'2')||1;
   let sub = 0;
-  Object.keys(order).forEach(id => {
+  getOrderIds().forEach(id => {
     const item = MENU.find(m => m.id === parseInt(id));
     if (item) sub += item.p * order[id];
   });
@@ -6212,38 +6301,51 @@ function recalc() {
 
 function buildText() {
   const L = lang === 'en' || lang === 'ru' ? lang : 'ka';
-  const T = TXT[L] || TXT.ka;
-  const name = g('r-name')?.value||'—';
-  const phone = g('r-phone')?.value||'—';
-  const date = g('r-date')?.value||'—';
-  const time = g('r-time')?.value||'—';
-  const guests = g('r-guests')?.value||'2';
-  const note = g('r-note')?.value||'';
-  const svc = parseFloat(g('f-svc')?.value)||0;
-  const disc = parseFloat(g('f-disc')?.value)||0;
-  const adv = parseFloat(g('f-adv')?.value)||0;
-  let sub = 0, lines = '';
-  Object.keys(order).map(Number).forEach(id => {
-    const item = MENU.find(m => m.id === id);
-    if (!item) return;
-    const q = order[id], lt = item.p*q; sub += lt;
-    const dish = menuDishLabelForLang(item, lang);
-    lines += `  • ${dish} ×${q} — ₾${lt.toFixed(2)}\n`;
+  const labels = {
+    ka: {brand:'რესტორანი ტიფლისი', order:'შეკვეთა', name:'სტუმარი', phone:'ტელეფონი', date:'თარიღი', time:'დრო', guests:'სტუმრები', table:'მაგიდა', payment:'გადახდა', subtotal:'ქვეჯამი', discount:'ფასდაკლება', service:'მომსახურება', advance:'ავანსი', total:'სულ', note:'შენიშვნა', thank:'გმადლობთ სტუმრობისთვის!'},
+    en: {brand:'Restaurant Tiflisi', order:'Order', name:'Guest', phone:'Phone', date:'Date', time:'Time', guests:'Guests', table:'Table', payment:'Payment', subtotal:'Subtotal', discount:'Discount', service:'Service', advance:'Advance', total:'TOTAL', note:'Note', thank:'Thank you for visiting!'},
+    ru: {brand:'Ресторан Тифлис', order:'Заказ', name:'Гость', phone:'Телефон', date:'Дата', time:'Время', guests:'Гости', table:'Стол', payment:'Оплата', subtotal:'Подытог', discount:'Скидка', service:'Сервис', advance:'Аванс', total:'ИТОГО', note:'Примечание', thank:'Спасибо за визит!'}
+  }[L];
+  const name = g('r-name')?.value || '—';
+  const phone = g('r-phone')?.value || '—';
+  const date = g('r-date')?.value || '—';
+  const time = g('r-time')?.value || '—';
+  const guests = g('r-guests')?.value || '2';
+  const table = g('r-table')?.value || '—';
+  const note = g('r-note')?.value || '';
+  const payVal = g('r-payment')?.value || '';
+  const payMaps = {
+    ka: {'ნაღდი':'ნაღდი','bog':'საქართველოს ბანკი','tbc':'თიბისი ბანკი','tera':'ტერა ბანკი','გადარიცხვა':'გადარიცხვა','cash':'ნაღდი','transfer':'გადარიცხვა'},
+    en: {'ნაღდი':'Cash','bog':'Bank of Georgia','tbc':'TBC Bank','tera':'Tera Bank','გადარიცხვა':'Transfer','cash':'Cash','transfer':'Transfer'},
+    ru: {'ნაღდი':'Наличные','bog':'Банк Грузии','tbc':'ТБС Банк','tera':'Тера банк','გადარიცხვა':'Перевод','cash':'Наличные','transfer':'Перевод'}
+  };
+  const payText = payMaps[L][payVal] || payVal || '—';
+  const svc = parseFloat(g('f-svc')?.value) || 0;
+  const disc = parseFloat(g('f-disc')?.value) || 0;
+  const adv = parseFloat(g('f-adv')?.value) || 0;
+  let sub = 0, lines = '', rowNo = 0;
+  getOrderIds().forEach(id => {
+    const item = MENU.find(m => m.id === id); if (!item) return;
+    const q = Number(order[id]) || 0, unit = Number(item.p) || 0, lineTotal = unit * q;
+    sub += lineTotal; rowNo += 1;
+    lines += `${rowNo}. ${menuDishLabelForLang(item, L)} — ${q} × ₾${unit.toFixed(2)} = ₾${lineTotal.toFixed(2)}\n`;
   });
-  const dA=sub*disc/100, afterD=sub-dA, sA=afterD*svc/100, total=Math.max(0,afterD+sA-adv);
-  const brand = T.wa_share_brand || TXT.ka.wa_share_brand;
-  const gSuffix = T.wa_share_guests || TXT.ka.wa_share_guests;
-  let t = `${brand}\n━━━━━━━━━━━━━━━━━━━\n*${name}* | 📅 ${date} 🕐 ${time}\n👥 ${guests} ${gSuffix}${phone!=='—'?'\n📞 '+phone:''}\n\n*${T.order}:*\n${lines}───────────────────\n`;
-  t += `${T.sub}: ₾${sub.toFixed(2)}\n`;
-  if(disc>0) t+=`${T.disc} ${disc}%: −₾${dA.toFixed(2)}\n`;
-  if(svc>0) t+=`${T.svc} ${svc}%: ₾${sA.toFixed(2)}\n`;
-  if(adv>0) t+=`${T.adv}: −₾${adv.toFixed(2)}\n`;
-  t += `*${T.total}: ₾${total.toFixed(2)}*\n${T.pp}: ₾${(total/Math.max(1,parseInt(guests))).toFixed(2)}`;
-  if(note) t+=`\n\n📝 ${note}`;
-  t += googleReviewInviteForWa(L);
-  return t;
+  const discountAmount = sub * disc / 100;
+  const afterDiscount = sub - discountAmount;
+  const serviceAmount = afterDiscount * svc / 100;
+  const total = Math.max(0, afterDiscount + serviceAmount - adv);
+  let text = `*${labels.brand}*\n${labels.order}\n\n`;
+  text += `${labels.name}: ${name}\n${labels.phone}: ${phone}\n${labels.date}: ${date}\n${labels.time}: ${time}\n${labels.guests}: ${guests}\n${labels.table}: ${table}\n${labels.payment}: ${payText}\n\n`;
+  text += `*${labels.order}:*\n${lines || '—\n'}\n`;
+  text += `${labels.subtotal}: ₾${sub.toFixed(2)}\n`;
+  if (disc > 0) text += `${labels.discount}: −₾${discountAmount.toFixed(2)}\n`;
+  if (svc > 0) text += `${labels.service}: ₾${serviceAmount.toFixed(2)}\n`;
+  if (adv > 0) text += `${labels.advance}: −₾${adv.toFixed(2)}\n`;
+  text += `*${labels.total}: ₾${total.toFixed(2)}*`;
+  if (note.trim()) text += `\n\n${labels.note}: ${note.trim()}`;
+  text += `\n\n${labels.thank}\nბათუმი · +995 568 76 76 38`;
+  return text;
 }
-
 function sendWA() { sendMsg('wa'); }
 function sendWASuccess() { sendMsg('wa'); }
 
@@ -6282,7 +6384,7 @@ function buildReceiptHTML() {
   const guests = g('r-guests')?.value||'2';
   let rows = '';
   let sub = 0;
-  Object.keys(order).map(Number).forEach(id => {
+  getOrderIds().forEach(id => {
     const item = MENU.find(m => m.id === id);
     if (!item) return;
     const q = order[id], lt = item.p*q; sub += lt;
@@ -6449,225 +6551,110 @@ function tiflisAssetUrl(relPath) {
 }
 
 function sharePDF() {
-  const name = g('r-name')?.value || g('s-name')?.textContent || '—';
-  const date = g('r-date')?.value || '—';
-  const time = g('r-time')?.value || '—';
-  const guests = g('r-guests')?.value || '2';
-  const svc = parseFloat(g('f-svc')?.value)||0;
-  const disc = parseFloat(g('f-disc')?.value)||0;
-  const adv = parseFloat(g('f-adv')?.value)||0;
-  const payVal = g('r-payment')?.value || '';
-  const payMaps = {
-    ka: {'ნაღდი':'ნაღდი','bog':'საქართველოს ბანკი','tbc':'თიბისი ბანკი','tera':'ტერა ბანკი','გადარიცხვა':'გადარიცხვა','cash':'ნაღდი','transfer':'გადარიცხვა'},
-    en: {'ნაღდი':'Cash','bog':'Bank of Georgia','tbc':'TBC Bank','tera':'Tera Bank','გადარიცხვა':'Transfer','cash':'Cash','transfer':'Transfer'},
-    ru: {'ნაღდი':'Наличные','bog':'Банк Грузии','tbc':'ТБС Банк','tera':'Тера Банк','გადარიცხვა':'Перевод','cash':'Наличные','transfer':'Перевод'}
-  };
-  const payMap = payMaps[lang] || payMaps.ka;
-  const payText = payMap[payVal] || payVal || '—';
-  let rows = '', sub = 0;
-  Object.keys(order).map(Number).forEach(id => {
-    const item = MENU.find(m => m.id === id); if(!item) return;
-    const q = order[id], lt = item.p*q; sub += lt;
-    rows += `<tr><td>${item[lang]||item.ka}</td><td style="text-align:center">×${q}</td><td style="text-align:right">₾${lt.toFixed(2)}</td></tr>`;
-  });
-  const dA=sub*disc/100, afterD=sub-dA, sA=afterD*svc/100, total=Math.max(0,afterD+sA-adv);
-  let extraRows = '';
-  if(disc>0) extraRows += `<tr style="color:#e74c3c"><td colspan="2">${TXT[lang].disc} ${disc}%</td><td style="text-align:right">−₾${dA.toFixed(2)}</td></tr>`;
-  if(svc>0) extraRows += `<tr><td colspan="2">${TXT[lang].svc} ${svc}%</td><td style="text-align:right">₾${sA.toFixed(2)}</td></tr>`;
-  if(adv>0) extraRows += `<tr style="color:#e74c3c"><td colspan="2">${TXT[lang].adv} (${payText})</td><td style="text-align:right">−₾${adv.toFixed(2)}</td></tr>`;
-  const win = window.open('','_blank');
-  if (!win) { alert('გთხოვთ დაუშვათ pop-up ამ საიტისთვის'); return; }
-  const pdfTitle = { ka: 'ჩეკი', en: 'Receipt', ru: 'Чек' }[lang] || 'Receipt';
-  const logoSrc = tiflisAssetUrl('logo.png');
-  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${pdfTitle} — Restaurant Tiflisi</title>
-  <style>
-    @page { margin: 14mm; size: A4 portrait; }
-    * { box-sizing: border-box; }
-    body{
-      font-family: Georgia, 'Times New Roman', serif;
-      padding: 28px 32px;
-      max-width: 440px;
-      margin: 0 auto;
-      color: #2c2010;
-      background: #fffdf8;
-      -webkit-print-color-adjust: exact;
-      print-color-adjust: exact;
-    }
-    .pdf-card {
-      border: 1px solid #e0d8c4;
-      border-radius: 12px;
-      padding: 20px 22px 24px;
-      background: #fff;
-      box-shadow: 0 1px 0 rgba(44,32,16,0.06);
-    }
-    h2{font-size:1.35rem;font-weight:400;margin:0 0 2px;color:#2c2010;letter-spacing:0.02em}
-    h2 em{color:#b8922e;font-style:italic}
-    .meta{font-size:.8rem;color:#6b5a48;margin-bottom:14px;line-height:1.5}
-    table{width:100%;border-collapse:collapse;font-size:.84rem}
-    thead th{
-      font-family:'Segoe UI',Tahoma,sans-serif;
-      font-size:.68rem;
-      letter-spacing:0.12em;
-      text-transform:uppercase;
-      color:#6b5a48;
-      border-bottom:2px solid #3d9b93;
-      padding:8px 4px 6px;
-      font-weight:600;
-    }
-    td{padding:7px 4px;border-bottom:1px dotted #e0d8c4}
-    .total-row td{
-      font-size:1.05rem;
-      font-weight:600;
-      color:#2c2010;
-      border-top:2px solid #3d9b93;
-      border-bottom:none;
-      padding-top:10px;
-      font-family: Georgia, serif;
-    }
-    .total-row td:last-child{color:#b85c38}
-    .pay-row td{font-size:.76rem;color:#6b5a48;border-bottom:none;padding-top:8px}
-    .footer{
-      margin-top:22px;
-      font-size:.7rem;
-      color:#9a8878;
-      text-align:center;
-      border-top:1px solid #e0d8c4;
-      padding-top:12px;
-      line-height:1.55;
-    }
-    .pdf-logo-img{
-      display:block;height:88px;width:auto;max-width:220px;margin:0 auto;
-      object-fit:contain;
-    }
-    .pdf-head{text-align:center;margin-bottom:14px;padding-bottom:14px;border-bottom:2px solid #d4a843}
-  </style></head><body>
-  <div class="pdf-card">
-  <div class="pdf-head">
-    <img class="pdf-logo-img" src="${logoSrc}" alt="Restaurant Tiflisi">
-    <div style="font-size:1.08rem;color:#2c2010;margin-top:8px">რესტორანი <em style="color:#b8922e;font-style:italic">ტიფლისი</em></div>
-  </div>
-  <div class="meta">${name} · ${date} ${time} · ${guests} ${{ka:"სტუმარი",en:"guest(s)",ru:"гост."}[lang]}</div>
-  <table>
-    <thead><tr><th style="text-align:left">${{ka:"კერძი",en:"Dish",ru:"Блюдо"}[lang]}</th><th style="text-align:center">${{ka:"რაოდ.",en:"Qty",ru:"Кол."}[lang]}</th><th style="text-align:right">${{ka:"ფასი",en:"Price",ru:"Цена"}[lang]}</th></tr></thead>
-    <tbody>${rows}${extraRows}
-    <tr class="total-row"><td colspan="2">${{ka:"სულ გადასახდელი",en:"Total to Pay",ru:"Итого к оплате"}[lang]}</td><td style="text-align:right">₾${total.toFixed(2)}</td></tr>
-    <tr class="pay-row"><td colspan="3">${{ka:"გადახდის მეთოდი",en:"Payment",ru:"Оплата"}[lang]}: ${payText}</td></tr>
-    </tbody>
-  </table>
-  <div class="footer">რესტორანი ტიფლისი · ბათუმი, ვ.გორგასალის ქ. 110/18<br>+995 568 76 76 38 · tiflisi2020@gmail.com</div>
-  </div>
-  </body></html>`);
-  win.document.close();
-  setTimeout(() => win.print(), 400);
+  // PDF export intentionally uses the same full A4 document as printing.
+  printReceipt();
 }
-
 function printReceipt() {
+  const esc = value => escapeHtml(String(value == null || value === '' ? '—' : value));
   const name = g('r-name')?.value || '—';
+  const phone = g('r-phone')?.value || '—';
+  const email = g('r-email')?.value || '—';
   const date = g('r-date')?.value || '—';
   const time = g('r-time')?.value || '—';
   const guests = g('r-guests')?.value || '2';
   const table = g('r-table')?.value || '—';
+  const note = g('r-note')?.value || '—';
   const payVal = g('r-payment')?.value || '';
   const payMaps = {
-    ka: {'ნაღდი':'ნაღდი','bog':'BOG','tbc':'TBC','tera':'TERA','გადარიცხვა':'გადარიცხვა','cash':'ნაღდი','transfer':'გადარიცხვა'},
-    en: {'ნაღდი':'Cash','bog':'BOG','tbc':'TBC','tera':'TERA','გადარიცხვა':'Transfer','cash':'Cash','transfer':'Transfer'},
-    ru: {'ნაღდი':'Нал.','bog':'BOG','tbc':'TBC','tera':'TERA','გადარიცხვა':'Перевод','cash':'Нал.','transfer':'Перевод'}
+    ka: {'ნაღდი':'ნაღდი','bog':'საქართველოს ბანკი','tbc':'თიბისი ბანკი','tera':'ტერა ბანკი','გადარიცხვა':'გადარიცხვა','cash':'ნაღდი','transfer':'გადარიცხვა'},
+    en: {'ნაღდი':'Cash','bog':'Bank of Georgia','tbc':'TBC Bank','tera':'Tera Bank','გადარიცხვა':'Transfer','cash':'Cash','transfer':'Transfer'},
+    ru: {'ნაღდი':'Наличные','bog':'Банк Грузии','tbc':'ТБС Банк','tera':'Тера банк','გადარიცხვა':'Перевод','cash':'Наличные','transfer':'Перевод'}
   };
-  const payText = (payMaps[lang]||payMaps.ka)[payVal] || payVal || '—';
-  const svc = parseFloat(g('f-svc')?.value)||0;
-  const disc = parseFloat(g('f-disc')?.value)||0;
-  const adv = parseFloat(g('f-adv')?.value)||0;
-
-  let rows = '', sub = 0;
-  Object.keys(order).map(Number).forEach(id => {
-    const item = MENU.find(m => m.id === id); if(!item) return;
-    const q = order[id], lt = item.p*q; sub += lt;
-    rows += `<tr><td>${item[lang]||item.ka}</td><td class="qty">x${q}</td><td class="price">${lt % 1 === 0 ? lt : lt.toFixed(2)}</td></tr>`;
+  const payText = (payMaps[lang] || payMaps.ka)[payVal] || payVal || '—';
+  const svc = parseFloat(g('f-svc')?.value) || 0;
+  const disc = parseFloat(g('f-disc')?.value) || 0;
+  const adv = parseFloat(g('f-adv')?.value) || 0;
+  const L = {
+    ka: {title:'შეკვეთა და ჯავშნის დეტალები', customer:'მომხმარებელი', phone:'ტელეფონი', email:'ელფოსტა', date:'თარიღი', time:'დრო', guests:'სტუმრები', table:'მაგიდა', payment:'გადახდის მეთოდი', note:'შენიშვნა', dish:'კერძი', qty:'რაოდენობა', unit:'ერთეულის ფასი', line:'ჯამი', subtotal:'ქვეჯამი', discount:'ფასდაკლება', service:'მომსახურება', advance:'ავანსი', total:'სულ გადასახდელი', prepared:'შექმნილია', thank:'გმადლობთ სტუმრობისთვის!'},
+    en: {title:'Order & Reservation Details', customer:'Customer', phone:'Phone', email:'Email', date:'Date', time:'Time', guests:'Guests', table:'Table', payment:'Payment method', note:'Note', dish:'Dish', qty:'Qty', unit:'Unit price', line:'Line total', subtotal:'Subtotal', discount:'Discount', service:'Service', advance:'Advance', total:'Total to pay', prepared:'Prepared', thank:'Thank you for visiting!'},
+    ru: {title:'Детали заказа и бронирования', customer:'Гость', phone:'Телефон', email:'Эл. почта', date:'Дата', time:'Время', guests:'Гости', table:'Стол', payment:'Оплата', note:'Примечание', dish:'Блюдо', qty:'Кол.', unit:'Цена', line:'Сумма', subtotal:'Подытог', discount:'Скидка', service:'Сервис', advance:'Аванс', total:'Итого к оплате', prepared:'Создано', thank:'Спасибо за визит!'}
+  }[lang] || null;
+  let rows = '', sub = 0, rowNo = 0;
+  getOrderIds().forEach(id => {
+    const item = MENU.find(m => m.id === id);
+    if (!item) return;
+    const q = Number(order[id]) || 0, unit = Number(item.p) || 0, lineTotal = unit * q;
+    sub += lineTotal; rowNo += 1;
+    rows += `<tr><td class="num">${rowNo}</td><td class="dish">${esc(menuDishLabelForLang(item, lang))}</td><td class="qty">${q}</td><td class="money">₾${unit.toFixed(2)}</td><td class="money">₾${lineTotal.toFixed(2)}</td></tr>`;
   });
-
-  const dA=sub*disc/100, afterD=sub-dA, sA=afterD*svc/100, total=Math.max(0,afterD+sA-adv);
-  let extraRows = '';
-  if(disc>0) extraRows += `<tr class="extra"><td colspan="2">${TXT[lang].disc} ${disc}%</td><td class="price">-${dA.toFixed(2)}</td></tr>`;
-  if(svc>0)  extraRows += `<tr class="extra"><td colspan="2">${TXT[lang].svc} ${svc}%</td><td class="price">+${sA.toFixed(2)}</td></tr>`;
-  if(adv>0)  extraRows += `<tr class="extra"><td colspan="2">${TXT[lang].adv}</td><td class="price">-${adv.toFixed(2)}</td></tr>`;
-
-  const labels = {
-    ka: { dish:'კერძი', qty:'რაოდ', price:'ფასი', total:'სულ', pay:'გადახდა', guest:'სტ.', table:'მაგ.', thanks:'გმადლობთ!' },
-    en: { dish:'Item', qty:'Qty', price:'Price', total:'TOTAL', pay:'Payment', guest:'gst', table:'tbl', thanks:'Thank you!' },
-    ru: { dish:'Блюдо', qty:'Кол', price:'Цена', total:'ИТОГО', pay:'Оплата', guest:'гст', table:'ст.', thanks:'Спасибо!' }
-  };
-  const L = labels[lang] || labels.ka;
-
-  const win = window.open('', '_blank');
-  if (!win) { alert('დაუშვით pop-up'); return; }
+  const discountAmount = sub * disc / 100;
+  const afterDiscount = sub - discountAmount;
+  const serviceAmount = afterDiscount * svc / 100;
+  const total = Math.max(0, afterDiscount + serviceAmount - adv);
+  let adjustments = `<tr><td colspan="4">${L.subtotal}</td><td class="money">₾${sub.toFixed(2)}</td></tr>`;
+  if (disc > 0) adjustments += `<tr class="muted"><td colspan="4">${L.discount} (${disc}%)</td><td class="money">−₾${discountAmount.toFixed(2)}</td></tr>`;
+  if (svc > 0) adjustments += `<tr class="muted"><td colspan="4">${L.service} (${svc}%)</td><td class="money">₾${serviceAmount.toFixed(2)}</td></tr>`;
+  if (adv > 0) adjustments += `<tr class="muted"><td colspan="4">${L.advance}</td><td class="money">−₾${adv.toFixed(2)}</td></tr>`;
   const logoSrc = tiflisAssetUrl('logo.png');
-  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
-<style>
-  @page { margin: 0; size: 80mm auto; }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 11px;
-    width: 76mm;
-    padding: 4mm 3mm;
-    color: #000;
-    background: #fff;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-  .logo-wrap { text-align: center; margin-bottom: 3mm; }
-  .receipt-logo-img {
-    display: inline-block;
-    height: 18mm;
-    width: auto;
-    max-width: 50mm;
-    object-fit: contain;
-    vertical-align: middle;
-  }
-  .logo-text { font-size: 13px; font-weight: bold; text-align: center; letter-spacing: 1px; }
-  .logo-sub { font-size: 9px; text-align: center; margin-bottom: 1mm; }
-  .sep { border: none; border-top: 1px dashed #000; margin: 2mm 0; }
-  .sep-solid { border: none; border-top: 1px solid #000; margin: 2mm 0; }
-  .meta { font-size: 10px; margin-bottom: 1mm; }
-  table { width: 100%; border-collapse: collapse; }
-  th { font-size: 9px; text-align: left; border-bottom: 1px solid #000; padding: 1mm 0; }
-  td { font-size: 10px; padding: 0.8mm 0; vertical-align: top; }
-  td.qty { width: 10mm; text-align: center; }
-  td.price { width: 16mm; text-align: right; white-space: nowrap; }
-  tr.extra td { font-size: 9px; color: #333; }
-  .total-row td { font-size: 13px; font-weight: bold; border-top: 1px solid #000; padding-top: 2mm; }
-  .total-row td.price { font-size: 13px; }
-  .pay-row td { font-size: 10px; padding-top: 1mm; }
-  .footer { text-align: center; font-size: 9px; margin-top: 3mm; line-height: 1.6; }
-  .thanks { font-size: 12px; font-weight: bold; text-align: center; margin: 2mm 0; }
-</style>
-</head><body>
-<div class="logo-wrap">
-  <img class="receipt-logo-img" src="${logoSrc}" alt="Tiflisi">
-  <div class="logo-text" style="display:none">TIFLISI</div>
-</div>
-<div class="logo-sub">ბათუმი · ვ.გორგასალის ქ. 110/18</div>
-<hr class="sep-solid">
-<div class="meta">${name}</div>
-<div class="meta">📅 ${date} &nbsp; 🕐 ${time} &nbsp; 👥 ${guests} ${L.guest} &nbsp; 🪑 ${table}</div>
-<hr class="sep">
-<table>
-  <thead><tr><th>${L.dish}</th><th style="text-align:center">${L.qty}</th><th style="text-align:right">${L.price} ₾</th></tr></thead>
-  <tbody>${rows}${extraRows}</tbody>
-</table>
-<hr class="sep">
-<table><tbody>
-  <tr class="total-row"><td colspan="2">${L.total}</td><td class="price">₾${total % 1 === 0 ? total : total.toFixed(2)}</td></tr>
-  <tr class="pay-row"><td colspan="3">${L.pay}: ${payText}</td></tr>
-</tbody></table>
-<hr class="sep-solid">
-<div class="thanks">${L.thanks}</div>
-<div class="footer">+995 568 76 76 38<br>tiflisi2020@gmail.com</div>
-</body></html>`);
+  const win = window.open('', '_blank');
+  if (!win) { alert('გთხოვთ დაუშვათ pop-up ამ საიტისთვის'); return; }
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${esc(L.title)} — Restaurant Tiflisi</title>
+  <style>
+    @page { size: A4 portrait; margin: 14mm; }
+    * { box-sizing: border-box; }
+    :root { color-scheme: light; }
+    body { margin:0; color:#2c2010; background:#fff; font-family:Arial,'Noto Sans Georgian','Segoe UI',sans-serif; font-size:11px; line-height:1.45; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .page { max-width:182mm; margin:0 auto; }
+    .top { display:flex; align-items:flex-start; justify-content:space-between; gap:24px; padding-bottom:16px; border-bottom:3px solid #3d9b93; }
+    .brand { display:flex; align-items:center; gap:14px; }
+    .logo { width:72px; height:58px; object-fit:contain; }
+    .brand-name { font-family:Georgia,'Times New Roman',serif; font-size:25px; letter-spacing:.04em; }
+    .brand-name em { color:#b8922e; font-style:italic; }
+    .brand-sub { color:#725f4c; font-size:10px; margin-top:3px; }
+    .contact { text-align:right; color:#725f4c; font-size:10px; line-height:1.7; }
+    h1 { margin:22px 0 12px; font-family:Georgia,'Times New Roman',serif; font-weight:400; font-size:21px; color:#2c2010; }
+    .info-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:18px; }
+    .info { min-height:48px; padding:8px 10px; border:1px solid #ded4c4; border-radius:5px; background:#faf7f0; }
+    .label { color:#8a7865; font-size:8px; text-transform:uppercase; letter-spacing:.08em; margin-bottom:3px; }
+    .value { font-weight:600; overflow-wrap:anywhere; }
+    .span-2 { grid-column:span 2; }
+    .note { margin:0 0 18px; padding:10px 12px; border-left:3px solid #d4a843; background:#fffbf1; overflow-wrap:anywhere; word-break:break-word; white-space:pre-wrap; }
+    table { width:100%; border-collapse:collapse; }
+    th { padding:9px 8px; color:#fff; background:#3d9b93; text-align:left; font-size:9px; letter-spacing:.05em; text-transform:uppercase; }
+    td { padding:9px 8px; border-bottom:1px solid #e7dfd2; vertical-align:top; }
+    .num { width:28px; color:#8a7865; text-align:center; }
+    .dish { font-weight:600; }
+    .qty { width:72px; text-align:center; }
+    .money { width:100px; text-align:right; white-space:nowrap; }
+    .muted td { color:#725f4c; }
+    .totals { width:48%; margin:16px 0 0 auto; }
+    .totals td { padding:6px 8px; }
+    .totals tr:last-child td { border-top:2px solid #3d9b93; border-bottom:0; font-size:15px; font-weight:700; color:#2c2010; padding-top:11px; }
+    .totals tr:last-child .money { color:#b85c38; }
+    .footer { display:flex; justify-content:space-between; gap:18px; margin-top:35px; padding-top:12px; border-top:1px solid #ded4c4; color:#8a7865; font-size:9px; }
+    .footer strong { color:#2c2010; }
+    @media print { .page { max-width:none; } }
+  </style></head><body><main class="page">
+    <header class="top"><div class="brand"><img class="logo" src="${logoSrc}" alt="Restaurant Tiflisi"><div><div class="brand-name">რესტორანი <em>ტიფლისი</em></div><div class="brand-sub">ქართული სამზარეულო · ბათუმი</div></div></div><div class="contact">ვ. გორგასალის ქ. 110/18, ბათუმი<br>+995 568 76 76 38<br>tiflisi2020@gmail.com</div></header>
+    <h1>${L.title}</h1>
+    <section class="info-grid">
+      <div class="info span-2"><div class="label">${L.customer}</div><div class="value">${esc(name)}</div></div>
+      <div class="info"><div class="label">${L.phone}</div><div class="value">${esc(phone)}</div></div>
+      <div class="info"><div class="label">${L.email}</div><div class="value">${esc(email)}</div></div>
+      <div class="info"><div class="label">${L.date}</div><div class="value">${esc(date)}</div></div>
+      <div class="info"><div class="label">${L.time}</div><div class="value">${esc(time)}</div></div>
+      <div class="info"><div class="label">${L.guests}</div><div class="value">${esc(guests)}</div></div>
+      <div class="info"><div class="label">${L.table}</div><div class="value">${esc(table)}</div></div>
+      <div class="info span-2"><div class="label">${L.payment}</div><div class="value">${esc(payText)}</div></div>
+    </section>
+    ${note !== '—' ? `<div class="note"><strong>${L.note}:</strong> ${esc(note)}</div>` : ''}
+    <table><thead><tr><th class="num">№</th><th>${L.dish}</th><th class="qty">${L.qty}</th><th class="money">${L.unit}</th><th class="money">${L.line}</th></tr></thead><tbody>${rows}</tbody></table>
+    <table class="totals"><tbody>${adjustments}<tr><td colspan="4">${L.total}</td><td class="money">₾${total.toFixed(2)}</td></tr></tbody></table>
+    <footer class="footer"><span><strong>${L.thank}</strong><br>რესტორანი ტიფლისი · ბათუმი</span><span>${L.prepared}: ${new Date().toLocaleString('ka-GE')}<br>Restaurant Tiflisi</span></footer>
+  </main></body></html>`);
   win.document.close();
-  setTimeout(() => { win.print(); setTimeout(() => win.close(), 1000); }, 400);
+  setTimeout(() => { win.focus(); win.print(); setTimeout(() => win.close(), 1200); }, 500);
 }
-
 function scrollToReserve() {
   document.getElementById('reservation').scrollIntoView({behavior:'smooth'});
 }
@@ -6734,7 +6721,7 @@ function clampGuests(el) {
 function buildReservationPrecheckSnapshot() {
   const items = [];
   let sub = 0;
-  Object.keys(order).map(Number).forEach(id => {
+  getOrderIds().forEach(id => {
     const item = MENU.find(m => m.id === id);
     if (!item) return;
     const q = order[id];
@@ -6795,7 +6782,7 @@ function syncFloatWhatsAppHref() {
       : L === 'ru'
         ? '🍃 Ресторан Тифлис — здравствуйте!'
         : '🍃 რესტორანი ტიფლისი — გამარჯობა!';
-  el.href = `https://wa.me/${TIFLIS_WA_BUSINESS_NUMBER}?text=${encodeURIComponent(intro + googleReviewInviteForWa(L))}`;
+  el.href = `https://wa.me/${TIFLIS_WA_BUSINESS_NUMBER}?text=${encodeURIComponent(intro)}`;
 }
 
 function buildReservationCustomerWaText(row, lgOpt) {
@@ -7007,7 +6994,7 @@ async function submitReservation() {
   // Send Telegram notification to admin
   const payLabels = {'ნაღდი':'ნაღდი',bog:'საქართველოს ბანკი',tbc:'თიბისი ბანკი',tera:'ტერა ბანკი','გადარიცხვა':'გადარიცხვა',cash:'ნაღდი',transfer:'გადარიცხვა'};
   const orderLines = Object.keys(order).length > 0
-    ? '\n🛒 ' + Object.keys(order).map(Number).map(id => {
+    ? '\n🛒 ' + getOrderIds().map(id => {
         const item = MENU.find(m=>m.id===id); if(!item) return '';
         return `${menuDishLabelForLang(item, lang)} ×${order[id]}`;
       }).filter(Boolean).join(', ')
@@ -8520,6 +8507,7 @@ function findSavedCheck(id) {
 
 function applySavedCheckRecord(row) {
   order = {};
+  orderSequence = [];
   let applied = 0;
   let missing = 0;
   (Array.isArray(row.items) ? row.items : []).forEach(it => {
@@ -8531,9 +8519,10 @@ function applySavedCheckRecord(row) {
       return;
     }
     order[id] = qty;
+    orderSequence.push(id);
     applied += 1;
   });
-  const firstId = Object.keys(order).map(Number).find(id => MENU.some(m => Number(m.id) === id));
+  const firstId = getOrderIds().find(id => MENU.some(m => Number(m.id) === id));
   if (firstId) {
     const dish = MENU.find(m => Number(m.id) === firstId);
     const catAt = dish ? CATS.findIndex(c => Number(c.id) === Number(dish.cat)) : -1;
@@ -8955,6 +8944,18 @@ function renderDashboardTimeStats(rows) {
   }).join('');
 }
 
+function renderDashboardTodayReservations(rows) {
+  const tb = g('dash-today-res-tbody');
+  if (!tb) return;
+  const list = [...(rows || [])].sort((a,b) => String(a.time || '').localeCompare(String(b.time || '')));
+  if (!list.length) { tb.innerHTML = '<tr><td colspan="6" style="text-align:center;color:rgba(245,240,232,.3);padding:1rem;font-style:italic;font-size:.72rem">დღეს აქტიური ჯავშანი არ არის</td></tr>'; return; }
+  tb.innerHTML = list.slice(0, 12).map(r => {
+    const id = escapeAttr(String(r.id ?? '')); const st = String(r.status || 'pending'); const color = adminStatusColor(st); const label = escapeHtml(statusLabels[st] || st);
+    return `<tr><td style="white-space:nowrap">${escapeHtml(String(r.time || '—').slice(0,5))}</td><td class="td-name">${escapeHtml(r.name || '—')}</td><td style="text-align:center">${escapeHtml(String(r.guests ?? '—'))}</td><td style="color:var(--gold)">${escapeHtml(r.table_id || '—')}</td><td><span style="color:${color}">${label}</span></td><td><div style="display:flex;gap:.25rem"><button type="button" class="admin-btn admin-btn-sm admin-btn-ghost dash-res-status" data-res-id="${id}" data-res-status="confirmed" title="დადასტურება">✅</button><button type="button" class="admin-btn admin-btn-sm admin-btn-ghost dash-res-wa" data-res-id="${id}" title="WhatsApp">📲</button></div></td></tr>`;
+  }).join('') + (list.length > 12 ? `<tr><td colspan="6" style="text-align:center;padding:.65rem"><button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="adminTab('reservations')">ყველა ${list.length} ჯავშნის ნახვა →</button></td></tr>` : '');
+  tb.querySelectorAll('.dash-res-status').forEach(btn => btn.addEventListener('click', () => changeResStatus(btn.dataset.resId, btn.dataset.resStatus)));
+  tb.querySelectorAll('.dash-res-wa').forEach(btn => btn.addEventListener('click', () => openAdminReservationWhatsApp(btn.dataset.resId, 'res')));
+}
 async function loadDashboardData() {
   const today = todayGeorgia();
   const tomorrow = georgiaPlusDays(today, 1);
@@ -8968,12 +8969,16 @@ async function loadDashboardData() {
   if (timeBody) {
     timeBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:rgba(245,240,232,.28);padding:1rem;font-style:italic;font-size:.72rem">ჩატვირთვა…</td></tr>';
   }
+  const todayBody = g('dash-today-res-tbody');
+  if (todayBody) {
+    todayBody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:rgba(245,240,232,.28);padding:1rem;font-style:italic;font-size:.72rem">ჩატვირთვა…</td></tr>';
+  }
   const dishBody = g('dash-dishes-tbody');
   if (dishBody) {
     dishBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:rgba(245,240,232,.28);padding:1rem;font-style:italic;font-size:.72rem">ჩატვირთვა…</td></tr>';
   }
   const [todayRes, pendingRes, tomorrowRes, savedRes, dishRes] = await Promise.allSettled([
-    supaFetch(`/rest/v1/reservations?date=eq.${today}&status=neq.cancelled&select=id,status,guests,table_id,time,precheck_json`),
+    supaFetch(`/rest/v1/reservations?date=eq.${today}&status=neq.cancelled&select=id,name,phone,status,guests,table_id,time,precheck_json`),
     supaFetch('/rest/v1/reservations?status=eq.pending&select=id'),
     supaFetch(`/rest/v1/reservations?date=eq.${tomorrow}&status=neq.cancelled&select=id`),
     supaFetch('/rest/v1/saved_checks?select=id'),
@@ -8982,8 +8987,11 @@ async function loadDashboardData() {
   if (todayRes.status !== 'fulfilled') {
     ['dash-today', 'dash-confirmed', 'dash-guests', 'dash-tables', 'dash-check-sum', 'dash-checks'].forEach(id => dashSet(id, '—'));
     renderDashboardTimeStats([]);
+    renderDashboardTodayReservations([]);
     const tb = g('dash-time-tbody');
     if (tb) tb.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#e74c3c;padding:1rem;font-size:.72rem">სტატისტიკა ვერ ჩაიტვირთა</td></tr>';
+    const todayTb = g('dash-today-res-tbody');
+    if (todayTb) todayTb.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#e74c3c;padding:1rem;font-size:.72rem">დღის ჯავშნები ვერ ჩაიტვირთა</td></tr>';
     adminMsg('dashboard-msg', '❌ ჯავშნების მონაცემები ვერ ჩაიტვირთა', 'err');
   } else {
     const rows = Array.isArray(todayRes.value) ? todayRes.value : [];
@@ -9012,6 +9020,7 @@ async function loadDashboardData() {
     dashSet('dash-checks', String(checks));
     dashSet('dash-check-sum', '₾' + checkSum.toFixed(2));
     renderDashboardTimeStats(rows);
+    renderDashboardTodayReservations(rows);
     if (dashMsg) {
       dashMsg.style.display = 'none';
       dashMsg.textContent = '';
@@ -9536,6 +9545,11 @@ function mapTileStyles(state) {
     : { bg: 'rgba(58,148,140,0.22)', border: 'rgba(58,148,140,0.7)', color: '#9ee8df', occupied: false };
 }
 
+let draggedMapTableId = '';
+function dragMapStart(event, tableId) { draggedMapTableId = String(tableId || ''); if (event?.dataTransfer) { event.dataTransfer.effectAllowed = 'move'; event.dataTransfer.setData('text/plain', draggedMapTableId); } }
+function dragMapOver(event) { if (event?.preventDefault) event.preventDefault(); if (event?.dataTransfer) event.dataTransfer.dropEffect = 'move'; }
+function dropMapTable(event, targetId) { if (event?.preventDefault) event.preventDefault(); const from = draggedMapTableId || event?.dataTransfer?.getData('text/plain') || ''; const to = String(targetId || ''); draggedMapTableId = ''; if (!from || !to || from === to) return; const fromSel = g('map-transfer-from'); const toSel = g('map-transfer-to'); if (fromSel) fromSel.value = from; if (toSel) toSel.value = to; transferTableReservation(); }
+
 async function loadMapTables() {
   try {
     await clearOldReservationsFromTables();
@@ -9558,7 +9572,7 @@ async function loadMapTables() {
       el.innerHTML = zones[zone].map(t => {
         const state = tableOccupancyStateFromReservations(rsvData, t.id);
         const s = mapTileStyles(state);
-        return `<div onclick="toggleTable('${t.id}',${s.occupied})" style="
+        return `<div draggable="true" data-map-table="${t.id}" ondragstart="dragMapStart(event,'${t.id}')" ondragover="dragMapOver(event)" ondrop="dropMapTable(event,'${t.id}')" onclick="toggleTable('${t.id}',${s.occupied})" style="
           width:56px;height:44px;border-radius:6px;display:flex;align-items:center;justify-content:center;
           cursor:pointer;font-size:.78rem;font-weight:500;letter-spacing:.04em;
           background:${s.bg};
@@ -10540,8 +10554,7 @@ async function loadReservations() {
       }
     }
     allReservations = useClientSort ? sortReservationsNewestFirst(data || []) : (data || []);
-    filteredReservations = allReservations;
-    renderResTable(filteredReservations);
+    applyReservationsClientFilter();
   } catch(e) {
     tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:#e74c3c;padding:2rem">❌ Supabase კავშირი ვერ მოხერხდა</td></tr>';
   }
@@ -10713,6 +10726,12 @@ async function loadReservationsWithChecks() {
   }
 }
 
+function applyReservationsClientFilter() {
+  const q = String(g('res-filter-search')?.value || '').trim().toLowerCase().replace(/\s+/g, '');
+  const source = Array.isArray(allReservations) ? allReservations : [];
+  filteredReservations = q ? source.filter(r => [r.name, r.phone].some(v => String(v || '').toLowerCase().replace(/\s+/g, '').includes(q))) : source;
+  renderResTable(filteredReservations);
+}
 function applyResFilter() {
   loadReservations();
 }
@@ -10751,80 +10770,66 @@ function printResChecksReport() {
     adminMsg('res-checks-msg', '❯ ჯერ დააჭირეთ „ჩვენება“ და დაელოდეთ სიას', 'err');
     return;
   }
-  const logoSrc = tiflisAssetUrl('logo.png');
+  const esc = value => escapeHtml(String(value == null || value === '' ? '—' : value));
   const from = getResChecksDateFrom();
   const to = getResChecksDateTo();
   const period = (from || to) ? `პერიოდი: ${from || '—'} — ${to || '—'}` : 'პერიოდი: ყველა';
   const st = getResChecksStatus();
-  const statusStr = st
-    ? ` | სტატუსი: ${statusLabels[st] || st}`
-    : ' | აქტიური ჩეკები (მომლოდინე + დადასტურებული)';
-  const blocks = lastResChecksRows.map(r => {
-    const o = parseReservationPrecheck(r.precheck_json);
-    const itemsHtml =
-      o && o.items.length
-        ? o.items
-            .map(it => {
-              const nm = escapeHtml(it.ka || it.en || it.ru || '—');
-              const lt =
-                it.line != null && Number.isFinite(Number(it.line))
-                  ? Number(it.line)
-                  : Number(it.p) * Number(it.qty || 0);
-              const sum = Number.isFinite(lt) ? lt.toFixed(2) : '—';
-              const unit = precheckItemUnitPrice(it);
-              const unitStr = Number.isFinite(unit) ? unit.toFixed(2) : '—';
-              return `<tr><td style="border:1px solid #ccc;padding:4px">${nm}</td><td style="text-align:right;border:1px solid #ccc;padding:4px">₾${unitStr}</td><td style="text-align:center;border:1px solid #ccc;padding:4px">${escapeHtml(String(it.qty))}</td><td style="text-align:right;border:1px solid #ccc;padding:4px">₾${sum}</td></tr>`;
-            })
-            .join('')
-        : '<tr><td colspan="4">—</td></tr>';
-    const tot = o && o.total != null && Number.isFinite(Number(o.total)) ? `₾${Number(o.total).toFixed(2)}` : '—';
-    const st = r.status || '';
-    const stLab = escapeHtml(statusLabels[st] || st || '—');
-    const guestSeg = r.guests != null && r.guests !== '' ? ` · 👥 ${escapeHtml(String(r.guests))}` : '';
-    const noteSeg = r.note != null && String(r.note).trim() ? ` · 📝 ${escapeHtml(String(r.note).trim())}` : '';
-    const pay = (r.advance_payment != null && r.advance_payment !== '') ? String(r.advance_payment).trim() : '';
-    const payD = pay ? escapeHtml(payLabels[pay] || pay) : '';
-    const a =
-      r.advance_amount != null && r.advance_amount !== ''
-        ? Number(r.advance_amount)
-        : r.advance != null && r.advance !== ''
-          ? Number(r.advance)
-          : NaN;
-    const advD = Number.isFinite(a) ? escapeHtml(a.toFixed(2)) : '';
-    const advBits = [payD, advD ? `₾${advD}` : ''].filter(Boolean);
-    const advSeg = advBits.length ? ` · 💰 ${advBits.join(' · ')}` : '';
-    const advPrecheckPrint = o && Number(o.advance) > 0 ? Number(o.advance) : NaN;
-    const advForPrintBadge =
-      Number.isFinite(a) && a > 0 ? a : Number.isFinite(advPrecheckPrint) && advPrecheckPrint > 0 ? advPrecheckPrint : NaN;
-    const resStLow = String(r.status || '').trim().toLowerCase();
-    const printConfAdv =
-      resStLow === 'confirmed' && Number.isFinite(advForPrintBadge) && advForPrintBadge > 0
-        ? `<div style="margin-top:4px;font-size:10px;color:#1a6b42;font-weight:600">დადასტურებულია · ავანსი დატოვებული: ₾${advForPrintBadge.toFixed(2)}${payD ? ' · ' + payD : ''}</div>`
-        : '';
-    return `
-    <div style="margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:1px solid #ddd;page-break-inside:avoid">
-      <div style="font-weight:700;font-size:13px;margin-bottom:6px">${escapeHtml(r.name || '—')} · ${escapeHtml(r.phone || '—')}</div>
-      <div style="font-size:11px;color:#555;margin-bottom:8px">📅 ${escapeHtml(r.date || '—')} ${escapeHtml(r.time || '—')} · 🪑 ${escapeHtml(r.table_id || '—')}${guestSeg}${advSeg} · <strong>${stLab}</strong>${noteSeg}</div>
-      <table style="width:100%;border-collapse:collapse;font-size:11px"><thead><tr><th style="text-align:left;border:1px solid #ccc;padding:4px">კერძი</th><th style="text-align:right;border:1px solid #ccc;padding:4px">ერთ. ₾</th><th style="border:1px solid #ccc;padding:4px">რაოდ.</th><th style="text-align:right;border:1px solid #ccc;padding:4px">თანხა</th></tr></thead><tbody>${itemsHtml}</tbody></table>
-      <div style="margin-top:6px;font-weight:600">სულ: ${tot}</div>${printConfAdv}
-    </div>`;
+  const statusStr = st ? `სტატუსი: ${statusLabels[st] || st}` : 'აქტიური ჩეკები';
+  const blocks = lastResChecksRows.map((r, index) => {
+    const o = parseReservationPrecheck(r.precheck_json) || { items: [] };
+    let sub = 0, rows = '', rowNo = 0;
+    o.items.forEach(it => {
+      const qty = Number(it.qty) || 0;
+      const unit = precheckItemUnitPrice(it);
+      const line = it.line != null && Number.isFinite(Number(it.line)) ? Number(it.line) : unit * qty;
+      if (!Number.isFinite(line)) return;
+      sub += line; rowNo += 1;
+      const nm = it.ka || it.en || it.ru || '—';
+      rows += `<tr><td class="num">${rowNo}</td><td class="dish">${esc(nm)}</td><td class="qty">${qty}</td><td class="money">₾${Number.isFinite(unit) ? unit.toFixed(2) : '—'}</td><td class="money">₾${line.toFixed(2)}</td></tr>`;
+    });
+    if (!rows) rows = '<tr><td colspan="5" style="text-align:center;color:#8a7865">—</td></tr>';
+    const disc = Number(o.disc_pct || o.discount || 0) || 0;
+    const svc = Number(o.svc_pct || o.service || 0) || 0;
+    const advRaw = r.advance_amount != null && r.advance_amount !== '' ? Number(r.advance_amount) : Number(o.advance || r.advance || 0);
+    const adv = Number.isFinite(advRaw) ? advRaw : 0;
+    const discAmount = sub * disc / 100;
+    const afterDiscount = sub - discAmount;
+    const serviceAmount = afterDiscount * svc / 100;
+    const calculatedTotal = Math.max(0, afterDiscount + serviceAmount - adv);
+    const total = o.total != null && Number.isFinite(Number(o.total)) ? Number(o.total) : calculatedTotal;
+    const pay = r.advance_payment || r.payment || '';
+    const payText = payLabels[pay] || pay || '—';
+    const status = statusLabels[r.status] || r.status || '—';
+    let adjustmentRows = `<tr><td colspan="4">ქვეჯამი</td><td class="money">₾${sub.toFixed(2)}</td></tr>`;
+    if (disc > 0) adjustmentRows += `<tr class="muted"><td colspan="4">ფასდაკლება (${disc}%)</td><td class="money">−₾${discAmount.toFixed(2)}</td></tr>`;
+    if (svc > 0) adjustmentRows += `<tr class="muted"><td colspan="4">მომსახურება (${svc}%)</td><td class="money">₾${serviceAmount.toFixed(2)}</td></tr>`;
+    if (adv > 0) adjustmentRows += `<tr class="muted"><td colspan="4">ავანსი</td><td class="money">−₾${adv.toFixed(2)}</td></tr>`;
+    return `<section class="reservation-card">
+      <div class="card-kicker">ჩეკი №${index + 1} · ${esc(status)}</div>
+      <div class="reservation-head"><div><h2>${esc(r.name || '—')}</h2><div class="subline">${esc(r.phone || '—')}${r.email ? ' · ' + esc(r.email) : ''}</div></div><div class="reservation-id">ID: ${esc(r.id || '—')}</div></div>
+      <div class="info-grid">
+        <div class="info"><div class="label">თარიღი</div><div class="value">${esc(r.date || '—')}</div></div>
+        <div class="info"><div class="label">დრო</div><div class="value">${esc(r.time || '—')}</div></div>
+        <div class="info"><div class="label">სტუმრები</div><div class="value">${esc(r.guests || '—')}</div></div>
+        <div class="info"><div class="label">მაგიდა</div><div class="value">${esc(r.table_id || '—')}</div></div>
+        <div class="info span-2"><div class="label">გადახდის მეთოდი</div><div class="value">${esc(payText)}</div></div>
+        <div class="info span-2"><div class="label">სტატუსი</div><div class="value">${esc(status)}</div></div>
+      </div>
+      ${r.note ? `<div class="note"><strong>შენიშვნა:</strong> ${esc(r.note)}</div>` : ''}
+      <table class="items"><thead><tr><th class="num">№</th><th>კერძი</th><th class="qty">რაოდენობა</th><th class="money">ერთეულის ფასი</th><th class="money">ჯამი</th></tr></thead><tbody>${rows}</tbody></table>
+      <table class="totals"><tbody>${adjustmentRows}<tr><td colspan="4">სულ გადასახდელი</td><td class="money">₾${total.toFixed(2)}</td></tr></tbody></table>
+    </section>`;
   }).join('');
+  const logoSrc = tiflisAssetUrl('logo.png');
   const win = window.open('', '_blank');
-  if (!win) {
-    adminMsg('res-checks-msg', '❯ გთხოვთ დაუშვათ pop-up ამ საიტისთვის', 'err');
-    return;
-  }
-  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>ჯავშნები ჩეკებით</title>
-  <style>body{font-family:sans-serif;font-size:12px;padding:20px;color:#222}.print-brand{text-align:center;margin:0 0 12px}.print-brand img{max-height:52px;width:auto;max-width:220px;object-fit:contain}h2{margin:0 0 6px;text-align:center;font-size:15px}.meta{font-size:10px;color:#666;margin-bottom:16px;text-align:center}</style></head><body>
-  <div class="print-brand"><img src="${logoSrc}" alt="რესტორანი ტიფლისი"></div>
-  <h2>რესტორანი ტიფლისი — ჯავშნები ჩეკებით</h2>
-  <p class="meta">${period}${statusStr} · ${lastResChecksRows.length} ჩანაწერი · ${toLocaleDateStringGeorgia(new Date())}</p>
-  ${blocks}
-  </body></html>`);
+  if (!win) { adminMsg('res-checks-msg', '❯ გთხოვთ დაუშვათ pop-up ამ საიტისთვის', 'err'); return; }
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>რესტორანი ტიფლისი — ჩეკები</title><style>
+    @page{size:A4 portrait;margin:14mm}*{box-sizing:border-box}body{margin:0;color:#2c2010;background:#fff;font-family:Arial,'Noto Sans Georgian','Segoe UI',sans-serif;font-size:11px;line-height:1.45;-webkit-print-color-adjust:exact;print-color-adjust:exact}.page{max-width:182mm;margin:0 auto}.top{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;padding-bottom:16px;border-bottom:3px solid #3d9b93;margin-bottom:18px}.brand{display:flex;align-items:center;gap:14px}.logo{width:72px;height:58px;object-fit:contain}.brand-name{font-family:Georgia,serif;font-size:25px;letter-spacing:.04em}.brand-name em{color:#b8922e;font-style:italic}.brand-sub,.contact,.subline,.reservation-id{color:#725f4c;font-size:10px}.brand-sub{margin-top:3px}.contact{text-align:right;line-height:1.7}.report-title{font-family:Georgia,serif;font-size:20px;margin:0 0 4px}.report-meta{color:#725f4c;font-size:10px;margin:0 0 16px}.reservation-card{page-break-inside:avoid;border:1px solid #ded4c4;border-radius:7px;padding:15px 16px 17px;margin-bottom:18px}.card-kicker{color:#3d9b93;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}.reservation-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;border-bottom:1px solid #e7dfd2;padding-bottom:10px;margin-bottom:11px}.reservation-head h2{font-family:Georgia,serif;font-size:18px;font-weight:400;margin:0 0 2px}.info-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:11px}.info{min-height:42px;padding:7px 9px;border:1px solid #e5ddcf;border-radius:4px;background:#faf7f0;min-width:0}.span-2{grid-column:span 2}.label{color:#8a7865;font-size:8px;text-transform:uppercase;letter-spacing:.07em;margin-bottom:2px}.value{font-weight:600;overflow-wrap:anywhere;word-break:break-word}.note{margin:0 0 11px;padding:9px 11px;border-left:3px solid #d4a843;background:#fffbf1;overflow-wrap:anywhere;word-break:break-word;white-space:pre-wrap}.note strong{font-weight:700}table{width:100%;border-collapse:collapse}.items th{padding:8px 7px;color:#fff;background:#3d9b93;text-align:left;font-size:8px;text-transform:uppercase;letter-spacing:.05em}.items td{padding:7px;border-bottom:1px solid #e7dfd2;vertical-align:top}.num{width:28px;text-align:center;color:#8a7865}.dish{font-weight:600}.qty{width:72px;text-align:center}.money{width:96px;text-align:right;white-space:nowrap}.muted td{color:#725f4c}.totals{width:53%;margin:12px 0 0 auto}.totals td{padding:5px 7px;border-bottom:1px solid #eee6da}.totals tr:last-child td{border-top:2px solid #3d9b93;border-bottom:0;padding-top:9px;font-size:14px;font-weight:700}.totals tr:last-child .money{color:#b85c38}.footer{display:flex;justify-content:space-between;gap:18px;margin-top:24px;padding-top:11px;border-top:1px solid #ded4c4;color:#8a7865;font-size:9px}.footer strong{color:#2c2010}
+  </style></head><body><main class="page"><header class="top"><div class="brand"><img class="logo" src="${logoSrc}" alt="რესტორანი ტიფლისი"><div><div class="brand-name">რესტორანი <em>ტიფლისი</em></div><div class="brand-sub">ქართული სამზარეულო · ბათუმი</div></div></div><div class="contact">ვ. გორგასალის ქ. 110/18, ბათუმი<br>+995 568 76 76 38<br>tiflisi2020@gmail.com</div></header><h1 class="report-title">ჩეკები და შეკვეთები</h1><p class="report-meta">${esc(period)} · ${esc(statusStr)} · ${lastResChecksRows.length} ჩანაწერი · დაბეჭდვის თარიღი: ${esc(toLocaleDateStringGeorgia(new Date()))}</p>${blocks}<footer class="footer"><span><strong>რესტორანი ტიფლისი</strong><br>გმადლობთ სტუმრობისთვის</span><span>ბათუმი, ვ. გორგასალის ქ. 110/18<br>+995 568 76 76 38 · tiflisi2020@gmail.com</span></footer></main></body></html>`);
   win.document.close();
-  setTimeout(() => win.print(), 400);
+  setTimeout(() => { win.focus(); win.print(); setTimeout(() => win.close(), 1200); }, 500);
 }
-
 /** ურნა (ტაბის გვერდით) — ჩეკი snapshot → res_checks_trash, შემდეგ reservations.status = cancelled (არა DELETE) */
 async function resChecksTrashFromTab() {
   adminTab('reschecks');
@@ -10965,6 +10970,11 @@ async function changeResStatus(id, status) {
     }
     await loadReservations();
     await loadReservationsWithChecks();
+    try {
+      if (g('dash-today-res-tbody')) await loadDashboardData();
+    } catch (dashErr) {
+      console.warn('dashboard refresh', dashErr);
+    }
     auditLog('res_status', id + ' → ' + status);
   } catch (e) {
     adminMsg('res-list-msg', '❌ სტატუსი ვერ განახლდა: ' + (e.message || ''), 'err');
