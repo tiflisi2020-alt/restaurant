@@ -4706,6 +4706,58 @@ footer { border-top:1px solid rgba(201,160,61,.22); }
 @media (max-width:900px) { #nav { height:auto; min-height:68px; padding-block:.75rem; flex-wrap:wrap; gap:.7rem; } .nav-links { display:flex; order:3; width:100%; justify-content:center; gap:1rem; padding-top:.35rem; } .nav-logo { margin-right:auto; } .nav-reserve { padding:.62rem .9rem; font-size:.66rem; } .menu-nav-col,.reservation-info { position:static; } .cat-tabs { overflow-x:auto; flex-wrap:nowrap; padding-bottom:.35rem; scrollbar-width:none; } .cat-tabs::-webkit-scrollbar { display:none; } .cat-tab { flex:0 0 auto; } }
 @media (max-width:600px) { #nav { padding-inline:.85rem; } .nav-links a { font-size:.66rem; letter-spacing:.06em; } .nav-reserve { display:none; } .lang-toggle { margin-left:.5rem; } .hero { min-height:720px; } .hero-content { padding:1.25rem; } .hero-eyebrow { font-size:.8rem; letter-spacing:.08em; } .hero-title { font-size:clamp(3.5rem,17vw,5.3rem); } .hero-subtitle { font-size:.66rem; line-height:1.8; letter-spacing:.08em; } .hero-cta { flex-direction:column; width:min(100%,290px); margin-inline:auto; } .hero-cta a { width:100%; text-align:center; } .about-item { padding:1.5rem 1rem; } .menu-layout { gap:1.25rem; } .menu-dishes-col { order:1; } .order-panel { order:2; position:sticky; bottom:.75rem; z-index:10; max-height:min(70vh, 560px); overflow-x:hidden; overflow-y:auto; -webkit-overflow-scrolling:touch; box-shadow:0 20px 42px rgba(23,17,11,.22); } .reservation-grid { gap:1.6rem; } .res-form { padding:1.15rem !important; } .form-grid { grid-template-columns:1fr !important; } .form-field.full { grid-column:auto !important; } .tiflis-float-rail { bottom:6.6rem; } }
 @media (prefers-reduced-motion:reduce) { .hero-bg { animation:none; } }
+/* ===== Banquet table groups ===== */
+.banquet-bar{border:1px solid rgba(170,136,210,.32);border-radius:16px;background:rgba(126,93,168,.08);padding:.8rem .9rem .85rem;margin:0 0 .8rem}
+.banquet-bar-head{display:flex;align-items:center;justify-content:space-between;gap:.75rem}
+.banquet-title{font-size:.98rem;font-weight:650;letter-spacing:.01em}
+.banquet-sub{margin-top:.15rem;font-size:.72rem;line-height:1.4;color:rgba(245,240,232,.62)}
+.banquet-composer{display:flex;flex-wrap:wrap;gap:.45rem;align-items:center;margin-top:.7rem}
+.banquet-picks{display:flex;flex-wrap:wrap;gap:.35rem;flex:1 1 100%;min-height:2rem;align-items:center}
+.banquet-empty{font-size:.72rem;color:rgba(245,240,232,.45)}
+.banquet-chip{border:0;border-radius:999px;padding:.32rem .65rem;background:#8060a8;color:#fff;font-size:.72rem;cursor:pointer}
+.banquet-composer .admin-btn,.banquet-card-actions .admin-btn,.banquet-bar-head .admin-btn{width:auto}
+.banquet-name{flex:1 1 12rem;min-width:10rem;margin:0}
+.banquet-list{display:grid;gap:.45rem;margin-top:.7rem}
+.banquet-card{display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:.65rem .7rem;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(170,136,210,.28)}
+.banquet-card-main{display:flex;align-items:flex-start;gap:.65rem;min-width:0}
+.banquet-badge{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;min-width:2.6rem;height:2.6rem;padding:0 .4rem;border-radius:10px;background:#8060a8;color:#fff;font-size:.72rem;font-weight:700}
+.banquet-card strong{display:block;font-size:.82rem}
+.banquet-tables{display:flex;flex-wrap:wrap;gap:.25rem;margin-top:.28rem}
+.banquet-tables span{padding:.08rem .38rem;border-radius:6px;background:rgba(128,96,168,.22);font-size:.68rem}
+.banquet-meta{margin-top:.22rem;font-size:.68rem;color:rgba(245,240,232,.55)}
+.banquet-card-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.3rem}
+.banquet-status{border:1px solid rgba(255,255,255,.12);background:transparent;color:inherit;border-radius:999px;padding:.28rem .55rem;font-size:.66rem;cursor:pointer}
+.banquet-status.on{background:#8060a8;border-color:#8060a8;color:#fff}
+.floor-table.is-banquet-pick{box-shadow:0 0 0 2px #c9a8ef,0 8px 18px rgba(128,96,168,.28)}
+#at-map.banquet-picking .floor-table{cursor:pointer}
+html.admin-theme-light .banquet-bar,html.admin-theme-light .banquet-card{background:#fff;border-color:rgba(128,96,168,.28)}
+html.admin-theme-light .banquet-sub,html.admin-theme-light .banquet-meta,html.admin-theme-light .banquet-empty{color:#6d6256}
+@media(max-width:760px){.banquet-bar-head,.banquet-card{align-items:flex-start;flex-direction:column}.banquet-card-actions{justify-content:flex-start}}
+.floor-summary{display:flex;flex-wrap:wrap;gap:.4rem;margin:.15rem 0 .7rem}
+.floor-summary span{display:inline-flex;align-items:center;gap:.35rem;padding:.28rem .55rem;border-radius:999px;border:1px solid rgba(255,255,255,.1);font-size:.68rem;letter-spacing:.02em}
+.floor-summary i{width:8px;height:8px;border-radius:50%;display:inline-block}
+.floor-layout{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:.8rem;align-items:start}
+.floor-zones{display:grid;gap:.65rem}
+.floor-zone{border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:.7rem .75rem .85rem;background:rgba(255,255,255,.03)}
+.floor-zone-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:.55rem;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(245,240,232,.72)}
+.floor-zone-head strong{font-weight:600;letter-spacing:.08em}
+.floor-grid{display:flex;flex-wrap:wrap;gap:.45rem}
+.floor-table{width:78px;min-height:68px;padding:.35rem .3rem;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.12rem;font:inherit;line-height:1.15;cursor:pointer}
+.floor-table.is-selected{box-shadow:0 0 0 2px #e4c56a,0 8px 18px rgba(0,0,0,.18)}
+.floor-table-id{font-size:.82rem;font-weight:650;letter-spacing:.04em}
+.floor-table-sub{font-size:.58rem;opacity:.88;max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.floor-panel{position:sticky;top:.4rem;border-radius:16px;border:1px solid rgba(255,255,255,.1);background:rgba(12,9,6,.45);padding:.9rem .85rem;min-height:220px}
+.floor-panel h3{margin:0 0 .2rem;font-size:1.15rem;font-weight:600}
+.floor-panel .floor-kicker{font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(245,240,232,.55);margin-bottom:.35rem}
+.floor-panel p{margin:.35rem 0;font-size:.78rem;line-height:1.45}
+.floor-seat-form{display:grid;gap:.45rem;margin-top:.65rem}
+.floor-seat-form label{font-size:.64rem;letter-spacing:.06em;text-transform:uppercase;color:rgba(245,240,232,.55)}
+.floor-panel-actions{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.7rem}
+.floor-panel-actions .admin-btn{width:auto}
+html.admin-theme-light .floor-zone,html.admin-theme-light .floor-panel{background:#fff;border-color:rgba(42,34,24,.1)}
+html.admin-theme-light .floor-zone-head,html.admin-theme-light .floor-panel .floor-kicker,html.admin-theme-light .floor-seat-form label{color:#6d6256}
+html.admin-theme-light .floor-summary span{border-color:rgba(42,34,24,.12);color:#2a2218}
+@media(max-width:860px){.floor-layout{grid-template-columns:1fr}.floor-panel{position:static}}
 /* ===== Admin operations refinement ===== */
 .admin-dashboard-today-wrap { margin-bottom: .35rem; }
 .admin-dashboard-today-table td, .admin-dashboard-today-table th { vertical-align: middle; }
@@ -5379,7 +5431,11 @@ footer { border-top:1px solid rgba(201,160,61,.22); }
           <span class="admin-filter-label" style="display:flex;align-items:center;gap:0.35rem;margin-left:auto"><i style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#2a726b"></i> თავისუფალი</span>
           <span class="admin-filter-label" style="display:flex;align-items:center;gap:0.35rem"><i style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#c9a03d"></i> მომლოდინე</span>
           <span class="admin-filter-label" style="display:flex;align-items:center;gap:0.35rem"><i style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#b85d38"></i> დადასტურებული</span>
+          <span class="admin-filter-label" style="display:flex;align-items:center;gap:0.35rem"><i style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#d77b5e"></i> ადგილზე</span>
+          <span class="admin-filter-label" style="display:flex;align-items:center;gap:0.35rem"><i style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#8060a8"></i> ბანკეტი</span>
+          <span class="admin-filter-label" style="display:flex;align-items:center;gap:0.35rem"><i style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#777"></i> დასუფთავება</span>
         </div>
+        <div id="map-floor-summary" class="floor-summary" aria-live="polite"></div>
         <div class="admin-filter-row" style="margin-bottom:0.65rem;padding:0.5rem 0;border-top:1px solid rgba(255,255,255,0.06)">
           <span class="admin-filter-label">ტრანსფერი</span>
           <div class="admin-filter-field">
@@ -5397,17 +5453,42 @@ footer { border-top:1px solid rgba(201,160,61,.22); }
           </div>
           <button type="button" class="admin-btn admin-btn-sm" style="width:auto" onclick="transferTableReservation()">შენახვა</button>
         </div>
-        <div style="margin-bottom:0.65rem">
-          <div class="admin-filter-label" style="margin-bottom:0.35rem">H ზონა</div>
-          <div id="map-zone-H" style="display:flex;flex-wrap:wrap;gap:.4rem"></div>
+        <div id="map-banquet-tools" class="banquet-bar">
+          <div class="banquet-bar-head">
+            <div>
+              <div class="banquet-title">ბანკეტი</div>
+              <div class="banquet-sub">აირჩიეთ მაგიდები რუკაზე და გააერთიანეთ ერთ ჯგუფად. ფიზიკური მაგიდები არ იშლება.</div>
+            </div>
+            <button type="button" id="banquet-mode-btn" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="toggleBanquetMode()">მაგიდების არჩევა</button>
+          </div>
+          <div id="banquet-composer" class="banquet-composer" hidden>
+            <div id="banquet-picks" class="banquet-picks"></div>
+            <input id="map-group-name" class="admin-input banquet-name" type="text" placeholder="სახელი, მაგ. ბერიძე" aria-label="ბანკეტის სახელი">
+            <button type="button" id="banquet-create-btn" class="admin-btn admin-btn-sm" onclick="createTableGroup()" disabled>გაერთიანება</button>
+            <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="clearBanquetPicks()">გასუფთავება</button>
+          </div>
+          <div id="map-group-list" class="banquet-list"></div>
         </div>
-        <div style="margin-bottom:0.65rem">
-          <div class="admin-filter-label" style="margin-bottom:0.35rem">A ზონა</div>
-          <div id="map-zone-A" style="display:flex;flex-wrap:wrap;gap:.4rem"></div>
-        </div>
-        <div style="margin-bottom:0.65rem">
-          <div class="admin-filter-label" style="margin-bottom:0.35rem">V ზონა</div>
-          <div id="map-zone-V" style="display:flex;flex-wrap:wrap;gap:.4rem"></div>
+        <div class="floor-layout">
+          <div class="floor-zones">
+            <section class="floor-zone">
+              <div class="floor-zone-head"><strong>ჰოლი</strong><span id="map-zone-count-H"></span></div>
+              <div id="map-zone-H" class="floor-grid"></div>
+            </section>
+            <section class="floor-zone">
+              <div class="floor-zone-head"><strong>ანტრესოლი</strong><span id="map-zone-count-A"></span></div>
+              <div id="map-zone-A" class="floor-grid"></div>
+            </section>
+            <section class="floor-zone">
+              <div class="floor-zone-head"><strong>ვერანდა</strong><span id="map-zone-count-V"></span></div>
+              <div id="map-zone-V" class="floor-grid"></div>
+            </section>
+          </div>
+          <aside class="floor-panel" id="map-seat-panel" aria-live="polite">
+            <div class="floor-kicker">მაგიდა</div>
+            <h3>აირჩიეთ მაგიდა</h3>
+            <p>თავისუფალ ან დაჯავშნილ მაგიდაზე დააჭირეთ და მონიშნეთ, რომ სტუმარი დაჯდა.</p>
+          </aside>
         </div>
         <div id="map-msg" class="admin-msg"></div>
       </div>
@@ -5936,6 +6017,35 @@ function getOrderIds() {
   return orderSequence.slice();
 }
 const g = id => document.getElementById(id);
+function mapTileStyles(state) {
+  const light = document.documentElement.classList.contains('admin-theme-light');
+  if (state === 'confirmed') return light
+    ? { bg: 'rgba(184,93,56,0.14)', border: '#b85d38', color: '#8f3d28', occupied: true }
+    : { bg: 'rgba(184,93,56,0.28)', border: 'rgba(184,93,56,0.75)', color: '#f0c2b4', occupied: true };
+  if (state === 'pending') return light
+    ? { bg: 'rgba(201,160,61,0.2)', border: '#a6842a', color: '#7a5a10', occupied: true }
+    : { bg: 'rgba(201,160,61,0.22)', border: 'rgba(201,160,61,0.75)', color: '#e4c56a', occupied: true };
+  if (state === 'occupied') return light
+    ? { bg: 'rgba(184,93,56,0.18)', border: '#b85d38', color: '#8f3d28', occupied: true }
+    : { bg: 'rgba(184,93,56,0.36)', border: '#d77b5e', color: '#ffe0d6', occupied: true };
+  if (state === 'grouped') return light
+    ? { bg: 'rgba(126,93,168,0.14)', border: '#8060a8', color: '#624582', occupied: false }
+    : { bg: 'rgba(126,93,168,0.28)', border: '#aa88d2', color: '#eadbff', occupied: false };
+  if (state === 'cleaning') return light
+    ? { bg: 'rgba(120,120,120,0.14)', border: '#777', color: '#555', occupied: true }
+    : { bg: 'rgba(120,120,120,0.28)', border: '#aaa', color: '#eee', occupied: true };
+  if (state === 'blocked') return light
+    ? { bg: 'rgba(60,60,60,0.18)', border: '#555', color: '#333', occupied: true }
+    : { bg: 'rgba(20,20,20,0.5)', border: '#777', color: '#ddd', occupied: true };
+  return light
+    ? { bg: 'rgba(42,114,107,0.12)', border: '#2a726b', color: '#1a5c56', occupied: false }
+    : { bg: 'rgba(58,148,140,0.22)', border: 'rgba(58,148,140,0.7)', color: '#9ee8df', occupied: false };
+}
+let draggedMapTableId = '';
+function dragMapStart(event, tableId) { mapDragMoved = false; draggedMapTableId = String(tableId || ''); if (event?.dataTransfer) { event.dataTransfer.effectAllowed = 'move'; event.dataTransfer.setData('text/plain', draggedMapTableId); } }
+function dragMapOver(event) { mapDragMoved = true; if (event?.preventDefault) event.preventDefault(); if (event?.dataTransfer) event.dataTransfer.dropEffect = 'move'; }
+function dropMapTable(event, targetId) { if (event?.preventDefault) event.preventDefault(); const from = draggedMapTableId || event?.dataTransfer?.getData('text/plain') || ''; const to = String(targetId || ''); draggedMapTableId = ''; if (!from || !to || from === to) return; const fromSel = g('map-transfer-from'); const toSel = g('map-transfer-to'); if (fromSel) fromSel.value = from; if (toSel) toSel.value = to; transferTableReservation(); }
+
 /** სტუმრის „შენახული შეკვეთები“ (ადმინი → შენახული ჩეკები) */
 const TIFLIS_SAVED_ORDERS_KEY = 'tiflis_orders';
 
@@ -6935,6 +7045,7 @@ async function submitReservation() {
   if (!name) { alert('გთხოვთ შეიყვანოთ სახელი'); return; }
   if (!phone) { alert('გთხოვთ შეიყვანოთ ტელეფონი'); return; }
   if (!date) { alert('გთხოვთ შეარჩიოთ თარიღი'); return; }
+  if (!time) { alert('გთხოვთ შეარჩიოთ დრო'); return; }
 
   const guests = parseInt(g('r-guests').value)||2;
   const tableSel = g('r-table');
@@ -6976,6 +7087,7 @@ async function submitReservation() {
     }
     // update table status
     if (table) await supaFetch(`/rest/v1/tables?id=eq.${table}`, 'PATCH', { status:'reserved' });
+    if (table) clearTableOperationalState(table);
   } catch(e) { console.warn('Supabase error', e); }
 
   lastGuestReservationWaRow = {
@@ -9528,35 +9640,308 @@ function tableOccupancyStateFromReservations(rows, tableId) {
   return state;
 }
 
-function mapTileStyles(state) {
-  const light = document.documentElement.classList.contains('admin-theme-light');
-  if (state === 'confirmed') {
-    return light
-      ? { bg: 'rgba(184,93,56,0.14)', border: '#b85d38', color: '#8f3d28', occupied: true }
-      : { bg: 'rgba(184,93,56,0.28)', border: 'rgba(184,93,56,0.75)', color: '#f0c2b4', occupied: true };
-  }
-  if (state === 'pending') {
-    return light
-      ? { bg: 'rgba(201,160,61,0.2)', border: '#a6842a', color: '#7a5a10', occupied: true }
-      : { bg: 'rgba(201,160,61,0.22)', border: 'rgba(201,160,61,0.75)', color: '#e4c56a', occupied: true };
-  }
-  return light
-    ? { bg: 'rgba(42,114,107,0.12)', border: '#2a726b', color: '#1a5c56', occupied: false }
-    : { bg: 'rgba(58,148,140,0.22)', border: 'rgba(58,148,140,0.7)', color: '#9ee8df', occupied: false };
+
+const TABLE_GROUPS_KEY = 'tiflis_table_groups_v1';
+const TABLE_OPS_KEY = 'tiflis_table_ops_v1';
+function getTableOps() {
+  try { const raw = JSON.parse(localStorage.getItem(TABLE_OPS_KEY) || '{}'); return raw && typeof raw === 'object' ? (raw[todayGeorgia()] || {}) : {}; }
+  catch (_) { return {}; }
 }
-
-let draggedMapTableId = '';
-function dragMapStart(event, tableId) { draggedMapTableId = String(tableId || ''); if (event?.dataTransfer) { event.dataTransfer.effectAllowed = 'move'; event.dataTransfer.setData('text/plain', draggedMapTableId); } }
-function dragMapOver(event) { if (event?.preventDefault) event.preventDefault(); if (event?.dataTransfer) event.dataTransfer.dropEffect = 'move'; }
-function dropMapTable(event, targetId) { if (event?.preventDefault) event.preventDefault(); const from = draggedMapTableId || event?.dataTransfer?.getData('text/plain') || ''; const to = String(targetId || ''); draggedMapTableId = ''; if (!from || !to || from === to) return; const fromSel = g('map-transfer-from'); const toSel = g('map-transfer-to'); if (fromSel) fromSel.value = from; if (toSel) toSel.value = to; transferTableReservation(); }
-
+function saveTableOps(ops) {
+  try { const raw = JSON.parse(localStorage.getItem(TABLE_OPS_KEY) || '{}'); const all = raw && typeof raw === 'object' ? raw : {}; all[todayGeorgia()] = ops || {}; localStorage.setItem(TABLE_OPS_KEY, JSON.stringify(all)); }
+  catch (_) { localStorage.setItem(TABLE_OPS_KEY, JSON.stringify({ [todayGeorgia()]: ops || {} })); }
+}
+function getTableOperationalRecord(tableId) {
+  const value = getTableOps()[String(tableId)];
+  if (!value) return null;
+  return typeof value === 'string' ? { status: value } : value;
+}
+function getTableOperationalState(tableId) { return getTableOperationalRecord(tableId)?.status || ''; }
+function setTableOperationalState(tableId, status) {
+  const ops = getTableOps();
+  if (status === 'cleaning' || status === 'free') ops[String(tableId)] = status;
+  else delete ops[String(tableId)];
+  saveTableOps(ops);
+}
+function setWalkInTable(tableId, name, guests, extra) {
+  const ops = getTableOps();
+  ops[String(tableId)] = {
+    status: 'occupied',
+    name: name || 'სტუმარი',
+    guests: Math.max(1, Number(guests) || 1),
+    seatedAt: new Date().toISOString(),
+    source: extra && extra.source ? extra.source : 'walk-in',
+    reservationId: extra && extra.reservationId ? extra.reservationId : null
+  };
+  saveTableOps(ops);
+}
+function clearTableOperationalState(tableId) { const ops = getTableOps(); delete ops[String(tableId)]; saveTableOps(ops); }
+function getTableGroups() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(TABLE_GROUPS_KEY) || '[]');
+    return Array.isArray(raw) ? raw.filter(x => x && Array.isArray(x.tableIds) && x.tableIds.length >= 2) : [];
+  } catch (_) { return []; }
+}
+function saveTableGroups(groups) { localStorage.setItem(TABLE_GROUPS_KEY, JSON.stringify(groups || [])); }
+function getActiveTableGroupForTable(tableId, groups = getTableGroups()) { return groups.find(gp => gp.status !== 'released' && gp.tableIds.includes(String(tableId))) || null; }
+function tableGroupVisualState(group, rows) {
+  if (group.status === 'blocked') return 'blocked';
+  const memberSeated = (group.tableIds || []).some(id => getTableOperationalRecord(id)?.status === 'occupied');
+  if (memberSeated) return 'occupied';
+  const memberCleaning = (group.tableIds || []).length && (group.tableIds || []).every(id => getTableOperationalRecord(id)?.status === 'cleaning');
+  if (group.status === 'cleaning' || memberCleaning) return 'cleaning';
+  const ids = new Set([String(group.id), ...(group.tableIds || []).map(String)]);
+  const matches = (rows || []).filter(x => ids.has(String(x.table_id || '')) && x.status !== 'cancelled');
+  if (matches.some(r => r.status === 'confirmed')) return 'confirmed';
+  if (matches.some(r => r.status === 'pending')) return 'pending';
+  return 'grouped';
+}
+let mapFloorRows = [];
+let mapSelectedTableId = '';
+let mapDragMoved = false;
+let banquetMode = false;
+let banquetPickIds = [];
+const MAP_STATE_LABEL = { free: 'თავისუფალი', pending: 'მომლოდინე', confirmed: 'დადასტურებული', occupied: 'ადგილზე', grouped: 'ბანკეტი', cleaning: 'დასუფთავება', blocked: 'დაბლოკილი' };
+function mapShortText(value, max) {
+  const text = String(value || '').trim();
+  const limit = max || 14;
+  return text.length > limit ? text.slice(0, limit - 1) + '…' : text;
+}
+function mapReservationForTable(tableId, rows) {
+  const list = (rows || []).filter(r => String(r.table_id || '') === String(tableId) && r.status !== 'cancelled');
+  return list.find(r => r.status === 'confirmed') || list.find(r => r.status === 'pending') || list[0] || null;
+}
+function mapTableMeta(tableId, rows, groups) {
+  const group = getActiveTableGroupForTable(tableId, groups || getTableGroups());
+  const record = getTableOperationalRecord(tableId);
+  const reservation = mapReservationForTable(tableId, rows);
+  let state = 'free';
+  if (group) state = tableGroupVisualState(group, rows);
+  else if (record?.status === 'occupied' || record?.status === 'cleaning' || record?.status === 'free') state = record.status;
+  else state = tableOccupancyStateFromReservations(rows, tableId);
+  return { group, record: group ? null : record, reservation: group ? null : reservation, state, styles: mapTileStyles(state) };
+}
+function formatSeatedClock(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return '';
+  return d.toLocaleTimeString('ka-GE', { timeZone: 'Asia/Tbilisi', hour: '2-digit', minute: '2-digit' });
+}
+function renderMapSeatPanel() {
+  const panel = g('map-seat-panel');
+  if (!panel) return;
+  const id = mapSelectedTableId;
+  if (!id) {
+    panel.innerHTML = '<div class="floor-kicker">მაგიდა</div><h3>აირჩიეთ მაგიდა</h3><p>თავისუფალ ან დაჯავშნილ მაგიდაზე დააჭირეთ და მონიშნეთ, რომ სტუმარი დაჯდა.</p>';
+    return;
+  }
+  const meta = mapTableMeta(id, mapFloorRows);
+  const label = MAP_STATE_LABEL[meta.state] || meta.state;
+  const seated = meta.record?.status === 'occupied' ? meta.record : null;
+  const groupRecord = meta.group ? getTableOperationalRecord(meta.group.tableIds[0]) : null;
+  const who = seated || (groupRecord?.status === 'occupied' ? groupRecord : null);
+  const reservation = meta.reservation;
+  const activeReservation = reservation && (meta.state === 'confirmed' || meta.state === 'pending') ? reservation : null;
+  const suggestedName = who?.name || activeReservation?.name || '';
+  const suggestedGuests = who?.guests || activeReservation?.guests || 2;
+  let body = `<div class="floor-kicker">${escapeHtml(label)}</div><h3>${escapeHtml(id)}</h3>`;
+  if (meta.group) body += `<p>ბანკეტი <strong>${escapeHtml(meta.group.id)}</strong> — ${escapeHtml(meta.group.name || 'ჯგუფი')}<br>${escapeHtml(meta.group.tableIds.join(' + '))}</p>`;
+  if (activeReservation) body += `<p>ჯავშანი: <strong>${escapeHtml(reservation.name || '—')}</strong><br>${escapeHtml(reservation.time || '—')} · ${escapeHtml(String(reservation.guests || '—'))} სტუმარი</p>`;
+  if (who) body += `<p>ადგილზეა <strong>${escapeHtml(who.name || 'სტუმარი')}</strong>, ${escapeHtml(String(who.guests || 1))} სტუმარი${who.seatedAt ? ' · ' + escapeHtml(formatSeatedClock(who.seatedAt)) : ''}</p>`;
+  if (meta.state !== 'occupied' && meta.state !== 'blocked') {
+    body += `<form class="floor-seat-form" onsubmit="confirmSeatGuest(event)">
+      <label for="map-seat-name">სტუმრის სახელი</label>
+      <input id="map-seat-name" class="admin-input" type="text" value="${escapeAttr(suggestedName)}" placeholder="სახელი ან Walk-in" style="margin:0">
+      <label for="map-seat-guests">სტუმრების რაოდენობა</label>
+      <input id="map-seat-guests" class="admin-input" type="number" min="1" max="99" value="${escapeAttr(String(suggestedGuests || 2))}" style="margin:0">
+      <button type="submit" class="admin-btn admin-btn-sm">სტუმარი დაჯდა</button>
+    </form>`;
+  }
+  body += '<div class="floor-panel-actions">';
+  if (meta.state === 'occupied') body += '<button type="button" class="admin-btn admin-btn-sm" onclick="releaseSeatedTable()">სტუმრებმა დატოვეს</button>';
+  if (meta.state === 'cleaning') body += '<button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="markTableReady()">მაგიდა მზადაა</button>';
+  body += '</div>';
+  panel.innerHTML = body;
+}
+function confirmSeatGuest(event) {
+  if (event && event.preventDefault) event.preventDefault();
+  const id = mapSelectedTableId;
+  if (!id) return;
+  const meta = mapTableMeta(id, mapFloorRows);
+  if (meta.state === 'blocked' || meta.state === 'occupied') return;
+  const name = String(g('map-seat-name')?.value || '').trim() || 'სტუმარი';
+  const guests = Math.max(1, Math.min(99, parseInt(g('map-seat-guests')?.value, 10) || 1));
+  const ids = meta.group ? meta.group.tableIds.slice() : [id];
+  ids.forEach(tableId => setWalkInTable(tableId, name, guests, {
+    source: meta.reservation ? 'reservation' : 'walk-in',
+    reservationId: meta.reservation?.id || null
+  }));
+  auditLog('guest_seated', `${ids.join('+')} · ${name} · ${guests}`);
+  adminMsg('map-msg', `✅ ${ids.join(' + ')} დაკავებულია — ${name}, ${guests} სტუმარი ადგილზეა`, 'ok');
+  loadMapTables();
+}
+function releaseSeatedTable() {
+  const id = mapSelectedTableId;
+  if (!id) return;
+  const meta = mapTableMeta(id, mapFloorRows);
+  const ids = meta.group ? meta.group.tableIds.slice() : [id];
+  ids.forEach(tableId => setTableOperationalState(tableId, 'cleaning'));
+  auditLog('table_cleaning', ids.join('+'));
+  adminMsg('map-msg', `🧽 ${ids.join(' + ')} გადავიდა დასუფთავებაზე`, 'warn');
+  loadMapTables();
+}
+function markTableReady() {
+  const id = mapSelectedTableId;
+  if (!id) return;
+  const meta = mapTableMeta(id, mapFloorRows);
+  const ids = meta.group ? meta.group.tableIds.slice() : [id];
+  ids.forEach(tableId => setTableOperationalState(tableId, 'free'));
+  auditLog('table_free', ids.join('+'));
+  adminMsg('map-msg', `✅ ${ids.join(' + ')} თავისუფალია`, 'ok');
+  loadMapTables();
+}
+function startWalkInTable(tableId) {
+  mapTableClick(tableId);
+}
+function moveTableToCleaning(tableId, source) {
+  if (!confirm(`${tableId} სტუმრებმა დატოვეს? მაგიდა გადავიდეს დასუფთავებაზე.`)) return;
+  setTableOperationalState(tableId, 'cleaning');
+  auditLog('table_cleaning', `${tableId}${source ? ` · ${source}` : ''}`);
+  adminMsg('map-msg', `🧽 ${tableId} გადავიდა დასუფთავებაზე.`, 'warn');
+  loadMapTables();
+}
+function renderBanquetPicks() {
+  const composer = g('banquet-composer');
+  const picks = g('banquet-picks');
+  const btn = g('banquet-mode-btn');
+  const mergeBtn = g('banquet-create-btn');
+  const map = g('at-map');
+  if (composer) composer.hidden = !banquetMode;
+  if (map) map.classList.toggle('banquet-picking', banquetMode);
+  if (btn) {
+    btn.textContent = banquetMode ? 'არჩევის დასრულება' : 'მაგიდების არჩევა';
+    btn.classList.toggle('admin-btn-primary', banquetMode);
+  }
+  if (mergeBtn) mergeBtn.disabled = banquetPickIds.length < 2;
+  if (!picks) return;
+  if (!banquetPickIds.length) {
+    picks.innerHTML = '<span class="banquet-empty">ჯერ არცერთი მაგიდა არ არის მონიშნული — დააჭირეთ რუკაზე მაგიდებს.</span>';
+    return;
+  }
+  picks.innerHTML = `<span class="banquet-pick-count">მონიშნულია ${banquetPickIds.length} მაგიდა</span>` + banquetPickIds.map(id => `<button type="button" class="banquet-chip" onclick="toggleBanquetPick('${escapeAttr(id)}')" title="მოხსნა">${escapeHtml(id)} ×</button>`).join('');
+}
+function toggleBanquetMode() {
+  banquetMode = !banquetMode;
+  renderBanquetPicks();
+  document.querySelectorAll('[data-map-table]').forEach(el => el.classList.toggle('is-banquet-pick', banquetPickIds.includes(el.getAttribute('data-map-table'))));
+}
+function toggleBanquetPick(tableId) {
+  const id = String(tableId || '').trim();
+  if (!id) return;
+  const meta = mapTableMeta(id, mapFloorRows);
+  if (meta.state !== 'free' || (meta.reservation && meta.record?.status !== 'free')) {
+    adminMsg('map-msg', `❌ ${id} მხოლოდ თავისუფალი მაგიდა შეიძლება გაერთიანდეს`, 'err');
+    return;
+  }
+  const groups = getTableGroups();
+  if (groups.some(gp => (gp.tableIds || []).includes(id))) {
+    adminMsg('map-msg', `❌ ${id} უკვე გაერთიანებულ ჯგუფშია`, 'err');
+    return;
+  }
+  if (banquetPickIds.includes(id)) banquetPickIds = banquetPickIds.filter(x => x !== id);
+  else banquetPickIds = [...banquetPickIds, id];
+  renderBanquetPicks();
+  document.querySelectorAll('[data-map-table]').forEach(el => el.classList.toggle('is-banquet-pick', banquetPickIds.includes(el.getAttribute('data-map-table'))));
+}
+function clearBanquetPicks() {
+  banquetPickIds = [];
+  renderBanquetPicks();
+  document.querySelectorAll('[data-map-table]').forEach(el => el.classList.remove('is-banquet-pick'));
+}
+function mapTableClick(tableId) {
+  if (mapDragMoved) { mapDragMoved = false; return; }
+  if (banquetMode) { toggleBanquetPick(tableId); return; }
+  mapSelectedTableId = String(tableId || '');
+  renderMapSeatPanel();
+  document.querySelectorAll('[data-map-table]').forEach(el => {
+    el.classList.toggle('is-selected', el.getAttribute('data-map-table') === mapSelectedTableId);
+  });
+}
+function populateMapGroupTableSelect() {
+  const sel = g('map-group-table-select');
+  if (!sel) return;
+  const used = new Set(getTableGroups().flatMap(gp => gp.tableIds || []));
+  const groups = { H: [], A: [], V: [] };
+  MAP_ALL_TABLE_IDS.forEach(id => groups[id.charAt(0)].push(id));
+  const labels = { H: 'ჰოლი', A: 'ანტრესოლი', V: 'ვერანდა' };
+  sel.innerHTML = Object.entries(groups).map(([zone, ids]) => `<optgroup label="${labels[zone]}">${ids.map(id => `<option value="${id}" ${used.has(id) ? 'disabled' : ''}>${id}${used.has(id) ? ' · ჯგუფშია' : ''}</option>`).join('')}</optgroup>`).join('');
+}
+function renderTableGroups(rows = [], groups = getTableGroups()) {
+  const el = g('map-group-list');
+  if (!el) return;
+  if (!groups.length) { el.innerHTML = '<div class="admin-compact-hint">აქტიური გაერთიანებული ჯგუფი ჯერ არ არის.</div>'; populateMapGroupTableSelect(); return; }
+  el.innerHTML = groups.map(gp => {
+    const memberIds = new Set([String(gp.id), ...(gp.tableIds || []).map(String)]);
+    const r = rows.find(x => memberIds.has(String(x.table_id || '')) && x.status === 'confirmed')
+      || rows.find(x => memberIds.has(String(x.table_id || '')) && x.status !== 'cancelled');
+    const live = r ? (statusLabels[r.status] || r.status) : 'თავისუფალი ჯგუფი';
+    const status = gp.status === 'cleaning' ? 'დასუფთავება' : gp.status === 'blocked' ? 'დაბლოკილი' : (r ? live : 'გაერთიანებული');
+    const id = escapeAttr(gp.id), name = escapeHtml(gp.name || 'ბანკეტი');
+    return `<div class="map-group-card"><div><strong>${id} · ${name}</strong><div class="admin-compact-hint">${gp.tableIds.map(escapeHtml).join(' + ')} · ${gp.tableIds.length} მაგიდა · ${escapeHtml(status)}</div></div><div class="map-group-actions"><select class="admin-input" style="width:auto;margin:0;padding:.28rem;font-size:.68rem" onchange="setTableGroupStatus('${id}',this.value)"><option value="merged"${gp.status === 'merged' ? ' selected' : ''}>გაერთიანებული</option><option value="cleaning"${gp.status === 'cleaning' ? ' selected' : ''}>დასუფთავება</option><option value="blocked"${gp.status === 'blocked' ? ' selected' : ''}>დაბლოკილი</option></select><button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" style="width:auto" onclick="releaseTableGroup('${id}')">ჯგუფის დაშლა</button></div></div>`;
+  }).join('');
+  populateMapGroupTableSelect();
+}
+async function createTableGroup() {
+  const tableIds = banquetPickIds.slice();
+  if (tableIds.length < 2) { adminMsg('map-msg', '❌ აირჩიეთ მინიმუმ ორი თავისუფალი მაგიდა', 'err'); return; }
+  const groups = getTableGroups();
+  const used = new Set(groups.flatMap(gp => gp.tableIds || []));
+  if (tableIds.some(id => used.has(id))) { adminMsg('map-msg', '❌ ერთ-ერთი მაგიდა უკვე სხვა ჯგუფშია', 'err'); return; }
+  try {
+    const today = todayGeorgia();
+    const rows = await supaFetch(`/rest/v1/reservations?date=eq.${today}&status=neq.cancelled&select=table_id`);
+    const busy = new Set((rows || []).filter(r => getTableOperationalState(r.table_id) !== 'free').map(r => String(r.table_id || '')).filter(Boolean));
+    const hit = tableIds.filter(id => busy.has(id));
+    if (hit.length) { adminMsg('map-msg', `❌ ${hit.join(', ')} უკვე დაჯავშნილია ამ დღეს`, 'err'); return; }
+  } catch (_) { /* ქსელის გარეშე ჯგუფი მაინც შეიქმნება */ }
+  const nextNo = groups.reduce((max, gp) => Math.max(max, Number(String(gp.id).replace(/^B-/, '')) || 0), 0) + 1;
+  const name = String(g('map-group-name')?.value || '').trim() || `ბანკეტი ${nextNo}`;
+  const group = { id: `B-${String(nextNo).padStart(2, '0')}`, name, tableIds, status: 'merged', createdAt: new Date().toISOString() };
+  groups.push(group); saveTableGroups(groups);
+  if (g('map-group-name')) g('map-group-name').value = '';
+  banquetPickIds = []; banquetMode = false; renderBanquetPicks();
+  auditLog('table_group_create', `${group.id}: ${tableIds.join(' + ')}`);
+  renderTableGroups([], groups); syncReservationGroupOptions(); loadMapTables();
+  adminMsg('map-msg', `✅ შეიქმნა ${group.id}: ${tableIds.join(' + ')}`, 'ok');
+}
+function setTableGroupStatus(groupId, status) {
+  const groups = getTableGroups(); const gp = groups.find(x => x.id === groupId); if (!gp) return;
+  gp.status = ['merged','cleaning','blocked'].includes(status) ? status : 'merged'; saveTableGroups(groups); auditLog('table_group_status', `${groupId} → ${gp.status}`); loadMapTables();
+}
+function releaseTableGroup(groupId) {
+  const groups = getTableGroups(); const gp = groups.find(x => x.id === groupId); if (!gp) return;
+  if (!confirm(`${gp.id} ჯგუფი დაიშალოს? ფიზიკური მაგიდები ისევ ცალკე გახდება.`)) return;
+  saveTableGroups(groups.filter(x => x.id !== groupId)); auditLog('table_group_release', groupId); syncReservationGroupOptions(); loadMapTables();
+  adminMsg('map-msg', `✅ ${groupId} დაიშალა`, 'ok');
+}
+function syncReservationGroupOptions() {
+  const sel = g('r-table'); if (!sel) return;
+  sel.querySelector('[data-table-group-options]')?.remove();
+  const groups = getTableGroups(); if (!groups.length) return;
+  const og = document.createElement('optgroup'); og.label = '🎉 ბანკეტის ჯგუფები'; og.setAttribute('data-table-group-options','true');
+  groups.forEach(gp => { const opt = document.createElement('option'); opt.value = gp.id; opt.textContent = `${gp.id} · ${gp.name || 'ბანკეტი'} (${gp.tableIds.join(' + ')})`; opt.setAttribute('data-table-group','true'); og.appendChild(opt); });
+  sel.appendChild(og);
+}
 async function loadMapTables() {
   try {
     await clearOldReservationsFromTables();
     const filterEl = document.getElementById('map-date-filter');
     const today2 = filterEl && filterEl.value ? filterEl.value : todayGeorgia();
     if (filterEl && !filterEl.value) filterEl.value = today2;
-    const rsvData = await supaFetch(`/rest/v1/reservations?date=eq.${today2}&status=neq.cancelled&select=table_id,status`);
+    const rsvData = await supaFetch(`/rest/v1/reservations?date=eq.${today2}&status=neq.cancelled&select=id,name,phone,guests,time,table_id,status`);
+    mapFloorRows = Array.isArray(rsvData) ? rsvData : [];
+    const groups = getTableGroups();
+    const counts = { free: 0, pending: 0, confirmed: 0, occupied: 0, grouped: 0, cleaning: 0, blocked: 0 };
 
     const zones = { H: [], A: [], V: [] };
     const allTables = [
@@ -9569,20 +9954,47 @@ async function loadMapTables() {
     ['H', 'A', 'V'].forEach(zone => {
       const el = g(`map-zone-${zone}`);
       if (!el) return;
+      const zoneCounts = {};
       el.innerHTML = zones[zone].map(t => {
-        const state = tableOccupancyStateFromReservations(rsvData, t.id);
-        const s = mapTileStyles(state);
-        return `<div draggable="true" data-map-table="${t.id}" ondragstart="dragMapStart(event,'${t.id}')" ondragover="dragMapOver(event)" ondrop="dropMapTable(event,'${t.id}')" onclick="toggleTable('${t.id}',${s.occupied})" style="
-          width:56px;height:44px;border-radius:6px;display:flex;align-items:center;justify-content:center;
-          cursor:pointer;font-size:.78rem;font-weight:500;letter-spacing:.04em;
-          background:${s.bg};
-          border:1px solid ${s.border};
-          color:${s.color};
-          transition:all .2s">${t.id}</div>`;
+        const meta = mapTableMeta(t.id, mapFloorRows, groups);
+        counts[meta.state] = (counts[meta.state] || 0) + 1;
+        zoneCounts[meta.state] = (zoneCounts[meta.state] || 0) + 1;
+        const s = meta.styles;
+        const seatedWho = (meta.record?.status === 'occupied' && meta.record)
+          || (meta.group && getTableOperationalRecord(meta.group.tableIds[0])?.status === 'occupied' ? getTableOperationalRecord(meta.group.tableIds[0]) : null);
+        const sub = seatedWho
+          ? `${seatedWho.guests || 1} სტუმ.`
+          : meta.group
+            ? meta.group.id
+            : (meta.state === 'confirmed' || meta.state === 'pending') && meta.reservation
+            ? mapShortText(meta.reservation.name || meta.reservation.time || '')
+              : (meta.state === 'free' ? '' : (MAP_STATE_LABEL[meta.state] || ''));
+        const selected = t.id === mapSelectedTableId ? ' is-selected' : '';
+        const banquetSelected = banquetPickIds.includes(t.id) ? ' is-banquet-pick' : '';
+        return `<button type="button" class="floor-table${selected}${banquetSelected}" draggable="true" data-map-table="${t.id}" ondragstart="dragMapStart(event,'${t.id}')" ondragover="dragMapOver(event)" ondrop="dropMapTable(event,'${t.id}')" onclick="mapTableClick('${t.id}')" style="background:${s.bg};border:1px solid ${s.border};color:${s.color}"><span class="floor-table-id">${escapeHtml(t.id)}</span>${sub ? `<span class="floor-table-sub">${escapeHtml(sub)}</span>` : ''}</button>`;
       }).join('');
+      const countEl = g(`map-zone-count-${zone}`);
+      if (countEl) {
+        const order = ['free', 'occupied', 'confirmed', 'pending', 'cleaning', 'grouped', 'blocked'];
+        countEl.textContent = order.filter(key => zoneCounts[key]).map(key => `${zoneCounts[key]} ${MAP_STATE_LABEL[key]}`).join(' · ');
+      }
     });
-    const occupiedIds = new Set((rsvData || []).map(r => r.table_id).filter(Boolean));
+    const summary = g('map-floor-summary');
+    if (summary) {
+      const chips = [
+        ['free', '#2a726b'],
+        ['occupied', '#d77b5e'],
+        ['confirmed', '#b85d38'],
+        ['pending', '#c9a03d'],
+        ['cleaning', '#777'],
+        ['grouped', '#8060a8']
+      ];
+      summary.innerHTML = chips.map(([key, color]) => `<span><i style="background:${color}"></i>${MAP_STATE_LABEL[key]} ${counts[key] || 0}</span>`).join('');
+    }
+    const occupiedIds = new Set(mapFloorRows.map(r => r.table_id).filter(Boolean));
     populateMapTransferSelects(occupiedIds);
+    renderTableGroups(mapFloorRows, groups);
+    renderMapSeatPanel();
   } catch (e) {
     adminMsg('map-msg', '❌ Supabase კავშირი ვერ მოხერხდა', 'err');
   }
@@ -9653,6 +10065,7 @@ async function refreshReservationTableSelectState() {
   const sel = g('r-table');
   const dateEl = g('r-date');
   if (!sel || !dateEl) return;
+  syncReservationGroupOptions();
   const date = dateEl.value || todayGeorgia();
   let confirmedIds = new Set();
   try {
@@ -9661,6 +10074,7 @@ async function refreshReservationTableSelectState() {
   } catch (_) {
     /* ქსელი/Supabase — ყველა ვარიანტი დარჩეს ხელმისაწვდომი */
   }
+  const groupedIds = new Set(getTableGroups().flatMap(gp => gp.tableIds || []).map(String));
   const prev = sel.value;
   sel.querySelectorAll('option').forEach(opt => {
     const v = (opt.value || opt.textContent || '').trim();
@@ -9669,7 +10083,14 @@ async function refreshReservationTableSelectState() {
       return;
     }
     const isTable = MAP_ALL_TABLE_IDS.includes(v);
-    opt.disabled = isTable && confirmedIds.has(v);
+    const isGroup = opt.hasAttribute('data-table-group');
+    if (isTable && groupedIds.has(v)) {
+      opt.disabled = true;
+      opt.title = 'ეს მაგიდა ბანკეტის ჯგუფშია — ჯგუფი აირჩიეთ';
+      return;
+    }
+    const memberBusy = isGroup && getTableGroups().some(gp => gp.id === v && (gp.tableIds || []).some(id => confirmedIds.has(String(id))));
+    opt.disabled = ((isTable || isGroup) && confirmedIds.has(v)) || memberBusy;
     if (opt.disabled) opt.title = 'დადასტურებული ჯავშანი — ეს მაგიდა დაკავებულია';
     else opt.removeAttribute('title');
   });
@@ -11105,7 +11526,9 @@ function exportResPDF() {
   <style>body{font-family:sans-serif;font-size:11px;padding:20px}h2{margin-bottom:8px}
   .report-meta{font-size:10px;color:#666;margin-bottom:12px}
   table{width:100%;border-collapse:collapse}th,td{border:1px solid #ccc;padding:5px 7px;text-align:left}
-  th{background:#f0f0f0;font-weight:600}</style></head><body>
+  th{background:#f0f0f0;font-weight:600}
+.banquet-pick-count{display:inline-flex;align-items:center;padding:.32rem .6rem;border-radius:999px;background:rgba(201,160,61,.18);border:1px solid rgba(201,160,61,.45);color:#f0d48b;font-size:.72rem;font-weight:650}.banquet-composer .admin-btn:disabled{opacity:.45;cursor:not-allowed;filter:grayscale(.25)}
+</style></head><body>
   <h2>რესტორანი ტიფლისი — ჯავშნების რეპორტი</h2>
   <p class="report-meta">${period}${statusStr}</p>
   <p class="report-meta">დაბეჭდვის თარიღი: ${toLocaleDateStringGeorgia(new Date())} · ${exportRows.length} ჩანაწერი</p>
