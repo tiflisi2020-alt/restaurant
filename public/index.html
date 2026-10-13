@@ -6860,16 +6860,14 @@ async function hydrateSharedTableState() {
       supaFetch('/rest/v1/table_groups?status=neq.released&select=*'),
       supaFetch(`/rest/v1/table_operations?business_date=eq.${todayGeorgia()}&select=*`)
     ]);
-    const localGroups = localGroupsSnapshot();
-    const localOps = localOpsSnapshot();
     const groups = (remoteGroups || []).map(remoteGroupToLocal).filter(x => x.id && x.tableIds.length >= 2);
     const ops = {};
     (remoteOps || []).forEach(row => { if (row.table_id) ops[String(row.table_id)] = remoteOperationToLocal(row); });
-    if (!groups.length && localGroups.length) void persistTableGroupsToSupabase(localGroups);
-    if (!Object.keys(ops).length && Object.keys(localOps).length) void persistTableOperationsToSupabase(localOps);
-    localStorage.setItem(TABLE_GROUPS_KEY, JSON.stringify(groups.length ? groups : localGroups));
+    // A successful empty Supabase response is authoritative: clear stale local state.
+    // localStorage is used only when the remote request fails and the catch block runs.
+    localStorage.setItem(TABLE_GROUPS_KEY, JSON.stringify(groups));
     const rawOps = JSON.parse(localStorage.getItem(TABLE_OPS_KEY) || '{}');
-    rawOps[todayGeorgia()] = Object.keys(ops).length ? ops : localOps;
+    rawOps[todayGeorgia()] = ops;
     localStorage.setItem(TABLE_OPS_KEY, JSON.stringify(rawOps));
     tableSharedStateLoaded = true;
   } catch (err) {
