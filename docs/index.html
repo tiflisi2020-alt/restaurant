@@ -9787,6 +9787,11 @@ function saveTableGroups(groups) {
   localStorage.setItem(TABLE_GROUPS_KEY, JSON.stringify(groups || []));
   void persistTableGroupsToSupabase(groups).catch(err => console.warn('table_groups sync failed', err));
 }
+async function releaseTableGroupInSupabase(groupId) {
+  const encoded = encodeURIComponent(String(groupId || ''));
+  if (!encoded) return;
+  await supaFetch(`/rest/v1/table_groups?group_code=eq.${encoded}`, 'PATCH', { status: 'released' }, { prefer: 'return=minimal' });
+}
 function getActiveTableGroupForTable(tableId, groups = getTableGroups()) { return groups.find(gp => gp.status !== 'released' && gp.tableIds.includes(String(tableId))) || null; }
 function tableGroupVisualState(group, rows) {
   if (group.status === 'blocked') return 'blocked';
@@ -10022,10 +10027,17 @@ function setTableGroupStatus(groupId, status) {
   const groups = getTableGroups(); const gp = groups.find(x => x.id === groupId); if (!gp) return;
   gp.status = ['merged','cleaning','blocked'].includes(status) ? status : 'merged'; saveTableGroups(groups); auditLog('table_group_status', `${groupId} → ${gp.status}`); loadMapTables();
 }
-function releaseTableGroup(groupId) {
+async function releaseTableGroup(groupId) {
   const groups = getTableGroups(); const gp = groups.find(x => x.id === groupId); if (!gp) return;
   if (!confirm(`${gp.id} ჯგუფი დაიშალოს? ფიზიკური მაგიდები ისევ ცალკე გახდება.`)) return;
-  saveTableGroups(groups.filter(x => x.id !== groupId)); auditLog('table_group_release', groupId); syncReservationGroupOptions(); loadMapTables();
+  saveTableGroups(groups.filter(x => x.id !== groupId));
+  try {
+    await releaseTableGroupInSupabase(groupId);
+  } catch (err) {
+    console.warn('table group release sync failed', err);
+    adminMsg('map-msg', `⚠️ ${groupId} ადგილობრივად დაიშალა, მაგრამ Supabase-ში ვერ განახლდა`, 'err');
+  }
+  auditLog('table_group_release', groupId); syncReservationGroupOptions(); loadMapTables();
   adminMsg('map-msg', `✅ ${groupId} დაიშალა`, 'ok');
 }
 function syncReservationGroupOptions() {
