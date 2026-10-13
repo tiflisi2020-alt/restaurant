@@ -9739,8 +9739,8 @@ function tableOccupancyStateFromReservations(rows, tableId) {
 }
 
 
-const TABLE_GROUPS_KEY = 'tiflis_table_groups_v1';
-const TABLE_OPS_KEY = 'tiflis_table_ops_v1';
+const TABLE_GROUPS_KEY = 'tiflis_table_groups_v2';
+const TABLE_OPS_KEY = 'tiflis_table_ops_v2';
 function getTableOps() {
   try { const raw = JSON.parse(localStorage.getItem(TABLE_OPS_KEY) || '{}'); return raw && typeof raw === 'object' ? (raw[todayGeorgia()] || {}) : {}; }
   catch (_) { return {}; }

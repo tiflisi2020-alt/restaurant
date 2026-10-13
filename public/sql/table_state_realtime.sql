@@ -88,6 +88,26 @@ create trigger table_operations_set_updated_at
 before update on public.table_operations
 for each row execute function public.set_table_state_updated_at();
 
+-- Protect released groups from stale clients that still try to upsert them as merged.
+create or replace function public.protect_released_table_group()
+returns trigger
+language plpgsql
+as $$
+begin
+  if tg_op = 'UPDATE'
+     and old.status = 'released'
+     and new.status <> 'released' then
+    return old;
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists table_groups_protect_released on public.table_groups;
+create trigger table_groups_protect_released
+before update on public.table_groups
+for each row execute function public.protect_released_table_group();
+
 -- RLS is enabled, with policies matching the current public app architecture.
 -- For stronger production security, replace anon write policies with authenticated
 -- admin policies after admin authentication is moved to Supabase Auth.
