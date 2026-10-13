@@ -6806,6 +6806,106 @@ async function supaFetch(path, method='GET', body=null, fetchOpts) {
   return data;
 }
 
+// ===== SHARED TABLE STATE + SUPABASE REALTIME =====
+// Supabase is the source of truth; localStorage remains an offline fallback.
+let tableRealtimeSocket = null;
+let tableRealtimeHeartbeat = null;
+let tableRealtimeReconnect = null;
+let tableSharedStateLoaded = false;
+let tableRealtimeStarted = false;
+
+function tableRealtimeWsUrl() {
+  return SUPA_URL.replace(/^http/i, 'ws') + '/realtime/v1/websocket?apikey=' + encodeURIComponent(SUPA_KEY) + '&vsn=1.0.0';
+}
+
+function localGroupsSnapshot() {
+  try { return JSON.parse(localStorage.getItem(TABLE_GROUPS_KEY) || '[]') || []; } catch (_) { return []; }
+}
+
+function localOpsSnapshot() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(TABLE_OPS_KEY) || '{}');
+    return raw && typeof raw === 'object' ? (raw[todayGeorgia()] || {}) : {};
+  } catch (_) { return {}; }
+}
+
+function remoteGroupToLocal(row) {
+  return { id: String(row.group_code || ''), name: row.name || 'ბანკეტი', tableIds: Array.isArray(row.table_ids) ? row.table_ids.map(String) : [], status: row.status || 'merged', createdAt: row.created_at || new Date().toISOString(), updatedAt: row.updated_at || row.created_at || new Date().toISOString() };
+}
+
+function remoteOperationToLocal(row) {
+  return { status: row.status, name: row.guest_name || undefined, guests: row.guests || undefined, source: row.source || 'system', reservationId: row.reservation_id || null, seatedAt: row.seated_at || undefined, updatedAt: row.updated_at || undefined };
+}
+
+async function persistTableGroupsToSupabase(groups) {
+  const rows = (groups || []).map(gp => ({ group_code: String(gp.id), name: gp.name || 'ბანკეტი', table_ids: (gp.tableIds || []).map(String), status: ['merged', 'cleaning', 'blocked', 'released'].includes(gp.status) ? gp.status : 'merged' }));
+  if (!rows.length) return;
+  await supaFetch('/rest/v1/table_groups?on_conflict=group_code', 'POST', rows, { prefer: 'resolution=merge-duplicates,return=minimal' });
+}
+
+async function persistTableOperationsToSupabase(ops) {
+  const date = todayGeorgia();
+  const rows = Object.entries(ops || {}).map(([tableId, value]) => {
+    const record = typeof value === 'string' ? { status: value } : (value || {});
+    return { table_id: String(tableId), business_date: date, status: record.status || 'free', guest_name: record.name || null, guests: record.guests || null, source: ['walk-in', 'reservation', 'admin', 'system'].includes(record.source) ? record.source : 'admin', reservation_id: record.reservationId == null ? null : String(record.reservationId), seated_at: record.seatedAt || null, updated_by: 'admin-panel' };
+  });
+  if (!rows.length) return;
+  await supaFetch('/rest/v1/table_operations?on_conflict=table_id,business_date', 'POST', rows, { prefer: 'resolution=merge-duplicates,return=minimal' });
+}
+
+async function hydrateSharedTableState() {
+  if (tableSharedStateLoaded) return;
+  try {
+    const [remoteGroups, remoteOps] = await Promise.all([
+      supaFetch('/rest/v1/table_groups?status=neq.released&select=*'),
+      supaFetch(`/rest/v1/table_operations?business_date=eq.${todayGeorgia()}&select=*`)
+    ]);
+    const localGroups = localGroupsSnapshot();
+    const localOps = localOpsSnapshot();
+    const groups = (remoteGroups || []).map(remoteGroupToLocal).filter(x => x.id && x.tableIds.length >= 2);
+    const ops = {};
+    (remoteOps || []).forEach(row => { if (row.table_id) ops[String(row.table_id)] = remoteOperationToLocal(row); });
+    if (!groups.length && localGroups.length) void persistTableGroupsToSupabase(localGroups);
+    if (!Object.keys(ops).length && Object.keys(localOps).length) void persistTableOperationsToSupabase(localOps);
+    localStorage.setItem(TABLE_GROUPS_KEY, JSON.stringify(groups.length ? groups : localGroups));
+    const rawOps = JSON.parse(localStorage.getItem(TABLE_OPS_KEY) || '{}');
+    rawOps[todayGeorgia()] = Object.keys(ops).length ? ops : localOps;
+    localStorage.setItem(TABLE_OPS_KEY, JSON.stringify(rawOps));
+    tableSharedStateLoaded = true;
+  } catch (err) {
+    console.warn('Shared table state unavailable; using localStorage fallback.', err);
+  }
+}
+
+function applyRealtimeTableChange() {
+  tableSharedStateLoaded = false;
+  hydrateSharedTableState().then(() => {
+    if (typeof loadMapTables === 'function' && document.getElementById('at-map')) loadMapTables();
+  }).catch(() => {});
+}
+
+function startTableRealtime() {
+  if (tableRealtimeStarted || typeof WebSocket === 'undefined') return;
+  tableRealtimeStarted = true;
+  const connect = () => {
+    try {
+      const ws = new WebSocket(tableRealtimeWsUrl());
+      tableRealtimeSocket = ws;
+      ws.onopen = () => {
+        ws.send(JSON.stringify({ topic: 'realtime:restaurant-tables', event: 'phx_join', payload: { config: { broadcast: { self: false }, presence: { key: '' }, postgres_changes: [{ event: '*', schema: 'public', table: 'table_groups' }, { event: '*', schema: 'public', table: 'table_operations' }] }, access_token: SUPA_KEY }, ref: '1' }));
+        clearInterval(tableRealtimeHeartbeat);
+        tableRealtimeHeartbeat = setInterval(() => { if (ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ topic: 'phoenix', event: 'heartbeat', payload: {}, ref: String(Date.now()) })); }, 25000);
+      };
+      ws.onmessage = event => { try { const msg = JSON.parse(event.data || '{}'); if (msg.event === 'postgres_changes' || msg.event === 'broadcast') applyRealtimeTableChange(); } catch (_) {} };
+      ws.onclose = () => { clearInterval(tableRealtimeHeartbeat); clearTimeout(tableRealtimeReconnect); tableRealtimeReconnect = setTimeout(connect, 4000); };
+      ws.onerror = () => { try { ws.close(); } catch (_) {} };
+    } catch (_) { clearTimeout(tableRealtimeReconnect); tableRealtimeReconnect = setTimeout(connect, 4000); }
+  };
+  connect();
+}
+
+hydrateSharedTableState().finally(startTableRealtime);
+
 // guests stepper
 function adjGuests(d) {
   const el = g('r-guests');
@@ -9650,6 +9750,7 @@ function getTableOps() {
 function saveTableOps(ops) {
   try { const raw = JSON.parse(localStorage.getItem(TABLE_OPS_KEY) || '{}'); const all = raw && typeof raw === 'object' ? raw : {}; all[todayGeorgia()] = ops || {}; localStorage.setItem(TABLE_OPS_KEY, JSON.stringify(all)); }
   catch (_) { localStorage.setItem(TABLE_OPS_KEY, JSON.stringify({ [todayGeorgia()]: ops || {} })); }
+  void persistTableOperationsToSupabase(ops).catch(err => console.warn('table_operations sync failed', err));
 }
 function getTableOperationalRecord(tableId) {
   const value = getTableOps()[String(tableId)];
@@ -9682,7 +9783,10 @@ function getTableGroups() {
     return Array.isArray(raw) ? raw.filter(x => x && Array.isArray(x.tableIds) && x.tableIds.length >= 2) : [];
   } catch (_) { return []; }
 }
-function saveTableGroups(groups) { localStorage.setItem(TABLE_GROUPS_KEY, JSON.stringify(groups || [])); }
+function saveTableGroups(groups) {
+  localStorage.setItem(TABLE_GROUPS_KEY, JSON.stringify(groups || []));
+  void persistTableGroupsToSupabase(groups).catch(err => console.warn('table_groups sync failed', err));
+}
 function getActiveTableGroupForTable(tableId, groups = getTableGroups()) { return groups.find(gp => gp.status !== 'released' && gp.tableIds.includes(String(tableId))) || null; }
 function tableGroupVisualState(group, rows) {
   if (group.status === 'blocked') return 'blocked';
@@ -9934,6 +10038,7 @@ function syncReservationGroupOptions() {
 }
 async function loadMapTables() {
   try {
+    await hydrateSharedTableState();
     await clearOldReservationsFromTables();
     const filterEl = document.getElementById('map-date-filter');
     const today2 = filterEl && filterEl.value ? filterEl.value : todayGeorgia();
