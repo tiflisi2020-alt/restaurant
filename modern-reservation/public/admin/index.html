@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>ადმინ შესვლა — რესტორანი ტიფლისი</title>
+  <script>
+    (function () {
+      if (sessionStorage.getItem('tiflis_admin_logged') !== '1') return;
+      var p = (location.pathname || '/').replace(/\/+$/, '') || '/';
+      var base = p.replace(/\/admin(\/index\.html)?$/i, '');
+      var panel = base + '/admin/panel';
+      if (location.hostname.indexOf('github.io') !== -1) panel += '/';
+      location.replace(panel);
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital@0;1&family=Raleway:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;500;600;700;800&family=Noto+Serif+Georgian:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cream: #efeae2;
+      --ink: #1c1915;
+      --gold: #c4a15a;
+      --card: #1a1714;
+      --muted: #b3a89b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      font-family: 'Noto Sans Georgian', 'Noto Sans', system-ui, sans-serif;
+      background:
+        radial-gradient(ellipse at 15% 0%, rgba(196, 161, 90, 0.2), transparent 40%),
+        var(--cream);
+      color: #f6f1e8;
+    }
+    .card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--card);
+      border: 1px solid rgba(246, 241, 232, 0.08);
+      border-radius: 22px;
+      padding: 2rem 1.6rem 1.5rem;
+      box-shadow: 0 24px 60px rgba(28, 25, 21, 0.18);
+    }
+    .mark {
+      width: 42px;
+      height: 42px;
+      margin: 0 auto 1rem;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: var(--gold);
+      color: #1c160c;
+      font-family: 'Noto Serif Georgian', Georgia, serif;
+      font-size: 1.3rem;
+    }
+    h1 {
+      font-family: 'Noto Serif Georgian', Georgia, serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: #f6f1e8;
+      text-align: center;
+      margin-bottom: 0.35rem;
+    }
+    .sub {
+      text-align: center;
+      font-size: 0.86rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+    label {
+      display: block;
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+    input[type="password"] {
+      width: 100%;
+      padding: 0.8rem 0.9rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(246, 241, 232, 0.14);
+      border-radius: 12px;
+      color: #f6f1e8;
+      font-family: inherit;
+      font-size: 1rem;
+      margin-bottom: 0.9rem;
+    }
+    input:focus { outline: 3px solid rgba(196, 161, 90, 0.35); border-color: var(--gold); }
+    button[type="submit"] {
+      width: 100%;
+      min-height: 46px;
+      padding: 0.75rem 1rem;
+      background: #174e47;
+      color: #f7fffd;
+      border: none;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    button[type="submit"]:hover { filter: brightness(1.08); }
+    button[type="submit"]:disabled { opacity: 0.55; cursor: not-allowed; }
+    .err {
+      display: none;
+      font-size: 0.75rem;
+      color: #e74c3c;
+      margin-top: 0.85rem;
+      text-align: center;
+    }
+    .err.show { display: block; }
+    .back {
+      display: block;
+      text-align: center;
+      margin-top: 1.35rem;
+      font-size: 0.72rem;
+      color: rgba(245, 240, 230, 0.45);
+    }
+    .back a { color: var(--gold); text-decoration: none; }
+    .back a:hover { text-decoration: underline; }
+    .login-divider {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin: 1.1rem 0 0.85rem;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(245, 240, 230, 0.35);
+    }
+    .login-divider::before,
+    .login-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.12);
+    }
+    #google-btn-host {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      min-height: 44px;
+    }
+    #google-err {
+      display: none;
+      font-size: 0.72rem;
+      color: #e8a598;
+      margin-top: 0.65rem;
+      text-align: center;
+      line-height: 1.45;
+    }
+    #google-section { display: none; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="mark" aria-hidden="true">T</div>
+    <h1>ადმინ შესვლა</h1>
+    <p class="sub">რესტორანი ტიფლისი · პაროლი ან Google — შემდეგ ადმინ პანელი</p>
+    <form id="login-form" autocomplete="on">
+      <label for="pw">პაროლი</label>
+      <input type="password" id="pw" name="password" autocomplete="current-password" required />
+      <button type="submit" id="btn">შესვლა</button>
+      <p class="err" id="err" role="alert">❌ პაროლი არასწორია</p>
+    </form>
+    <div id="google-section">
+      <div class="login-divider">ან Google</div>
+      <div id="google-btn-host"></div>
+      <p id="google-err" role="alert"></p>
+    </div>
+    <p class="back"><a href="../">← მთავარი გვერდი</a></p>
+  </div>
+  <script>
+    const SUPA_URL = '/api/legacy';
+    const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhjeHprZWx2cG15bnJlZXdmbHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NDUwMTksImV4cCI6MjA4OTMyMTAxOX0.swcXV9m5g9Ox1t_QkLz_9suVTnBPanG0QxA1Eo4H-rY';
+    const ADMIN_PW_DEFAULT = 'tiflis2024';
+
+    async function supaFetch(path, method = 'GET', body = null) {
+      const opts = {
+        method,
+        headers: {
+          apikey: SUPA_KEY,
+          Authorization: 'Bearer ' + SUPA_KEY,
+          'Content-Type': 'application/json',
+          Prefer: 'return=representation',
+        },
+      };
+      if (body) opts.body = JSON.stringify(body);
+      const r = await fetch(SUPA_URL + path, opts);
+      const text = await r.text();
+      let data = null;
+      if (text) {
+        try {
+          data = JSON.parse(text);
+        } catch {
+          data = { message: text };
+        }
+      }
+      if (!r.ok) {
+        const msg =
+          (data && (data.message || data.error_description || data.hint)) ||
+          r.statusText ||
+          'HTTP ' + r.status;
+        throw new Error(typeof msg === 'string' ? msg : JSON.stringify(msg));
+      }
+      return data;
+    }
+
+    async function getAdminPw() {
+      try {
+        const data = await supaFetch('/rest/v1/settings?key=eq.admin_pw&select=value');
+        if (data && data[0] && data[0].value) return data[0].value;
+      } catch (e) {}
+      try {
+        return localStorage.getItem('tiflis_admin_pw') || ADMIN_PW_DEFAULT;
+      } catch (e) {
+        return ADMIN_PW_DEFAULT;
+      }
+    }
+
+    function goPanel() {
+      var p2 = (location.pathname || '/').replace(/\/+$/, '') || '/';
+      var base = p2.replace(/\/admin(\/index\.html)?$/i, '');
+      var panel = base + '/admin/panel';
+      if (location.hostname.indexOf('github.io') !== -1) panel += '/';
+      window.location.replace(panel);
+    }
+
+    let googleClientInited = null;
+    function loadGsi() {
+      if (window.google && window.google.accounts && window.google.accounts.id) return Promise.resolve();
+      return new Promise(function (resolve, reject) {
+        var s = document.createElement('script');
+        s.src = 'https://accounts.google.com/gsi/client';
+        s.async = true;
+        s.defer = true;
+        s.onload = function () { resolve(); };
+        s.onerror = function () { reject(new Error('gsi')); };
+        document.head.appendChild(s);
+      });
+    }
+
+    async function setupGoogleSignIn() {
+      var section = document.getElementById('google-section');
+      var host = document.getElementById('google-btn-host');
+      var gErr = document.getElementById('google-err');
+      if (!section || !host) return;
+      try {
+        var r = await fetch('/api/auth/google-config');
+        var cfg = await r.json();
+        if (!cfg || !cfg.enabled || !cfg.clientId) {
+          section.style.display = 'none';
+          host.innerHTML = '';
+          return;
+        }
+        section.style.display = 'block';
+        await loadGsi();
+        if (googleClientInited !== cfg.clientId) {
+          google.accounts.id.initialize({
+            client_id: cfg.clientId,
+            callback: function (response) {
+              onGoogleCredential(response, gErr);
+            },
+            auto_select: false,
+            cancel_on_tap_outside: true,
+          });
+          googleClientInited = cfg.clientId;
+        }
+        host.innerHTML = '';
+        google.accounts.id.renderButton(host, {
+          theme: 'filled_black',
+          size: 'large',
+          width: 280,
+          text: 'continue_with',
+          locale: 'ka',
+        });
+      } catch (e) {
+        section.style.display = 'none';
+        host.innerHTML = '';
+      }
+    }
+
+    async function onGoogleCredential(response, errEl) {
+      if (errEl) {
+        errEl.style.display = 'none';
+        errEl.textContent = '';
+      }
+      if (!response || !response.credential) return;
+      try {
+        var r = await fetch('/api/auth/google', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ credential: response.credential }),
+        });
+        var data = await r.json().catch(function () { return {}; });
+        if (!r.ok || !data.ok) {
+          if (errEl) {
+            errEl.textContent = (data && data.error) ? String(data.error) : 'Google შესვლა ვერ მოხერხდა';
+            errEl.style.display = 'block';
+          }
+          return;
+        }
+        sessionStorage.setItem('tiflis_admin_logged', '1');
+        sessionStorage.setItem('tiflis_admin_stay', '1');
+        goPanel();
+      } catch (e) {
+        if (errEl) {
+          errEl.textContent = 'ქსელის შეცდომა — გაუშვით npm start (სერვერი) და სცადეთ თავიდან';
+          errEl.style.display = 'block';
+        }
+      }
+    }
+
+    setupGoogleSignIn();
+
+    const form = document.getElementById('login-form');
+    const pwEl = document.getElementById('pw');
+    const errEl = document.getElementById('err');
+    const btn = document.getElementById('btn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errEl.classList.remove('show');
+      btn.disabled = true;
+      try {
+        const response = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: pwEl.value }),
+        });
+        const ok = response.ok;
+        if (ok) {
+          sessionStorage.setItem('tiflis_admin_logged', '1');
+          sessionStorage.setItem('tiflis_admin_stay', '1');
+          goPanel();
+        } else {
+          errEl.classList.add('show');
+          pwEl.value = '';
+          pwEl.focus();
+        }
+      } catch (err) {
+        errEl.textContent = '❌ კავშირის შეცდომა';
+        errEl.classList.add('show');
+      } finally {
+        btn.disabled = false;
+      }
+    });
+    pwEl.focus();
+  </script>
+</body>
+</html>
