@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ka">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="რესტორანი ტიფლისი — ქართული სამზარეულო და მარტივი ონლაინ რეზერვაცია" />
+  <title>ტიფლისი — მაგიდა, რომელიც გელოდება</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="/">TIFLISI<span>რესტორანი</span></a><nav><a href="#experience">ჩვენი ამბავი</a><a href="#menu">მენიუ</a><a class="nav-cta" href="#reserve">მაგიდის დაჯავშნა</a></nav><button class="menu-toggle" aria-label="მენიუ">☰</button></header>
+  <main>
+    <section class="hero"><div class="hero-noise"></div><div class="hero-copy"><p class="eyebrow">თბილისი · ქართული სუფრა</p><h1>საღამო,<br><em>რომელიც გახსოვს.</em></h1><p class="hero-text">ტრადიციული გემოები, თანამედროვე სითბო და მაგიდა, რომელიც სწორედ თქვენთვის მოვამზადეთ.</p><a class="button button-accent" href="#reserve">დაჯავშნე მაგიდა <span>↗</span></a></div><div class="hero-note">12:00 — 23:00 <i></i> ყოველდღე</div></section>
+    <section id="experience" class="story section"><div class="section-label">01 / ჩვენი ამბავი</div><div><h2>სუფრა არის<br><em>შეხვედრა.</em></h2><p>„ტიფლისში“ ძველი თბილისის ხასიათს ვაცოცხლებთ — თიხის ჭურჭელში, ახალ პურში, ოჯახურ რეცეპტებში და იმ თავისუფალ საღამოებში, როცა დრო ნელდება.</p><a class="text-link" href="#menu">გაეცანი მენიუს <span>→</span></a></div><div class="story-stat"><strong>14</strong><span>წელი<br>თბილისის გულში</span></div></section>
+    <section id="menu" class="menu-section section"><div class="section-label">02 / სამზარეულო</div><div class="menu-heading"><h2>დღეს რას<br><em>გაგიზიარებთ?</em></h2><p>მარტივი პროდუქტები. დიდი გემო. ყოველდღე ახალი.</p></div><div id="menu-list" class="menu-list"><p class="muted">მენიუ იტვირთება...</p></div></section>
+    <section id="reserve" class="reserve-section section"><div class="section-label">03 / რეზერვაცია</div><div class="reserve-grid"><div><h2>შენი მაგიდა<br><em>აქ არის.</em></h2><p class="reserve-intro">აირჩიე თარიღი და დრო — დანარჩენს ჩვენ მივხედავთ.</p><div class="reserve-perks"><span>✓ დასტური მყისიერად</span><span>✓ არჩევანი მაგიდის მიხედვით</span><span>✓ უფასო გაუქმება 2 საათით ადრე</span></div></div><form id="reservation-form" class="reservation-form"><div class="form-row"><label>თარიღი<input type="date" id="date" required /></label><label>სტუმრები<select id="guests" required><option value="2">2 სტუმარი</option><option value="3">3 სტუმარი</option><option value="4">4 სტუმარი</option><option value="5">5 სტუმარი</option><option value="6">6 სტუმარი</option><option value="8">8 სტუმარი</option></select></label></div><label>ხელმისაწვდომი დრო<select id="slot" required disabled><option>ჯერ აირჩიე თარიღი</option></select></label><input type="hidden" id="table-id" /><div class="form-row"><label>სახელი<input id="name" required placeholder="თქვენი სახელი" /></label><label>ტელეფონი<input id="phone" required placeholder="+995 ..." /></label></div><label>ელფოსტა <span class="optional">არასავალდებულო</span><input id="email" type="email" placeholder="you@example.com" /></label><label>შენიშვნა <span class="optional">არასავალდებულო</span><textarea id="notes" rows="3" placeholder="დაბადების დღე, ბავშვი, ფანჯარასთან... "></textarea></label><button class="button button-dark" type="submit">დაჯავშნა <span>→</span></button><p id="form-message" class="form-message" role="status"></p></form></div></section>
+  </main>
+  <footer><div class="brand">TIFLISI<span>რესტორანი</span></div><p>თბილისი, საქართველო · ყოველდღე 12:00 — 23:00</p><a href="/admin.html">ადმინი</a></footer>
+  <div id="success-modal" class="modal" hidden><div class="modal-card"><button class="modal-close" aria-label="დახურვა">×</button><div class="success-mark">✓</div><p class="eyebrow">რეზერვაცია მიღებულია</p><h2>მაგიდა გელოდება.</h2><p>შენი დასტურის კოდია</p><strong id="confirmation-code" class="confirmation-code"></strong><p class="muted">დეტალები შეინახე — საჭიროების შემთხვევაში დაგვიკავშირდი.</p></div></div>
+  <script src="/app.js" type="module"></script>
+</body>
+</html>
