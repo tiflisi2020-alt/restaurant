@@ -833,12 +833,15 @@ html.admin-panel-route #admin-modal.adm-app .admin-box {
 #admin-modal.adm-app .adm-swatch--banquet { background: #1D7F7A; }
 #admin-modal.adm-app .adm-swatch--clean { background: #B7B1A8; }
 
+/* Only show when .on — never override .admin-pane { display:none } */
 #admin-modal.adm-app #at-map.map-workspace {
-  display: flex;
   flex-direction: column;
   gap: 8px;
   padding-top: 4px !important;
   padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px)) !important;
+}
+#admin-modal.adm-app #at-map.map-workspace.on {
+  display: flex;
 }
 #admin-modal.adm-app .map-hero {
   display: flex;
