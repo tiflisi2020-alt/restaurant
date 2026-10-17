@@ -167,6 +167,7 @@ app.all('/api/legacy/rest/v1/:table', requireDb, asyncRoute(async (req, res) => 
   if (table === 'menu_categories') {
     if (req.method === 'GET') {
       let rows = await supa('menu_categories', '?select=id,legacy_id,name,ka,en,ru,sort_order,is_active&order=sort_order.asc,legacy_id.asc');
+      rows = rows.filter((r) => r.is_active !== false);
       const idFilter = legacyQuery(req, 'id'); if (idFilter) rows = rows.filter((r) => String(r.legacy_id) === legacyEq(idFilter, 'id'));
       return res.json(rows.map(legacyCategory));
     }
@@ -206,6 +207,13 @@ app.all('/api/legacy/rest/v1/:table', requireDb, asyncRoute(async (req, res) => 
   }
   if (table === 'reservations') {
     if (req.method === 'GET') {
+      const idFilter = legacyQuery(req, 'id').replace(/^eq\./, '');
+      if (idFilter) {
+        const one = await supa('reservations', `?id=eq.${encode(idFilter)}&select=*`);
+        const tables = await supa('restaurant_tables', '?select=id,name');
+        const names = new Map(tables.map((t) => [t.id, t.name]));
+        return res.json(one.map((r) => legacyReservation(r, names.get(r.table_id) || '')));
+      }
       let rows = await supa('reservations', '?select=*&order=created_at.desc,reservation_date.desc,reservation_time.desc&limit=500');
       const url = new URL(req.protocol + '://' + (req.headers.host || 'localhost') + req.originalUrl);
       const dateParams = url.searchParams.getAll('date');
