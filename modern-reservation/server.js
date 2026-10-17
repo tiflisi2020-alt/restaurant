@@ -128,13 +128,22 @@ function legacyMenuItem(row) { return { id: Number(row.legacy_id || 0), legacy_i
 function legacyReservation(row, tableName = '') {
   return { ...row, name: row.guest_name, date: row.reservation_date, time: String(row.reservation_time || '').slice(0, 5), table_id: tableName || row.table_id || '', payment: row.payment || '', note: row.note || row.notes || '', precheck_json: row.precheck_json || null };
 }
+const FLOOR_TABLE_SEATS = {
+  'H-11': 6, 'H-12': 6, 'H-13': 3, 'H-14': 4, 'H-15': 2, 'H-16': 4, 'H-17': 2, 'H-18': 6, 'H-19': 4,
+  'A-20': 2, 'A-21': 4, 'A-22': 4, 'A-23': 4, 'A-24': 4, 'A-25': 4, 'A-26': 4, 'A-27': 6, 'A-28': 4, 'A-29': 6,
+  'V-1': 3, 'V-2': 4, 'V-3': 2, 'V-4': 4, 'V-5': 4, 'V-6': 4, 'V-7': 4, 'V-8': 4
+};
 function floorTableMeta(name) {
   const id = String(name || '').trim().toUpperCase();
+  if (FLOOR_TABLE_SEATS[id] != null) {
+    const zone = id.startsWith('H-') ? 'hall' : id.startsWith('A-') ? 'mezzanine' : 'veranda';
+    return { name: id, seats: FLOOR_TABLE_SEATS[id], zone };
+  }
+  if (/^B-\d+$/.test(id)) return { name: id, seats: 8, zone: 'banquet' };
+  if (/^T\d+$/.test(id)) return { name: id, seats: 4, zone: 'main' };
   if (/^H-\d+$/.test(id)) return { name: id, seats: 4, zone: 'hall' };
   if (/^A-\d+$/.test(id)) return { name: id, seats: 4, zone: 'mezzanine' };
   if (/^V-\d+$/.test(id)) return { name: id, seats: 4, zone: 'veranda' };
-  if (/^B-\d+$/.test(id)) return { name: id, seats: 8, zone: 'banquet' };
-  if (/^T\d+$/.test(id)) return { name: id, seats: 4, zone: 'main' };
   return null;
 }
 async function resolveRestaurantTable(tableName) {
