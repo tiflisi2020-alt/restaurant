@@ -883,3 +883,98 @@ html.admin-panel-route #admin-modal.adm-app .admin-box {
   #admin-modal.adm-app .admin-logout { padding: 0 10px !important; }
   #admin-modal.adm-app .floor-table { width: 72px !important; }
 }
+
+
+/* Mobile hardening: iOS Safari, Android Chrome and safe-area devices. */
+html.admin-panel-route,
+html.admin-panel-route body {
+  min-height: 100%;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+html.admin-panel-route body {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  overscroll-behavior-x: none;
+}
+#admin-modal.adm-app,
+#admin-modal.adm-app .admin-box {
+  min-height: 100dvh;
+}
+#admin-modal.adm-app button,
+#admin-modal.adm-app input,
+#admin-modal.adm-app select,
+#admin-modal.adm-app textarea,
+#admin-modal.adm-app a {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+#admin-modal.adm-app .admin-pane,
+#admin-modal.adm-app .admin-table-wrap,
+#admin-modal.adm-app .floor-scroll {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+#admin-modal.adm-app .admin-table-wrap,
+#admin-modal.adm-app .floor-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+}
+@media (max-width: 980px) {
+  #admin-modal.adm-app .admin-box {
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+  }
+  #admin-modal.adm-app .admin-top {
+    padding-top: max(12px, env(safe-area-inset-top)) !important;
+  }
+  #admin-modal.adm-app .admin-sidebar {
+    height: 100dvh !important;
+    padding-bottom: env(safe-area-inset-bottom) !important;
+  }
+  #admin-modal.adm-app .admin-pane {
+    padding-bottom: calc(28px + env(safe-area-inset-bottom)) !important;
+  }
+  #admin-modal.adm-app .admin-nav-backdrop {
+    min-height: 100dvh;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+@media (max-width: 640px) {
+  /* iOS Safari zooms focused controls below 16px. */
+  #admin-modal.adm-app .admin-input,
+  #admin-modal.adm-app .admin-search,
+  #admin-modal.adm-app .admin-cat-filter,
+  #admin-modal.adm-app .admin-field input,
+  #admin-modal.adm-app .admin-field select,
+  #admin-modal.adm-app .admin-field textarea,
+  #admin-modal.adm-app .admin-filter-row input,
+  #admin-modal.adm-app .admin-filter-row select,
+  #admin-modal.adm-app .res-adv-input,
+  #admin-modal.adm-app .res-advpay-select {
+    min-height: 44px !important;
+    font-size: 16px !important;
+  }
+  #admin-modal.adm-app .admin-top {
+    padding-right: max(12px, env(safe-area-inset-right)) !important;
+    padding-left: max(12px, env(safe-area-inset-left)) !important;
+  }
+  #admin-modal.adm-app .admin-pane {
+    padding-right: max(14px, env(safe-area-inset-right)) !important;
+    padding-left: max(14px, env(safe-area-inset-left)) !important;
+  }
+  #admin-modal.adm-app .admin-sidebar {
+    width: min(86vw, 320px) !important;
+  }
+  #admin-modal.adm-app .admin-table-wrap table,
+  #admin-modal.adm-app .floor-scroll table {
+    min-width: 680px;
+  }
+  #admin-modal.adm-app .admin-table-wrap,
+  #admin-modal.adm-app .floor-scroll {
+    margin-right: calc(-1 * max(14px, env(safe-area-inset-right)));
+    margin-left: calc(-1 * max(14px, env(safe-area-inset-left)));
+    padding-right: max(14px, env(safe-area-inset-right));
+    padding-left: max(14px, env(safe-area-inset-left));
+  }
+}

@@ -11,3 +11,47 @@
 .admin-shell .button-accent{margin-top:0}
 .admin-login .button-accent{margin-top:.4rem}
 @media(max-width:760px){.admin-header{align-items:flex-start;gap:1rem;flex-direction:column}.admin-header h1{font-size:2rem}.admin-card{padding:1rem}.admin-login{margin:8vh 1rem}.admin-table{min-width:760px}}
+
+
+/* Cross-platform mobile hardening for Android Chrome and iOS Safari. */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+body {
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+}
+button,
+a,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+@media (max-width: 760px) {
+  .topbar {
+    height: max(64px, calc(64px + env(safe-area-inset-top)));
+    padding-top: env(safe-area-inset-top);
+  }
+  .hero {
+    min-height: 100svh;
+    height: auto;
+    padding-top: max(8rem, calc(8rem + env(safe-area-inset-top)));
+    padding-bottom: max(5rem, calc(5rem + env(safe-area-inset-bottom)));
+  }
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+  .modal {
+    padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+  }
+  .modal-card {
+    max-height: calc(100svh - 2rem);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
