@@ -978,3 +978,95 @@ html.admin-panel-route body {
     padding-left: max(14px, env(safe-area-inset-left));
   }
 }
+
+
+/* Mobile navigation motion, touch feedback and reservation table ergonomics. */
+#admin-modal.adm-app .admin-nav-toggle,
+#admin-modal.adm-app .admin-sidebar .admin-tab,
+#admin-modal.adm-app .admin-btn,
+#admin-modal.adm-app .admin-theme-toggle,
+#admin-modal.adm-app .admin-logout {
+  transition: transform 160ms ease, background-color 160ms ease, border-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
+}
+#admin-modal.adm-app .admin-nav-toggle:active,
+#admin-modal.adm-app .admin-btn:active,
+#admin-modal.adm-app .admin-theme-toggle:active,
+#admin-modal.adm-app .admin-logout:active {
+  transform: scale(0.95);
+}
+@media (max-width: 980px) {
+  #admin-modal.adm-app .admin-sidebar {
+    transition: transform 300ms cubic-bezier(.22, .8, .25, 1) !important;
+    will-change: transform;
+  }
+  #admin-modal.adm-app .admin-nav-backdrop {
+    display: block !important;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 240ms ease, visibility 0s linear 240ms;
+  }
+  #admin-modal.adm-app .admin-shell.nav-open .admin-nav-backdrop {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    transition: opacity 240ms ease;
+  }
+  #admin-modal.adm-app .admin-nav-toggle {
+    transition: transform 240ms ease, background-color 160ms ease, color 160ms ease;
+  }
+  #admin-modal.adm-app .admin-shell.nav-open .admin-nav-toggle {
+    transform: rotate(90deg);
+    background: var(--a-teal-deep) !important;
+    color: #fff !important;
+  }
+  #admin-modal.adm-app .admin-sidebar .admin-tab:active {
+    transform: translateX(3px) scale(0.985);
+    background: rgba(255, 255, 255, 0.1) !important;
+  }
+}
+@media (max-width: 640px) {
+  #admin-modal.adm-app .admin-filter-row {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+  }
+  #admin-modal.adm-app .admin-filter-row > *,
+  #admin-modal.adm-app .admin-filter-row .admin-filter-field {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+  #admin-modal.adm-app .admin-table-wrap {
+    border: 1px solid var(--a-line);
+    border-radius: 14px;
+    scrollbar-color: var(--a-line-strong) transparent;
+    scroll-snap-type: x proximity;
+  }
+  #admin-modal.adm-app .admin-table-wrap .admin-table {
+    min-width: 760px;
+  }
+  #admin-modal.adm-app .admin-table-wrap .admin-table th:first-child,
+  #admin-modal.adm-app .admin-table-wrap .admin-table td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    background: var(--a-card) !important;
+    box-shadow: 6px 0 12px rgba(0, 0, 0, 0.08);
+  }
+  #admin-modal.adm-app .admin-table-wrap .admin-table th:first-child {
+    z-index: 3;
+    background: var(--a-side) !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #admin-modal.adm-app .admin-nav-toggle,
+  #admin-modal.adm-app .admin-sidebar,
+  #admin-modal.adm-app .admin-nav-backdrop,
+  #admin-modal.adm-app .admin-sidebar .admin-tab,
+  #admin-modal.adm-app .admin-btn,
+  #admin-modal.adm-app .admin-theme-toggle,
+  #admin-modal.adm-app .admin-logout {
+    transition: none !important;
+  }
+}
