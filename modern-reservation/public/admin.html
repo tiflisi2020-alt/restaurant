@@ -6,51 +6,58 @@
 <title>რეზერვაციები — Tiflisi</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;500;600;700;800&family=Noto+Serif+Georgian:wght@600;700&display=swap" rel="stylesheet">
 <style>
-  :root { color-scheme: light; }
+  :root { color-scheme: light only; }
   * { box-sizing: border-box; }
-  body { margin: 0; min-height: 100vh; background: #efeae2; color: #1c1915; font-family: "Noto Sans Georgian", system-ui, sans-serif; }
+  body { margin: 0; min-height: 100vh; background: #F6F3EF; color: #252724; font-family: "Noto Sans Georgian", system-ui, sans-serif; }
   .hidden { display: none !important; }
   .login {
     min-height: 100vh; display: grid; place-items: center; padding: 24px;
-    background: radial-gradient(ellipse at 15% 0%, rgba(196,161,90,.22), transparent 42%), #efeae2;
+    background: linear-gradient(180deg, rgba(166,75,60,.06), transparent 220px), #F6F3EF;
   }
-  .login-card { width: min(420px, 100%); padding: 28px; border-radius: 22px; background: #1a1714; color: #f6f1e8; box-shadow: 0 24px 60px rgba(28,25,21,.18); }
-  .mark { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 12px; background: #c4a15a; color: #1c160c; font-family: "Noto Serif Georgian", Georgia, serif; font-size: 1.3rem; }
+  .login-card { width: min(420px, 100%); padding: 28px; border-radius: 8px; background: #fff; color: #252724; border: 1px solid #E7E1DA; box-shadow: 0 12px 32px rgba(37,39,36,.06); }
+  .mark { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 6px; background: #A64B3C; color: #fff; font-family: "Noto Serif Georgian", Georgia, serif; font-size: 1.15rem; }
   .login-card h1, .workspace h1 { margin: 10px 0 6px; font-family: "Noto Serif Georgian", Georgia, serif; font-weight: 650; letter-spacing: -.03em; }
-  .login-card p, .sub { margin: 0 0 16px; color: #b3a89b; line-height: 1.5; }
-  label { display: grid; gap: 6px; margin-bottom: 12px; font-size: 12px; font-weight: 750; letter-spacing: .06em; text-transform: uppercase; color: #c4a15a; }
+  .login-card p, .sub { margin: 0 0 16px; color: #77766F; line-height: 1.5; }
+  label { display: grid; gap: 6px; margin-bottom: 12px; font-size: 12px; font-weight: 750; letter-spacing: .04em; text-transform: uppercase; color: #77766F; }
   input, button { font: inherit; }
-  input { width: 100%; min-height: 44px; padding: 10px 12px; border-radius: 12px; border: 1px solid rgba(246,241,232,.16); background: rgba(255,255,255,.05); color: #f6f1e8; }
-  .workspace input { background: #fff; color: #1c1915; border-color: #d9d0c3; }
-  button, .button { min-height: 42px; padding: 0 14px; border-radius: 12px; border: 0; background: #174e47; color: #f7fffd; font-weight: 750; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; }
-  .ghost { background: transparent; color: #1c1915; border: 1px solid #d4c9b8; }
+  input { width: 100%; min-height: 44px; padding: 10px 12px; border-radius: 6px; border: 1px solid #D8D1C8; background: #fff; color: #252724; }
+  .workspace input { background: #fff; color: #252724; border-color: #D8D1C8; }
+  button, .button { min-height: 40px; padding: 0 14px; border-radius: 6px; border: 0; background: #A64B3C; color: #fff; font-weight: 750; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; }
+  button:hover, .button:hover { background: #84392F; }
+  .ghost { background: #fff; color: #217B76; border: 1px solid #C5E4E1; }
+  .ghost:hover { background: #F3FBFA; }
   .login-card button { width: 100%; justify-content: center; }
-  .error { min-height: 1.2rem; color: #e7a097; }
-  .app { min-height: 100vh; display: grid; grid-template-columns: 240px minmax(0, 1fr); }
-  aside { background: #1a1714; color: #f6f1e8; padding: 22px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .error { min-height: 1.2rem; color: #84392F; }
+  .app { min-height: 100vh; display: grid; grid-template-columns: 232px minmax(0, 1fr); }
+  aside { background: #fff; color: #252724; padding: 22px 16px; display: flex; flex-direction: column; gap: 8px; border-right: 1px solid #E7E1DA; }
   aside strong { display: block; font-size: 1.05rem; }
-  aside span { color: #b3a89b; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+  aside span { color: #77766F; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; }
   .workspace { padding: 22px; min-width: 0; }
   header { display: flex; justify-content: space-between; gap: 12px; align-items: flex-end; margin-bottom: 16px; }
-  .toolbar, .table-card { background: #fffdf9; border: 1px solid #e6ddd1; border-radius: 16px; }
+  .toolbar, .table-card { background: #fff; border: 1px solid #E7E1DA; border-radius: 8px; }
   .toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; padding: 14px; margin-bottom: 14px; }
-  .toolbar label { color: #6d675f; }
+  .toolbar label { color: #77766F; }
   .table-card { overflow: auto; }
   table { width: 100%; border-collapse: collapse; min-width: 720px; }
-  th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee6da; font-size: 14px; }
-  th { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: #6d675f; background: #f3eee6; }
-  .status { border-radius: 999px; padding: 4px 8px; font-size: 12px; font-weight: 750; }
-  .status-pending { background: rgba(201,160,61,.18); color: #8a6420; }
-  .status-confirmed { background: rgba(31,111,100,.14); color: #174e47; }
-  .status-seated { background: rgba(196,122,88,.16); color: #8a3f28; }
-  .status-completed { background: #efeae2; color: #3e4742; }
-  .status-cancelled, .status-no_show { background: rgba(157,59,50,.12); color: #9d3b32; }
-  .small-button { min-height: 32px; padding: 0 10px; border-radius: 10px; border: 1px solid #d4c9b8; background: #fff; color: #1c1915; font-weight: 700; cursor: pointer; }
+  th, td { padding: 12px; text-align: left; border-bottom: 1px solid #F0EBE4; font-size: 14px; }
+  th { font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: #77766F; background: #F7F4F0; }
+  .status { border-radius: 4px; padding: 4px 8px; font-size: 12px; font-weight: 750; }
+  .status-pending { background: #F8F1E4; color: #6E4E16; }
+  .status-confirmed { background: #E7F5F4; color: #217B76; }
+  .status-seated { background: #F8EBE7; color: #84392F; }
+  .status-completed { background: #EEE9E2; color: #3c3b36; }
+  .status-cancelled, .status-no_show { background: #F8EBE7; color: #84392F; }
+  .small-button { min-height: 32px; padding: 0 10px; border-radius: 6px; border: 1px solid #C5E4E1; background: #fff; color: #217B76; font-weight: 700; cursor: pointer; }
   @media (max-width: 800px) {
     .app { grid-template-columns: 1fr; }
     aside { flex-direction: row; align-items: center; justify-content: space-between; }
     .workspace { padding: 14px; }
     header { align-items: stretch; flex-direction: column; }
+  }
+  @media (orientation: landscape) and (min-width: 640px) {
+    .app { grid-template-columns: 200px minmax(0, 1fr); }
+    aside { flex-direction: column; align-items: flex-start; justify-content: flex-start; }
+    header { flex-direction: row; align-items: flex-end; }
   }
 </style>
 </head>

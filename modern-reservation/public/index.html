@@ -20,14 +20,10 @@
   var p = (location.pathname || "/").replace(/\/+$/, "") || "/";
 
   if (isGh && location.search.indexOf("gh_panel=1") !== -1) {
-    document.documentElement.classList.add("admin-panel-route");
-    document.documentElement.style.background = "#101413";
-    try {
-      if (localStorage.getItem("tiflis_admin_theme") === "light") {
-        document.documentElement.classList.add("admin-theme-light");
-        document.documentElement.style.background = "#efeae2";
-      }
-    } catch (e) {}
+    document.documentElement.classList.add("admin-panel-route", "admin-theme-light");
+    document.documentElement.style.background = "#F6F3EF";
+    document.documentElement.style.colorScheme = "light";
+    try { localStorage.removeItem("tiflis_admin_theme"); } catch (e) {}
     if (sessionStorage.getItem("tiflis_admin_logged") !== "1") {
       var baseSeg = (p.match(/^(\/[^\/]+)/) || [])[1] || "";
       location.replace(baseSeg + "/admin/");
@@ -41,14 +37,10 @@
   }
 
   if (!/\/admin\/panel$/i.test(p) && !/\/admin\/panel\/index\.html$/i.test(p)) return;
-  document.documentElement.classList.add("admin-panel-route");
-  document.documentElement.style.background = "#101413";
-  try {
-    if (localStorage.getItem("tiflis_admin_theme") === "light") {
-      document.documentElement.classList.add("admin-theme-light");
-      document.documentElement.style.background = "#efeae2";
-    }
-  } catch (e) {}
+  document.documentElement.classList.add("admin-panel-route", "admin-theme-light");
+  document.documentElement.style.background = "#F6F3EF";
+  document.documentElement.style.colorScheme = "light";
+  try { localStorage.removeItem("tiflis_admin_theme"); } catch (e) {}
   if (sessionStorage.getItem("tiflis_admin_logged") !== "1") {
     location.replace(p.replace(/\/admin\/panel(\/index\.html)?$/i, "/admin"));
   }
@@ -4880,8 +4872,35 @@ html.admin-theme-light.admin-panel-route #admin-modal .admin-compact-card { back
 html.admin-theme-light.admin-panel-route #admin-modal .admin-msg.err { color:#9b3f2e; background:#fff1ee; border-color:#e7b4a8; }
 html.admin-theme-light.admin-panel-route #admin-modal .admin-msg.ok { color:#17695d; background:#e8f7f2; border-color:#9ed5c8; }
 html.admin-theme-light.admin-panel-route #admin-modal code { color:#28766c; background:rgba(61,155,147,.08); }
-html.admin-panel-route #admin-modal .admin-btn { font-weight:700; letter-spacing:.01em; }</style>
-<link rel="stylesheet" href="/admin-ui.css?v=20261016b">
+html.admin-panel-route #admin-modal .admin-btn { font-weight:700; letter-spacing:.01em; }
+
+/* Landscape phones and short tablets: use the width instead of the stacked portrait layout. */
+@media (orientation: landscape) and (max-height: 520px) {
+  .hero { height: auto; min-height: 100svh; }
+  .hero-title { font-size: clamp(2.1rem, 7vw, 3.2rem) !important; }
+  .hero-cta { flex-direction: row; width: auto; }
+  .hero-cta a { width: auto; }
+  section { padding: 2.25rem 0; }
+  .nav-reserve { display: inline-flex; }
+}
+@media (orientation: landscape) and (min-width: 640px) and (max-width: 980px) {
+  .about-strip .container { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .menu-layout {
+    display: grid !important;
+    flex-direction: unset !important;
+    grid-template-columns: minmax(0, 1fr) min(280px, 34vw);
+    grid-template-rows: auto auto;
+    width: 100%;
+  }
+  .menu-layout > .menu-nav-col { grid-column: 1 / -1; width: auto !important; }
+  .menu-layout > .menu-dishes-col,
+  .menu-layout > .order-panel { width: auto !important; min-width: 0 !important; }
+  .reservation-grid { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 1.5rem; }
+  .form-grid { grid-template-columns: 1fr 1fr !important; }
+  .footer-grid { grid-template-columns: 1.4fr 1fr 1fr; gap: 1.5rem; }
+}
+</style>
+<link rel="stylesheet" href="/admin-ui.css?v=20261017mapux7">
 </head>
 <body>
 
@@ -5180,7 +5199,7 @@ html.admin-panel-route #admin-modal .admin-btn { font-weight:700; letter-spacing
               </div>
               <div class="form-field">
                 <label for="r-time" data-i18n="f_time">დრო *</label>
-                <input type="time" id="r-time" value="19:00">
+                <input type="time" id="r-time" value="19:00" onchange="refreshReservationTableSelectState()">
               </div>
               <div class="form-field full">
                 <label for="r-table" data-i18n="f_table">სასურველი მაგიდა</label>
@@ -5224,26 +5243,11 @@ html.admin-panel-route #admin-modal .admin-btn { font-weight:700; letter-spacing
 <!-- ADMIN MODAL -->
 <div id="admin-modal" class="admin-modal adm-app" role="dialog" aria-modal="true" aria-labelledby="admin-modal-title" aria-hidden="true">
   <div class="admin-box" role="document">
-    <div class="admin-top">
-      <div class="admin-top-left">
-        <span class="admin-product-kicker" id="admin-kicker">ოპერაციები</span>
-        <h2 id="admin-modal-title">ადმინ პანელი</h2>
-        <p class="admin-brand-tagline" id="admin-brand-tagline">Restaurant Tiflisi · მართვის ცენტრი</p>
-        <p id="admin-stay-hint" class="admin-stay-hint" role="note">დასასრულებლად დააჭირეთ „გასვლა“ — პანელი იხურება მხოლოდ გასვლის შემდეგ.</p>
-      </div>
-      <div class="admin-top-clock" id="admin-top-clock" aria-live="polite"></div>
-      <div class="admin-top-actions">
-        <button type="button" id="admin-nav-toggle" class="admin-nav-toggle" onclick="toggleAdminNav()" aria-label="სექციების მენიუ" title="სექციები" style="display:none">☰</button>
-        <button type="button" id="admin-sidebar-collapse" class="admin-sidebar-collapse" onclick="toggleAdminSidebarCollapse()" aria-pressed="false" title="გვერდითი მენიუს დაკეცვა" aria-label="გვერდითი მენიუს დაკეცვა">‹</button>
-        <button type="button" id="admin-theme-toggle" class="admin-theme-toggle" onclick="toggleAdminTheme()" aria-pressed="false" title="ნათელი / მუქი რეჟიმი" aria-label="ნათელი რეჟიმის ჩართვა">☀</button>
-        <button type="button" id="admin-logout-btn" class="admin-logout" onclick="adminLogout()" style="display:none" aria-label="ადმინიდან გასვლა">გასვლა</button>
-        <button type="button" id="admin-close-btn" class="admin-close" onclick="closeAdmin()" aria-label="დახურვა">×</button>
-      </div>
-    </div>
-
     <!-- LOGIN -->
     <div id="admin-login-wrap">
       <div class="admin-login">
+        <button type="button" class="admin-login-close" onclick="closeAdmin()" aria-label="დახურვა">×</button>
+        <div class="admin-side-mark" aria-hidden="true">T</div>
         <h3>შესვლა</h3>
         <p>შეიყვანეთ პაროლი. თუ სერვერზე ჩართულია, შეგიძლიათ Google-ითაც შეხვიდეთ.</p>
         <input class="admin-input" type="password" id="admin-pw" placeholder="პაროლი" autocomplete="current-password" onkeydown="if(event.key==='Enter')adminLogin()">
@@ -5317,6 +5321,25 @@ html.admin-panel-route #admin-modal .admin-btn { font-weight:700; letter-spacing
         <div class="admin-side-foot"><strong>ტიფლისი</strong><span>სამუშაო სივრცე</span></div>
       </aside>
       <div class="admin-main">
+      <header class="admin-top">
+        <div class="admin-top-left">
+          <nav class="admin-crumb" aria-label="მდებარეობა">
+            <span class="admin-product-kicker" id="admin-kicker">ოპერაციები</span>
+            <span class="admin-crumb-sep" aria-hidden="true">/</span>
+            <span id="admin-crumb-page">მიმოხილვა</span>
+          </nav>
+          <h2 id="admin-modal-title">ადმინ პანელი</h2>
+          <p class="admin-brand-tagline" id="admin-brand-tagline">Restaurant Tiflisi · მართვის ცენტრი</p>
+          <p id="admin-stay-hint" class="admin-stay-hint" role="note">დასასრულებლად დააჭირეთ „გასვლა“ — პანელი იხურება მხოლოდ გასვლის შემდეგ.</p>
+        </div>
+        <div class="admin-top-clock" id="admin-top-clock" aria-live="polite"></div>
+        <div class="admin-top-actions">
+          <button type="button" id="admin-nav-toggle" class="admin-nav-toggle" onclick="toggleAdminNav()" aria-label="სექციების მენიუ" title="სექციები" style="display:none">☰</button>
+          <button type="button" id="admin-sidebar-collapse" class="admin-sidebar-collapse" onclick="toggleAdminSidebarCollapse()" aria-pressed="false" title="გვერდითი მენიუს დაკეცვა" aria-label="გვერდითი მენიუს დაკეცვა">‹</button>
+          <button type="button" id="admin-logout-btn" class="admin-logout" onclick="adminLogout()" style="display:none" aria-label="ადმინიდან გასვლა">გასვლა</button>
+          <button type="button" id="admin-close-btn" class="admin-close" onclick="closeAdmin()" aria-label="დახურვა">×</button>
+        </div>
+      </header>
       <div class="admin-body">
       <div class="admin-content">
       <!-- DASHBOARD TAB -->
@@ -5543,47 +5566,60 @@ html.admin-panel-route #admin-modal .admin-btn { font-weight:700; letter-spacing
       </div>
 
       <!-- MAP TAB -->
-      <div id="at-map" class="admin-pane" role="tabpanel">
-        <div class="admin-section-title">მაგიდების რუკა</div>
-        <div class="admin-filter-row">
-          <div class="admin-filter-field">
-            <span class="admin-filter-label">თარიღი</span>
-            <input type="date" id="map-date-filter" class="admin-input" style="width:auto;margin:0;padding:.35rem .55rem;font-size:.74rem">
+      <div id="at-map" class="admin-pane map-workspace" role="tabpanel">
+        <header class="map-hero">
+          <div class="map-hero-copy">
+            <h2 class="map-hero-title">მაგიდების რუკა</h2>
+            <p class="map-hero-sub">დარბაზი · ჯავშნები · დასმა</p>
           </div>
-          <button type="button" class="admin-btn admin-btn-sm" style="width:auto" onclick="loadMapTables()">ნახვა</button>
-          <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" style="width:auto" onclick="document.getElementById('map-date-filter').value='';loadMapTables()">დღეს</button>
-          <div class="adm-legend">
-            <span class="admin-filter-label"><i class="adm-swatch adm-swatch--free"></i> თავისუფალი</span>
-            <span class="admin-filter-label"><i class="adm-swatch adm-swatch--pending"></i> მომლოდინე</span>
-            <span class="admin-filter-label"><i class="adm-swatch adm-swatch--confirmed"></i> დადასტურებული</span>
-            <span class="admin-filter-label"><i class="adm-swatch adm-swatch--seated"></i> ადგილზე</span>
-            <span class="admin-filter-label"><i class="adm-swatch adm-swatch--banquet"></i> ბანკეტი</span>
-            <span class="admin-filter-label"><i class="adm-swatch adm-swatch--clean"></i> დასუფთავება</span>
+          <div class="map-hero-actions">
+            <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost map-cta-banquet" id="banquet-open-btn" onclick="toggleBanquetPanel()">ბანკეტი</button>
+            <button type="button" class="admin-btn map-cta-primary" onclick="startMapNewReservation()">+ ახალი ჯავშანი</button>
           </div>
+        </header>
+
+        <div class="map-controls">
+          <div class="map-toolbar">
+            <div class="map-toolbar-dates">
+              <button type="button" class="map-icon-btn" onclick="shiftMapDate(-1)" aria-label="წინა დღე">‹</button>
+              <label class="map-date-field">
+                <span class="visually-hidden">თარიღი</span>
+                <input type="date" id="map-date-filter" class="admin-input" onchange="loadMapTables()" aria-label="თარიღი">
+              </label>
+              <button type="button" class="map-icon-btn" onclick="shiftMapDate(1)" aria-label="შემდეგი დღე">›</button>
+              <div class="map-quick-dates">
+                <button type="button" class="map-chip" onclick="setMapDateToday()">დღეს</button>
+                <button type="button" class="map-chip" onclick="setMapDateTomorrow()">ხვალ</button>
+                <button type="button" class="map-chip" onclick="setMapSlotNow()">ახლა</button>
+              </div>
+            </div>
+            <div class="map-toolbar-tools">
+              <label class="map-search-field">
+                <span class="visually-hidden">ძებნა</span>
+                <input type="search" id="map-search" class="admin-input" placeholder="მაგიდა, სტუმარი, ტელ…" oninput="renderMapFloor()" autocomplete="off">
+              </label>
+              <label class="map-check"><input id="map-free-only" type="checkbox" onchange="renderMapFloor()"> მხოლოდ თავისუფალი</label>
+            </div>
+          </div>
+
+          <div class="map-slots-row">
+            <div class="map-context" id="map-context" aria-live="polite"></div>
+            <div class="map-slots-wrap">
+              <div id="map-slot-row" class="host-slots" role="tablist" aria-label="დრო"></div>
+            </div>
+          </div>
+
+          <div id="map-floor-summary" class="floor-summary" aria-live="polite"></div>
         </div>
-        <div id="map-floor-summary" class="floor-summary" aria-live="polite"></div>
-        <div class="admin-filter-row" style="margin-bottom:0.65rem;padding:0.5rem 0;border-top:1px solid rgba(255,255,255,0.06)">
-          <span class="admin-filter-label">ტრანსფერი</span>
-          <div class="admin-filter-field">
-            <label style="font-size:.65rem;color:rgba(245,240,232,.5);margin-right:.25rem">წყარო (FROM)</label>
-            <select id="map-transfer-from" class="admin-input" style="width:auto;min-width:5rem;margin:0;padding:.28rem .4rem;font-size:.72rem">
-              <option value="">— აირჩიეთ —</option>
-            </select>
-          </div>
-          <span style="color:rgba(245,240,232,.4);font-size:.75rem">→</span>
-          <div class="admin-filter-field">
-            <label style="font-size:.65rem;color:rgba(245,240,232,.5);margin-right:.25rem">სამიზნე (TO)</label>
-            <select id="map-transfer-to" class="admin-input" style="width:auto;min-width:5rem;margin:0;padding:.28rem .4rem;font-size:.72rem">
-              <option value="">— აირჩიეთ —</option>
-            </select>
-          </div>
-          <button type="button" class="admin-btn admin-btn-sm" style="width:auto" onclick="transferTableReservation()">შენახვა</button>
-        </div>
-        <div id="map-banquet-tools" class="banquet-bar">
+
+        <select id="map-transfer-from" hidden aria-hidden="true"><option value="">— აირჩიეთ —</option></select>
+        <select id="map-transfer-to" hidden aria-hidden="true"><option value="">— აირჩიეთ —</option></select>
+
+        <div id="map-banquet-tools" class="banquet-bar" hidden>
           <div class="banquet-bar-head">
             <div>
               <div class="banquet-title">ბანკეტი</div>
-              <div class="banquet-sub">აირჩიეთ მაგიდები რუკაზე და გააერთიანეთ ერთ ჯგუფად. ფიზიკური მაგიდები არ იშლება.</div>
+              <div class="banquet-sub">აირჩიეთ მაგიდები რუკაზე და გააერთიანეთ ერთ ჯგუფად.</div>
             </div>
             <button type="button" id="banquet-mode-btn" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="toggleBanquetMode()">მაგიდების არჩევა</button>
           </div>
@@ -5595,25 +5631,27 @@ html.admin-panel-route #admin-modal .admin-btn { font-weight:700; letter-spacing
           </div>
           <div id="map-group-list" class="banquet-list"></div>
         </div>
+
         <div class="floor-layout">
           <div class="floor-zones">
-            <section class="floor-zone">
+            <section class="floor-zone" data-zone="H">
               <div class="floor-zone-head"><strong>ჰოლი</strong><span id="map-zone-count-H"></span></div>
               <div id="map-zone-H" class="floor-grid"></div>
             </section>
-            <section class="floor-zone">
+            <section class="floor-zone" data-zone="A">
               <div class="floor-zone-head"><strong>ანტრესოლი</strong><span id="map-zone-count-A"></span></div>
               <div id="map-zone-A" class="floor-grid"></div>
             </section>
-            <section class="floor-zone">
+            <section class="floor-zone" data-zone="V">
               <div class="floor-zone-head"><strong>ვერანდა</strong><span id="map-zone-count-V"></span></div>
               <div id="map-zone-V" class="floor-grid"></div>
             </section>
           </div>
+          <button type="button" class="map-panel-scrim" onclick="closeMapSeatPanel()" aria-label="დახურვა"></button>
           <aside class="floor-panel" id="map-seat-panel" aria-live="polite">
             <div class="floor-kicker">მაგიდა</div>
             <h3>აირჩიეთ მაგიდა</h3>
-            <p>თავისუფალ ან დაჯავშნილ მაგიდაზე დააჭირეთ და მონიშნეთ, რომ სტუმარი დაჯდა.</p>
+            <p class="map-panel-hint">რუკაზე დააჭირეთ მაგიდას ჯავშნისთვის ან დასმისთვის.</p>
           </aside>
         </div>
         <div id="map-msg" class="admin-msg"></div>
@@ -6144,28 +6182,57 @@ function getOrderIds() {
 }
 const g = id => document.getElementById(id);
 function mapTileStyles(state) {
-  const light = document.documentElement.classList.contains('admin-theme-light');
-  if (state === 'confirmed') return light
-    ? { bg: 'rgba(184,93,56,0.14)', border: '#b85d38', color: '#8f3d28', occupied: true }
-    : { bg: 'rgba(184,93,56,0.28)', border: 'rgba(184,93,56,0.75)', color: '#f0c2b4', occupied: true };
-  if (state === 'pending') return light
-    ? { bg: 'rgba(201,160,61,0.2)', border: '#a6842a', color: '#7a5a10', occupied: true }
-    : { bg: 'rgba(201,160,61,0.22)', border: 'rgba(201,160,61,0.75)', color: '#e4c56a', occupied: true };
-  if (state === 'occupied') return light
-    ? { bg: 'rgba(184,93,56,0.18)', border: '#b85d38', color: '#8f3d28', occupied: true }
-    : { bg: 'rgba(184,93,56,0.36)', border: '#d77b5e', color: '#ffe0d6', occupied: true };
-  if (state === 'grouped') return light
-    ? { bg: 'rgba(126,93,168,0.14)', border: '#8060a8', color: '#624582', occupied: false }
-    : { bg: 'rgba(126,93,168,0.28)', border: '#aa88d2', color: '#eadbff', occupied: false };
-  if (state === 'cleaning') return light
-    ? { bg: 'rgba(120,120,120,0.14)', border: '#777', color: '#555', occupied: true }
-    : { bg: 'rgba(120,120,120,0.28)', border: '#aaa', color: '#eee', occupied: true };
-  if (state === 'blocked') return light
-    ? { bg: 'rgba(60,60,60,0.18)', border: '#555', color: '#333', occupied: true }
-    : { bg: 'rgba(20,20,20,0.5)', border: '#777', color: '#ddd', occupied: true };
-  return light
-    ? { bg: 'rgba(42,114,107,0.12)', border: '#2a726b', color: '#1a5c56', occupied: false }
-    : { bg: 'rgba(58,148,140,0.22)', border: 'rgba(58,148,140,0.7)', color: '#9ee8df', occupied: false };
+  if (state === 'confirmed') return { bg: '#F9ECE9', border: '#AD4939', color: '#8F3A2E', occupied: true };
+  if (state === 'pending') return { bg: '#FBF6EB', border: '#C4A15A', color: '#6E4E16', occupied: true };
+  if (state === 'occupied') return { bg: '#F3DDD8', border: '#8F3A2E', color: '#6E3128', occupied: true };
+  if (state === 'grouped') return { bg: '#E8F5F4', border: '#1D7F7A', color: '#165F5B', occupied: false };
+  if (state === 'cleaning') return { bg: '#F0EDE8', border: '#B7B1A8', color: '#5C5952', occupied: true };
+  if (state === 'blocked') return { bg: '#EBE8E3', border: '#8A867E', color: '#3A3934', occupied: true };
+  return { bg: '#F2FAF9', border: '#249E98', color: '#1D7F7A', occupied: false };
+}
+function mapTableSeats(tableId) {
+  const id = String(tableId || '');
+  if (/^B-/.test(id)) return 8;
+  return 4;
+}
+function syncMapPanelOpenClass() {
+  const layout = document.querySelector('#at-map .floor-layout');
+  if (layout) layout.classList.toggle('map-panel-open', !!mapSelectedTableId);
+}
+function closeMapSeatPanel() {
+  mapSelectedTableId = '';
+  document.querySelectorAll('[data-map-table]').forEach(el => el.classList.remove('is-selected'));
+  syncMapPanelOpenClass();
+  renderMapSeatPanel();
+}
+function shiftMapDate(delta) {
+  const el = g('map-date-filter');
+  if (!el) return;
+  const base = el.value || todayGeorgia();
+  const d = new Date(`${base}T12:00:00`);
+  if (Number.isNaN(d.getTime())) return;
+  d.setDate(d.getDate() + Number(delta || 0));
+  el.value = d.toLocaleDateString('en-CA');
+  loadMapTables();
+}
+function setMapDateTomorrow() {
+  const el = g('map-date-filter');
+  if (!el) return;
+  const d = new Date(`${todayGeorgia()}T12:00:00`);
+  d.setDate(d.getDate() + 1);
+  el.value = d.toLocaleDateString('en-CA');
+  loadMapTables();
+}
+function startMapNewReservation() {
+  const freeId = MAP_ALL_TABLE_IDS.find(id => mapMetaForBoard(id).state === 'free');
+  if (freeId) {
+    mapSelectedTableId = freeId;
+    renderMapFloor();
+    setTimeout(() => g('map-seat-name')?.focus(), 40);
+    adminMsg('map-msg', `აირჩიეთ დრო და შეავსეთ სტუმრის მონაცემები — ${freeId}`, 'ok');
+    return;
+  }
+  adminMsg('map-msg', 'ამ საათზე თავისუფალი მაგიდა არ არის — შეცვალეთ დრო ან თარიღი', 'warn');
 }
 let draggedMapTableId = '';
 function dragMapStart(event, tableId) { mapDragMoved = false; draggedMapTableId = String(tableId || ''); if (event?.dataTransfer) { event.dataTransfer.effectAllowed = 'move'; event.dataTransfer.setData('text/plain', draggedMapTableId); } }
@@ -6988,7 +7055,13 @@ async function hydrateSharedTableState() {
     ]);
     const groups = (remoteGroups || []).map(remoteGroupToLocal).filter(x => x.id && x.tableIds.length >= 2);
     const ops = {};
-    (remoteOps || []).forEach(row => { if (row.table_id) ops[String(row.table_id)] = remoteOperationToLocal(row); });
+    (remoteOps || []).forEach(row => {
+      if (!row.table_id) return;
+      const local = remoteOperationToLocal(row);
+      // Ignore inert "free" rows — they used to paint over reservation colors on the map.
+      if (local.status === 'free') return;
+      ops[String(row.table_id)] = local;
+    });
     // A successful empty Supabase response is authoritative: clear stale local state.
     // localStorage is used only when the remote request fails and the catch block runs.
     localStorage.setItem(TABLE_GROUPS_KEY, JSON.stringify(groups));
@@ -7276,8 +7349,18 @@ async function submitReservation() {
   const table = tableSel.value;
   const tableOpt = table ? Array.from(tableSel.options).find(o => o.value === table) : null;
   if (table && tableOpt && tableOpt.disabled) {
-    alert('ეს მაგიდა არჩეული თარიღისთვის უკვე დადასტურებული ჯავშნითაა დაკავებული — გთხოვთ აირჩიოთ სხვა მაგიდა.');
+    alert('ეს მაგიდა არჩეულ დროს უკვე დაკავებულია — გთხოვთ აირჩიოთ სხვა მაგიდა ან სხვა საათი.');
     return;
+  }
+  if (table && table !== '—') {
+    try {
+      const dayRows = await supaFetch(`/rest/v1/reservations?date=eq.${date}&status=neq.cancelled&select=id,table_id,time,status,name`) || [];
+      const clash = findOverlappingReservation(dayRows, table, time);
+      if (clash) {
+        alert(`მაგიდა ${table} უკვე დაკავებულია ${String(clash.time || '').slice(0, 5)}-ზე (${clash.name || 'ჯავშანი'}). სხვა საათი ან მაგიდა აირჩიეთ.`);
+        return;
+      }
+    } catch (_) { /* ქსელის გარეშე გავაგრძელოთ შენახვა */ }
   }
   const note = g('r-note').value;
   const email = g('r-email')?.value||'';
@@ -7312,7 +7395,11 @@ async function submitReservation() {
     // update table status
     if (table) await supaFetch(`/rest/v1/tables?id=eq.${table}`, 'PATCH', { status:'reserved' });
     if (table) clearTableOperationalState(table);
-  } catch(e) { console.warn('Supabase error', e); }
+    } catch(e) {
+      console.warn('Supabase error', e);
+      alert(e && e.message ? e.message : 'ჯავშანი ვერ შეინახა. გთხოვთ თავიდან სცადოთ.');
+      return;
+    }
 
   lastGuestReservationWaRow = {
     name,
@@ -8196,43 +8283,19 @@ function goAdminEntry() {
   else location.href = adminLoginUrl();
 }
 
-function syncAdminThemeToggleUI() {
-  const btn = g('admin-theme-toggle');
-  if (!btn) return;
-  const light = document.documentElement.classList.contains('admin-theme-light');
-  btn.setAttribute('aria-pressed', light ? 'true' : 'false');
-  btn.textContent = light ? '☾' : '☀';
-  btn.setAttribute('aria-label', light ? 'მუქი რეჟიმის ჩართვა' : 'ნათელი რეჟიმის ჩართვა');
-  btn.title = light ? 'მუქი რეჟიმი' : 'ნათელი რეჟიმი';
-}
+function syncAdminThemeToggleUI() {}
 
 function applyStoredAdminTheme() {
-  let light = false;
-  try {
-    light = localStorage.getItem('tiflis_admin_theme') === 'light';
-  } catch (e) {}
-  document.documentElement.classList.toggle('admin-theme-light', light);
+  document.documentElement.classList.add('admin-theme-light');
+  document.documentElement.style.colorScheme = 'light';
   if (document.documentElement.classList.contains('admin-panel-route')) {
-    document.documentElement.style.background = light ? '#efeae2' : '#101413';
+    document.documentElement.style.background = '#F6F3EF';
   }
-  syncAdminThemeToggleUI();
+  try { localStorage.removeItem('tiflis_admin_theme'); } catch (e) {}
 }
 
 function toggleAdminTheme() {
-  const light = !document.documentElement.classList.contains('admin-theme-light');
-  document.documentElement.classList.toggle('admin-theme-light', light);
-  if (document.documentElement.classList.contains('admin-panel-route')) {
-    document.documentElement.style.background = light ? '#efeae2' : '#101413';
-  }
-  try {
-    localStorage.setItem('tiflis_admin_theme', light ? 'light' : 'dark');
-  } catch (e) {}
-  syncAdminThemeToggleUI();
-  const onTab = document.querySelector('.admin-tab.on');
-  const tab = onTab && onTab.getAttribute('data-tab');
-  if (tab === 'map') loadMapTables();
-  if (tab === 'reservations' && typeof loadReservations === 'function') loadReservations();
-  if (tab === 'reschecks' && typeof loadReservationsWithChecks === 'function') loadReservationsWithChecks();
+  applyStoredAdminTheme();
 }
 
 function openAdmin() {
@@ -8531,11 +8594,15 @@ function setAdminHeading(tab) {
     if (titleEl) titleEl.textContent = 'ადმინ პანელი';
     if (tag) tag.textContent = 'Restaurant Tiflisi · მართვის ცენტრი';
     if (kicker) kicker.textContent = 'ოპერაციები';
+    const crumb = g('admin-crumb-page');
+    if (crumb) crumb.textContent = 'მიმოხილვა';
     return;
   }
   if (titleEl) titleEl.textContent = pair[0];
   if (kicker) kicker.textContent = pair[1];
   if (tag) tag.textContent = pair[2] || pair[1];
+  const crumb = g('admin-crumb-page');
+  if (crumb) crumb.textContent = pair[0];
 }
 
 function toggleAdminNav() {
@@ -9903,8 +9970,9 @@ async function clearOldReservationsFromTables() {
 /** ჯავშნების სიიდან: confirmed > pending > free */
 function tableOccupancyStateFromReservations(rows, tableId) {
   let state = 'free';
+  const want = String(tableId || '');
   for (const r of rows || []) {
-    if (r.table_id !== tableId || r.status === 'cancelled') continue;
+    if (String(r.table_id || '') !== want || r.status === 'cancelled') continue;
     if (r.status === 'confirmed') return 'confirmed';
     if (r.status === 'pending') state = 'pending';
   }
@@ -9978,10 +10046,158 @@ function tableGroupVisualState(group, rows) {
 }
 let mapFloorRows = [];
 let mapSelectedTableId = '';
+let mapSelectedSlot = '';
 let mapDragMoved = false;
 let banquetMode = false;
 let banquetPickIds = [];
-const MAP_STATE_LABEL = { free: 'თავისუფალი', pending: 'მომლოდინე', confirmed: 'დადასტურებული', occupied: 'ადგილზე', grouped: 'ბანკეტი', cleaning: 'დასუფთავება', blocked: 'დაბლოკილი' };
+const MAP_STATE_LABEL = { free: 'თავისუფალი', pending: 'მომლოდინე', confirmed: 'დადასტურებული', occupied: 'ადგილზეა', grouped: 'ბანკეტი', cleaning: 'დასუფთავება', blocked: 'დაბლოკილი' };
+function mapSlotOptions() {
+  const out = [];
+  for (let mins = 12 * 60; mins <= 23 * 60 + 30; mins += 30) {
+    out.push(String(Math.floor(mins / 60)).padStart(2, '0') + ':' + String(mins % 60).padStart(2, '0'));
+  }
+  return out;
+}
+function mapSlotMinutes(slot) {
+  const match = String(slot || '').match(/^(\d{1,2}):(\d{2})/);
+  return match ? Number(match[1]) * 60 + Number(match[2]) : null;
+}
+function tbilisiNowMinutes() {
+  const parts = new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Tbilisi', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(new Date());
+  const hour = Number(parts.find(part => part.type === 'hour')?.value || 0);
+  const minute = Number(parts.find(part => part.type === 'minute')?.value || 0);
+  return hour * 60 + minute;
+}
+function nearestMapSlot(mins) {
+  const slots = mapSlotOptions();
+  return slots.reduce((best, slot) => Math.abs(mapSlotMinutes(slot) - mins) < Math.abs(mapSlotMinutes(best) - mins) ? slot : best, slots[0]);
+}
+const RESERVATION_HOLD_MINUTES = 120;
+function reservationWindow(time) {
+  const start = mapSlotMinutes(time);
+  if (start == null) return null;
+  return { start, end: start + RESERVATION_HOLD_MINUTES };
+}
+function reservationWindowsOverlap(timeA, timeB) {
+  const a = reservationWindow(timeA);
+  const b = reservationWindow(timeB);
+  if (!a || !b) return false;
+  return a.start < b.end && b.start < a.end;
+}
+function mapReservationCoversSlot(reservation, slot) {
+  const start = mapSlotMinutes(reservation && reservation.time);
+  const at = mapSlotMinutes(slot);
+  if (start == null || at == null) return !slot;
+  return at >= start && at < start + RESERVATION_HOLD_MINUTES;
+}
+function mapRowsForSlot(rows, slot) {
+  if (!slot) return rows || [];
+  return (rows || []).filter(row => mapReservationCoversSlot(row, slot));
+}
+function dayReservationsForTable(rows, tableId) {
+  return (rows || [])
+    .filter(r => String(r.table_id || '') === String(tableId || '') && r.status !== 'cancelled' && r.status !== 'no_show')
+    .slice()
+    .sort((a, b) => (mapSlotMinutes(a.time) || 0) - (mapSlotMinutes(b.time) || 0));
+}
+function findOverlappingReservation(rows, tableId, time, excludeId) {
+  const want = String(tableId || '');
+  const exclude = excludeId != null ? String(excludeId) : '';
+  return (rows || []).find(r => {
+    if (String(r.table_id || '') !== want) return false;
+    if (r.status === 'cancelled' || r.status === 'no_show') return false;
+    if (exclude && String(r.id) === exclude) return false;
+    return reservationWindowsOverlap(r.time, time);
+  }) || null;
+}
+function formatReservationShiftLabel(row) {
+  return `${String(row.time || '—').slice(0, 5)} ${row.name || ''}`.trim();
+}
+function mapBoardDate() {
+  return g('map-date-filter')?.value || todayGeorgia();
+}
+function mapMetaForBoard(tableId, groups) {
+  const date = mapBoardDate();
+  const slot = mapSelectedSlot;
+  const slotRows = mapRowsForSlot(mapFloorRows, slot);
+  const meta = mapTableMeta(tableId, slotRows, groups || getTableGroups());
+  const liveToday = date === todayGeorgia();
+  const opsLive = meta.record && (meta.record.status === 'occupied' || meta.record.status === 'cleaning');
+  if (!liveToday && opsLive) {
+    const reservation = mapReservationForTable(tableId, slotRows);
+    const state = reservation?.status === 'confirmed' ? 'confirmed' : reservation?.status === 'pending' ? 'pending' : 'free';
+    return { ...meta, record: null, reservation, state, styles: mapTileStyles(state) };
+  }
+  if (liveToday && opsLive) {
+    const at = mapSlotMinutes(slot);
+    if (at != null && at >= tbilisiNowMinutes() + RESERVATION_HOLD_MINUTES) {
+      const reservation = mapReservationForTable(tableId, slotRows);
+      const state = reservation?.status === 'confirmed' ? 'confirmed' : reservation?.status === 'pending' ? 'pending' : 'free';
+      return { ...meta, record: null, reservation, state, styles: mapTileStyles(state), seatedNow: meta.record };
+    }
+  }
+  return meta;
+}
+function dayReservationTimes(rows) {
+  return (rows || [])
+    .filter(r => r && r.status !== 'cancelled' && r.status !== 'no_show')
+    .map(r => String(r.time || '').slice(0, 5))
+    .filter(t => mapSlotMinutes(t) != null)
+    .sort((a, b) => mapSlotMinutes(a) - mapSlotMinutes(b));
+}
+function pickMapSlotForDate(date, rows) {
+  const day = date || todayGeorgia();
+  const times = dayReservationTimes(rows);
+  if (day === todayGeorgia()) {
+    return mapSelectedSlot && mapSlotOptions().includes(mapSelectedSlot)
+      ? mapSelectedSlot
+      : nearestMapSlot(tbilisiNowMinutes());
+  }
+  // Future/past day: land on the first booking so occupied tables are visible immediately.
+  return times[0] || '19:00';
+}
+function setMapDateToday() {
+  const el = g('map-date-filter');
+  if (el) el.value = todayGeorgia();
+  mapSelectedSlot = nearestMapSlot(tbilisiNowMinutes());
+  loadMapTables();
+}
+function setMapSlot(slot) {
+  mapSelectedSlot = slot;
+  renderMapSlots();
+  renderMapFloor();
+}
+function setMapSlotNow() {
+  const el = g('map-date-filter');
+  if (el) el.value = todayGeorgia();
+  mapSelectedSlot = nearestMapSlot(tbilisiNowMinutes());
+  loadMapTables();
+}
+function updateMapContext() {
+  const el = g('map-context');
+  if (!el) return;
+  const date = mapBoardDate();
+  const slot = mapSelectedSlot || nearestMapSlot(tbilisiNowMinutes());
+  el.innerHTML = `აქტიური: <strong>${escapeHtml(date)}</strong> · <strong>${escapeHtml(slot)}</strong>`;
+}
+function renderMapSlots() {
+  const row = g('map-slot-row');
+  if (!row) return;
+  if (!mapSelectedSlot) mapSelectedSlot = nearestMapSlot(tbilisiNowMinutes());
+  row.innerHTML = mapSlotOptions().map(slot => `<button type="button" class="host-slot${slot === mapSelectedSlot ? ' is-on' : ''}" role="tab" aria-selected="${slot === mapSelectedSlot ? 'true' : 'false'}" onclick="setMapSlot('${slot}')">${slot}</button>`).join('');
+  const active = row.querySelector('.is-on');
+  if (active) row.scrollLeft = Math.max(0, active.offsetLeft - row.clientWidth / 2 + active.clientWidth / 2);
+  updateMapContext();
+}
+function toggleBanquetPanel() {
+  const bar = g('map-banquet-tools');
+  const btn = g('banquet-open-btn');
+  if (!bar) return;
+  const open = bar.hidden;
+  bar.hidden = !open;
+  if (btn) btn.classList.toggle('admin-btn-primary', open);
+  if (!open && banquetMode) toggleBanquetMode();
+}
 function mapShortText(value, max) {
   const text = String(value || '').trim();
   const limit = max || 14;
@@ -9993,11 +10209,13 @@ function mapReservationForTable(tableId, rows) {
 }
 function mapTableMeta(tableId, rows, groups) {
   const group = getActiveTableGroupForTable(tableId, groups || getTableGroups());
-  const record = getTableOperationalRecord(tableId);
+  const rawRecord = getTableOperationalRecord(tableId);
+  // "free" in ops must not hide pending/confirmed bookings — only occupied/cleaning override the board.
+  const record = (rawRecord?.status === 'occupied' || rawRecord?.status === 'cleaning') ? rawRecord : null;
   const reservation = mapReservationForTable(tableId, rows);
   let state = 'free';
   if (group) state = tableGroupVisualState(group, rows);
-  else if (record?.status === 'occupied' || record?.status === 'cleaning' || record?.status === 'free') state = record.status;
+  else if (record) state = record.status;
   else state = tableOccupancyStateFromReservations(rows, tableId);
   return { group, record: group ? null : record, reservation: group ? null : reservation, state, styles: mapTileStyles(state) };
 }
@@ -10007,41 +10225,166 @@ function formatSeatedClock(iso) {
   if (Number.isNaN(d.getTime())) return '';
   return d.toLocaleTimeString('ka-GE', { timeZone: 'Asia/Tbilisi', hour: '2-digit', minute: '2-digit' });
 }
+function mapFillPhoneFromName() {
+  const name = String(g('map-seat-name')?.value || '').trim().toLowerCase();
+  const phone = g('map-book-phone');
+  if (!name || !phone || phone.dataset.touched === '1' || phone.value.trim()) return;
+  const hit = (mapFloorRows || []).find(row => String(row.name || '').trim().toLowerCase() === name && row.phone);
+  if (hit) phone.value = hit.phone;
+}
 function renderMapSeatPanel() {
   const panel = g('map-seat-panel');
   if (!panel) return;
+  syncMapPanelOpenClass();
   const id = mapSelectedTableId;
   if (!id) {
-    panel.innerHTML = '<div class="floor-kicker">მაგიდა</div><h3>აირჩიეთ მაგიდა</h3><p>თავისუფალ ან დაჯავშნილ მაგიდაზე დააჭირეთ და მონიშნეთ, რომ სტუმარი დაჯდა.</p>';
+    panel.innerHTML = `<div class="map-panel-head"><div><div class="floor-kicker">მაგიდა</div><h3>აირჩიეთ მაგიდა</h3></div></div>
+      <p class="map-panel-hint">თავისუფალ მაგიდაზე იწერება ჯავშანი. დაჯავშნილზე — დადასტურება, დასმა ან გადატანა.</p>`;
     return;
   }
-  const meta = mapTableMeta(id, mapFloorRows);
+  const meta = mapMetaForBoard(id);
   const label = MAP_STATE_LABEL[meta.state] || meta.state;
+  const seats = mapTableSeats(id);
   const seated = meta.record?.status === 'occupied' ? meta.record : null;
   const groupRecord = meta.group ? getTableOperationalRecord(meta.group.tableIds[0]) : null;
   const who = seated || (groupRecord?.status === 'occupied' ? groupRecord : null);
   const reservation = meta.reservation;
   const activeReservation = reservation && (meta.state === 'confirmed' || meta.state === 'pending') ? reservation : null;
   const suggestedName = who?.name || activeReservation?.name || '';
+  const suggestedPhone = activeReservation?.phone || '';
   const suggestedGuests = who?.guests || activeReservation?.guests || 2;
-  let body = `<div class="floor-kicker">${escapeHtml(label)}</div><h3>${escapeHtml(id)}</h3>`;
-  if (meta.group) body += `<p>ბანკეტი <strong>${escapeHtml(meta.group.id)}</strong> — ${escapeHtml(meta.group.name || 'ჯგუფი')}<br>${escapeHtml(meta.group.tableIds.join(' + '))}</p>`;
-  if (activeReservation) body += `<p>ჯავშანი: <strong>${escapeHtml(reservation.name || '—')}</strong><br>${escapeHtml(reservation.time || '—')} · ${escapeHtml(String(reservation.guests || '—'))} სტუმარი</p>`;
-  if (who) body += `<p>ადგილზეა <strong>${escapeHtml(who.name || 'სტუმარი')}</strong>, ${escapeHtml(String(who.guests || 1))} სტუმარი${who.seatedAt ? ' · ' + escapeHtml(formatSeatedClock(who.seatedAt)) : ''}</p>`;
-  if (meta.state !== 'occupied' && meta.state !== 'blocked') {
-    body += `<form class="floor-seat-form" onsubmit="confirmSeatGuest(event)">
-      <label for="map-seat-name">სტუმრის სახელი</label>
-      <input id="map-seat-name" class="admin-input" type="text" value="${escapeAttr(suggestedName)}" placeholder="სახელი ან Walk-in" style="margin:0">
-      <label for="map-seat-guests">სტუმრების რაოდენობა</label>
-      <input id="map-seat-guests" class="admin-input" type="number" min="1" max="99" value="${escapeAttr(String(suggestedGuests || 2))}" style="margin:0">
-      <button type="submit" class="admin-btn admin-btn-sm">სტუმარი დაჯდა</button>
-    </form>`;
+  const slot = mapSelectedSlot || nearestMapSlot(tbilisiNowMinutes());
+  const dayList = dayReservationsForTable(mapFloorRows, id);
+  const others = dayList.filter(row => row !== reservation && !mapReservationCoversSlot(row, slot));
+  const preferredTime = activeReservation?.time || slot;
+  const dateVal = mapBoardDate();
+  const timeOptions = mapSlotOptions().map(item => {
+    const clash = findOverlappingReservation(dayList, id, item, activeReservation?.id);
+    const selected = item === String(preferredTime || '').slice(0, 5) && !clash ? ' selected' : '';
+    return `<option value="${item}"${selected}${clash ? ' disabled' : ''}>${item}${clash ? ' · დაკავებული' : ''}</option>`;
+  }).join('');
+  let body = `<div class="map-panel-head"><div><div class="floor-kicker">${escapeHtml(slot)} · ${escapeHtml(dateVal)}</div><h3>${escapeHtml(id)}</h3></div>
+    <button type="button" class="map-panel-close" onclick="closeMapSeatPanel()" aria-label="დახურვა">×</button></div>
+    <div class="map-panel-meta">
+      <span class="map-pill map-pill--${escapeAttr(meta.state)}">${escapeHtml(label)}</span>
+      <span class="map-pill">${seats} ადგილი</span>
+    </div>`;
+  if (meta.group) {
+    body += `<div class="map-panel-section"><div class="map-panel-section-title">ბანკეტი</div>
+      <p><strong>${escapeHtml(meta.group.id)}</strong> — ${escapeHtml(meta.group.name || 'ჯგუფი')}<br>${escapeHtml(meta.group.tableIds.join(' + '))}</p></div>`;
   }
-  body += '<div class="floor-panel-actions">';
-  if (meta.state === 'occupied') body += '<button type="button" class="admin-btn admin-btn-sm" onclick="releaseSeatedTable()">სტუმრებმა დატოვეს</button>';
-  if (meta.state === 'cleaning') body += '<button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="markTableReady()">მაგიდა მზადაა</button>';
-  body += '</div>';
+  if (activeReservation || who) {
+    body += `<div class="map-panel-section"><div class="map-panel-section-title">სტუმარი</div>`;
+    if (activeReservation) {
+      body += `<p><strong>${escapeHtml(reservation.name || '—')}</strong><br>${escapeHtml(reservation.phone || 'ტელეფონი არ არის')}<br>${escapeHtml(String(reservation.time || '—').slice(0, 5))} · ${escapeHtml(String(reservation.guests || '—'))} სტუმარი</p>`;
+    }
+    if (who) body += `<p>ადგილზეა <strong>${escapeHtml(who.name || 'სტუმარი')}</strong>, ${escapeHtml(String(who.guests || 1))} სტუმარი${who.seatedAt ? ' · ' + escapeHtml(formatSeatedClock(who.seatedAt)) : ''}</p>`;
+    body += `</div>`;
+  }
+  if (meta.seatedNow && meta.state === 'free') body += `<p class="adm-note">ამ საათზე თავისუფალია ჯავშნისთვის, მაგრამ წინა ცვლა ჯერ ადგილზეა.</p>`;
+  else if (who && meta.state === 'free') body += `<p class="adm-note">წინა ცვლა ჯერ ადგილზეა — მეორე ცვლა მაინც შეიძლება დაჯავშნოთ თავისუფალ საათზე.</p>`;
+  if (dayList.length > 1 || others.length) {
+    body += `<div class="map-panel-section"><div class="map-panel-section-title">დღის ცვლები</div>
+      <p>${dayList.map(row => escapeHtml(formatReservationShiftLabel(row))).join(' · ')}</p></div>`;
+  }
+  if (meta.state === 'free') {
+    body += `<div class="map-panel-section"><div class="map-panel-section-title">ახალი ჯავშანი</div>
+      <form class="floor-seat-form" onsubmit="bookMapTable(event)">
+      <label for="map-seat-name">სტუმრის სახელი</label>
+      <input id="map-seat-name" class="admin-input" type="text" placeholder="სახელი" autocomplete="name" oninput="mapFillPhoneFromName()">
+      <label for="map-book-phone">ტელეფონი</label>
+      <input id="map-book-phone" class="admin-input" type="tel" placeholder="5XX XXX XXX" autocomplete="tel" oninput="this.dataset.touched='1'">
+      <label for="map-seat-guests">სტუმრების რაოდენობა</label>
+      <input id="map-seat-guests" class="admin-input" type="number" min="1" max="99" value="2">
+      <label for="map-book-time">დრო</label>
+      <select id="map-book-time" class="admin-input">${timeOptions}</select>
+      <p class="map-panel-note">ჯავშანი მაგიდას იკავებს 2 საათით.</p>
+      <div class="floor-panel-actions">
+        <button type="submit" class="admin-btn admin-btn-sm">დაჯავშნა</button>
+        <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="confirmSeatGuest(event)">ახლავე დასვა</button>
+      </div>
+    </form></div>`;
+  } else if (meta.state === 'pending' || meta.state === 'confirmed' || meta.state === 'grouped') {
+    const freeTargets = MAP_ALL_TABLE_IDS.filter(tableId => tableId !== id && mapMetaForBoard(tableId).state === 'free');
+    body += `<div class="map-panel-section"><div class="map-panel-section-title">მოქმედებები</div><div class="floor-panel-actions">`;
+    if (meta.state === 'pending' && activeReservation) body += `<button type="button" class="admin-btn admin-btn-sm" onclick="mapSetReservationStatus('confirmed')">დადასტურება</button>`;
+    if (activeReservation) body += `<button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="mapSetReservationStatus('cancelled')">გაუქმება</button>`;
+    body += `</div></div>`;
+    if (meta.state !== 'blocked') {
+      body += `<div class="map-panel-section"><div class="map-panel-section-title">დასმა</div>
+        <form class="floor-seat-form" onsubmit="confirmSeatGuest(event)">
+        <label for="map-seat-name">სტუმრის სახელი</label>
+        <input id="map-seat-name" class="admin-input" type="text" value="${escapeAttr(suggestedName)}">
+        ${suggestedPhone ? `<label>ტელეფონი</label><input class="admin-input" type="tel" value="${escapeAttr(suggestedPhone)}" readonly>` : ''}
+        <label for="map-seat-guests">სტუმრები</label>
+        <input id="map-seat-guests" class="admin-input" type="number" min="1" max="99" value="${escapeAttr(String(suggestedGuests || 2))}">
+        <button type="submit" class="admin-btn admin-btn-sm">ახლავე დასვა</button>
+      </form></div>`;
+    }
+    if (activeReservation && freeTargets.length) {
+      body += `<div class="map-panel-section"><div class="map-panel-section-title">გადატანა</div>
+        <div class="floor-seat-form">
+        <label for="map-move-to">სხვა მაგიდა</label>
+        <select id="map-move-to" class="admin-input">${freeTargets.map(tableId => `<option value="${tableId}">${tableId}</option>`).join('')}</select>
+        <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="moveSelectedReservation()">გადატანა</button>
+      </div></div>`;
+    }
+  }
+  if (meta.state === 'occupied' || meta.state === 'cleaning') {
+    body += '<div class="map-panel-section"><div class="map-panel-section-title">სტატუსი</div><div class="floor-panel-actions">';
+    if (meta.state === 'occupied') body += '<button type="button" class="admin-btn admin-btn-sm" onclick="releaseSeatedTable()">სტუმრებმა დატოვეს</button>';
+    if (meta.state === 'cleaning') body += '<button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="markTableReady()">მაგიდა მზადაა</button>';
+    body += '</div></div>';
+  }
   panel.innerHTML = body;
+}
+async function bookMapTable(event) {
+  if (event && event.preventDefault) event.preventDefault();
+  const id = mapSelectedTableId;
+  if (!id) return;
+  const name = String(g('map-seat-name')?.value || '').trim();
+  const phone = String(g('map-book-phone')?.value || '').trim();
+  const guests = Math.max(1, Math.min(99, parseInt(g('map-seat-guests')?.value, 10) || 2));
+  const time = String(g('map-book-time')?.value || mapSelectedSlot || '').trim().slice(0, 5);
+  const date = mapBoardDate();
+  if (!name || !phone || !time) { adminMsg('map-msg', '❌ სახელი, ტელეფონი და დრო სავალდებულოა', 'err'); return; }
+  const clash = findOverlappingReservation(mapFloorRows, id, time);
+  if (clash) {
+    adminMsg('map-msg', `❌ ${id} უკვე დაკავებულია ${String(clash.time || '').slice(0, 5)}-ზე (${clash.name || 'ჯავშანი'}) — სხვა საათი აირჩიეთ`, 'err');
+    return;
+  }
+  const seated = getTableOperationalRecord(id);
+  const seatedNote = (seated?.status === 'occupied' && date === todayGeorgia())
+    ? ` · წინა ცვლა ჯერ ადგილზეა (${seated.name || 'სტუმარი'})`
+    : '';
+  try {
+    await supaFetch('/rest/v1/reservations', 'POST', { name, phone, date, time, guests, table_id: id, status: 'pending', payment: '', note: '' });
+    auditLog('map_book', `${id} · ${date} ${time} · ${name}`);
+    adminMsg('map-msg', `✅ ${id} დაიჯავშნა — ${name}, ${time}${seatedNote}`, seatedNote ? 'warn' : 'ok');
+    mapSelectedSlot = time;
+    await loadMapTables();
+  } catch (err) {
+    adminMsg('map-msg', '❌ ჯავშანი ვერ შეინახა: ' + (err.message || ''), 'err');
+  }
+}
+async function mapSetReservationStatus(status) {
+  const meta = mapMetaForBoard(mapSelectedTableId);
+  const id = meta.reservation && meta.reservation.id;
+  if (!id) { adminMsg('map-msg', '❌ ჯავშანი ვერ მოიძებნა', 'err'); return; }
+  if (status === 'cancelled' && !confirm('ჯავშანი გაუქმდეს?')) return;
+  await changeResStatus(id, status);
+  adminMsg('map-msg', status === 'confirmed' ? '✅ ჯავშანი დადასტურდა' : '✅ ჯავშანი გაუქმდა', status === 'cancelled' ? 'warn' : 'ok');
+  await loadMapTables();
+}
+async function moveSelectedReservation() {
+  const toId = g('map-move-to')?.value;
+  const from = g('map-transfer-from');
+  const to = g('map-transfer-to');
+  if (!toId || !from || !to) return;
+  from.value = mapSelectedTableId;
+  to.value = toId;
+  mapSelectedTableId = toId;
+  await transferTableReservation();
 }
 function confirmSeatGuest(event) {
   if (event && event.preventDefault) event.preventDefault();
@@ -10142,10 +10485,11 @@ function mapTableClick(tableId) {
   if (mapDragMoved) { mapDragMoved = false; return; }
   if (banquetMode) { toggleBanquetPick(tableId); return; }
   mapSelectedTableId = String(tableId || '');
-  renderMapSeatPanel();
   document.querySelectorAll('[data-map-table]').forEach(el => {
     el.classList.toggle('is-selected', el.getAttribute('data-map-table') === mapSelectedTableId);
   });
+  syncMapPanelOpenClass();
+  renderMapSeatPanel();
 }
 function populateMapGroupTableSelect() {
   const sel = g('map-group-table-select');
@@ -10228,66 +10572,96 @@ async function loadMapTables() {
     if (filterEl && !filterEl.value) filterEl.value = today2;
     const rsvData = await supaFetch(`/rest/v1/reservations?date=eq.${today2}&status=neq.cancelled&select=id,name,phone,guests,time,table_id,status`);
     mapFloorRows = Array.isArray(rsvData) ? rsvData : [];
-    const groups = getTableGroups();
-    const counts = { free: 0, pending: 0, confirmed: 0, occupied: 0, grouped: 0, cleaning: 0, blocked: 0 };
-
-    const zones = { H: [], A: [], V: [] };
-    const allTables = [
-      ...Array.from({ length: 9 }, (_, i) => ({ id: `H-${i + 11}`, zone: 'H' })),
-      ...Array.from({ length: 10 }, (_, i) => ({ id: `A-${i + 20}`, zone: 'A' })),
-      ...Array.from({ length: 8 }, (_, i) => ({ id: `V-${i + 1}`, zone: 'V' }))
-    ];
-    allTables.forEach(t => zones[t.zone].push(t));
-
-    ['H', 'A', 'V'].forEach(zone => {
-      const el = g(`map-zone-${zone}`);
-      if (!el) return;
-      const zoneCounts = {};
-      el.innerHTML = zones[zone].map(t => {
-        const meta = mapTableMeta(t.id, mapFloorRows, groups);
-        counts[meta.state] = (counts[meta.state] || 0) + 1;
-        zoneCounts[meta.state] = (zoneCounts[meta.state] || 0) + 1;
-        const s = meta.styles;
-        const seatedWho = (meta.record?.status === 'occupied' && meta.record)
-          || (meta.group && getTableOperationalRecord(meta.group.tableIds[0])?.status === 'occupied' ? getTableOperationalRecord(meta.group.tableIds[0]) : null);
-        const sub = seatedWho
-          ? `${seatedWho.guests || 1} სტუმ.`
-          : meta.group
-            ? meta.group.id
-            : (meta.state === 'confirmed' || meta.state === 'pending') && meta.reservation
-            ? mapShortText(meta.reservation.name || meta.reservation.time || '')
-              : (meta.state === 'free' ? '' : (MAP_STATE_LABEL[meta.state] || ''));
-        const selected = t.id === mapSelectedTableId ? ' is-selected' : '';
-        const banquetSelected = banquetPickIds.includes(t.id) ? ' is-banquet-pick' : '';
-        return `<button type="button" class="floor-table${selected}${banquetSelected}" draggable="true" data-map-table="${t.id}" ondragstart="dragMapStart(event,'${t.id}')" ondragover="dragMapOver(event)" ondrop="dropMapTable(event,'${t.id}')" onclick="mapTableClick('${t.id}')" style="background:${s.bg};border:1px solid ${s.border};color:${s.color}"><span class="floor-table-id">${escapeHtml(t.id)}</span>${sub ? `<span class="floor-table-sub">${escapeHtml(sub)}</span>` : ''}</button>`;
-      }).join('');
-      const countEl = g(`map-zone-count-${zone}`);
-      if (countEl) {
-        const order = ['free', 'occupied', 'confirmed', 'pending', 'cleaning', 'grouped', 'blocked'];
-        countEl.textContent = order.filter(key => zoneCounts[key]).map(key => `${zoneCounts[key]} ${MAP_STATE_LABEL[key]}`).join(' · ');
-      }
-    });
-    const summary = g('map-floor-summary');
-    if (summary) {
-      const chips = [
-        ['free', '#2a726b'],
-        ['occupied', '#d77b5e'],
-        ['confirmed', '#b85d38'],
-        ['pending', '#c9a03d'],
-        ['cleaning', '#777'],
-        ['grouped', '#8060a8']
-      ];
-      summary.innerHTML = chips.map(([key, color]) => `<span><i style="background:${color}"></i>${MAP_STATE_LABEL[key]} ${counts[key] || 0}</span>`).join('');
-    }
-    const occupiedIds = new Set(mapFloorRows.map(r => r.table_id).filter(Boolean));
-    populateMapTransferSelects(occupiedIds);
-    renderTableGroups(mapFloorRows, groups);
-    renderMapSeatPanel();
+    mapSelectedSlot = pickMapSlotForDate(today2, mapFloorRows);
+    renderMapSlots();
+    renderMapFloor();
   } catch (e) {
     adminMsg('map-msg', '❌ Supabase კავშირი ვერ მოხერხდა', 'err');
   }
 }
 
+function renderMapFloor() {
+  const groups = getTableGroups();
+  const counts = { free: 0, pending: 0, confirmed: 0, occupied: 0, grouped: 0, cleaning: 0, blocked: 0 };
+  const freeOnly = !!g('map-free-only')?.checked;
+  const searchQ = String(g('map-search')?.value || '').trim().toLowerCase();
+  const zones = { H: [], A: [], V: [] };
+  const allTables = [
+    ...Array.from({ length: 9 }, (_, i) => ({ id: `H-${i + 11}`, zone: 'H' })),
+    ...Array.from({ length: 10 }, (_, i) => ({ id: `A-${i + 20}`, zone: 'A' })),
+    ...Array.from({ length: 8 }, (_, i) => ({ id: `V-${i + 1}`, zone: 'V' }))
+  ];
+  allTables.forEach(t => zones[t.zone].push(t));
+  ['H', 'A', 'V'].forEach(zone => {
+    const el = g(`map-zone-${zone}`);
+    if (!el) return;
+    const zoneCounts = {};
+    el.innerHTML = zones[zone].map(t => {
+      const meta = mapMetaForBoard(t.id, groups);
+      counts[meta.state] = (counts[meta.state] || 0) + 1;
+      zoneCounts[meta.state] = (zoneCounts[meta.state] || 0) + 1;
+      if (freeOnly && meta.state !== 'free') return '';
+      const seatedWho = (meta.record?.status === 'occupied' && meta.record)
+        || (meta.group && getTableOperationalRecord(meta.group.tableIds[0])?.status === 'occupied' ? getTableOperationalRecord(meta.group.tableIds[0]) : null);
+      const dayList = dayReservationsForTable(mapFloorRows, t.id);
+      const guestBlob = [
+        t.id,
+        meta.reservation?.name,
+        meta.reservation?.phone,
+        seatedWho?.name,
+        meta.group?.name,
+        meta.group?.id
+      ].filter(Boolean).join(' ').toLowerCase();
+      if (searchQ && !guestBlob.includes(searchQ)) return '';
+      const otherTimes = dayList
+        .filter(row => !mapReservationCoversSlot(row, mapSelectedSlot))
+        .map(row => String(row.time || '').slice(0, 5))
+        .filter(Boolean);
+      const statusLabel = MAP_STATE_LABEL[meta.state] || meta.state;
+      let sub = '';
+      if (seatedWho) {
+        sub = `${mapShortText(seatedWho.name || 'სტუმარი', 12)} · ${formatSeatedClock(seatedWho.seatedAt) || 'ადგილზე'}`;
+      } else if (meta.group) {
+        sub = `${meta.group.id}${meta.group.name ? ' · ' + mapShortText(meta.group.name, 8) : ''}`;
+      } else if ((meta.state === 'confirmed' || meta.state === 'pending') && meta.reservation) {
+        sub = `${mapShortText(meta.reservation.name || '', 12)} · ${String(meta.reservation.time || '').slice(0, 5)}`;
+      }
+      if (otherTimes.length) {
+        const nextHint = `შემდეგი · ${otherTimes[0]}`;
+        sub = sub ? `${sub} · ${nextHint}` : nextHint;
+      }
+      const selected = t.id === mapSelectedTableId ? ' is-selected' : '';
+      const banquetSelected = banquetPickIds.includes(t.id) ? ' is-banquet-pick' : '';
+      const aria = `${t.id}, ${statusLabel}, ${mapTableSeats(t.id)} ადგილი${sub ? ', ' + sub : ''}`;
+      return `<button type="button" class="floor-table floor-table--${escapeAttr(meta.state)}${selected}${banquetSelected}" draggable="true" data-map-table="${t.id}" data-state="${escapeAttr(meta.state)}" title="${escapeAttr(dayList.map(formatReservationShiftLabel).join(' | ') || statusLabel)}" aria-label="${escapeAttr(aria)}" ondragstart="dragMapStart(event,'${t.id}')" ondragover="dragMapOver(event)" ondrop="dropMapTable(event,'${t.id}')" onclick="mapTableClick('${t.id}')"><span class="floor-table-top"><span class="floor-table-id">${escapeHtml(t.id)}</span><span class="floor-table-seats">${mapTableSeats(t.id)}</span></span><span class="floor-table-status">${escapeHtml(statusLabel)}</span><span class="floor-table-sub">${escapeHtml(sub)}</span></button>`;
+    }).join('');
+    const countEl = g(`map-zone-count-${zone}`);
+    if (countEl) {
+      const freeN = zoneCounts.free || 0;
+      const busyN = Object.keys(zoneCounts).filter(k => k !== 'free').reduce((n, k) => n + (zoneCounts[k] || 0), 0);
+      countEl.textContent = busyN ? `${freeN} თავისუფალი · ${busyN} დაკავებული` : `${freeN} თავისუფალი`;
+    }
+  });
+  const summary = g('map-floor-summary');
+  if (summary) {
+    const chips = [
+      ['free', '#249E98'],
+      ['pending', '#C4A15A'],
+      ['confirmed', '#AD4939'],
+      ['occupied', '#8F3A2E'],
+      ['grouped', '#1D7F7A'],
+      ['cleaning', '#B7B1A8'],
+      ['blocked', '#8A867E']
+    ];
+    summary.innerHTML = chips.map(([key, color]) => `<span><i style="background:${color}"></i>${MAP_STATE_LABEL[key]} ${counts[key] || 0}</span>`).join('');
+  }
+  updateMapContext();
+  const occupiedIds = new Set(mapRowsForSlot(mapFloorRows, mapSelectedSlot).map(r => r.table_id).filter(Boolean));
+  populateMapTransferSelects(occupiedIds);
+  renderTableGroups(mapFloorRows, groups);
+  syncMapPanelOpenClass();
+  renderMapSeatPanel();
+}
 function populateMapTransferSelects(occupiedIds) {
   const fromSel = g('map-transfer-from');
   const toSel = g('map-transfer-to');
@@ -10322,25 +10696,27 @@ async function transferTableReservation() {
     adminMsg('map-msg', '❌ წყარო და სამიზნე არ უნდა ემთხვეოდეს', 'err');
     return;
   }
-  let toOccupied = false;
-  try {
-    const toRows = await supaFetch(`/rest/v1/reservations?date=eq.${date}&table_id=eq.${encodeURIComponent(toId)}&status=neq.cancelled&select=id`);
-    toOccupied = Array.isArray(toRows) && toRows.length > 0;
-  } catch (_) {}
-  if (toOccupied) {
-    adminMsg('map-msg', `❌ მაგიდა ${toId} ამ თარიღზე დაკავებულია — ტრანსფერი შეუძლებელია`, 'err');
+  const moving = mapMetaForBoard(fromId).reservation || mapReservationForTable(fromId, mapRowsForSlot(mapFloorRows, mapSelectedSlot));
+  if (!moving?.id) {
+    adminMsg('map-msg', `❌ არჩეულ საათზე ${fromId}-ზე გადასატანი ჯავშანი არ არის`, 'err');
+    return;
+  }
+  const clash = findOverlappingReservation(mapFloorRows, toId, moving.time, moving.id);
+  if (clash) {
+    adminMsg('map-msg', `❌ ${toId} უკვე დაკავებულია ${String(clash.time || '').slice(0, 5)}-ზე — ტრანსფერი შეუძლებელია`, 'err');
     return;
   }
   try {
     const res = await supaFetch(
-      `/rest/v1/reservations?date=eq.${date}&table_id=eq.${encodeURIComponent(fromId)}&status=neq.cancelled`,
+      `/rest/v1/reservations?id=eq.${encodeURIComponent(String(moving.id))}`,
       'PATCH',
       { table_id: toId }
     );
-    const count = Array.isArray(res) ? res.length : 0;
-    adminMsg('map-msg', count > 0 ? `✅ ${count} ჯავშანი გადატანილია ${fromId} → ${toId}` : `⚠️ ჯავშანი არ მოიძებნა ${fromId}-ზე ${date}`, count > 0 ? 'ok' : 'warn');
+    const count = Array.isArray(res) ? res.length : (res ? 1 : 0);
+    adminMsg('map-msg', count > 0 ? `✅ ჯავშანი გადატანილია ${fromId} → ${toId} (${String(moving.time || '').slice(0, 5)})` : `⚠️ ჯავშანი ვერ განახლდა`, count > 0 ? 'ok' : 'warn');
     if (count > 0) {
-      auditLog('res_transfer', `${fromId} → ${toId} (${date})`);
+      auditLog('res_transfer', `${fromId} → ${toId} · ${String(moving.time || '').slice(0, 5)} (${date})`);
+      mapSelectedTableId = toId;
       await loadMapTables();
     }
   } catch (e) {
@@ -10348,19 +10724,29 @@ async function transferTableReservation() {
   }
 }
 
-/** სარეზერვაციო ფორმა: არჩევა დადასტურებული მაგიდისთვის არჩეული თარიღით — აკრძალული */
+/** სარეზერვაციო ფორმა: მაგიდა იბლოკება მხოლოდ თუ არჩეული დრო ეფარება არსებულ ჯავშანს */
 async function refreshReservationTableSelectState() {
   const sel = g('r-table');
   const dateEl = g('r-date');
+  const timeEl = g('r-time');
   if (!sel || !dateEl) return;
   syncReservationGroupOptions();
   const date = dateEl.value || todayGeorgia();
-  let confirmedIds = new Set();
+  const time = String(timeEl?.value || '').slice(0, 5);
+  let dayRows = [];
   try {
-    const rows = await supaFetch(`/rest/v1/reservations?date=eq.${date}&status=eq.confirmed&select=table_id`);
-    confirmedIds = new Set((rows || []).map(r => r.table_id).filter(Boolean));
+    dayRows = await supaFetch(`/rest/v1/reservations?date=eq.${date}&status=neq.cancelled&select=id,table_id,time,status,name`) || [];
   } catch (_) {
-    /* ქსელი/Supabase — ყველა ვარიანტი დარჩეს ხელმისაწვდომი */
+    dayRows = [];
+  }
+  const busyAtTime = new Set();
+  if (time) {
+    MAP_ALL_TABLE_IDS.forEach(id => {
+      if (findOverlappingReservation(dayRows, id, time)) busyAtTime.add(id);
+    });
+    getTableGroups().forEach(gp => {
+      if ((gp.tableIds || []).some(id => busyAtTime.has(String(id)))) busyAtTime.add(String(gp.id));
+    });
   }
   const groupedIds = new Set(getTableGroups().flatMap(gp => gp.tableIds || []).map(String));
   const prev = sel.value;
@@ -10377,10 +10763,14 @@ async function refreshReservationTableSelectState() {
       opt.title = 'ეს მაგიდა ბანკეტის ჯგუფშია — ჯგუფი აირჩიეთ';
       return;
     }
-    const memberBusy = isGroup && getTableGroups().some(gp => gp.id === v && (gp.tableIds || []).some(id => confirmedIds.has(String(id))));
-    opt.disabled = ((isTable || isGroup) && confirmedIds.has(v)) || memberBusy;
-    if (opt.disabled) opt.title = 'დადასტურებული ჯავშანი — ეს მაგიდა დაკავებულია';
-    else opt.removeAttribute('title');
+    const clash = (isTable || isGroup) && busyAtTime.has(v);
+    opt.disabled = !!clash;
+    if (opt.disabled) {
+      const hit = isTable ? findOverlappingReservation(dayRows, v, time) : null;
+      opt.title = hit
+        ? `ამ დროს დაკავებულია (${String(hit.time || '').slice(0, 5)} · ${hit.name || 'ჯავშანი'}) — სხვა საათი ან მაგიდა აირჩიეთ`
+        : 'ამ დროს დაკავებულია';
+    } else opt.removeAttribute('title');
   });
   if (prev) {
     const o = Array.from(sel.options).find(opt => opt.value === prev);
@@ -10706,7 +11096,7 @@ function formatPrecheckCellHtml(r) {
     const payRaw = (r.advance_payment != null && r.advance_payment !== '') ? String(r.advance_payment).trim() : '';
     const payMap = {'ნაღდი':'ნაღდი',bog:'საქართველოს ბანკი',tbc:'თიბისი ბანკი',tera:'ტერა ბანკი','გადარიცხვა':'გადარიცხვა',cash:'ნაღდი',transfer:'გადარიცხვა'};
     const payLab = payRaw ? escapeHtml(payMap[payRaw] || payRaw) : '';
-    advBadgeHtml = `<div style="font-size:.62rem;margin-top:${advBadgeMt};padding:.3rem .45rem;border-radius:4px;background:rgba(46,204,113,.1);border:1px solid rgba(46,204,113,.32);color:#b8efd0;line-height:1.35">დადასტურებულია · ავანსი დატოვებული: <strong>₾${advBadgeAmt.toFixed(2)}</strong>${payLab ? ' · ' + payLab : ''}</div>`;
+    advBadgeHtml = `<div style="font-size:.62rem;margin-top:${advBadgeMt};padding:.3rem .45rem;border-radius:4px;background:#E7F5F4;border:1px solid #B7E0DC;color:#217B76;line-height:1.35">დადასტურებულია · ავანსი დატოვებული: <strong>₾${advBadgeAmt.toFixed(2)}</strong>${payLab ? ' · ' + payLab : ''}</div>`;
   }
   if (!hasCheckLines) {
     if (advBadgeHtml) return advBadgeHtml;
@@ -11443,13 +11833,10 @@ function applyResFilter() {
 
 const payLabels = {'ნაღდი':'ნაღდი',bog:'საქართველოს ბანკი',tbc:'თიბისი ბანკი',tera:'ტერა ბანკი','გადარიცხვა':'გადარიცხვა',cash:'ნაღდი',transfer:'გადარიცხვა'};
 function adminStatusColor(st) {
-  const light = document.documentElement.classList.contains('admin-theme-light');
-  const map = light
-    ? { pending: '#7a5a10', confirmed: '#1a5c56', cancelled: '#8f3d28' }
-    : { pending: '#e4c56a', confirmed: '#7dcea0', cancelled: '#f0b8a8' };
-  return map[st] || (light ? '#5c5146' : '#e4c56a');
+  const map = { pending: '#6E4E16', confirmed: '#217B76', cancelled: '#84392F' };
+  return map[st] || '#5C5952';
 }
-const statusColors = { pending: '#e4c56a', confirmed: '#7dcea0', cancelled: '#f0b8a8' };
+const statusColors = { pending: '#6E4E16', confirmed: '#217B76', cancelled: '#84392F' };
 const statusLabels = {pending:'მომლოდინე',confirmed:'დადასტურებული',cancelled:'გაუქმებული'};
 function adminStatusBadge(st) {
   const key = String(st || '');
@@ -11468,10 +11855,10 @@ function formatResChecksAdvanceReadonlyHtml(r) {
         ? Number(r.advance)
         : NaN;
   const amt = Number.isFinite(a) ? escapeHtml(a.toFixed(2)) : '';
-  if (!payLab && !amt) return '<span style="color:rgba(245,240,232,.22)">—</span>';
+  if (!payLab && !amt) return '<span style="color:#77766F">—</span>';
   const parts = [];
-  if (payLab) parts.push(`<span style="color:rgba(245,240,232,.72)">${payLab}</span>`);
-  if (amt) parts.push(`<span style="color:var(--gold)">₾${amt}</span>`);
+  if (payLab) parts.push(`<span style="color:#252724">${payLab}</span>`);
+  if (amt) parts.push(`<span style="color:#A64B3C">₾${amt}</span>`);
   return `<div style="font-size:.68rem;line-height:1.35">${parts.join(' · ')}</div>`;
 }
 

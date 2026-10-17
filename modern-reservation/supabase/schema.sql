@@ -87,7 +87,17 @@ insert into public.restaurant_settings (id) values (true) on conflict (id) do no
 
 insert into public.restaurant_tables (name, seats, zone) values
   ('T01', 2, 'window'), ('T02', 2, 'window'), ('T03', 4, 'main'),
-  ('T04', 4, 'main'), ('T05', 6, 'main'), ('T06', 8, 'family')
+  ('T04', 4, 'main'), ('T05', 6, 'main'), ('T06', 8, 'family'),
+  ('H-11', 4, 'hall'), ('H-12', 4, 'hall'), ('H-13', 4, 'hall'),
+  ('H-14', 4, 'hall'), ('H-15', 4, 'hall'), ('H-16', 4, 'hall'),
+  ('H-17', 4, 'hall'), ('H-18', 4, 'hall'), ('H-19', 4, 'hall'),
+  ('A-20', 4, 'mezzanine'), ('A-21', 4, 'mezzanine'), ('A-22', 4, 'mezzanine'),
+  ('A-23', 4, 'mezzanine'), ('A-24', 4, 'mezzanine'), ('A-25', 4, 'mezzanine'),
+  ('A-26', 4, 'mezzanine'), ('A-27', 4, 'mezzanine'), ('A-28', 4, 'mezzanine'),
+  ('A-29', 4, 'mezzanine'),
+  ('V-1', 4, 'veranda'), ('V-2', 4, 'veranda'), ('V-3', 4, 'veranda'),
+  ('V-4', 4, 'veranda'), ('V-5', 4, 'veranda'), ('V-6', 4, 'veranda'),
+  ('V-7', 4, 'veranda'), ('V-8', 4, 'veranda')
 on conflict (name) do nothing;
 
 insert into public.menu_categories (name, sort_order)

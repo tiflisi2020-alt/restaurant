@@ -25,6 +25,13 @@ const sessionReady = Boolean(adminPassword && sessionSecret);
 
 app.disable('x-powered-by');
 app.use(express.json({ limit: '100kb' }));
+
+const publicDir = path.join(__dirname, 'public');
+const publicIndex = path.join(publicDir, 'index.html');
+const adminLoginPage = path.join(publicDir, 'admin', 'index.html');
+app.get(['/admin', '/admin/'], (_req, res) => res.sendFile(adminLoginPage));
+app.get(['/admin/panel', '/admin/panel/'], (_req, res) => res.sendFile(publicIndex));
+
 app.use(express.static(path.join(__dirname, 'public'), { extensions: ['html'] }));
 
 const asyncRoute = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
@@ -104,6 +111,248 @@ app.post('/api/admin/logout', requireAdmin, (_req, res) => { setSessionCookie(re
 app.get('/api/admin/session', (req, res) => res.json({ authenticated: validSession(cookie(req, 'tiflis_admin')) }));
 app.get('/api/admin/reservations', requireDb, requireAdmin, asyncRoute(async (req, res) => { const date = clean(req.query.date, 10); const filter = dateOk(date) ? `&reservation_date=eq.${encode(date)}` : ''; res.json(await supa('reservations', `?select=*,restaurant_tables(name,seats,zone)&order=reservation_date.asc,reservation_time.asc&limit=200${filter}`)); }));
 app.patch('/api/admin/reservations/:id', requireDb, requireAdmin, asyncRoute(async (req, res) => { const status = clean(req.body?.status, 20); if (!['pending', 'confirmed', 'seated', 'completed', 'cancelled', 'no_show'].includes(status)) return res.status(400).json({ error: 'სტატუსი არასწორია.' }); const updated = await supa('reservations', `?id=eq.${encode(req.params.id)}`, { method: 'PATCH', body: JSON.stringify({ status }) }); const data = updated[0]; await supa('reservation_events', '', { method: 'POST', body: JSON.stringify({ reservation_id: data.id, event_type: `status:${status}`, actor: 'admin' }) }); res.json(data); }));
+
+// Compatibility bridge for the legacy full-featured UI. The browser talks only to
+// this same-origin route; the Supabase service key remains server-side.
+const legacyQuery = (req, key) => new URL(req.protocol + '://' + (req.headers.host || 'localhost') + req.originalUrl).searchParams.get(key) || '';
+const legacyEq = (value, prefix) => String(value || '').replace(new RegExp(`^${prefix}=`), '').replace(/^eq\./, '');
+const legacyAdminMutation = (req, res) => {
+  if (req.method === 'GET' || req.method === 'HEAD') return true;
+  if (req.method === 'POST' && req.params.table === 'reservations') return true;
+  if (validSession(cookie(req, 'tiflis_admin'))) return true;
+  res.status(401).json({ message: 'ადმინის ავტორიზაცია საჭიროა.' });
+  return false;
+};
+function legacyCategory(row) { return { id: Number(row.legacy_id || 0), legacy_id: Number(row.legacy_id || 0), ka: row.ka || row.name, en: row.en || row.name, ru: row.ru || row.name, sort_order: row.sort_order }; }
+function legacyMenuItem(row) { return { id: Number(row.legacy_id || 0), legacy_id: Number(row.legacy_id || 0), ka: row.ka || row.name, en: row.en || row.name, ru: row.ru || row.name, p: Number(row.p ?? row.price ?? 0), cat: Number(row.cat || 0), active: row.active !== false }; }
+function legacyReservation(row, tableName = '') {
+  return { ...row, name: row.guest_name, date: row.reservation_date, time: String(row.reservation_time || '').slice(0, 5), table_id: tableName || row.table_id || '', payment: row.payment || '', note: row.note || row.notes || '', precheck_json: row.precheck_json || null };
+}
+function floorTableMeta(name) {
+  const id = String(name || '').trim().toUpperCase();
+  if (/^H-\d+$/.test(id)) return { name: id, seats: 4, zone: 'hall' };
+  if (/^A-\d+$/.test(id)) return { name: id, seats: 4, zone: 'mezzanine' };
+  if (/^V-\d+$/.test(id)) return { name: id, seats: 4, zone: 'veranda' };
+  if (/^B-\d+$/.test(id)) return { name: id, seats: 8, zone: 'banquet' };
+  if (/^T\d+$/.test(id)) return { name: id, seats: 4, zone: 'main' };
+  return null;
+}
+async function resolveRestaurantTable(tableName) {
+  const name = clean(tableName, 50);
+  if (!name || name === '—' || name === '-') return null;
+  const found = (await supa('restaurant_tables', `?name=eq.${encode(name)}&select=id,name,seats`))[0];
+  if (found) return found;
+  const meta = floorTableMeta(name);
+  if (!meta) {
+    const err = new Error('მაგიდა ვერ მოიძებნა');
+    err.status = 400;
+    throw err;
+  }
+  const inserted = await supa('restaurant_tables', '', { method: 'POST', body: JSON.stringify({ ...meta, is_active: true }) });
+  return inserted[0];
+}
+
+app.all('/api/legacy/rest/v1/:table', requireDb, asyncRoute(async (req, res) => {
+  const table = req.params.table;
+  if (!legacyAdminMutation(req, res)) return;
+  if (table === 'menu_categories') {
+    if (req.method === 'GET') {
+      let rows = await supa('menu_categories', '?select=id,legacy_id,name,ka,en,ru,sort_order,is_active&order=sort_order.asc,legacy_id.asc');
+      const idFilter = legacyQuery(req, 'id'); if (idFilter) rows = rows.filter((r) => String(r.legacy_id) === legacyEq(idFilter, 'id'));
+      return res.json(rows.map(legacyCategory));
+    }
+    const body = Array.isArray(req.body) ? req.body[0] : (req.body || {});
+    const id = Number(body.id || body.legacy_id || 0); const patch = { name: clean(body.ka || body.name, 160), ka: clean(body.ka || body.name, 160), en: clean(body.en || body.ka || body.name, 160), ru: clean(body.ru || body.ka || body.name, 160), sort_order: Number(body.sort_order || id || 0), is_active: body.active !== false };
+    let rows = id ? await supa('menu_categories', `?legacy_id=eq.${id}&select=id`) : [];
+    if (req.method === 'DELETE') { if (rows[0]) await supa('menu_categories', `?id=eq.${encode(rows[0].id)}`, { method: 'DELETE' }); return res.json([]); }
+    if (rows[0]) { const updated = await supa('menu_categories', `?id=eq.${encode(rows[0].id)}`, { method: 'PATCH', body: JSON.stringify(patch) }); return res.json(updated.map(legacyCategory)); }
+    const inserted = await supa('menu_categories', '', { method: 'POST', body: JSON.stringify({ ...patch, legacy_id: id || Date.now() }) }); return res.json(inserted.map(legacyCategory));
+  }
+  if (table === 'menu_items') {
+    if (req.method === 'GET') {
+      let rows = await supa('menu_items', '?select=id,legacy_id,name,ka,en,ru,p,price,cat,active,is_available&order=sort_order.asc,legacy_id.asc');
+      const idFilter = legacyQuery(req, 'id'); if (idFilter) rows = rows.filter((r) => String(r.legacy_id) === legacyEq(idFilter, 'id'));
+      return res.json(rows.map(legacyMenuItem));
+    }
+    const body = Array.isArray(req.body) ? req.body[0] : (req.body || {}); const id = Number(body.id || body.legacy_id || 0); const patch = { name: clean(body.ka || body.name, 160), ka: clean(body.ka || body.name, 160), en: clean(body.en || body.ka || body.name, 160), ru: clean(body.ru || body.ka || body.name, 160), p: Number(body.p || body.price || 0), price: Number(body.p || body.price || 0), cat: Number(body.cat || 0), active: body.active !== false, is_available: body.active !== false };
+    let rows = id ? await supa('menu_items', `?legacy_id=eq.${id}&select=id`) : [];
+    if (req.method === 'DELETE') { if (rows[0]) await supa('menu_items', `?id=eq.${encode(rows[0].id)}`, { method: 'PATCH', body: JSON.stringify({ active: false, is_available: false }) }); return res.json([]); }
+    if (rows[0]) { const updated = await supa('menu_items', `?id=eq.${encode(rows[0].id)}`, { method: 'PATCH', body: JSON.stringify(patch) }); return res.json(updated.map(legacyMenuItem)); }
+    const category = (await supa('menu_categories', `?legacy_id=eq.${Number(patch.cat)}&select=id`))[0]; const inserted = await supa('menu_items', '', { method: 'POST', body: JSON.stringify({ ...patch, legacy_id: id || Date.now(), category_id: category?.id || null }) }); return res.json(inserted.map(legacyMenuItem));
+  }
+  if (table === 'settings') {
+    const keyParam = legacyQuery(req, 'key'); const key = keyParam.replace(/^eq\./, '').replace(/^in\.\((.*)\)$/, '$1').split(',')[0];
+    if (req.method === 'GET') { const rows = await supa('settings', keyParam.includes('in.') ? `?key=in.(${keyParam.match(/in\.\((.*)\)/)?.[1] || ''})&select=key,value` : `?key=eq.${encode(key)}&select=key,value`); return res.json(rows); }
+    const body = Array.isArray(req.body) ? req.body[0] : (req.body || {}); const target = key || body.key; const existing = await supa('settings', `?key=eq.${encode(target)}&select=key`); if (existing.length) { const updated = await supa('settings', `?key=eq.${encode(target)}`, { method: 'PATCH', body: JSON.stringify({ value: String(body.value ?? '') }) }); return res.json(updated); } const inserted = await supa('settings', '', { method: 'POST', body: JSON.stringify({ key: target, value: String(body.value ?? '') }) }); return res.json(inserted);
+  }
+  if (table === 'tables') {
+    const date = todayInTimezone();
+    if (req.method === 'GET') {
+      const tables = await supa('restaurant_tables', '?is_active=eq.true&select=id,name,seats,zone&order=name');
+      const ops = await supa('table_operations', `?business_date=eq.${date}&select=table_id,status,guest_name,guests,reservation_id`);
+      const opMap = new Map(ops.map((row) => [String(row.table_id), row]));
+      return res.json(tables.map((row) => { const op = opMap.get(row.name) || {}; return { id: row.name, name: row.name, seats: row.seats, zone: row.zone, status: op.status || 'free', guest_name: op.guest_name || null, guests: op.guests || null, reservation_id: op.reservation_id || null }; }));
+    }
+    const id = legacyQuery(req, 'id').replace(/^eq\./, ''); const body = req.body || {}; if (!id) return res.json([]); const row = { table_id: id, business_date: date, status: clean(body.status || 'free', 30), guest_name: body.guest_name || body.name || null, guests: body.guests == null ? null : Number(body.guests), source: 'admin', reservation_id: body.reservation_id || null, updated_by: 'legacy-bridge' }; const saved = await supa('table_operations', `?on_conflict=table_id,business_date`, { method: 'POST', body: JSON.stringify(row), headers: { Prefer: 'resolution=merge-duplicates,return=representation' } }); return res.json(saved);
+  }
+  if (table === 'reservations') {
+    if (req.method === 'GET') {
+      let rows = await supa('reservations', '?select=*&order=created_at.desc,reservation_date.desc,reservation_time.desc&limit=500');
+      const url = new URL(req.protocol + '://' + (req.headers.host || 'localhost') + req.originalUrl);
+      const dateParams = url.searchParams.getAll('date');
+      let dateEq = '';
+      let dateGte = '';
+      let dateLte = '';
+      for (const raw of dateParams) {
+        const value = String(raw || '');
+        if (value.startsWith('gte.')) dateGte = value.slice(4);
+        else if (value.startsWith('lte.')) dateLte = value.slice(4);
+        else if (value.startsWith('eq.')) dateEq = value.slice(3);
+        else if (/^\d{4}-\d{2}-\d{2}$/.test(value)) dateEq = value;
+      }
+      const dayOf = (value) => String(value || '').slice(0, 10);
+      if (dateEq) rows = rows.filter((r) => dayOf(r.reservation_date) === dateEq);
+      else {
+        if (dateGte) rows = rows.filter((r) => dayOf(r.reservation_date) >= dateGte);
+        if (dateLte) rows = rows.filter((r) => dayOf(r.reservation_date) <= dateLte);
+      }
+      const status = legacyQuery(req, 'status');
+      const tableFilter = legacyQuery(req, 'table_id').replace(/^eq\./, '');
+      if (status) rows = rows.filter((r) => status.startsWith('neq.') ? r.status !== status.slice(4) : status.startsWith('eq.') ? r.status === status.slice(3) : r.status === status);
+      const tables = await supa('restaurant_tables', '?select=id,name');
+      const names = new Map(tables.map((t) => [t.id, t.name]));
+      const idsByName = new Map(tables.map((t) => [t.name, t.id]));
+      if (tableFilter) {
+        const wantId = idsByName.get(tableFilter) || tableFilter;
+        rows = rows.filter((r) => String(r.table_id) === String(wantId));
+      }
+      return res.json(rows.map((r) => legacyReservation(r, names.get(r.table_id) || '')));
+    }
+    if (req.method === 'POST') {
+      const b = Array.isArray(req.body) ? req.body[0] : (req.body || {});
+      const tableName = clean(b.table_id, 50);
+      let tableRow = null;
+      try {
+        tableRow = await resolveRestaurantTable(tableName);
+      } catch (err) {
+        return res.status(err.status || 400).json({ message: err.message || 'მაგიდა ვერ მოიძებნა' });
+      }
+      if (!tableRow && tableName && tableName !== '—' && tableName !== '-') {
+        return res.status(400).json({ message: 'მაგიდა ვერ მოიძებნა' });
+      }
+      const displayName = tableRow?.name || tableName || '—';
+      const reservationDate = clean(b.date || b.reservation_date, 10);
+      const reservationTime = clean(b.time || b.reservation_time, 5);
+      if (tableRow && reservationDate && reservationTime) {
+        const existing = await supa('reservations', `?reservation_date=eq.${encode(reservationDate)}&table_id=eq.${encode(tableRow.id)}&status=not.in.(cancelled,no_show)&select=id,guest_name,reservation_time,status`);
+        const hold = 120;
+        const toMin = (value) => {
+          const match = String(value || '').match(/^(\d{1,2}):(\d{2})/);
+          return match ? Number(match[1]) * 60 + Number(match[2]) : null;
+        };
+        const start = toMin(reservationTime);
+        const clash = (existing || []).find((row) => {
+          const other = toMin(row.reservation_time);
+          return start != null && other != null && start < other + hold && other < start + hold;
+        });
+        if (clash) {
+          return res.status(409).json({
+            message: `მაგიდა ${displayName} უკვე დაკავებულია ${String(clash.reservation_time || '').slice(0, 5)}-ზე (${clash.guest_name || 'ჯავშანი'}). სხვა საათი ან მაგიდა აირჩიეთ.`
+          });
+        }
+      }
+      const row = {
+        confirmation_code: `TF-${crypto.randomBytes(3).toString('hex').toUpperCase()}`,
+        guest_name: clean(b.name || b.guest_name, 100),
+        phone: clean(b.phone, 40),
+        email: b.email || null,
+        reservation_date: reservationDate,
+        reservation_time: reservationTime ? `${reservationTime}:00` : null,
+        guests: Number(b.guests || 2),
+        table_id: tableRow?.id || null,
+        status: b.status || 'pending',
+        notes: clean(b.note || b.notes, 500),
+        payment: clean(b.payment, 60),
+        note: clean(b.note, 500),
+        precheck_json: b.precheck_json || null
+      };
+      try {
+        const inserted = await supa('reservations', '', { method: 'POST', body: JSON.stringify(row) });
+        return res.status(201).json(legacyReservation(inserted[0], displayName));
+      } catch (err) {
+        if (err.code === '23505' || err.status === 409) {
+          return res.status(409).json({ message: 'ეს მაგიდა ამ დროს უკვე დაჯავშნილია. გთხოვთ სხვა დრო აირჩიოთ.' });
+        }
+        throw err;
+      }
+    }
+    const idFilter = legacyQuery(req, 'id').replace(/^eq\./, '');
+    const dateFilter = legacyQuery(req, 'date').replace(/^eq\./, '');
+    const tableFilter = legacyQuery(req, 'table_id').replace(/^eq\./, '');
+    const statusFilter = legacyQuery(req, 'status');
+    let targets = [];
+    if (idFilter) {
+      targets = await supa('reservations', `?id=eq.${encode(idFilter)}&select=*`);
+    } else if (dateFilter || tableFilter) {
+      let query = '?select=*&limit=100';
+      if (dateFilter) query += `&reservation_date=eq.${encode(dateFilter)}`;
+      if (tableFilter) {
+        const tableRow = await resolveRestaurantTable(tableFilter).catch(() => null);
+        if (!tableRow) return res.json([]);
+        query += `&table_id=eq.${encode(tableRow.id)}`;
+      }
+      targets = await supa('reservations', query);
+      if (statusFilter) {
+        targets = targets.filter((r) => statusFilter.startsWith('neq.') ? r.status !== statusFilter.slice(4) : r.status === statusFilter.slice(3));
+      }
+    }
+    if (!targets.length) return res.json([]);
+    const b = req.body || {};
+    const patch = {};
+    for (const k of ['status', 'payment', 'note', 'precheck_json', 'advance_amount', 'advance_payment']) {
+      if (b[k] !== undefined) patch[k === 'note' ? 'notes' : k] = b[k];
+    }
+    let displayTableName = '';
+    if (b.table_id !== undefined) {
+      try {
+        const tableRow = await resolveRestaurantTable(b.table_id);
+        patch.table_id = tableRow?.id || null;
+        displayTableName = tableRow?.name || '';
+      } catch (err) {
+        return res.status(err.status || 400).json({ message: err.message || 'მაგიდა ვერ მოიძებნა' });
+      }
+    }
+    const updated = [];
+    for (const existing of targets) {
+      const rows = await supa('reservations', `?id=eq.${encode(existing.id)}`, { method: 'PATCH', body: JSON.stringify(patch) });
+      updated.push(...rows);
+    }
+    if (!displayTableName && updated[0]?.table_id) {
+      const names = await supa('restaurant_tables', `?id=eq.${encode(updated[0].table_id)}&select=name`);
+      displayTableName = names[0]?.name || '';
+    }
+    return res.json(updated.map((r) => legacyReservation(r, displayTableName)));
+  }
+  if (['table_groups', 'table_operations', 'saved_checks'].includes(table)) {
+    if (table === 'saved_checks') {
+      const rawQuery = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
+      const query = rawQuery.replace(/saved_at/g, 'created_at').replace(/edited_at/g, 'updated_at');
+      if (req.method === 'GET') {
+        const rows = await supa(table, query, { method: 'GET' });
+        return res.json(rows.map((row) => ({ id: row.id, name: row.name || '', phone: row.phone || '', email: row.email || '', res_date: row.date || null, time_slot: row.time || '', guests: row.guests, payment: row.payment || '', table_id: row.table_id || '', note: row.note || '', disc: row.disc || 0, svc: row.svc || 0, adv: row.adv || 0, items: row.items || [], subtotal: row.subtotal || 0, total: row.total || 0, saved_at: row.created_at || null, edited_at: row.updated_at || null })));
+      }
+      if (req.method === 'POST') {
+        const b = Array.isArray(req.body) ? req.body[0] : (req.body || {});
+        const row = { id: String(b.id ?? crypto.randomUUID()), name: clean(b.name, 160), phone: clean(b.phone, 50), date: b.res_date || null, time: b.time_slot || null, guests: b.guests == null ? null : Number(b.guests), table_id: clean(b.table_id, 50), note: clean(b.note, 500), disc: Number(b.disc || 0), svc: Number(b.svc || 0), adv: Number(b.adv || 0), items: Array.isArray(b.items) ? b.items : [], subtotal: Number(b.subtotal || 0), total: Number(b.total || 0), updated_at: b.edited_at || new Date().toISOString() };
+        const saved = await supa(table, '?on_conflict=id', { method: 'POST', body: JSON.stringify(row), headers: { Prefer: 'resolution=merge-duplicates,return=representation' } });
+        return res.json(saved.map((r) => ({ ...r, res_date: r.date, time_slot: r.time, saved_at: r.created_at, edited_at: r.updated_at })));
+      }
+      const result = await supa(table, query, { method: req.method, body: ['GET','HEAD'].includes(req.method) ? undefined : JSON.stringify(req.body) }); return res.json(result);
+    }
+    const query = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : ''; const options = { method: req.method, body: ['GET','HEAD'].includes(req.method) ? undefined : JSON.stringify(req.body) }; return res.json(await supa(table, query, options));
+  }
+  return res.status(404).json({ message: `Legacy table not supported: ${table}` });
+}));
 
 app.use((error, _req, res, _next) => { console.error(error); res.status(error.status && error.status < 500 ? error.status : 500).json({ error: error.status && error.status < 500 ? error.message : 'სერვერის შეცდომა. სცადეთ მოგვიანებით.' }); });
 export default app;

@@ -20,11 +20,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;500;600;700;800&family=Noto+Serif+Georgian:wght@500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --cream: #efeae2;
-      --ink: #1c1915;
-      --gold: #c4a15a;
-      --card: #1a1714;
-      --muted: #b3a89b;
+      --cream: #F6F3EF;
+      --ink: #252724;
+      --brick: #A64B3C;
+      --brick-deep: #84392F;
+      --teal: #2A9D96;
+      --card: #FFFFFF;
+      --muted: #77766F;
+      --line: #E7E1DA;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -36,36 +39,37 @@
       padding: max(1.5rem, env(safe-area-inset-top)) max(1.5rem, env(safe-area-inset-right)) max(1.5rem, env(safe-area-inset-bottom)) max(1.5rem, env(safe-area-inset-left));
       font-family: 'Noto Sans Georgian', 'Noto Sans', system-ui, sans-serif;
       background:
-        radial-gradient(ellipse at 15% 0%, rgba(196, 161, 90, 0.2), transparent 40%),
+        linear-gradient(180deg, rgba(166, 75, 60, 0.06), transparent 220px),
         var(--cream);
-      color: #f6f1e8;
+      color: var(--ink);
+      color-scheme: light only;
     }
     .card {
       width: 100%;
       max-width: 420px;
       background: var(--card);
-      border: 1px solid rgba(246, 241, 232, 0.08);
-      border-radius: 22px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
       padding: 2rem 1.6rem 1.5rem;
-      box-shadow: 0 24px 60px rgba(28, 25, 21, 0.18);
+      box-shadow: 0 12px 32px rgba(37, 39, 36, 0.06);
     }
     .mark {
-      width: 42px;
-      height: 42px;
+      width: 40px;
+      height: 40px;
       margin: 0 auto 1rem;
-      border-radius: 12px;
+      border-radius: 6px;
       display: grid;
       place-items: center;
-      background: var(--gold);
-      color: #1c160c;
+      background: var(--brick);
+      color: #fff;
       font-family: 'Noto Serif Georgian', Georgia, serif;
-      font-size: 1.3rem;
+      font-size: 1.25rem;
     }
     h1 {
       font-family: 'Noto Serif Georgian', Georgia, serif;
       font-weight: 600;
       font-size: 1.7rem;
-      color: #f6f1e8;
+      color: var(--ink);
       text-align: center;
       margin-bottom: 0.35rem;
     }
@@ -79,32 +83,32 @@
     label {
       display: block;
       font-size: 0.68rem;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
-      color: var(--gold);
+      color: var(--muted);
       font-weight: 700;
       margin-bottom: 0.4rem;
     }
     input[type="password"] {
       width: 100%;
       padding: 0.8rem 0.9rem;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(246, 241, 232, 0.14);
-      border-radius: 12px;
-      color: #f6f1e8;
+      background: #fff;
+      border: 1px solid #D8D1C8;
+      border-radius: 6px;
+      color: var(--ink);
       font-family: inherit;
       font-size: 1rem;
       margin-bottom: 0.9rem;
     }
-    input:focus { outline: 3px solid rgba(196, 161, 90, 0.35); border-color: var(--gold); }
+    input:focus { outline: 2px solid rgba(42, 157, 150, 0.35); border-color: var(--teal); }
     button[type="submit"] {
       width: 100%;
-      min-height: 46px;
+      min-height: 44px;
       padding: 0.75rem 1rem;
-      background: #174e47;
-      color: #f7fffd;
+      background: var(--brick);
+      color: #fff;
       border: none;
-      border-radius: 12px;
+      border-radius: 6px;
       font-family: inherit;
       font-size: 0.95rem;
       font-weight: 700;
@@ -125,9 +129,9 @@
       text-align: center;
       margin-top: 1.35rem;
       font-size: 0.72rem;
-      color: rgba(245, 240, 230, 0.45);
+      color: var(--muted);
     }
-    .back a { color: var(--gold); text-decoration: none; }
+    .back a { color: var(--brick); text-decoration: none; }
     .back a:hover { text-decoration: underline; }
     .login-divider {
       display: flex;
@@ -137,14 +141,14 @@
       font-size: 0.6rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: rgba(245, 240, 230, 0.35);
+      color: var(--muted);
     }
     .login-divider::before,
     .login-divider::after {
       content: '';
       flex: 1;
       height: 1px;
-      background: rgba(255, 255, 255, 0.12);
+      background: var(--line);
     }
     #google-btn-host {
       display: flex;
