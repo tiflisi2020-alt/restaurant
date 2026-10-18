@@ -814,6 +814,25 @@ html.admin-panel-route #admin-modal.adm-app .admin-box {
 }
 #admin-modal.adm-app .admin-compact-card--tg { border-top: 2px solid var(--a-teal) !important; }
 #admin-modal.adm-app .admin-compact-card--risk { border-top: 2px solid var(--a-brick) !important; margin-top: 12px; }
+#admin-modal.adm-app .admin-password-card {
+  margin-bottom: 0.9rem;
+  border-top: 2px solid var(--a-brick) !important;
+}
+#admin-modal.adm-app .admin-password-card h4 {
+  margin: 0 0 0.2rem;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--a-ink);
+  font-family: var(--a-display);
+}
+#admin-modal.adm-app .admin-password-status {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--a-muted);
+}
+#admin-modal.adm-app .admin-password-card .admin-form-grid { margin-top: 0.7rem; }
+#admin-modal.adm-app .admin-field[hidden] { display: none !important; }
 #admin-modal.adm-app #adm-audit-list { color: var(--a-ink-soft) !important; }
 
 /* Floor / map workspace */
@@ -1208,8 +1227,20 @@ html.admin-panel-route #admin-modal.adm-app .admin-box {
   border-color: #8A867E !important;
   color: #3A3934 !important;
 }
+#admin-modal.adm-app .floor-table.has-later[data-later="confirmed"] {
+  box-shadow: inset 0 -3px 0 #AD4939;
+}
+#admin-modal.adm-app .floor-table.has-later[data-later="pending"] {
+  box-shadow: inset 0 -3px 0 #C4A15A;
+}
 #admin-modal.adm-app .floor-table.is-selected {
   box-shadow: 0 0 0 2px var(--a-brick), var(--a-shadow-md) !important;
+}
+#admin-modal.adm-app .floor-table.has-later[data-later="confirmed"].is-selected {
+  box-shadow: inset 0 -3px 0 #AD4939, 0 0 0 2px var(--a-brick), var(--a-shadow-md) !important;
+}
+#admin-modal.adm-app .floor-table.has-later[data-later="pending"].is-selected {
+  box-shadow: inset 0 -3px 0 #C4A15A, 0 0 0 2px var(--a-brick), var(--a-shadow-md) !important;
 }
 #admin-modal.adm-app .floor-table.is-banquet-pick {
   box-shadow: 0 0 0 2px var(--a-teal), var(--a-shadow-md) !important;
@@ -1684,7 +1715,7 @@ html.admin-theme-light #admin-modal.adm-app .admin-side-brand {
   #admin-modal.adm-app .map-icon-btn { min-width: 40px; min-height: 40px; }
   #admin-modal.adm-app .map-check { min-height: 40px; font-size: 0.75rem; }
   #admin-modal.adm-app .host-slot { min-height: 40px; }
-  #admin-modal.adm-app .floor-summary { gap: 3px 4px; max-height: 2.6rem; overflow: hidden; }
+  #admin-modal.adm-app .floor-summary { gap: 3px 4px; max-height: none; overflow: visible; }
   #admin-modal.adm-app .floor-summary span { padding: 2px 6px; font-size: 0.65rem; }
   #admin-modal.adm-app .floor-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1719,5 +1750,632 @@ html.admin-theme-light #admin-modal.adm-app .admin-side-brand {
   #admin-modal.adm-app .map-chip,
   #admin-modal.adm-app .map-icon-btn {
     transition: none !important;
+  }
+}
+
+/* ===== Reservations card board ===== */
+#admin-modal.adm-app #at-reservations.res-board-pane {
+  max-width: none;
+  padding-bottom: 1.25rem;
+}
+#admin-modal.adm-app .res-board-head {
+  margin-bottom: 0.35rem;
+}
+#admin-modal.adm-app .res-board-sub {
+  margin: 0.15rem 0 0.75rem;
+  font-size: 0.78rem;
+  color: var(--a-muted);
+  line-height: 1.4;
+}
+#admin-modal.adm-app .res-board-filters {
+  margin-bottom: 0.85rem;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+#admin-modal.adm-app .res-board-count {
+  margin-top: 0.65rem;
+  font-size: 0.68rem;
+  color: var(--a-muted);
+}
+#admin-modal.adm-app .res-cards {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+#admin-modal.adm-app .res-cards-inner {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
+  width: 100%;
+  min-width: 0;
+}
+#admin-modal.adm-app .res-cards-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2.25rem 1rem;
+  color: var(--a-muted);
+  font-size: 0.85rem;
+  font-style: italic;
+  background: var(--a-card);
+  border: 1px dashed var(--a-line);
+  border-radius: 12px;
+}
+#admin-modal.adm-app .res-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: #FFFFFF;
+  border: 1px solid var(--a-line);
+  border-radius: 14px;
+  box-shadow: var(--a-shadow);
+  overflow: hidden;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+#admin-modal.adm-app .res-card:hover {
+  border-color: rgba(36, 158, 152, 0.35);
+  box-shadow: var(--a-shadow-md);
+}
+#admin-modal.adm-app .res-card--pending {
+  border-top: 3px solid #C4A15A;
+}
+#admin-modal.adm-app .res-card--confirmed {
+  border-top: 3px solid #249E98;
+}
+#admin-modal.adm-app .res-card--cancelled {
+  border-top: 3px solid #AD4939;
+  opacity: 0.92;
+}
+#admin-modal.adm-app .res-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.65rem;
+  padding: 0.85rem 0.95rem 0.7rem;
+  background: linear-gradient(180deg, #FFFCFA 0%, #FFFFFF 100%);
+  border-bottom: 1px solid var(--a-line);
+}
+#admin-modal.adm-app .res-card-guest {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+#admin-modal.adm-app .res-card-name {
+  margin: 0;
+  font-family: var(--a-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #292929;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+#admin-modal.adm-app .res-card-phone {
+  display: inline-flex;
+  margin-top: 0.28rem;
+  font-size: 0.78rem;
+  color: #249E98;
+  text-decoration: none;
+  word-break: break-all;
+}
+#admin-modal.adm-app .res-card-phone:hover {
+  color: #1D7F7A;
+  text-decoration: underline;
+}
+#admin-modal.adm-app .res-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 0.8rem 0.95rem;
+  flex: 1 1 auto;
+}
+#admin-modal.adm-app .res-card-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.45rem;
+}
+#admin-modal.adm-app .res-card-meta-item {
+  min-width: 0;
+  padding: 0.45rem 0.55rem;
+  border-radius: 8px;
+  background: #F7F4EF;
+  border: 1px solid #E7E1DA;
+}
+#admin-modal.adm-app .res-card-meta-item span {
+  display: block;
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--a-muted);
+  margin-bottom: 0.12rem;
+}
+#admin-modal.adm-app .res-card-meta-item strong {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 650;
+  color: #292929;
+  overflow-wrap: anywhere;
+}
+#admin-modal.adm-app .res-card-meta-item--table strong {
+  color: #AD4939;
+}
+#admin-modal.adm-app .res-card-note {
+  margin: 0;
+  padding: 0.5rem 0.65rem;
+  border-radius: 8px;
+  border-left: 3px solid #C4A15A;
+  background: #FFFBF1;
+  font-size: 0.74rem;
+  color: #3c3b36;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+#admin-modal.adm-app .res-card-note strong {
+  color: #6E4E16;
+}
+#admin-modal.adm-app .res-card-adv {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.4rem 0.5rem;
+  padding: 0.5rem 0.55rem;
+  border-radius: 8px;
+  background: #F7F4EF;
+  border: 1px solid #E7E1DA;
+}
+#admin-modal.adm-app .res-card-adv-label {
+  grid-column: 1 / -1;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--a-muted);
+  margin: 0;
+}
+#admin-modal.adm-app .res-card-adv .res-advpay-select {
+  grid-column: 1 / -1;
+  width: 100% !important;
+  min-width: 0;
+  max-width: none !important;
+  min-height: 36px;
+  font-size: 0.72rem !important;
+}
+#admin-modal.adm-app .res-adv-amount {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+  max-width: 9.5rem;
+}
+#admin-modal.adm-app .res-adv-currency {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  height: 44px;
+  font-size: 0.9rem;
+  color: var(--a-muted);
+  line-height: 1;
+}
+#admin-modal.adm-app .res-card-adv .res-adv-input {
+  flex: 1 1 auto;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 36px;
+  margin: 0 !important;
+}
+#admin-modal.adm-app .res-card-adv .admin-btn {
+  justify-self: end;
+  min-height: 36px;
+  width: auto !important;
+}
+#admin-modal.adm-app .res-card .is-hidden {
+  display: none !important;
+}
+#admin-modal.adm-app .res-card-shifts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  align-items: center;
+}
+#admin-modal.adm-app .res-card-shifts-label {
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--a-muted);
+  width: 100%;
+}
+#admin-modal.adm-app .res-shift-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.22rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  background: rgba(36, 158, 152, 0.1);
+  border: 1px solid rgba(36, 158, 152, 0.28);
+  color: #1D7F7A;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#admin-modal.adm-app .res-card-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.7rem 0.85rem 0.85rem;
+  border-top: 1px solid var(--a-line);
+  background: #FFFCFA;
+  margin-top: auto;
+}
+#admin-modal.adm-app .res-card-foot .admin-btn {
+  width: auto !important;
+  min-height: 38px;
+  padding: 0.4rem 0.7rem !important;
+  font-size: 0.74rem !important;
+}
+#admin-modal.adm-app .res-card-foot .res-status-btn[data-res-status="confirmed"] {
+  background: #249E98 !important;
+  border-color: #249E98 !important;
+  color: #fff !important;
+}
+#admin-modal.adm-app .res-card-foot .res-wa-resend-btn {
+  border-color: rgba(36, 158, 152, 0.45) !important;
+  color: #1D7F7A !important;
+}
+#admin-modal.adm-app .res-card-more {
+  position: relative;
+  margin-left: auto;
+}
+#admin-modal.adm-app .res-card-more-btn {
+  min-width: 38px;
+  min-height: 38px;
+  padding: 0.35rem 0.55rem !important;
+}
+#admin-modal.adm-app .res-card-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 4px);
+  z-index: 20;
+  min-width: 10.5rem;
+  padding: 0.35rem;
+  border-radius: 10px;
+  background: #FFFFFF;
+  border: 1px solid var(--a-line);
+  box-shadow: var(--a-shadow-md);
+}
+#admin-modal.adm-app .res-card-more.open .res-card-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+#admin-modal.adm-app .res-card-menu .admin-btn {
+  width: 100% !important;
+  justify-content: flex-start;
+  min-height: 36px;
+  font-size: 0.72rem !important;
+}
+#admin-modal.adm-app .res-card-menu .res-status-btn[data-res-status="cancelled"] {
+  color: #AD4939 !important;
+}
+
+@media (max-width: 1100px) {
+  #admin-modal.adm-app .res-cards-inner {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 700px) {
+  #admin-modal.adm-app .res-board-sub {
+    display: none;
+  }
+  #admin-modal.adm-app .res-board-filters {
+    display: grid !important;
+    grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+    gap: 0.4rem !important;
+    margin-bottom: 0.7rem;
+  }
+  #admin-modal.adm-app .res-board-filters .admin-filter-field:nth-child(1),
+  #admin-modal.adm-app .res-board-filters .admin-filter-field:nth-child(2) {
+    grid-column: span 3;
+  }
+  #admin-modal.adm-app .res-board-filters .admin-filter-field:nth-child(3),
+  #admin-modal.adm-app .res-board-filters .admin-reservation-search-field {
+    grid-column: 1 / -1;
+  }
+  #admin-modal.adm-app .res-board-filters > .admin-btn {
+    grid-column: span 2;
+    width: 100% !important;
+    min-height: 42px;
+  }
+  #admin-modal.adm-app .res-cards-inner {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+  }
+  #admin-modal.adm-app .res-card-head {
+    align-items: center;
+    padding: 0.7rem 0.8rem 0.55rem;
+  }
+  #admin-modal.adm-app .res-card-name {
+    font-size: 1.02rem;
+  }
+  #admin-modal.adm-app .adm-status {
+    flex: 0 0 auto;
+    font-size: 0.66rem;
+  }
+  #admin-modal.adm-app .res-card-body {
+    gap: 0.5rem;
+    padding: 0.65rem 0.8rem;
+  }
+  #admin-modal.adm-app .res-card-meta {
+    gap: 0.35rem;
+  }
+  #admin-modal.adm-app .res-card-meta-item {
+    padding: 0.38rem 0.45rem;
+  }
+  #admin-modal.adm-app .res-card-adv .admin-btn {
+    align-self: stretch;
+    min-width: 6.5rem;
+    min-height: 44px;
+  }
+  #admin-modal.adm-app .res-card-foot {
+    display: grid;
+    grid-template-columns: 1fr 1fr 44px;
+    align-items: stretch;
+    gap: 0.4rem;
+    padding: 0.65rem 0.75rem 0.75rem;
+  }
+  #admin-modal.adm-app .res-card-foot > .admin-btn {
+    width: 100% !important;
+    flex: none;
+    min-height: 42px !important;
+    padding: 0.45rem 0.55rem !important;
+  }
+  #admin-modal.adm-app .res-card-more {
+    grid-column: 3;
+    grid-row: 1;
+    margin-left: 0;
+    align-self: stretch;
+  }
+  #admin-modal.adm-app .res-card-more-btn {
+    width: 44px !important;
+    height: 100%;
+    min-height: 42px;
+    padding: 0 !important;
+  }
+  #admin-modal.adm-app .res-card-menu {
+    left: auto;
+    right: 0;
+    min-width: 11rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #admin-modal.adm-app .res-card {
+    transition: none !important;
+  }
+}
+
+/* ===== Checks + trash board ===== */
+#admin-modal.adm-app #at-reschecks.checks-board-pane {
+  max-width: none;
+  padding-bottom: 1.5rem;
+}
+#admin-modal.adm-app .checks-board-head {
+  margin-bottom: 0.85rem;
+}
+#admin-modal.adm-app .checks-board-brand {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+#admin-modal.adm-app .checks-board-brand img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  border-radius: 10px;
+  background: #FFFFFF;
+  border: 1px solid var(--a-line);
+  flex: 0 0 auto;
+}
+#admin-modal.adm-app .checks-board-sub {
+  margin: 0.2rem 0 0;
+  font-size: 0.78rem;
+  color: var(--a-muted);
+  line-height: 1.45;
+  max-width: 52rem;
+}
+#admin-modal.adm-app .checks-inline-link {
+  border: 0;
+  background: none;
+  padding: 0;
+  margin: 0;
+  color: #249E98;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+  text-decoration: underline;
+}
+#admin-modal.adm-app .checks-inline-link:hover {
+  color: #1D7F7A;
+}
+#admin-modal.adm-app .checks-panel {
+  background: #FFFFFF;
+  border: 1px solid var(--a-line);
+  border-radius: 14px;
+  padding: 0.85rem 0.95rem 1rem;
+  box-shadow: var(--a-shadow);
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+#admin-modal.adm-app .checks-panel--active {
+  border-top: 3px solid #249E98;
+}
+#admin-modal.adm-app .checks-panel--trash {
+  border-top: 3px solid #AD4939;
+  background: linear-gradient(180deg, #FFF8F6 0%, #FFFFFF 40%);
+}
+#admin-modal.adm-app .checks-panel-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  margin-bottom: 0.65rem;
+  flex-wrap: wrap;
+}
+#admin-modal.adm-app .checks-panel-title {
+  margin: 0;
+  font-family: var(--a-display);
+  font-size: 1.05rem;
+  font-weight: 650;
+  color: #292929;
+}
+#admin-modal.adm-app .checks-panel-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.22rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+#admin-modal.adm-app .checks-panel-badge--teal {
+  background: #E7F5F4;
+  color: #217B76;
+  border: 1px solid #B7E0DC;
+}
+#admin-modal.adm-app .checks-panel-badge--brick {
+  background: #F8EBE7;
+  color: #84392F;
+  border: 1px solid #E7C7C1;
+}
+#admin-modal.adm-app .checks-board-filters {
+  gap: 0.5rem;
+  margin-bottom: 0.65rem;
+}
+#admin-modal.adm-app .checks-search-field {
+  flex: 1 1 12rem;
+  min-width: 10rem;
+}
+#admin-modal.adm-app .checks-trash-hint {
+  margin: 0 0 0.65rem;
+  font-size: 0.72rem;
+  color: var(--a-muted);
+  line-height: 1.45;
+}
+#admin-modal.adm-app .checks-trash-hint code {
+  font-size: 0.65rem;
+  color: #AD4939;
+}
+#admin-modal.adm-app .checks-board-count {
+  margin-top: 0.55rem;
+  font-size: 0.68rem;
+  color: var(--a-muted);
+}
+#admin-modal.adm-app .checks-table-wrap {
+  border: 1px solid var(--a-line);
+  border-radius: 10px;
+  background: #F7F4EF;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+#admin-modal.adm-app .checks-table-wrap--trash {
+  background: #FFF5F2;
+  border-color: #E7C7C1;
+}
+#admin-modal.adm-app .checks-table {
+  margin: 0;
+  min-width: 860px;
+  background: transparent;
+}
+#admin-modal.adm-app .checks-table thead th {
+  background: #FFFFFF !important;
+  color: #7A7870 !important;
+  font-size: 0.65rem !important;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--a-line) !important;
+  white-space: nowrap;
+}
+#admin-modal.adm-app .checks-table--trash thead th {
+  background: #FFF8F6 !important;
+}
+#admin-modal.adm-app .checks-table tbody td {
+  background: #FFFFFF !important;
+  color: #292929 !important;
+  border-bottom: 1px solid #E7E1DA !important;
+  vertical-align: top;
+  font-size: 0.78rem;
+}
+#admin-modal.adm-app .checks-table--trash tbody td {
+  background: #FFFCFA !important;
+}
+#admin-modal.adm-app .checks-table tbody tr.checks-row--trash td {
+  opacity: 0.92;
+}
+#admin-modal.adm-app .checks-table tbody tr.checks-row--trash .td-name {
+  color: #AD4939 !important;
+}
+#admin-modal.adm-app .checks-table .checks-cell-muted {
+  color: #6B6860 !important;
+  font-size: 0.78rem;
+}
+#admin-modal.adm-app .checks-table .checks-cell-note {
+  color: #8A8680 !important;
+  font-size: 0.75rem;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#admin-modal.adm-app .checks-col-order {
+  min-width: 12rem;
+}
+#admin-modal.adm-app .checks-empty-cell {
+  text-align: center !important;
+  color: var(--a-muted) !important;
+  padding: 1.5rem 1rem !important;
+  font-style: italic;
+  background: #FFFFFF !important;
+}
+#admin-modal.adm-app .checks-table .adm-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  min-width: 9rem;
+}
+#admin-modal.adm-app .checks-table .adm-row-actions .admin-btn {
+  width: auto !important;
+  min-height: 34px;
+  font-size: 0.7rem !important;
+}
+#admin-modal.adm-app .res-card-foot .res-check-cta {
+  background: #249E98 !important;
+  border-color: #249E98 !important;
+  color: #FFFFFF !important;
+}
+#admin-modal.adm-app .res-card-foot .res-check-cta:hover {
+  background: #1D7F7A !important;
+  border-color: #1D7F7A !important;
+}
+
+@media (max-width: 900px) {
+  #admin-modal.adm-app .checks-board-brand {
+    align-items: center;
+  }
+  #admin-modal.adm-app .checks-search-field {
+    flex: 1 1 100%;
+  }
+  #admin-modal.adm-app .checks-table .adm-row-actions .admin-btn {
+    min-height: 40px;
+  }
+}
+@media (max-width: 700px) {
+  #admin-modal.adm-app .checks-panel {
+    padding: 0.75rem;
+  }
+  #admin-modal.adm-app .checks-board-brand img {
+    width: 44px;
+    height: 44px;
   }
 }

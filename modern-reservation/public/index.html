@@ -42,8 +42,10 @@
 
 <title>რესტორანი ტიფლისი — მენიუ & რეზერვაცია</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;500;600;700;800&family=Noto+Serif+Georgian:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="image" href="Hero%20section.jpg" fetchpriority="high">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Raleway:wght@300;400;500;600&family=Noto+Sans+Georgian:wght@400;500;600;700;800&family=Noto+Serif+Georgian:wght@500;600;700&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Raleway:wght@300;400;500;600&family=Noto+Sans+Georgian:wght@400;500;600;700;800&family=Noto+Serif+Georgian:wght@500;600;700&display=swap"></noscript>
 <style>
 :root {
   /* Full UI luxury comfort — softer contrast, warmer paper */
@@ -134,7 +136,6 @@ html.tiflis-full-ui:not(.admin-panel-route) body {
   line-height: 1.68;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
   background:
     radial-gradient(ellipse 100% 50% at 50% -6%, rgba(58, 148, 140, 0.055) 0%, transparent 45%),
     radial-gradient(ellipse 65% 35% at 100% 5%, rgba(201, 160, 61, 0.04) 0%, transparent 40%),
@@ -179,12 +180,10 @@ html.tiflis-full-ui:not(.admin-panel-route) #menu {
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
-  animation: bgPulse 8s ease-in-out infinite alternate;
-  will-change: transform;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-bg { top: 0; height: 100%; will-change: auto; }
+  .hero-bg { top: 0; height: 100%; }
 }
 
 .hero-bg::after {
@@ -408,14 +407,19 @@ nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  transition: all 0.4s;
+  transition: background 0.4s, padding 0.4s, border-color 0.4s;
 }
 
 nav.scrolled {
-  background: rgba(42,34,24,0.94);
-  backdrop-filter: blur(12px);
+  background: rgba(42,34,24,0.96);
   padding: 0.6rem 3rem;
   border-bottom: 1px solid rgba(61,155,147,0.2);
+}
+@media (min-width: 901px) {
+  nav.scrolled {
+    background: rgba(42,34,24,0.94);
+    backdrop-filter: blur(12px);
+  }
 }
 
 .nav-logo {
@@ -710,7 +714,6 @@ section { padding: 6rem 0; }
   z-index: 0;
   pointer-events: none;
   border-radius: 60% 40% 70% 30% / 50% 60% 40% 50%;
-  filter: blur(0.5px);
 }
 
 #menu::before {
@@ -739,25 +742,13 @@ section { padding: 6rem 0; }
 }
 
 @keyframes tiflisMenuBlobA {
-  from {
-    border-radius: 60% 40% 70% 30% / 50% 60% 40% 50%;
-    transform: translate(0, 0) rotate(0deg) scale(1);
-  }
-  to {
-    border-radius: 45% 55% 35% 65% / 55% 45% 55% 45%;
-    transform: translate(-12px, 8px) rotate(8deg) scale(1.05);
-  }
+  from { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
+  to { transform: translate3d(-12px, 8px, 0) rotate(8deg) scale(1.05); }
 }
 
 @keyframes tiflisMenuBlobB {
-  from {
-    border-radius: 40% 60% 30% 70% / 60% 40% 60% 40%;
-    transform: translate(0, 0) rotate(0deg) scale(1);
-  }
-  to {
-    border-radius: 65% 35% 55% 45% / 40% 60% 40% 60%;
-    transform: translate(10px, -14px) rotate(-10deg) scale(1.08);
-  }
+  from { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
+  to { transform: translate3d(10px, -14px, 0) rotate(-10deg) scale(1.08); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2255,6 +2246,7 @@ footer {
     opacity: 0.11;
     right: -8%;
     bottom: -12%;
+    filter: none;
   }
   .reservation-info::after { width: 70%; }
   .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
@@ -2461,6 +2453,7 @@ footer {
     opacity: 0.075;
     right: -4%;
     bottom: -8%;
+    filter: none;
   }
   .res-form { padding: 1.5rem 1.1rem; }
   .form-title { font-size: 1.5rem; }
@@ -4644,7 +4637,7 @@ html.admin-panel-route .tiflis-float-rail {
 :root { --ui-ink-strong:#201912; --ui-surface:rgba(255,253,249,.92); --ui-accent:#277d76; --ui-accent-warm:#c48e2c; }
 html { scroll-padding-top:82px; }
 body { letter-spacing:.005em; }
-#nav { height:76px; padding:0 clamp(1rem,4vw,4rem); background:rgba(30,24,18,.82); border-bottom:1px solid rgba(255,255,255,.12); box-shadow:0 10px 30px rgba(23,17,11,.12); backdrop-filter:blur(18px) saturate(1.1); -webkit-backdrop-filter:blur(18px) saturate(1.1); }
+#nav { height:76px; padding:0 clamp(1rem,4vw,4rem); background:rgba(30,24,18,.94); border-bottom:1px solid rgba(255,255,255,.12); box-shadow:0 10px 30px rgba(23,17,11,.12); }
 .nav-links { gap:clamp(1rem,2.5vw,2.25rem); }
 .nav-links a { font-size:.7rem; letter-spacing:.11em; }
 .nav-reserve { border-radius:999px; padding:.72rem 1.1rem; box-shadow:0 8px 20px rgba(58,148,140,.22); }
@@ -4692,6 +4685,31 @@ footer { border-top:1px solid rgba(201,160,61,.22); }
 @media (max-width:900px) { #nav { height:auto; min-height:68px; padding-block:.75rem; flex-wrap:wrap; gap:.7rem; } .nav-links { display:flex; order:3; width:100%; justify-content:center; gap:1rem; padding-top:.35rem; } .nav-logo { margin-right:auto; } .nav-reserve { padding:.62rem .9rem; font-size:.66rem; } .menu-nav-col,.reservation-info { position:static; } .cat-tabs { overflow-x:auto; flex-wrap:nowrap; padding-bottom:.35rem; scrollbar-width:none; } .cat-tabs::-webkit-scrollbar { display:none; } .cat-tab { flex:0 0 auto; } }
 @media (max-width:600px) { #nav { padding-inline:.85rem; } .nav-links a { font-size:.66rem; letter-spacing:.06em; } .nav-reserve { display:none; } .lang-toggle { margin-left:.5rem; } .hero { min-height:720px; } .hero-content { padding:1.25rem; } .hero-eyebrow { font-size:.8rem; letter-spacing:.08em; } .hero-title { font-size:clamp(3.5rem,17vw,5.3rem); } .hero-subtitle { font-size:.66rem; line-height:1.8; letter-spacing:.08em; } .hero-cta { flex-direction:column; width:min(100%,290px); margin-inline:auto; } .hero-cta a { width:100%; text-align:center; } .about-item { padding:1.5rem 1rem; } .menu-layout { gap:1.25rem; } .menu-dishes-col { order:1; } .order-panel { order:2; position:sticky; bottom:.75rem; z-index:10; max-height:min(70vh, 560px); overflow-x:hidden; overflow-y:auto; -webkit-overflow-scrolling:touch; box-shadow:0 20px 42px rgba(23,17,11,.22); } .reservation-grid { gap:1.6rem; } .res-form { padding:1.15rem !important; } .form-grid { grid-template-columns:1fr !important; } .form-field.full { grid-column:auto !important; } .tiflis-float-rail { bottom:6.6rem; } }
 @media (prefers-reduced-motion:reduce) { .hero-bg { animation:none; } }
+/* Phone reservation: form first, clear of the side rail */
+@media (max-width: 700px) {
+  #reservation .container {
+    padding-right: calc(1rem + 62px);
+  }
+  #reservation .reservation-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+  #reservation .reservation-grid > .reveal-delay-2 {
+    order: -1;
+  }
+  #reservation .form-title {
+    font-size: 1.65rem !important;
+    line-height: 1.15;
+  }
+  #reservation .reservation-info::before {
+    opacity: 0.05;
+    width: min(46%, 180px);
+  }
+  #reservation .res-form {
+    padding: 1.15rem 1rem !important;
+  }
+}
 /* ===== Banquet table groups ===== */
 .banquet-bar{border:1px solid rgba(170,136,210,.32);border-radius:16px;background:rgba(126,93,168,.08);padding:.8rem .9rem .85rem;margin:0 0 .8rem}
 .banquet-bar-head{display:flex;align-items:center;justify-content:space-between;gap:.75rem}
@@ -4893,7 +4911,7 @@ html.admin-panel-route #admin-modal .admin-btn { font-weight:700; letter-spacing
   .footer-grid { grid-template-columns: 1.4fr 1fr 1fr; gap: 1.5rem; }
 }
 </style>
-<link rel="stylesheet" href="/admin-ui.css?v=20261017checksux2">
+<link rel="stylesheet" href="/admin-ui.css?v=20261018map">
 </head>
 <body>
 
@@ -5792,6 +5810,30 @@ html.admin-panel-route #admin-modal .admin-btn { font-weight:700; letter-spacing
       <div id="at-settings" class="admin-pane" role="tabpanel">
         <div class="admin-section-title">პარამეტრები</div>
 
+        <div class="admin-compact-card admin-password-card">
+          <h4>ადმინის პაროლი</h4>
+          <p id="admin-password-status" class="admin-password-status">პაროლის მდგომარეობა იტვირთება…</p>
+          <div class="admin-form-grid">
+            <div class="admin-field" id="st-pw-current-wrap">
+              <label for="st-pw-current">მიმდინარე პაროლი</label>
+              <input type="password" id="st-pw-current" autocomplete="current-password" placeholder="ახლანდელი პაროლი">
+            </div>
+            <div class="admin-field">
+              <label for="st-pw-new">ახალი პაროლი</label>
+              <input type="password" id="st-pw-new" autocomplete="new-password" placeholder="მინიმუმ 8 სიმბოლო">
+            </div>
+            <div class="admin-field">
+              <label for="st-pw-confirm">გაიმეორეთ ახალი პაროლი</label>
+              <input type="password" id="st-pw-confirm" autocomplete="new-password" placeholder="იგივე პაროლი კიდევ ერთხელ" onkeydown="if(event.key==='Enter')adminChangePassword()">
+            </div>
+          </div>
+          <div id="adm-msg-password" class="admin-msg"></div>
+          <div class="admin-form-actions" style="margin-top:.65rem">
+            <button type="button" class="admin-btn" style="width:auto" onclick="adminChangePassword()">პაროლის შენახვა</button>
+          </div>
+          <p class="admin-compact-hint">შენახვის შემდეგ შესვლა ყველა მოწყობილობაზე ამ პაროლით ხდება. ძველი პაროლი აღარ იმუშავებს.</p>
+        </div>
+
         <div class="admin-compact-card admin-compact-card--tg">
           <h4>Telegram</h4>
           <div class="admin-form-grid" style="margin-bottom:0.35rem">
@@ -5832,10 +5874,6 @@ html.admin-panel-route #admin-modal .admin-btn { font-weight:700; letter-spacing
             <label>სამუშაო საათები</label>
             <input type="text" id="st-hours" value="10:00 — 24:00">
           </div>
-          <div class="admin-field">
-            <label>ახალი ადმინ პაროლი</label>
-            <input type="password" id="st-pw" placeholder="ცარიელი = არ შეიცვლება">
-          </div>
         </div>
         <div id="adm-msg-settings" class="admin-msg"></div>
         <div class="admin-form-actions">
@@ -5845,7 +5883,7 @@ html.admin-panel-route #admin-modal .admin-btn { font-weight:700; letter-spacing
         </div>
         <div class="admin-compact-card admin-compact-card--risk">
           <div style="font-size:.62rem;color:var(--brick);font-weight:600;margin-bottom:0.25rem">უსაფრთხოება</div>
-          <p class="admin-compact-hint" style="margin:0">Telegram Token და Chat ID Supabase-შია. პაროლი ბრაუზერშიც რჩება — ნაგულისხმევი პაროლი შეცვალეთ.</p>
+          <p class="admin-compact-hint" style="margin:0">Telegram Token და Chat ID Supabase-შია. ადმინის პაროლი ინახება დაშიფრული სახით და ბრაუზერში აღარ რჩება.</p>
         </div>
         <div class="admin-section-title" style="font-size:0.92rem;margin-top:0;margin-bottom:0.45rem">აუდიტი</div>
         <div id="adm-audit-list" style="max-height:140px;overflow-y:auto;margin-bottom:0.65rem;padding-right:0.2rem"></div>
@@ -6318,20 +6356,28 @@ function adminPublicHomeUrl() {
 
 // Nav scroll + hero parallax (ფონი ნელა მოძრაობს სქროლთან შედარებით)
 const heroParallaxMedia = window.matchMedia('(prefers-reduced-motion: reduce)');
+const heroParallaxMobile = window.matchMedia('(max-width: 768px)');
 let heroParallaxRaf = null;
+let heroParallaxNodes = null;
 function updateHeroParallax() {
   if (heroParallaxMedia.matches) return;
-  const hero = document.querySelector('.hero');
-  const bg = document.querySelector('.hero-bg');
+  if (!heroParallaxNodes) {
+    heroParallaxNodes = {
+      hero: document.querySelector('.hero'),
+      bg: document.querySelector('.hero-bg')
+    };
+  }
+  const hero = heroParallaxNodes.hero;
+  const bg = heroParallaxNodes.bg;
   if (!hero || !bg) return;
   const rect = hero.getBoundingClientRect();
   const vh = window.innerHeight || 1;
   if (rect.bottom <= 0 || rect.top >= vh) {
-    bg.style.transform = '';
+    if (bg.style.transform) bg.style.transform = '';
     return;
   }
   const past = Math.max(0, -rect.top);
-  const factor = window.matchMedia('(max-width: 768px)').matches ? 0.28 : 0.42;
+  const factor = heroParallaxMobile.matches ? 0.28 : 0.42;
   bg.style.transform = `translate3d(0, ${past * factor}px, 0)`;
 }
 function scheduleHeroParallax() {
@@ -6344,7 +6390,10 @@ function scheduleHeroParallax() {
 }
 window.addEventListener('scroll', () => {
   const nav = g('nav');
-  if (nav) nav.classList.toggle('scrolled', window.scrollY > 60);
+  if (nav) {
+    const on = window.scrollY > 60;
+    if (nav.classList.contains('scrolled') !== on) nav.classList.toggle('scrolled', on);
+  }
   scheduleHeroParallax();
 }, { passive: true });
 window.addEventListener('resize', scheduleHeroParallax, { passive: true });
@@ -6456,7 +6505,7 @@ function renderMenu() {
   /* არა reveal-up: ყოველ ხელახლა რენდერზე აღარ ირბენს fade-up ანიმაცია (არ „ხტება“ გვერდი) */
   listEl.innerHTML = items.map(m => {
     const q = order[m.id] || 0;
-    return `<div class="menu-item${q>0?' selected':''}">
+    return `<div class="menu-item${q>0?' selected':''}" data-menu-id="${m.id}">
       <div class="menu-item-name">${escapeHtml(menuDishLabelForLang(m, lang))}</div>
       <div class="menu-item-price">₾${m.p%1===0?m.p:m.p.toFixed(2)}</div>
       <div class="qty-ctrl">
@@ -6473,17 +6522,27 @@ function preservePageScroll(run) {
   const y = window.scrollY;
   run();
   requestAnimationFrame(() => {
-    window.scrollTo(0, y);
+    window.scrollTo({ top: y, left: 0, behavior: 'auto' });
   });
 }
 
+function syncMenuRowQty(id) {
+  const listEl = g('menu-list');
+  if (!listEl) return false;
+  const row = listEl.querySelector('.menu-item[data-menu-id="' + cssEscapeAttrSelector(id) + '"]');
+  if (!row) return false;
+  const q = order[id] || 0;
+  row.classList.toggle('selected', q > 0);
+  const input = row.querySelector('.qty-input');
+  if (input && document.activeElement !== input) input.value = q ? String(q) : '';
+  return true;
+}
+
 function chg(id, d) {
-  preservePageScroll(() => {
-    const nv = Math.max(0, (order[id]||0)+d);
-    if (nv === 0) delete order[id]; else { order[id] = nv; markOrderItem(id); }
-    renderMenu();
-    renderOrder();
-  });
+  const nv = Math.max(0, (order[id]||0)+d);
+  if (nv === 0) delete order[id]; else { order[id] = nv; markOrderItem(id); }
+  if (!syncMenuRowQty(id)) preservePageScroll(() => renderMenu());
+  renderOrder();
 }
 
 /**
@@ -6505,18 +6564,16 @@ function setQtyFromField(id, value, phase) {
     renderOrder();
     return;
   }
-  preservePageScroll(() => {
-    if (raw === '') {
-      delete order[id];
-    } else {
-      let nv = parseInt(raw, 10);
-      if (!Number.isFinite(nv) || nv < 0) nv = 0;
-      if (nv <= 0) delete order[id];
-      else { order[id] = Math.min(999, nv); markOrderItem(id); }
-    }
-    renderMenu();
-    renderOrder();
-  });
+  if (raw === '') {
+    delete order[id];
+  } else {
+    let nv = parseInt(raw, 10);
+    if (!Number.isFinite(nv) || nv < 0) nv = 0;
+    if (nv <= 0) delete order[id];
+    else { order[id] = Math.min(999, nv); markOrderItem(id); }
+  }
+  if (!syncMenuRowQty(id)) preservePageScroll(() => renderMenu());
+  renderOrder();
 }
 
 function clearAll() {
@@ -6528,11 +6585,9 @@ function clearAll() {
 }
 
 function removeItem(id) {
-  preservePageScroll(() => {
-    delete order[id];
-    renderMenu();
-    renderOrder();
-  });
+  delete order[id];
+  if (!syncMenuRowQty(id)) preservePageScroll(() => renderMenu());
+  renderOrder();
 }
 
 function renderOrder() {
@@ -7019,6 +7074,8 @@ let tableRealtimeSocket = null;
 let tableRealtimeHeartbeat = null;
 let tableRealtimeReconnect = null;
 let tableSharedStateLoaded = false;
+let tableGroupsLoaded = false;
+let tableOpsLoaded = false;
 let tableRealtimeStarted = false;
 
 function tableRealtimeWsUrl() {
@@ -7060,29 +7117,57 @@ async function persistTableOperationsToSupabase(ops) {
   await supaFetch('/rest/v1/table_operations?on_conflict=table_id,business_date', 'POST', rows, { prefer: 'resolution=merge-duplicates,return=minimal' });
 }
 
+function storeRemoteTableGroups(remoteGroups) {
+  const groups = (remoteGroups || []).map(remoteGroupToLocal).filter(x => x.id && x.tableIds.length >= 2);
+  localStorage.setItem(TABLE_GROUPS_KEY, JSON.stringify(groups));
+  tableGroupsLoaded = true;
+}
+
+function storeRemoteTableOps(remoteOps) {
+  const ops = {};
+  (remoteOps || []).forEach(row => {
+    if (!row.table_id) return;
+    const local = remoteOperationToLocal(row);
+    // Ignore inert "free" rows — they used to paint over reservation colors on the map.
+    if (local.status === 'free') return;
+    ops[String(row.table_id)] = local;
+  });
+  const rawOps = JSON.parse(localStorage.getItem(TABLE_OPS_KEY) || '{}');
+  rawOps[todayGeorgia()] = ops;
+  localStorage.setItem(TABLE_OPS_KEY, JSON.stringify(rawOps));
+  tableOpsLoaded = true;
+}
+
+let tableGroupsPromise = null;
+async function hydrateTableGroups() {
+  if (tableGroupsLoaded) return;
+  if (tableGroupsPromise) return tableGroupsPromise;
+  tableGroupsPromise = (async () => {
+    try {
+      const remoteGroups = await supaFetch('/rest/v1/table_groups?status=neq.released&select=group_code,name,table_ids,status,created_at,updated_at');
+      storeRemoteTableGroups(remoteGroups);
+    } catch (err) {
+      console.warn('Table groups unavailable; using localStorage fallback.', err);
+    } finally {
+      tableGroupsPromise = null;
+    }
+  })();
+  return tableGroupsPromise;
+}
+
 async function hydrateSharedTableState() {
-  if (tableSharedStateLoaded) return;
+  if (tableGroupsLoaded && tableOpsLoaded) {
+    tableSharedStateLoaded = true;
+    return;
+  }
   try {
     const [remoteGroups, remoteOps] = await Promise.all([
-      supaFetch('/rest/v1/table_groups?status=neq.released&select=*'),
-      supaFetch(`/rest/v1/table_operations?business_date=eq.${todayGeorgia()}&select=*`)
+      tableGroupsLoaded ? Promise.resolve(null) : supaFetch('/rest/v1/table_groups?status=neq.released&select=group_code,name,table_ids,status,created_at,updated_at'),
+      tableOpsLoaded ? Promise.resolve(null) : supaFetch(`/rest/v1/table_operations?business_date=eq.${todayGeorgia()}&select=table_id,status,guest_name,guests,source,reservation_id,seated_at,updated_at`)
     ]);
-    const groups = (remoteGroups || []).map(remoteGroupToLocal).filter(x => x.id && x.tableIds.length >= 2);
-    const ops = {};
-    (remoteOps || []).forEach(row => {
-      if (!row.table_id) return;
-      const local = remoteOperationToLocal(row);
-      // Ignore inert "free" rows — they used to paint over reservation colors on the map.
-      if (local.status === 'free') return;
-      ops[String(row.table_id)] = local;
-    });
-    // A successful empty Supabase response is authoritative: clear stale local state.
-    // localStorage is used only when the remote request fails and the catch block runs.
-    localStorage.setItem(TABLE_GROUPS_KEY, JSON.stringify(groups));
-    const rawOps = JSON.parse(localStorage.getItem(TABLE_OPS_KEY) || '{}');
-    rawOps[todayGeorgia()] = ops;
-    localStorage.setItem(TABLE_OPS_KEY, JSON.stringify(rawOps));
-    tableSharedStateLoaded = true;
+    if (!tableGroupsLoaded) storeRemoteTableGroups(remoteGroups);
+    if (!tableOpsLoaded) storeRemoteTableOps(remoteOps);
+    tableSharedStateLoaded = tableGroupsLoaded && tableOpsLoaded;
   } catch (err) {
     console.warn('Shared table state unavailable; using localStorage fallback.', err);
   }
@@ -7096,11 +7181,12 @@ function applyRealtimeTableChange() {
 }
 
 function startTableRealtime() {
-  if (tableRealtimeStarted || typeof WebSocket === 'undefined' || !SUPA_KEY) return;
+  const wsUrl = tableRealtimeWsUrl();
+  if (tableRealtimeStarted || typeof WebSocket === 'undefined' || !SUPA_KEY || !wsUrl) return;
   tableRealtimeStarted = true;
   const connect = () => {
     try {
-      const ws = new WebSocket(tableRealtimeWsUrl());
+      const ws = new WebSocket(wsUrl);
       tableRealtimeSocket = ws;
       ws.onopen = () => {
         ws.send(JSON.stringify({ topic: 'realtime:restaurant-tables', event: 'phx_join', payload: { config: { broadcast: { self: false }, presence: { key: '' }, postgres_changes: [{ event: '*', schema: 'public', table: 'table_groups' }, { event: '*', schema: 'public', table: 'table_operations' }] }, access_token: SUPA_KEY }, ref: '1' }));
@@ -7115,7 +7201,11 @@ function startTableRealtime() {
   connect();
 }
 
-hydrateSharedTableState().finally(startTableRealtime);
+if (document.documentElement.classList.contains('admin-panel-route')) {
+  hydrateSharedTableState().finally(startTableRealtime);
+} else {
+  hydrateTableGroups();
+}
 
 // guests stepper
 function adjGuests(d) {
@@ -7663,7 +7753,6 @@ async function restoreAdminSessionFromCookie() {
 }
 
 async function init() {
-  loadTgSettings();
   const isPanel = document.documentElement.classList.contains('admin-panel-route');
   if (isPanel) {
     applyStoredAdminTheme();
@@ -7726,7 +7815,12 @@ async function init() {
       else openAdmin();
     });
   }
-  queueMicrotask(() => refreshReservationTableSelectState());
+  const refreshTables = () => refreshReservationTableSelectState();
+  const afterGroups = (typeof hydrateTableGroups === 'function') ? hydrateTableGroups() : Promise.resolve();
+  afterGroups.finally(() => {
+    const idle = window.requestIdleCallback || function (fn) { setTimeout(fn, 250); };
+    idle(refreshTables, { timeout: 1200 });
+  });
   initPwaInstallBanner();
   initRevealAnimations();
 }
@@ -8387,23 +8481,55 @@ async function testTelegramBot() {
   } catch(e) { st.textContent = '❌ კავშირის შეცდომა'; }
 }
 
-async function getAdminPw() {
+async function refreshAdminPasswordForm() {
+  const status = g('admin-password-status');
+  const currentWrap = g('st-pw-current-wrap');
+  let configured = true;
   try {
-    const data = await supaFetch('/rest/v1/settings?key=eq.admin_pw&select=value');
-    if (data && data[0] && data[0].value) return data[0].value;
-  } catch(e) {}
-  return localStorage.getItem('tiflis_admin_pw') || ADMIN_PW_DEFAULT;
+    const response = await fetch('/api/admin/password');
+    if (response.ok) {
+      const data = await response.json();
+      configured = Boolean(data && data.configured);
+    }
+  } catch (e) {}
+  if (currentWrap) currentWrap.hidden = !configured;
+  if (status) status.textContent = configured ? 'პაროლი დაყენებულია. შესაცვლელად შეიყვანეთ მიმდინარე და ახალი პაროლი.' : 'პაროლი ჯერ არ არის დაყენებული. ქვემოთ დააყენეთ ახალი.';
 }
 
-async function saveAdminPw(pw) {
-  let remoteOk = true;
-  try {
-    await supaFetch('/rest/v1/settings?key=eq.admin_pw', 'PATCH', { value: pw });
-  } catch (e) {
-    remoteOk = false;
+async function adminChangePassword() {
+  const currentPassword = g('st-pw-current') ? g('st-pw-current').value : '';
+  const newPassword = g('st-pw-new') ? g('st-pw-new').value : '';
+  const confirmPassword = g('st-pw-confirm') ? g('st-pw-confirm').value : '';
+  if (newPassword.length < 8) {
+    adminMsg('adm-msg-password', '❌ ახალი პაროლი უნდა იყოს მინიმუმ 8 სიმბოლო', 'err');
+    return;
   }
-  localStorage.setItem('tiflis_admin_pw', pw);
-  return remoteOk;
+  if (newPassword !== confirmPassword) {
+    adminMsg('adm-msg-password', '❌ ახალი პაროლი არ ემთხვევა გამეორებას', 'err');
+    return;
+  }
+  try {
+    const response = await fetch('/api/admin/password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ currentPassword, newPassword, confirmPassword })
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      const text = data && data.error ? data.error : 'პაროლი ვერ შეიცვალა';
+      adminMsg('adm-msg-password', '❌ ' + text, 'err');
+      return;
+    }
+    if (g('st-pw-current')) g('st-pw-current').value = '';
+    if (g('st-pw-new')) g('st-pw-new').value = '';
+    if (g('st-pw-confirm')) g('st-pw-confirm').value = '';
+    try { localStorage.removeItem('tiflis_admin_pw'); } catch (e) {}
+    adminMsg('adm-msg-password', '✅ პაროლი შეიცვალა. შემდეგ შესვლაზე ახალ პაროლს გამოიყენეთ.', 'ok');
+    auditLog('admin_password', 'changed');
+    refreshAdminPasswordForm();
+  } catch (e) {
+    adminMsg('adm-msg-password', '❌ კავშირის შეცდომა', 'err');
+  }
 }
 
 function updateAdminStayUI() {
@@ -8725,7 +8851,7 @@ const ADMIN_TAB_TITLES = {
   reservations: ['ჯავშნები', 'დარბაზი', 'ფილტრი, სტატუსი, ავანსი და ექსპორტი'],
   reschecks: ['ჩეკები და ურნა', 'დარბაზი', 'აქტიური ჩეკები, ბეჭდვა და გაუქმებულის აღდგენა'],
   savedchecks: ['შენახული ჩეკები', 'დარბაზი', 'სტუმრის შენახული შეკვეთები'],
-  settings: ['პარამეტრები', 'სისტემა', 'კონტაქტი, Telegram და აუდიტი']
+  settings: ['პარამეტრები', 'სისტემა', 'პაროლი, კონტაქტი, Telegram და აუდიტი']
 };
 
 function paintAdminClock() {
@@ -8819,7 +8945,7 @@ function adminTab(t) {
   if (t === 'reservations') loadReservations();
   if (t === 'reschecks') loadReservationsWithChecks();
   if (t === 'savedchecks') renderSavedChecksTable();
-  if (t === 'settings') adminRenderAudit();
+  if (t === 'settings') { adminRenderAudit(); refreshAdminPasswordForm(); }
   touchAdminSession();
 }
 
@@ -10070,15 +10196,7 @@ async function adminSaveSettings() {
   tgConfig.token = tgFields.token;
   tgConfig.chatid = tgFields.chatid;
   const tgRemoteOk = await persistTgSettings();
-  const newPw = g('st-pw').value;
-  let pwRemoteOk = true;
-  if (newPw.trim()) {
-    pwRemoteOk = await saveAdminPw(newPw.trim());
-    g('st-pw').value = '';
-  }
-  if (newPw.trim() && !pwRemoteOk) {
-    adminMsg('adm-msg-settings', '⚠ პაროლი ლოკალურად შეინახა; Supabase ვერ განახლდა', 'err');
-  } else if (!tgRemoteOk) {
+  if (!tgRemoteOk) {
     adminMsg('adm-msg-settings', '⚠ Telegram Supabase-ში ვერ შეინახა', 'err');
   } else {
     adminMsg('adm-msg-settings', '✅ პარამეტრები შენახულია', 'ok');
@@ -10117,9 +10235,7 @@ async function clearOldReservationsFromTables() {
   const today = todayGeorgia();
   if (localStorage.getItem(TABLE_CLEANUP_KEY) === today) return;
   try {
-    await Promise.all(MAP_ALL_TABLE_IDS.map(id =>
-      supaFetch(`/rest/v1/tables?id=eq.${id}`, 'PATCH', { status: 'free' })
-    ));
+    await supaFetch('/rest/v1/tables', 'POST', MAP_ALL_TABLE_IDS.map(id => ({ id, status: 'free' })), { prefer: 'resolution=merge-duplicates,return=minimal' });
     localStorage.setItem(TABLE_CLEANUP_KEY, today);
   } catch (_) { /* Supabase/tables ცხრილი შესაძლოა არ არსებობდეს */ }
 }
@@ -10722,12 +10838,13 @@ function syncReservationGroupOptions() {
 }
 async function loadMapTables() {
   try {
-    await hydrateSharedTableState();
-    await clearOldReservationsFromTables();
     const filterEl = document.getElementById('map-date-filter');
     const today2 = filterEl && filterEl.value ? filterEl.value : todayGeorgia();
     if (filterEl && !filterEl.value) filterEl.value = today2;
-    const rsvData = await supaFetch(`/rest/v1/reservations?date=eq.${today2}&status=neq.cancelled&select=id,name,phone,guests,time,table_id,status`);
+    const reservationsPromise = supaFetch(`/rest/v1/reservations?date=eq.${today2}&status=neq.cancelled&select=id,name,phone,guests,time,table_id,status`);
+    await hydrateSharedTableState();
+    const rsvData = await reservationsPromise;
+    void clearOldReservationsFromTables();
     mapFloorRows = Array.isArray(rsvData) ? rsvData : [];
     mapSelectedSlot = pickMapSlotForDate(today2, mapFloorRows);
     renderMapSlots();
@@ -10770,10 +10887,13 @@ function renderMapFloor() {
         meta.group?.id
       ].filter(Boolean).join(' ').toLowerCase();
       if (searchQ && !guestBlob.includes(searchQ)) return '';
-      const otherTimes = dayList
-        .filter(row => !mapReservationCoversSlot(row, mapSelectedSlot))
-        .map(row => String(row.time || '').slice(0, 5))
-        .filter(Boolean);
+      const slotAt = mapSlotMinutes(mapSelectedSlot);
+      const laterRow = dayList.find(row => {
+        if (mapReservationCoversSlot(row, mapSelectedSlot)) return false;
+        const start = mapSlotMinutes(row.time);
+        return start != null && slotAt != null && start > slotAt;
+      }) || null;
+      const laterState = laterRow ? (laterRow.status === 'pending' ? 'pending' : 'confirmed') : '';
       const statusLabel = MAP_STATE_LABEL[meta.state] || meta.state;
       let sub = '';
       if (seatedWho) {
@@ -10783,14 +10903,16 @@ function renderMapFloor() {
       } else if ((meta.state === 'confirmed' || meta.state === 'pending') && meta.reservation) {
         sub = `${mapShortText(meta.reservation.name || '', 12)} · ${String(meta.reservation.time || '').slice(0, 5)}`;
       }
-      if (otherTimes.length) {
-        const nextHint = `შემდეგი · ${otherTimes[0]}`;
+      if (laterRow && meta.state !== 'confirmed' && meta.state !== 'pending' && meta.state !== 'occupied') {
+        const nextHint = `${mapShortText(laterRow.name || 'ჯავშანი', 12)} · ${String(laterRow.time || '').slice(0, 5)}`;
         sub = sub ? `${sub} · ${nextHint}` : nextHint;
       }
       const selected = t.id === mapSelectedTableId ? ' is-selected' : '';
       const banquetSelected = banquetPickIds.includes(t.id) ? ' is-banquet-pick' : '';
+      const laterClass = laterState && meta.state !== 'confirmed' && meta.state !== 'pending' && meta.state !== 'occupied' ? ' has-later' : '';
+      const laterAttr = laterClass ? ` data-later="${laterState}"` : '';
       const aria = `${t.id}, ${statusLabel}, ${mapTableSeats(t.id)} ადგილი${sub ? ', ' + sub : ''}`;
-      return `<button type="button" class="floor-table floor-table--${escapeAttr(meta.state)}${selected}${banquetSelected}" draggable="true" data-map-table="${t.id}" data-state="${escapeAttr(meta.state)}" title="${escapeAttr(dayList.map(formatReservationShiftLabel).join(' | ') || statusLabel)}" aria-label="${escapeAttr(aria)}" ondragstart="dragMapStart(event,'${t.id}')" ondragover="dragMapOver(event)" ondrop="dropMapTable(event,'${t.id}')" onclick="mapTableClick('${t.id}')"><span class="floor-table-top"><span class="floor-table-id">${escapeHtml(t.id)}</span><span class="floor-table-seats">${mapTableSeats(t.id)}</span></span><span class="floor-table-status">${escapeHtml(statusLabel)}</span><span class="floor-table-sub">${escapeHtml(sub)}</span></button>`;
+      return `<button type="button" class="floor-table floor-table--${escapeAttr(meta.state)}${selected}${banquetSelected}${laterClass}"${laterAttr} draggable="true" data-map-table="${t.id}" data-state="${escapeAttr(meta.state)}" title="${escapeAttr(dayList.map(formatReservationShiftLabel).join(' | ') || statusLabel)}" aria-label="${escapeAttr(aria)}" ondragstart="dragMapStart(event,'${t.id}')" ondragover="dragMapOver(event)" ondrop="dropMapTable(event,'${t.id}')" onclick="mapTableClick('${t.id}')"><span class="floor-table-top"><span class="floor-table-id">${escapeHtml(t.id)}</span><span class="floor-table-seats">${mapTableSeats(t.id)}</span></span><span class="floor-table-status">${escapeHtml(statusLabel)}</span><span class="floor-table-sub">${escapeHtml(sub)}</span></button>`;
     }).join('');
     const countEl = g(`map-zone-count-${zone}`);
     if (countEl) {
@@ -12270,10 +12392,12 @@ function renderResTable(data) {
         <div class="res-card-adv res-adv-cell" data-res-adv-row="${idAttr}">
           <span class="res-card-adv-label">ავანსი / გადახდა</span>
           ${resAdvancePaymentSelectHtml(r, locked)}
-          <span style="font-size:.72rem;color:var(--a-muted)">₾</span>
-          <input type="number" class="admin-input res-adv-input" min="0" step="0.5"
-            value="${advVal === '' ? '' : escapeAttr(String(advVal))}"
-            ${locked ? 'disabled' : ''} aria-label="ავანსი ლარში">
+          <span class="res-adv-amount">
+            <span class="res-adv-currency">₾</span>
+            <input type="number" class="admin-input res-adv-input" min="0" step="0.5"
+              value="${advVal === '' ? '' : escapeAttr(String(advVal))}"
+              ${locked ? 'disabled' : ''} aria-label="ავანსი ლარში">
+          </span>
           <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost res-adv-save-btn${locked ? ' is-hidden' : ''}" data-res-id="${idAttr}">შენახვა</button>
           <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost res-adv-edit-btn${locked ? '' : ' is-hidden'}" data-res-id="${idAttr}">რედაქტირება</button>
         </div>
