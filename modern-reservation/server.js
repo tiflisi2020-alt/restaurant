@@ -119,7 +119,7 @@ app.get('/api/menu', requireDb, asyncRoute(async (_req, res) => res.json(await s
 
 app.get('/api/availability', requireDb, asyncRoute(async (req, res) => {
   const date = clean(req.query.date, 10); const guests = Number(req.query.guests || 2);
-  if (!dateOk(date) || date < todayInTimezone() || !Number.isInteger(guests) || guests < 1 || guests > 30) return res.status(400).json({ error: 'აირჩიეთ დღევანდელი ან მომავალი თარიღი და 1–30 სტუმარი.' });
+  if (!dateOk(date) || date < todayInTimezone() || !Number.isInteger(guests) || guests < 1 || guests > 300) return res.status(400).json({ error: 'აირჩიეთ დღევანდელი ან მომავალი თარიღი და 1–300 სტუმარი.' });
   const settings = (await supa('restaurant_settings', '?id=eq.true&select=opening_time,closing_time,slot_minutes'))[0] || { opening_time: '12:00', closing_time: '23:00', slot_minutes: 30 };
   const [tables, reservations] = await Promise.all([
     supa('restaurant_tables', `?is_active=eq.true&seats=gte.${guests}&select=id,name,seats,zone&order=seats`),
@@ -137,7 +137,7 @@ app.get('/api/availability', requireDb, asyncRoute(async (req, res) => {
 
 app.post('/api/reservations', requireDb, asyncRoute(async (req, res) => {
   const body = req.body || {}; const guest_name = clean(body.guest_name, 100); const phone = clean(body.phone, 40); const email = clean(body.email, 160); const reservation_date = clean(body.reservation_date, 10); const reservation_time = clean(body.reservation_time, 5); const guests = Number(body.guests); const table_id = clean(body.table_id, 60); const notes = clean(body.notes, 500);
-  if (!guest_name || !phone || !dateOk(reservation_date) || reservation_date < todayInTimezone() || !timeOk(reservation_time) || !Number.isInteger(guests) || guests < 1 || guests > 30 || !table_id) return res.status(400).json({ error: 'გთხოვთ ყველა სავალდებულო ველი სწორად შეავსოთ.' });
+  if (!guest_name || !phone || !dateOk(reservation_date) || reservation_date < todayInTimezone() || !timeOk(reservation_time) || !Number.isInteger(guests) || guests < 1 || guests > 300 || !table_id) return res.status(400).json({ error: 'გთხოვთ ყველა სავალდებულო ველი სწორად შეავსოთ (სტუმრები 1–300).' });
   const tables = await supa('restaurant_tables', `?id=eq.${encode(table_id)}&is_active=eq.true&select=id,seats`); const table = tables[0];
   if (!table || table.seats < guests) return res.status(400).json({ error: 'არჩეული მაგიდა აღარ არის ხელმისაწვდომი.' });
   const confirmation_code = `TF-${crypto.randomBytes(3).toString('hex').toUpperCase()}`;
@@ -453,6 +453,16 @@ app.all('/api/legacy/rest/v1/:table', requireDb, asyncRoute(async (req, res) => 
         }
       }
       const advanceAmount = b.advance_amount == null || b.advance_amount === '' ? null : Number(b.advance_amount);
+      const guestsCount = Number(b.guests || 2);
+      if (!Number.isInteger(guestsCount) || guestsCount < 1 || guestsCount > 300) {
+        return res.status(400).json({ message: 'სტუმრების რაოდენობა უნდა იყოს 1-დან 300-მდე.' });
+      }
+      if (!clean(b.name || b.guest_name, 100) || !clean(b.phone, 40)) {
+        return res.status(400).json({ message: 'გთხოვთ შეიყვანოთ სახელი და ტელეფონი.' });
+      }
+      if (!dateOk(reservationDate) || !timeOk(reservationTime)) {
+        return res.status(400).json({ message: 'გთხოვთ სწორად აირჩიოთ თარიღი და დრო.' });
+      }
       const row = {
         confirmation_code: `TF-${crypto.randomBytes(3).toString('hex').toUpperCase()}`,
         guest_name: clean(b.name || b.guest_name, 100),
@@ -460,18 +470,38 @@ app.all('/api/legacy/rest/v1/:table', requireDb, asyncRoute(async (req, res) => 
         email: b.email || null,
         reservation_date: reservationDate,
         reservation_time: reservationTime ? `${reservationTime}:00` : null,
-        guests: Number(b.guests || 2),
+        guests: guestsCount,
         table_id: tableRow?.id || null,
         status: b.status || 'pending',
         notes: clean(b.note || b.notes, 500),
         payment: clean(b.payment, 60),
-        note: clean(b.note, 500),
-        precheck_json: b.precheck_json || null,
-        advance_amount: Number.isFinite(advanceAmount) ? advanceAmount : null,
-        advance_payment: b.advance_payment ? clean(b.advance_payment, 60) : null
+        precheck_json: b.precheck_json || null
       };
+      if (Number.isFinite(advanceAmount)) row.advance_amount = advanceAmount;
+      if (b.advance_payment) row.advance_payment = clean(b.advance_payment, 60);
       try {
-        const inserted = await supa('reservations', '', { method: 'POST', body: JSON.stringify(row) });
+        let inserted;
+        try {
+          inserted = await supa('reservations', '', { method: 'POST', body: JSON.stringify(row) });
+        } catch (e1) {
+          // Older schemas may lack advance_* / payment / precheck_json — retry core fields only.
+          const msg = String(e1.message || '');
+          const unknownCol = e1.code === 'PGRST204' || /Could not find the .+ column/i.test(msg) || /schema cache/i.test(msg);
+          if (!unknownCol) throw e1;
+          const core = {
+            confirmation_code: row.confirmation_code,
+            guest_name: row.guest_name,
+            phone: row.phone,
+            email: row.email,
+            reservation_date: row.reservation_date,
+            reservation_time: row.reservation_time,
+            guests: row.guests,
+            table_id: row.table_id,
+            status: row.status,
+            notes: row.notes
+          };
+          inserted = await supa('reservations', '', { method: 'POST', body: JSON.stringify(core) });
+        }
         const saved = inserted[0];
         // Guest bookings cannot PATCH /tables (admin-only). Mark floor state here with the service key.
         if (displayName && displayName !== '—' && displayName !== '-') {
@@ -498,6 +528,9 @@ app.all('/api/legacy/rest/v1/:table', requireDb, asyncRoute(async (req, res) => 
       } catch (err) {
         if (err.code === '23505' || err.status === 409) {
           return res.status(409).json({ message: 'ეს მაგიდა ამ დროს უკვე დაჯავშნილია. გთხოვთ სხვა დრო აირჩიოთ.' });
+        }
+        if (err.code === '23514' || /guests_check/i.test(String(err.message || ''))) {
+          return res.status(400).json({ message: 'სტუმრების რაოდენობა ბაზაში შეზღუდულია. განაახლეთ guests ლიმიტი ან შეამცირეთ რაოდენობა.' });
         }
         throw err;
       }
@@ -583,6 +616,11 @@ app.all('/api/legacy/rest/v1/:table', requireDb, asyncRoute(async (req, res) => 
   return res.status(404).json({ message: `Legacy table not supported: ${table}` });
 }));
 
-app.use((error, _req, res, _next) => { console.error(error); res.status(error.status && error.status < 500 ? error.status : 500).json({ error: error.status && error.status < 500 ? error.message : 'სერვერის შეცდომა. სცადეთ მოგვიანებით.' }); });
+app.use((error, _req, res, _next) => {
+  console.error(error);
+  const status = error.status && error.status < 500 ? error.status : 500;
+  const text = status < 500 ? (error.message || 'მოთხოვნა ვერ შესრულდა') : 'სერვერის შეცდომა. სცადეთ მოგვიანებით.';
+  res.status(status).json({ message: text, error: text });
+});
 export default app;
 if (process.env.VERCEL !== '1') app.listen(port, () => console.log(`Modern reservation running at http://localhost:${port}`));

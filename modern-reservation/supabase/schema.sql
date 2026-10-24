@@ -51,7 +51,7 @@ create table if not exists public.reservations (
   email text,
   reservation_date date not null,
   reservation_time time not null,
-  guests integer not null check (guests between 1 and 30),
+  guests integer not null check (guests between 1 and 300),
   table_id uuid references public.restaurant_tables(id) on delete set null,
   status text not null default 'pending' check (status in ('pending','confirmed','seated','completed','cancelled','no_show')),
   notes text not null default '',

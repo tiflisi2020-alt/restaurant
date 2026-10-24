@@ -6938,7 +6938,7 @@ async function supaFetch(path, method='GET', body=null, fetchOpts) {
   }
   if (!r.ok) {
     const d = data && typeof data === 'object' ? data : {};
-    const parts = [d.message, d.details, d.hint].filter(Boolean);
+    const parts = [d.message, d.error, d.details, d.hint].filter(Boolean);
     const msg = parts.length ? parts.map(String).join(' — ') : (r.statusText || ('HTTP ' + r.status));
     const err = new Error(typeof msg === 'string' ? msg.slice(0, 400) : JSON.stringify(msg).slice(0, 400));
     err.status = r.status;
@@ -7432,7 +7432,8 @@ async function submitReservation() {
     return;
   }
 
-  const guests = parseInt(g('r-guests').value)||2;
+  const guests = Math.max(1, Math.min(300, parseInt(g('r-guests').value, 10) || 2));
+  if (g('r-guests')) g('r-guests').value = String(guests);
   const tableSel = g('r-table');
   const table = tableSel.value;
   const tableOpt = table ? Array.from(tableSel.options).find(o => o.value === table) : null;
