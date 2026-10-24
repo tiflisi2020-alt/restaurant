@@ -200,6 +200,36 @@ function legacyMenuItem(row) { return { id: Number(row.legacy_id || 0), legacy_i
 function legacyReservation(row, tableName = '') {
   return { ...row, name: row.guest_name, date: row.reservation_date, time: String(row.reservation_time || '').slice(0, 5), table_id: tableName || row.table_id || '', payment: row.payment || '', note: row.note || row.notes || '', precheck_json: row.precheck_json || null };
 }
+/** Guest fields from the check editor. Status-only patches must stay unchanged. */
+export function legacyReservationPatch(body) {
+  const b = body || {};
+  const patch = {};
+  for (const k of ['status', 'payment', 'precheck_json', 'advance_amount', 'advance_payment']) {
+    if (b[k] !== undefined) patch[k] = b[k];
+  }
+  if (b.note !== undefined) patch.notes = b.note;
+  if (b.name !== undefined || b.guest_name !== undefined) {
+    const guestName = clean(b.name ?? b.guest_name, 100);
+    if (guestName) patch.guest_name = guestName;
+  }
+  if (b.phone !== undefined) {
+    const phone = clean(b.phone, 80);
+    if (phone) patch.phone = phone;
+  }
+  if (b.date !== undefined || b.reservation_date !== undefined) {
+    const reservationDate = clean(b.date ?? b.reservation_date, 10);
+    if (dateOk(reservationDate)) patch.reservation_date = reservationDate;
+  }
+  if (b.time !== undefined || b.reservation_time !== undefined) {
+    const hhmm = clean(b.time ?? b.reservation_time, 8).slice(0, 5);
+    if (timeOk(hhmm)) patch.reservation_time = `${hhmm}:00`;
+  }
+  if (b.guests !== undefined && b.guests !== null && b.guests !== '') {
+    const guests = Number(b.guests);
+    if (Number.isInteger(guests) && guests >= 1 && guests <= 300) patch.guests = guests;
+  }
+  return patch;
+}
 const LEGACY_RES_SELECT = {
   id: 'id', name: 'guest_name', guest_name: 'guest_name', phone: 'phone', email: 'email',
   date: 'reservation_date', reservation_date: 'reservation_date', time: 'reservation_time',
@@ -404,7 +434,25 @@ app.all('/api/legacy/rest/v1/:table', requireDb, asyncRoute(async (req, res) => 
             message: `მაგიდა ${displayName} უკვე დაკავებულია ${String(clash.reservation_time || '').slice(0, 5)}-ზე (${clash.guest_name || 'ჯავშანი'}). სხვა საათი ან მაგიდა აირჩიეთ.`
           });
         }
+        const linkGroups = await supa('table_groups', '?status=eq.merged&select=group_code,table_ids');
+        const linkedIds = (linkGroups || [])
+          .filter((group) => String(group.group_code || '').startsWith('L-') && (group.table_ids || []).map(String).includes(displayName))
+          .map((group) => String(group.group_code).slice(2))
+          .filter(Boolean);
+        if (linkedIds.length) {
+          const linkedRows = await supa('reservations', `?id=in.(${linkedIds.map(encode).join(',')})&reservation_date=eq.${encode(reservationDate)}&status=not.in.(cancelled,no_show)&select=id,guest_name,reservation_time,status`);
+          const linkedClash = (linkedRows || []).find((row) => {
+            const other = toMin(row.reservation_time);
+            return start != null && other != null && start < other + hold && other < start + hold;
+          });
+          if (linkedClash) {
+            return res.status(409).json({
+              message: `მაგიდა ${displayName} მიერთებულია ${String(linkedClash.reservation_time || '').slice(0, 5)}-ის ჯავშანზე (${linkedClash.guest_name || 'სტუმარი'}). სხვა მაგიდა აირჩიეთ.`
+            });
+          }
+        }
       }
+      const advanceAmount = b.advance_amount == null || b.advance_amount === '' ? null : Number(b.advance_amount);
       const row = {
         confirmation_code: `TF-${crypto.randomBytes(3).toString('hex').toUpperCase()}`,
         guest_name: clean(b.name || b.guest_name, 100),
@@ -418,11 +466,35 @@ app.all('/api/legacy/rest/v1/:table', requireDb, asyncRoute(async (req, res) => 
         notes: clean(b.note || b.notes, 500),
         payment: clean(b.payment, 60),
         note: clean(b.note, 500),
-        precheck_json: b.precheck_json || null
+        precheck_json: b.precheck_json || null,
+        advance_amount: Number.isFinite(advanceAmount) ? advanceAmount : null,
+        advance_payment: b.advance_payment ? clean(b.advance_payment, 60) : null
       };
       try {
         const inserted = await supa('reservations', '', { method: 'POST', body: JSON.stringify(row) });
-        return res.status(201).json(legacyReservation(inserted[0], displayName));
+        const saved = inserted[0];
+        // Guest bookings cannot PATCH /tables (admin-only). Mark floor state here with the service key.
+        if (displayName && displayName !== '—' && displayName !== '-') {
+          try {
+            await supa('table_operations', '?on_conflict=table_id,business_date', {
+              method: 'POST',
+              body: JSON.stringify({
+                table_id: displayName,
+                business_date: reservationDate || todayInTimezone(),
+                status: 'reserved',
+                guest_name: row.guest_name || null,
+                guests: row.guests || null,
+                source: 'reservation',
+                reservation_id: saved?.id || null,
+                updated_by: 'legacy-bridge'
+              }),
+              headers: { Prefer: 'resolution=merge-duplicates,return=minimal' }
+            });
+          } catch (opsErr) {
+            console.warn('reservation table_operations reserved', opsErr?.message || opsErr);
+          }
+        }
+        return res.status(201).json(legacyReservation(saved, displayName));
       } catch (err) {
         if (err.code === '23505' || err.status === 409) {
           return res.status(409).json({ message: 'ეს მაგიდა ამ დროს უკვე დაჯავშნილია. გთხოვთ სხვა დრო აირჩიოთ.' });
@@ -452,10 +524,7 @@ app.all('/api/legacy/rest/v1/:table', requireDb, asyncRoute(async (req, res) => 
     }
     if (!targets.length) return res.json([]);
     const b = req.body || {};
-    const patch = {};
-    for (const k of ['status', 'payment', 'note', 'precheck_json', 'advance_amount', 'advance_payment']) {
-      if (b[k] !== undefined) patch[k === 'note' ? 'notes' : k] = b[k];
-    }
+    const patch = legacyReservationPatch(b);
     let displayTableName = '';
     if (b.table_id !== undefined) {
       try {
@@ -493,7 +562,23 @@ app.all('/api/legacy/rest/v1/:table', requireDb, asyncRoute(async (req, res) => 
       }
       const result = await supa(table, query, { method: req.method, body: ['GET','HEAD'].includes(req.method) ? undefined : JSON.stringify(req.body) }); return res.json(result);
     }
-    const query = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : ''; const options = { method: req.method, body: ['GET','HEAD'].includes(req.method) ? undefined : JSON.stringify(req.body) }; return res.json(await supa(table, query, options));
+    const query = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
+    const options = {
+      method: req.method,
+      body: ['GET', 'HEAD'].includes(req.method) ? undefined : JSON.stringify(req.body),
+      headers: {},
+    };
+    // Upsert must send Prefer: resolution=merge-duplicates. Without it, seating fails when
+    // the (table_id, business_date) row already exists (free/reserved), so only localStorage updates.
+    if (req.method === 'POST' && (table === 'table_operations' || table === 'table_groups')) {
+      const prefer = String(req.get('prefer') || '');
+      options.headers.Prefer = prefer.includes('resolution=')
+        ? prefer
+        : 'resolution=merge-duplicates,return=minimal';
+    } else if (req.get('prefer')) {
+      options.headers.Prefer = req.get('prefer');
+    }
+    return res.json(await supa(table, query, options));
   }
   return res.status(404).json({ message: `Legacy table not supported: ${table}` });
 }));

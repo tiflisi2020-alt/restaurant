@@ -4482,65 +4482,7 @@ html.admin-theme-light #admin-modal .admin-preview-skin .menu-item-price {
   color: #b85d38;
 }
 
-/* ===== FLOAT CONTACT RAIL (glass — ფერები როგორც .nav-reserve „მაგიდის დაჯავშნა“) ===== */
-.tiflis-float-rail {
-  position: fixed;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 150;
-  display: flex;
-  flex-direction: column;
-  width: 56px;
-  background: rgba(61, 155, 147, 0.14);
-  -webkit-backdrop-filter: blur(14px) saturate(1.2);
-  backdrop-filter: blur(14px) saturate(1.2);
-  border: 1.5px solid rgba(61, 155, 147, 0.5);
-  border-right: none;
-  border-radius: var(--ui-radius-sm) 0 0 var(--ui-radius-sm);
-  box-shadow: -6px 10px 32px rgba(44, 32, 16, 0.12);
-  overflow: hidden;
-  font-family: 'Raleway', sans-serif;
-}
-.tiflis-float-rail a {
-  color: var(--teal);
-  text-decoration: none;
-  outline: none;
-}
-.tiflis-float-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 56px;
-  flex-shrink: 0;
-  background: transparent;
-  border-bottom: 1px solid rgba(61, 155, 147, 0.28);
-  transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
-}
-.tiflis-float-btn:last-child {
-  border-bottom: none;
-}
-.tiflis-float-btn svg {
-  width: 26px;
-  height: 26px;
-  flex-shrink: 0;
-  fill: currentColor;
-}
-.tiflis-float-btn:hover,
-.tiflis-float-btn:focus-visible {
-  background: var(--teal);
-  color: #fff;
-  transform: scale(1.04);
-}
-.tiflis-float-btn:active {
-  transform: scale(0.98);
-}
-html.admin-panel-route .tiflis-float-rail {
-  display: none !important;
-}
 @media print {
-  .tiflis-float-rail { display: none !important; }
   body.printing-menu {
     height: auto !important;
     overflow: visible !important;
@@ -4565,30 +4507,7 @@ html.admin-panel-route .tiflis-float-rail {
     padding: 1rem !important;
   }
 }
-@media (max-width: 600px) {
-  .tiflis-float-rail {
-    top: auto;
-    bottom: 5.5rem;
-    transform: none;
-    width: 52px;
-    border-radius: var(--ui-radius-sm) 0 0 var(--ui-radius-sm);
-  }
-  .tiflis-float-btn {
-    height: 52px;
-  }
-  .tiflis-float-btn svg {
-    width: 24px;
-    height: 24px;
-  }
-}
 @media (prefers-reduced-motion: reduce) {
-  .tiflis-float-btn {
-    transition-duration: 0.01ms;
-  }
-  .tiflis-float-btn:hover,
-  .tiflis-float-btn:focus-visible {
-    transform: none;
-  }
   img,
   .nav-logo .site-logo-teal--nav,
   .ft-pill {
@@ -4680,16 +4599,12 @@ body { letter-spacing:.005em; }
 footer { border-top:1px solid rgba(201,160,61,.22); }
 .footer-grid { gap:3rem; }
 .footer-col a { text-underline-offset:3px; }
-.tiflis-float-btn { box-shadow:0 8px 20px rgba(23,17,11,.16); }
 :focus-visible { outline:3px solid rgba(196,142,44,.72); outline-offset:3px; }
 @media (max-width:900px) { #nav { height:auto; min-height:68px; padding-block:.75rem; flex-wrap:wrap; gap:.7rem; } .nav-links { display:flex; order:3; width:100%; justify-content:center; gap:1rem; padding-top:.35rem; } .nav-logo { margin-right:auto; } .nav-reserve { padding:.62rem .9rem; font-size:.66rem; } .menu-nav-col,.reservation-info { position:static; } .cat-tabs { overflow-x:auto; flex-wrap:nowrap; padding-bottom:.35rem; scrollbar-width:none; } .cat-tabs::-webkit-scrollbar { display:none; } .cat-tab { flex:0 0 auto; } }
-@media (max-width:600px) { #nav { padding-inline:.85rem; } .nav-links a { font-size:.66rem; letter-spacing:.06em; } .nav-reserve { display:none; } .lang-toggle { margin-left:.5rem; } .hero { min-height:720px; } .hero-content { padding:1.25rem; } .hero-eyebrow { font-size:.8rem; letter-spacing:.08em; } .hero-title { font-size:clamp(3.5rem,17vw,5.3rem); } .hero-subtitle { font-size:.66rem; line-height:1.8; letter-spacing:.08em; } .hero-cta { flex-direction:column; width:min(100%,290px); margin-inline:auto; } .hero-cta a { width:100%; text-align:center; } .about-item { padding:1.5rem 1rem; } .menu-layout { gap:1.25rem; } .menu-dishes-col { order:1; } .order-panel { order:2; position:sticky; bottom:.75rem; z-index:10; max-height:min(70vh, 560px); overflow-x:hidden; overflow-y:auto; -webkit-overflow-scrolling:touch; box-shadow:0 20px 42px rgba(23,17,11,.22); } .reservation-grid { gap:1.6rem; } .res-form { padding:1.15rem !important; } .form-grid { grid-template-columns:1fr !important; } .form-field.full { grid-column:auto !important; } .tiflis-float-rail { bottom:6.6rem; } }
+@media (max-width:600px) { #nav { padding-inline:.85rem; background:#1e1812; } .nav-links a { font-size:.66rem; letter-spacing:.06em; } .nav-reserve { display:none; } .lang-toggle { margin-left:.5rem; } .hero { min-height:720px; } .hero-content { padding:1.25rem; } .hero-eyebrow { font-size:.8rem; letter-spacing:.08em; } .hero-title { font-size:clamp(3.5rem,17vw,5.3rem); } .hero-subtitle { font-size:.66rem; line-height:1.8; letter-spacing:.08em; } .hero-cta { flex-direction:column; width:min(100%,290px); margin-inline:auto; } .hero-cta a { width:100%; text-align:center; } .about-item { padding:1.5rem 1rem; } .menu-layout { gap:1.25rem; } .menu-dishes-col { order:1; } .order-panel { order:2; position:sticky; bottom:.75rem; z-index:10; max-height:min(70vh, 560px); overflow-x:hidden; overflow-y:auto; -webkit-overflow-scrolling:touch; box-shadow:0 20px 42px rgba(23,17,11,.22); }  .reservation-grid { gap:1.6rem; } .res-form { padding:1.15rem !important; } .form-grid { grid-template-columns:1fr !important; } .form-field.full { grid-column:auto !important; }  }
 @media (prefers-reduced-motion:reduce) { .hero-bg { animation:none; } }
-/* Phone reservation: form first, clear of the side rail */
+/* Phone reservation: form first */
 @media (max-width: 700px) {
-  #reservation .container {
-    padding-right: calc(1rem + 62px);
-  }
   #reservation .reservation-grid {
     display: flex;
     flex-direction: column;
@@ -4911,28 +4826,9 @@ html.admin-panel-route #admin-modal .admin-btn { font-weight:700; letter-spacing
   .footer-grid { grid-template-columns: 1.4fr 1fr 1fr; gap: 1.5rem; }
 }
 </style>
-<link rel="stylesheet" href="/admin-ui.css?v=20261018map">
+<link rel="stylesheet" href="/admin-ui.css?v=20261018cats2">
 </head>
 <body>
-
-<!-- Floating contact rail: WhatsApp, Messenger, Glovo, Wolt, Bolt -->
-<aside class="tiflis-float-rail" aria-label="სწრაფი კონტაქტი">
-  <a id="tiflis-float-wa" class="tiflis-float-btn" href="https://wa.me/995568767638" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" title="WhatsApp">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.883 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-  </a>
-  <a class="tiflis-float-btn" href="https://m.me/TiflisiRestaurantBatumi" target="_blank" rel="noopener noreferrer" aria-label="Facebook Messenger" title="Messenger">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.04c-5.376 0-9.74 4.15-9.74 9.26 0 2.9 1.434 5.49 3.68 7.17V22l3.37-1.85c.9.25 1.85.38 2.85.38 5.376 0 9.74-4.15 9.74-9.26S17.376 2.04 12 2.04zm.93 12.07-2.45-2.6L7.2 14.07l5.4-5.75 2.5 2.62 4.84-2.62-5.81 5.99z"/></svg>
-  </a>
-  <a class="tiflis-float-btn" href="https://glovoapp.com/en/ge/batumi/stores/tiflisi-bat?content=pitsa-c.1421345036&amp;section=pitsa-s.2999510380" target="_blank" rel="noopener noreferrer" aria-label="Glovo" title="Glovo">
-    <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2C8.28 2 2 8.28 2 16s6.28 14 14 14 14-6.28 14-14S23.72 2 16 2zm0 4a10 10 0 0 1 7.66 3.6l-2.56 2.56A6.25 6.25 0 1 0 22.75 16H16v-3.5h10.5A10 10 0 0 1 16 26 10 10 0 0 1 6 16 10 10 0 0 1 16 6z"/></svg>
-  </a>
-  <a class="tiflis-float-btn" href="https://wolt.com/en/geo/batumi/restaurant/restaurant-tiflis/items/soup-10?srsltid=AfmBOopDnVtfrR30XTIjeboPzi9xLfad6qtpf8aEeldquKXKcx47KxqY" target="_blank" rel="noopener noreferrer" aria-label="Wolt" title="Wolt">
-    <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M4 8h3.5l2.5 10.5L12.5 8H16l2.5 10.5L21 8h3.5l-4 16h-3.5L14.5 14 12 24H8.5L4 8z"/></svg>
-  </a>
-  <a class="tiflis-float-btn" href="https://food.bolt.eu/ka-ge/38-batumi/p/67460-restorani-tiplisi/" target="_blank" rel="noopener noreferrer" aria-label="Bolt Food" title="Bolt Food">
-    <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M18 2L6 18h10l-2 12 14-16H18L20 2z"/></svg>
-  </a>
-</aside>
 
 <!-- NAV -->
 <nav id="nav">
@@ -5751,15 +5647,8 @@ html.admin-panel-route #admin-modal .admin-btn { font-weight:700; letter-spacing
             <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" style="width:auto" onclick="printResChecksReport()">🖨 ბეჭდვა</button>
           </div>
           <div id="res-checks-msg" class="admin-msg"></div>
-          <div class="admin-table-wrap checks-table-wrap">
-            <table class="admin-table checks-table" id="res-checks-table">
-              <thead><tr>
-                <th>სახელი</th><th>ტელეფონი</th><th>თარიღი</th><th>დრო</th>
-                <th>სტუმ.</th><th>მაგიდა</th><th title="ავანსის გადახდის მეთოდი და თანხა">ავანსი</th><th>შენიშვნა</th>
-                <th class="checks-col-order">შეკვეთა</th><th>სტატუსი</th><th></th>
-              </tr></thead>
-              <tbody id="res-checks-tbody"><tr><td colspan="11" class="checks-empty-cell">ჩატვირთვა...</td></tr></tbody>
-            </table>
+          <div id="res-checks-grid" class="checks-grid" role="list" aria-label="აქტიური ჩეკები">
+            <div class="checks-grid-empty">ჩატვირთვა...</div>
           </div>
           <div id="res-checks-count" class="checks-board-count">0 ჩანაწერი</div>
         </section>
@@ -5770,15 +5659,8 @@ html.admin-panel-route #admin-modal .admin-btn { font-weight:700; letter-spacing
             <span class="checks-panel-badge checks-panel-badge--brick">არქივი</span>
           </div>
           <p class="checks-trash-hint">გაუქმებისას snapshot ინახება res_checks_trash-ში. აღდგენა ურნიდან აბრუნებს აქტიურ სიაში. Sidebar-ის ურნის ღილაკი — ზედა სიის მასობრივი გაუქმება + არქივი.</p>
-          <div class="admin-table-wrap checks-table-wrap checks-table-wrap--trash">
-            <table class="admin-table checks-table checks-table--trash" id="res-checks-trash-table">
-              <thead><tr>
-                <th>სახელი</th><th>ტელეფონი</th><th>თარიღი</th><th>დრო</th>
-                <th>სტუმ.</th><th>მაგიდა</th><th title="არქივში არ ინახება — ცარიელია თუ ცხრილი ძველია">ავანსი</th><th>შენიშვნა</th>
-                <th class="checks-col-order">შეკვეთა</th><th>სტატუსი</th><th></th>
-              </tr></thead>
-              <tbody id="res-checks-trash-tbody"><tr><td colspan="11" class="checks-empty-cell">ჩვენების შემდეგ</td></tr></tbody>
-            </table>
+          <div id="res-checks-trash-grid" class="checks-grid checks-grid--trash" role="list" aria-label="ურნა — გაუქმებული ჩეკები">
+            <div class="checks-grid-empty">ჩვენების შემდეგ</div>
           </div>
           <div id="res-checks-trash-count" class="checks-board-count">0 ჩანაწერი ურნაში</div>
         </section>
@@ -6469,7 +6351,6 @@ function applyI18n() {
   });
   // document lang attribute
   document.documentElement.lang = lang;
-  syncFloatWhatsAppHref();
 }
 
 function renderCats() {
@@ -7139,8 +7020,8 @@ function storeRemoteTableOps(remoteOps) {
 }
 
 let tableGroupsPromise = null;
-async function hydrateTableGroups() {
-  if (tableGroupsLoaded) return;
+async function hydrateTableGroups(force = false) {
+  if (!force && tableGroupsLoaded) return;
   if (tableGroupsPromise) return tableGroupsPromise;
   tableGroupsPromise = (async () => {
     try {
@@ -7155,18 +7036,22 @@ async function hydrateTableGroups() {
   return tableGroupsPromise;
 }
 
-async function hydrateSharedTableState() {
-  if (tableGroupsLoaded && tableOpsLoaded) {
+async function hydrateSharedTableState(force = false) {
+  if (!force && tableGroupsLoaded && tableOpsLoaded) {
     tableSharedStateLoaded = true;
     return;
   }
   try {
     const [remoteGroups, remoteOps] = await Promise.all([
-      tableGroupsLoaded ? Promise.resolve(null) : supaFetch('/rest/v1/table_groups?status=neq.released&select=group_code,name,table_ids,status,created_at,updated_at'),
-      tableOpsLoaded ? Promise.resolve(null) : supaFetch(`/rest/v1/table_operations?business_date=eq.${todayGeorgia()}&select=table_id,status,guest_name,guests,source,reservation_id,seated_at,updated_at`)
+      (!force && tableGroupsLoaded) ? Promise.resolve(null) : supaFetch('/rest/v1/table_groups?status=neq.released&select=group_code,name,table_ids,status,created_at,updated_at'),
+      (!force && tableOpsLoaded) ? Promise.resolve(null) : supaFetch(`/rest/v1/table_operations?business_date=eq.${todayGeorgia()}&select=table_id,status,guest_name,guests,source,reservation_id,seated_at,updated_at`)
     ]);
-    if (!tableGroupsLoaded) storeRemoteTableGroups(remoteGroups);
-    if (!tableOpsLoaded) storeRemoteTableOps(remoteOps);
+    if (force || !tableGroupsLoaded) {
+      if (remoteGroups != null) storeRemoteTableGroups(remoteGroups);
+    }
+    if (force || !tableOpsLoaded) {
+      if (remoteOps != null) storeRemoteTableOps(remoteOps);
+    }
     tableSharedStateLoaded = tableGroupsLoaded && tableOpsLoaded;
   } catch (err) {
     console.warn('Shared table state unavailable; using localStorage fallback.', err);
@@ -7175,7 +7060,9 @@ async function hydrateSharedTableState() {
 
 function applyRealtimeTableChange() {
   tableSharedStateLoaded = false;
-  hydrateSharedTableState().then(() => {
+  tableGroupsLoaded = false;
+  tableOpsLoaded = false;
+  hydrateSharedTableState(true).then(() => {
     if (typeof loadMapTables === 'function' && document.getElementById('at-map')) loadMapTables();
   }).catch(() => {});
 }
@@ -7265,7 +7152,7 @@ function normalizePhoneDigitsWa(raw) {
   return String(raw == null ? '' : raw).replace(/\D/g, '');
 }
 
-/** დადასტურების + Google-ის ბლოკი — WA (შეკვეთა/მცურავი/წინასწარი შეკვეთა), ბმული TIFLIS_GOOGLE_REVIEW_URL */
+/** დადასტურების + Google-ის ბლოკი — WA (შეკვეთა/წინასწარი შეკვეთა), ბმული TIFLIS_GOOGLE_REVIEW_URL */
 const TIFLIS_GOOGLE_REVIEW_URL = 'https://g.page/r/CcKkKc1ypmCgEAE/review';
 
 function googleReviewInviteForWa(lang) {
@@ -7278,22 +7165,6 @@ function googleReviewInviteForWa(lang) {
     return `\n\nВаша бронь подтверждена! ✨\n\nЖдём вас в гости. Мы сделаем всё, чтобы ваш вечер прошёл отлично. 🥂\n\nЕсли всё понравится, короткий отзыв в Google после визита для нас очень важен:\n${u}\n\nДо встречи!`;
   }
   return `\n\nთქვენი ჯავშანი დადასტურებულია! ✨\n\nმოუთმენლად ველოდებით თქვენს მასპინძლობას. ჩვენი გუნდი ყველაფერს გააკეთებს, რომ თქვენმა წვეულებამ საუკეთესოდ ჩაიაროს. 🥂\n\nთუ ყველაფრით კმაყოფილი დარჩებით, ღონისძიების შემდეგ თქვენი შთაბეჭდილების გაზიარება Google-ზე ჩვენთვის ძალიან მნიშვნელოვანი იქნება:\n${u}\n\nშეხვედრამდე!`;
-}
-
-const TIFLIS_WA_BUSINESS_NUMBER = '995568767638';
-
-/** მთავარი გვერდის მცურავი WhatsApp — იგივე Google-მიწვევა, ენის მიხედვით */
-function syncFloatWhatsAppHref() {
-  const el = document.getElementById('tiflis-float-wa');
-  if (!el) return;
-  const L = lang === 'en' || lang === 'ru' ? lang : 'ka';
-  const intro =
-    L === 'en'
-      ? '🍃 Restaurant Tiflis — hello!'
-      : L === 'ru'
-        ? '🍃 Ресторан Тифлис — здравствуйте!'
-        : '🍃 რესტორანი ტიფლისი — გამარჯობა!';
-  el.href = `https://wa.me/${TIFLIS_WA_BUSINESS_NUMBER}?text=${encodeURIComponent(intro)}`;
 }
 
 function formatReservationDateForWa(raw, L) {
@@ -7544,12 +7415,22 @@ function resendGuestReservationWhatsApp() {
 async function submitReservation() {
   const name = g('r-name').value.trim();
   const phone = g('r-phone').value.trim();
-  const date = g('r-date').value;
+  let date = g('r-date').value;
   const time = g('r-time').value;
   if (!name) { alert('გთხოვთ შეიყვანოთ სახელი'); return; }
   if (!phone) { alert('გთხოვთ შეიყვანოთ ტელეფონი'); return; }
   if (!date) { alert('გთხოვთ შეარჩიოთ თარიღი'); return; }
   if (!time) { alert('გთხოვთ შეარჩიოთ დრო'); return; }
+  const todayMin = todayGeorgia();
+  if (date < todayMin) {
+    alert('აღდგენილ ჩეკში თარიღი წარსულშია — გთხოვთ აირჩიოთ დღევანდელი ან მომავალი თარიღი.');
+    if (g('r-date')) {
+      g('r-date').value = todayMin;
+      g('r-date').min = todayMin;
+    }
+    void refreshReservationTableSelectState();
+    return;
+  }
 
   const guests = parseInt(g('r-guests').value)||2;
   const tableSel = g('r-table');
@@ -7577,7 +7458,7 @@ async function submitReservation() {
   const advance_amount = parseFloat(g('f-adv')?.value) || 0;
   const advance_payment = advance_amount > 0 && payment ? payment : null;
 
-  // Save to Supabase
+  // Save to Supabase — მაგიდის სტატუსის განახლება არ უნდა ჩააგდოს უკვე შენახული ჯავშანი
   try {
     const payload = {
       name, phone, date, time, guests, table_id: table||'—', payment, note, status:'pending',
@@ -7599,14 +7480,23 @@ async function submitReservation() {
         throw e1;
       }
     }
-    // update table status
-    if (table) await supaFetch(`/rest/v1/tables?id=eq.${table}`, 'PATCH', { status:'reserved' });
-    if (table) clearTableOperationalState(table);
-    } catch(e) {
-      console.warn('Supabase error', e);
-      alert(e && e.message ? e.message : 'ჯავშანი ვერ შეინახა. გთხოვთ თავიდან სცადოთ.');
-      return;
+  } catch (e) {
+    console.warn('Supabase error', e);
+    alert(e && e.message ? e.message : 'ჯავშანი ვერ შეინახა. გთხოვთ თავიდან სცადოთ.');
+    return;
+  }
+  if (table && table !== '—') {
+    try {
+      await supaFetch(`/rest/v1/tables?id=eq.${encodeURIComponent(table)}`, 'PATCH', { status: 'reserved' });
+    } catch (tableErr) {
+      console.warn('table reserved (non-fatal)', tableErr);
     }
+    try {
+      await clearTableOperationalState(table);
+    } catch (opsErr) {
+      console.warn('clear table ops (non-fatal)', opsErr);
+    }
+  }
 
   lastGuestReservationWaRow = {
     name,
@@ -7816,11 +7706,15 @@ async function init() {
     });
   }
   const refreshTables = () => refreshReservationTableSelectState();
+  refreshTables();
   const afterGroups = (typeof hydrateTableGroups === 'function') ? hydrateTableGroups() : Promise.resolve();
-  afterGroups.finally(() => {
-    const idle = window.requestIdleCallback || function (fn) { setTimeout(fn, 250); };
-    idle(refreshTables, { timeout: 1200 });
-  });
+  afterGroups.finally(refreshTables);
+  if (!document.documentElement.classList.contains('admin-panel-route') && !window.__tiflisTableWatch) {
+    window.__tiflisTableWatch = setInterval(() => {
+      if (document.hidden) return;
+      refreshReservationTableSelectState();
+    }, 8000);
+  }
   initPwaInstallBanner();
   initRevealAnimations();
 }
@@ -8007,7 +7901,7 @@ async function loadOverrides() {
     const menuData = Array.isArray(menuRaw) ? menuRaw.filter(menuItemIsPublicVisible) : [];
     if (menuData.length > 0) {
       MENU.length = 0;
-      menuData.forEach(m => MENU.push({ id: m.id, ka: m.ka, en: m.en, ru: m.ru, p: parseFloat(m.p), cat: Number(m.cat) }));
+      menuData.forEach(m => MENU.push({ id: Number(m.id), ka: m.ka, en: m.en, ru: m.ru, p: parseFloat(m.p), cat: Number(m.cat) }));
     }
   } catch(e) {
     console.warn('Supabase load failed, using local data:', e);
@@ -9269,7 +9163,13 @@ function applySavedCheckRecord(row) {
   setVal('r-name', row.name);
   setVal('r-phone', row.phone);
   setVal('r-email', row.email);
-  setVal('r-date', row.date);
+  const todayMin = todayGeorgia();
+  if (g('r-date')) g('r-date').min = todayMin;
+  let restoreDate = row.date != null ? String(row.date).trim() : '';
+  if (restoreDate && /^\d{4}-\d{2}-\d{2}$/.test(restoreDate) && restoreDate < todayMin) {
+    restoreDate = todayMin;
+  }
+  setVal('r-date', restoreDate);
   setVal('r-time', row.time);
   setVal('r-guests', row.guests);
   setVal('r-payment', row.payment);
@@ -9281,7 +9181,7 @@ function applySavedCheckRecord(row) {
   renderCats();
   renderMenu();
   renderOrder();
-  return { applied, missing };
+  return { applied, missing, preferredTable: row.table ? String(row.table) : '' };
 }
 
 function revealRestoredOrder() {
@@ -9289,6 +9189,26 @@ function revealRestoredOrder() {
   const target = panel || g('menu');
   if (!target) return;
   setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 280);
+}
+
+async function finishRestoredSavedCheck(result) {
+  revealRestoredOrder();
+  try {
+    await refreshReservationTableSelectState();
+  } catch (_) {}
+  const preferred = result && result.preferredTable ? String(result.preferredTable).trim() : '';
+  const sel = g('r-table');
+  if (preferred && sel) {
+    const opt = Array.from(sel.options).find(o => o.value === preferred || o.textContent.trim() === preferred);
+    if (opt && !opt.disabled) sel.value = preferred;
+    else if (opt && opt.disabled) {
+      sel.value = '';
+      alert('ჩეკი დაბრუნდა. მაგიდა ' + preferred + ' ამ დროს დაკავებულია — სხვა მაგიდა ან საათი აირჩიეთ, შემდეგ დაჯავშნეთ.');
+    }
+  }
+  if (result && !result.applied) {
+    alert('ჩეკი დაბრუნდა, მაგრამ კერძები მენიუში აღარ მოიძებნა.');
+  }
 }
 
 function consumeRestoredSavedCheck() {
@@ -9311,10 +9231,7 @@ function consumeRestoredSavedCheck() {
       history.replaceState(null, '', u.pathname + (u.search || '') + '#order');
     }
   } catch (_) {}
-  revealRestoredOrder();
-  if (!result.applied) {
-    alert('ჩეკი დაბრუნდა, მაგრამ კერძები მენიუში აღარ მოიძებნა.');
-  }
+  void finishRestoredSavedCheck(result);
 }
 
 function returnSavedCheck(id) {
@@ -9339,8 +9256,7 @@ function returnSavedCheck(id) {
   }
   const result = applySavedCheckRecord(row);
   if (typeof closeAdminForce === 'function') closeAdminForce();
-  revealRestoredOrder();
-  if (!result.applied) alert('ჩეკი დაბრუნდა, მაგრამ კერძები მენიუში აღარ მოიძებნა.');
+  void finishRestoredSavedCheck(result);
 }
 
 function syncSavedCheckDraftFromDom() {
@@ -10018,12 +9934,16 @@ async function adminDeleteDish(id, opts) {
 function adminRenderCatsList() {
   g('adm-cats-list').innerHTML = CATS.map(c => `
     <div class="admin-cat-card">
-      <label class="admin-filter-label" style="margin:0">რიგი</label>
-      <input type="number" class="admin-input" style="width:52px;margin:0;padding:.3rem .35rem;font-size:.72rem" value="${c.sort_order ?? c.id}" title="sort_order" aria-label="კატეგორიის რიგი ${escapeHtml(c.ka)}" onchange="adminSetCatOrder(${c.id},this.value)">
-      <span class="admin-cat-name">${escapeHtml(c.ka)}</span>
-      <span class="admin-cat-meta">${escapeHtml(c.en || '—')}</span>
-      <span class="admin-cat-meta">${MENU.filter(m=>m.cat===c.id).length} კერძი</span>
-      <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost admin-btn-danger" style="width:auto;margin-left:auto" onclick="adminDeleteCat(${c.id})" aria-label="წაშლა ${escapeHtml(c.ka)}">წაშლა</button>
+      <label class="admin-cat-order">
+        <span>რიგი</span>
+        <input type="number" class="admin-input" value="${c.sort_order ?? c.id}" title="sort_order" aria-label="კატეგორიის რიგი ${escapeHtml(c.ka)}" onchange="adminSetCatOrder(${c.id},this.value)">
+      </label>
+      <div class="admin-cat-titles">
+        <span class="admin-cat-name">${escapeHtml(c.ka)}</span>
+        <span class="admin-cat-meta">${escapeHtml(c.en || '—')}</span>
+      </div>
+      <span class="admin-cat-count">${MENU.filter(m=>m.cat===c.id).length} კერძი</span>
+      <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost admin-btn-danger" onclick="adminDeleteCat(${c.id})" aria-label="წაშლა ${escapeHtml(c.ka)}">წაშლა</button>
     </div>`).join('');
 }
 
@@ -10243,9 +10163,8 @@ async function clearOldReservationsFromTables() {
 /** ჯავშნების სიიდან: confirmed > pending > free */
 function tableOccupancyStateFromReservations(rows, tableId) {
   let state = 'free';
-  const want = String(tableId || '');
   for (const r of rows || []) {
-    if (String(r.table_id || '') !== want || r.status === 'cancelled') continue;
+    if (!reservationCoversTable(r, tableId) || r.status === 'cancelled' || r.status === 'no_show') continue;
     if (r.status === 'confirmed') return 'confirmed';
     if (r.status === 'pending') state = 'pending';
   }
@@ -10262,7 +10181,7 @@ function getTableOps() {
 function saveTableOps(ops) {
   try { const raw = JSON.parse(localStorage.getItem(TABLE_OPS_KEY) || '{}'); const all = raw && typeof raw === 'object' ? raw : {}; all[todayGeorgia()] = ops || {}; localStorage.setItem(TABLE_OPS_KEY, JSON.stringify(all)); }
   catch (_) { localStorage.setItem(TABLE_OPS_KEY, JSON.stringify({ [todayGeorgia()]: ops || {} })); }
-  void persistTableOperationsToSupabase(ops).catch(err => console.warn('table_operations sync failed', err));
+  return persistTableOperationsToSupabase(ops);
 }
 function getTableOperationalRecord(tableId) {
   const value = getTableOps()[String(tableId)];
@@ -10274,7 +10193,7 @@ function setTableOperationalState(tableId, status) {
   const ops = getTableOps();
   if (status === 'cleaning' || status === 'free') ops[String(tableId)] = status;
   else delete ops[String(tableId)];
-  saveTableOps(ops);
+  return saveTableOps(ops);
 }
 function setWalkInTable(tableId, name, guests, extra) {
   const ops = getTableOps();
@@ -10286,9 +10205,9 @@ function setWalkInTable(tableId, name, guests, extra) {
     source: extra && extra.source ? extra.source : 'walk-in',
     reservationId: extra && extra.reservationId ? extra.reservationId : null
   };
-  saveTableOps(ops);
+  return saveTableOps(ops);
 }
-function clearTableOperationalState(tableId) { const ops = getTableOps(); delete ops[String(tableId)]; saveTableOps(ops); }
+function clearTableOperationalState(tableId) { const ops = getTableOps(); delete ops[String(tableId)]; return saveTableOps(ops); }
 function getTableGroups() {
   try {
     const raw = JSON.parse(localStorage.getItem(TABLE_GROUPS_KEY) || '[]');
@@ -10297,14 +10216,57 @@ function getTableGroups() {
 }
 function saveTableGroups(groups) {
   localStorage.setItem(TABLE_GROUPS_KEY, JSON.stringify(groups || []));
-  void persistTableGroupsToSupabase(groups).catch(err => console.warn('table_groups sync failed', err));
+  return persistTableGroupsToSupabase(groups);
 }
 async function releaseTableGroupInSupabase(groupId) {
   const encoded = encodeURIComponent(String(groupId || ''));
   if (!encoded) return;
   await supaFetch(`/rest/v1/table_groups?group_code=eq.${encoded}`, 'PATCH', { status: 'released' }, { prefer: 'return=minimal' });
 }
-function getActiveTableGroupForTable(tableId, groups = getTableGroups()) { return groups.find(gp => gp.status !== 'released' && gp.tableIds.includes(String(tableId))) || null; }
+function isReservationLinkGroup(group) {
+  return !!group && String(group.id || '').startsWith('L-');
+}
+function linkGroupReservationId(group) {
+  return isReservationLinkGroup(group) ? String(group.id).slice(2) : '';
+}
+function isLiveLinkGroup(group, rows = mapFloorRows) {
+  if (!group || group.status === 'released' || !isReservationLinkGroup(group)) return false;
+  const rid = linkGroupReservationId(group);
+  return (rows || []).some(r => String(r.id) === rid && r.status !== 'cancelled' && r.status !== 'no_show');
+}
+function getActiveTableGroupForTable(tableId, groups = getTableGroups()) {
+  return groups.find(gp => gp.status !== 'released' && !isReservationLinkGroup(gp) && (gp.tableIds || []).includes(String(tableId))) || null;
+}
+function linkGroupForReservation(reservationId) {
+  const id = 'L-' + String(reservationId || '');
+  return getTableGroups().find(gp => gp.status !== 'released' && String(gp.id) === id) || null;
+}
+function linkGroupForTable(tableId) {
+  const id = String(tableId || '');
+  return getTableGroups().find(gp => gp.status !== 'released' && isReservationLinkGroup(gp) && (gp.tableIds || []).map(String).includes(id)) || null;
+}
+function reservationCoversTable(reservation, tableId) {
+  if (!reservation) return false;
+  if (String(reservation.table_id || '') === String(tableId || '')) return true;
+  const gp = linkGroupForReservation(reservation.id);
+  return !!(gp && (gp.tableIds || []).map(String).includes(String(tableId || '')));
+}
+function linkedTablesForReservation(reservation) {
+  const gp = reservation && linkGroupForReservation(reservation.id);
+  const primary = String(reservation?.table_id || '');
+  return gp ? (gp.tableIds || []).map(String).filter(id => id && id !== primary) : [];
+}
+function tablesFreeToLink(reservation) {
+  if (!reservation?.id || !reservation.table_id) return [];
+  return MAP_ALL_TABLE_IDS.filter(id => {
+    if (id === String(reservation.table_id)) return false;
+    if (linkedTablesForReservation(reservation).includes(id)) return false;
+    if (getActiveTableGroupForTable(id)) return false;
+    const other = linkGroupForTable(id);
+    if (other && isLiveLinkGroup(other) && String(other.id) !== 'L-' + String(reservation.id)) return false;
+    return !findOverlappingReservation(mapFloorRows, id, reservation.time, reservation.id);
+  });
+}
 function tableGroupVisualState(group, rows) {
   if (group.status === 'blocked') return 'blocked';
   const memberSeated = (group.tableIds || []).some(id => getTableOperationalRecord(id)?.status === 'occupied');
@@ -10368,16 +10330,21 @@ function mapRowsForSlot(rows, slot) {
   return (rows || []).filter(row => mapReservationCoversSlot(row, slot));
 }
 function dayReservationsForTable(rows, tableId) {
-  return (rows || [])
-    .filter(r => String(r.table_id || '') === String(tableId || '') && r.status !== 'cancelled' && r.status !== 'no_show')
-    .slice()
-    .sort((a, b) => (mapSlotMinutes(a.time) || 0) - (mapSlotMinutes(b.time) || 0));
+  const list = (rows || [])
+    .filter(r => reservationCoversTable(r, tableId) && r.status !== 'cancelled' && r.status !== 'no_show')
+    .slice();
+  const seen = new Set();
+  return list.filter(r => {
+    const key = String(r.id);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).sort((a, b) => (mapSlotMinutes(a.time) || 0) - (mapSlotMinutes(b.time) || 0));
 }
 function findOverlappingReservation(rows, tableId, time, excludeId) {
-  const want = String(tableId || '');
   const exclude = excludeId != null ? String(excludeId) : '';
   return (rows || []).find(r => {
-    if (String(r.table_id || '') !== want) return false;
+    if (!reservationCoversTable(r, tableId)) return false;
     if (r.status === 'cancelled' || r.status === 'no_show') return false;
     if (exclude && String(r.id) === exclude) return false;
     return reservationWindowsOverlap(r.time, time);
@@ -10477,7 +10444,7 @@ function mapShortText(value, max) {
   return text.length > limit ? text.slice(0, limit - 1) + '…' : text;
 }
 function mapReservationForTable(tableId, rows) {
-  const list = (rows || []).filter(r => String(r.table_id || '') === String(tableId) && r.status !== 'cancelled');
+  const list = (rows || []).filter(r => reservationCoversTable(r, tableId) && r.status !== 'cancelled' && r.status !== 'no_show');
   return list.find(r => r.status === 'confirmed') || list.find(r => r.status === 'pending') || list[0] || null;
 }
 function mapTableMeta(tableId, rows, groups) {
@@ -10489,6 +10456,7 @@ function mapTableMeta(tableId, rows, groups) {
   let state = 'free';
   if (group) state = tableGroupVisualState(group, rows);
   else if (record) state = record.status;
+  else if (reservation && (reservation.status === 'confirmed' || reservation.status === 'pending')) state = reservation.status;
   else state = tableOccupancyStateFromReservations(rows, tableId);
   return { group, record: group ? null : record, reservation: group ? null : reservation, state, styles: mapTileStyles(state) };
 }
@@ -10594,13 +10562,37 @@ function renderMapSeatPanel() {
         <button type="submit" class="admin-btn admin-btn-sm">ახლავე დასვა</button>
       </form></div>`;
     }
-    if (activeReservation && freeTargets.length) {
+    if (activeReservation && freeTargets.length && String(activeReservation.table_id || '') === id) {
       body += `<div class="map-panel-section"><div class="map-panel-section-title">გადატანა</div>
         <div class="floor-seat-form">
         <label for="map-move-to">სხვა მაგიდა</label>
         <select id="map-move-to" class="admin-input">${freeTargets.map(tableId => `<option value="${tableId}">${tableId}</option>`).join('')}</select>
         <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="moveSelectedReservation()">გადატანა</button>
       </div></div>`;
+    }
+    if (activeReservation && activeReservation.table_id) {
+      const primary = String(activeReservation.table_id);
+      const extras = linkedTablesForReservation(activeReservation);
+      const linkChoices = tablesFreeToLink(activeReservation);
+      const onExtra = id !== primary && extras.includes(id);
+      body += `<div class="map-panel-section"><div class="map-panel-section-title">მიერთებული მაგიდები</div>`;
+      body += `<p class="map-panel-note">ჯავშანი რჩება ${escapeHtml(primary)}-ზე. დამატებული მაგიდა იმავე სტუმარს და საათს იღებს.</p>`;
+      if (extras.length) {
+        body += `<p>${extras.map(tableId => `<button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="detachLinkedTable('${escapeAttr(tableId)}')">${escapeHtml(tableId)} · ჩამოშლა</button>`).join(' ')}</p>`;
+      } else {
+        body += `<p class="map-panel-note">ჯერ მხოლოდ ${escapeHtml(primary)}.</p>`;
+      }
+      if (onExtra) {
+        body += `<button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" onclick="detachLinkedTable('${escapeAttr(id)}')">ამ მაგიდის ჩამოშლა</button>`;
+      }
+      if (linkChoices.length) {
+        body += `<div class="floor-seat-form">
+          <label for="map-link-table">თავისუფალი მაგიდა ამ საათზე</label>
+          <select id="map-link-table" class="admin-input">${linkChoices.map(tableId => `<option value="${tableId}">${tableId}</option>`).join('')}</select>
+          <button type="button" class="admin-btn admin-btn-sm" onclick="attachTableToReservation()">მიერთება</button>
+        </div>`;
+      }
+      body += `</div>`;
     }
   }
   if (meta.state === 'occupied' || meta.state === 'cleaning') {
@@ -10631,11 +10623,21 @@ async function bookMapTable(event) {
     ? ` · წინა ცვლა ჯერ ადგილზეა (${seated.name || 'სტუმარი'})`
     : '';
   try {
-    await supaFetch('/rest/v1/reservations', 'POST', { name, phone, date, time, guests, table_id: id, status: 'pending', payment: '', note: '' });
+    const created = await supaFetch('/rest/v1/reservations', 'POST', { name, phone, date, time, guests, table_id: id, status: 'pending', payment: '', note: '' });
+    const saved = created && typeof created === 'object' ? created : {};
+    mapFloorRows = (mapFloorRows || []).filter(r => String(r.id) !== String(saved.id || ''));
+    mapFloorRows.push({
+      id: saved.id || ('tmp-' + Date.now()),
+      name, phone, guests, time, table_id: id, status: saved.status || 'pending'
+    });
+    mapSelectedSlot = time;
+    renderMapSlots();
+    renderMapFloor();
+    renderMapSeatPanel();
     auditLog('map_book', `${id} · ${date} ${time} · ${name}`);
     adminMsg('map-msg', `✅ ${id} დაიჯავშნა — ${name}, ${time}${seatedNote}`, seatedNote ? 'warn' : 'ok');
-    mapSelectedSlot = time;
-    await loadMapTables();
+    void loadMapTables();
+    void loadReservations();
   } catch (err) {
     adminMsg('map-msg', '❌ ჯავშანი ვერ შეინახა: ' + (err.message || ''), 'err');
   }
@@ -10645,9 +10647,23 @@ async function mapSetReservationStatus(status) {
   const id = meta.reservation && meta.reservation.id;
   if (!id) { adminMsg('map-msg', '❌ ჯავშანი ვერ მოიძებნა', 'err'); return; }
   if (status === 'cancelled' && !confirm('ჯავშანი გაუქმდეს?')) return;
-  await changeResStatus(id, status);
+  try {
+    await changeResStatus(id, status, { quiet: true });
+  } catch (err) {
+    adminMsg('map-msg', '❌ სტატუსი ვერ განახლდა: ' + (err.message || ''), 'err');
+    return;
+  }
+  if (status === 'cancelled') {
+    mapFloorRows = (mapFloorRows || []).filter(r => String(r.id) !== String(id));
+  } else {
+    const row = (mapFloorRows || []).find(r => String(r.id) === String(id));
+    if (row) row.status = status;
+  }
+  renderMapFloor();
+  renderMapSeatPanel();
   adminMsg('map-msg', status === 'confirmed' ? '✅ ჯავშანი დადასტურდა' : '✅ ჯავშანი გაუქმდა', status === 'cancelled' ? 'warn' : 'ok');
-  await loadMapTables();
+  void loadMapTables();
+  void loadReservations();
 }
 async function moveSelectedReservation() {
   const toId = g('map-move-to')?.value;
@@ -10659,7 +10675,97 @@ async function moveSelectedReservation() {
   mapSelectedTableId = toId;
   await transferTableReservation();
 }
-function confirmSeatGuest(event) {
+async function attachTableToReservation() {
+  const meta = mapMetaForBoard(mapSelectedTableId);
+  const reservation = meta.reservation;
+  const extra = String(g('map-link-table')?.value || '').trim();
+  if (!reservation?.id || !reservation.table_id || !extra) return;
+  const primary = String(reservation.table_id);
+  if (!tablesFreeToLink(reservation).includes(extra)) {
+    adminMsg('map-msg', `❌ ${extra} ამ საათზე ვერ მიერთდება`, 'err');
+    return;
+  }
+  const before = getTableGroups();
+  const groups = before.filter(gp => String(gp.id) !== 'L-' + String(reservation.id));
+  const prev = linkGroupForReservation(reservation.id);
+  const tableIds = prev ? prev.tableIds.map(String) : [primary];
+  if (!tableIds.includes(primary)) tableIds.unshift(primary);
+  if (!tableIds.includes(extra)) tableIds.push(extra);
+  groups.push({
+    id: 'L-' + String(reservation.id),
+    name: reservation.name || 'ჯავშანი',
+    tableIds,
+    status: 'merged',
+    createdAt: prev?.createdAt || new Date().toISOString()
+  });
+  try {
+    await saveTableGroups(groups);
+    adminMsg('map-msg', `✅ ${extra} მიერთდა ${primary}-ის ჯავშანზე — ${reservation.name || 'სტუმარი'}`, 'ok');
+    renderMapFloor();
+    renderMapSeatPanel();
+  } catch (err) {
+    localStorage.setItem(TABLE_GROUPS_KEY, JSON.stringify(before));
+    adminMsg('map-msg', '❌ მიერთება ვერ შეინახა: ' + (err.message || ''), 'err');
+  }
+}
+async function detachLinkedTable(extraId) {
+  const extra = String(extraId || '').trim();
+  const gp = linkGroupForTable(extra);
+  if (!gp) return;
+  const rid = linkGroupReservationId(gp);
+  const reservation = (mapFloorRows || []).find(r => String(r.id) === rid) || null;
+  const primary = String(reservation?.table_id || (gp.tableIds || [])[0] || '');
+  if (!extra || extra === primary) {
+    adminMsg('map-msg', 'მთავარი მაგიდა ჯავშანზე რჩება', 'warn');
+    return;
+  }
+  const before = getTableGroups();
+  const tableIds = (gp.tableIds || []).map(String).filter(id => id && id !== extra);
+  if (primary && !tableIds.includes(primary)) tableIds.unshift(primary);
+  const groups = before.filter(g => String(g.id) !== String(gp.id));
+  try {
+    if (tableIds.length >= 2) {
+      groups.push({ ...gp, tableIds });
+      await saveTableGroups(groups);
+    } else {
+      localStorage.setItem(TABLE_GROUPS_KEY, JSON.stringify(groups));
+      await releaseTableGroupInSupabase(gp.id);
+      if (groups.length) await persistTableGroupsToSupabase(groups);
+    }
+    adminMsg('map-msg', `✅ ${extra} ჩამოიშალა. ჯავშანი რჩება ${primary}-ზე`, 'ok');
+    renderMapFloor();
+    renderMapSeatPanel();
+  } catch (err) {
+    localStorage.setItem(TABLE_GROUPS_KEY, JSON.stringify(before));
+    adminMsg('map-msg', '❌ ჩამოშლა ვერ შეინახა: ' + (err.message || ''), 'err');
+  }
+}
+async function rematerializeReservationLinks(reservation, newPrimary, dropTableId) {
+  const gp = linkGroupForReservation(reservation?.id);
+  if (!gp || !reservation?.id) return;
+  const primary = String(newPrimary || reservation.table_id || '');
+  const drop = String(dropTableId || '');
+  const extras = (gp.tableIds || []).map(String).filter(id => id && id !== primary && id !== drop && id !== String(reservation.table_id || ''));
+  const tableIds = primary ? [primary, ...extras.filter(id => id !== primary)] : extras;
+  const groups = getTableGroups().filter(g => String(g.id) !== String(gp.id));
+  if (tableIds.length >= 2) {
+    groups.push({ ...gp, tableIds, name: reservation.name || gp.name || 'ჯავშანი', status: 'merged' });
+    await saveTableGroups(groups);
+  } else {
+    localStorage.setItem(TABLE_GROUPS_KEY, JSON.stringify(groups));
+    await releaseTableGroupInSupabase(gp.id);
+    if (groups.length) await persistTableGroupsToSupabase(groups);
+  }
+}
+async function releaseReservationLinks(reservationId) {
+  const gp = linkGroupForReservation(reservationId);
+  if (!gp) return;
+  const groups = getTableGroups().filter(g => String(g.id) !== String(gp.id));
+  localStorage.setItem(TABLE_GROUPS_KEY, JSON.stringify(groups));
+  await releaseTableGroupInSupabase(gp.id);
+  if (groups.length) await persistTableGroupsToSupabase(groups);
+}
+async function confirmSeatGuest(event) {
   if (event && event.preventDefault) event.preventDefault();
   const id = mapSelectedTableId;
   if (!id) return;
@@ -10668,43 +10774,90 @@ function confirmSeatGuest(event) {
   const name = String(g('map-seat-name')?.value || '').trim() || 'სტუმარი';
   const guests = Math.max(1, Math.min(99, parseInt(g('map-seat-guests')?.value, 10) || 1));
   const ids = meta.group ? meta.group.tableIds.slice() : [id];
-  ids.forEach(tableId => setWalkInTable(tableId, name, guests, {
+  const extra = {
     source: meta.reservation ? 'reservation' : 'walk-in',
     reservationId: meta.reservation?.id || null
-  }));
-  auditLog('guest_seated', `${ids.join('+')} · ${name} · ${guests}`);
-  adminMsg('map-msg', `✅ ${ids.join(' + ')} დაკავებულია — ${name}, ${guests} სტუმარი ადგილზეა`, 'ok');
-  loadMapTables();
+  };
+  try {
+    // One write with all seated tables so Supabase gets a single upsert batch.
+    const ops = getTableOps();
+    ids.forEach(tableId => {
+      ops[String(tableId)] = {
+        status: 'occupied',
+        name: name || 'სტუმარი',
+        guests: Math.max(1, Number(guests) || 1),
+        seatedAt: new Date().toISOString(),
+        source: extra.source,
+        reservationId: extra.reservationId
+      };
+    });
+    const pending = saveTableOps(ops);
+    auditLog('guest_seated', `${ids.join('+')} · ${name} · ${guests}`);
+    renderMapFloor();
+    renderMapSeatPanel();
+    adminMsg('map-msg', `✅ ${ids.join(' + ')} დაკავებულია — ${name}, ${guests} სტუმარი ადგილზეა`, 'ok');
+    await pending;
+  } catch (err) {
+    console.warn('table_operations seat sync failed', err);
+    adminMsg('map-msg', '❌ დასმა ლოკალურად ჩანს, მაგრამ ონლაინ ვერ შეინახა: ' + (err.message || ''), 'err');
+    renderMapFloor();
+  }
+  void loadMapTables();
 }
-function releaseSeatedTable() {
+async function releaseSeatedTable() {
   const id = mapSelectedTableId;
   if (!id) return;
   const meta = mapTableMeta(id, mapFloorRows);
   const ids = meta.group ? meta.group.tableIds.slice() : [id];
-  ids.forEach(tableId => setTableOperationalState(tableId, 'cleaning'));
-  auditLog('table_cleaning', ids.join('+'));
-  adminMsg('map-msg', `🧽 ${ids.join(' + ')} გადავიდა დასუფთავებაზე`, 'warn');
-  loadMapTables();
+  try {
+    const ops = getTableOps();
+    ids.forEach(tableId => { ops[String(tableId)] = 'cleaning'; });
+    const pending = saveTableOps(ops);
+    auditLog('table_cleaning', ids.join('+'));
+    renderMapFloor();
+    renderMapSeatPanel();
+    adminMsg('map-msg', `🧽 ${ids.join(' + ')} გადავიდა დასუფთავებაზე`, 'warn');
+    await pending;
+  } catch (err) {
+    console.warn('table_operations cleaning sync failed', err);
+    adminMsg('map-msg', '❌ დასუფთავება ონლაინ ვერ შეინახა: ' + (err.message || ''), 'err');
+  }
+  void loadMapTables();
 }
-function markTableReady() {
+async function markTableReady() {
   const id = mapSelectedTableId;
   if (!id) return;
   const meta = mapTableMeta(id, mapFloorRows);
   const ids = meta.group ? meta.group.tableIds.slice() : [id];
-  ids.forEach(tableId => setTableOperationalState(tableId, 'free'));
-  auditLog('table_free', ids.join('+'));
-  adminMsg('map-msg', `✅ ${ids.join(' + ')} თავისუფალია`, 'ok');
-  loadMapTables();
+  try {
+    const ops = getTableOps();
+    ids.forEach(tableId => { ops[String(tableId)] = 'free'; });
+    const pending = saveTableOps(ops);
+    auditLog('table_free', ids.join('+'));
+    renderMapFloor();
+    renderMapSeatPanel();
+    adminMsg('map-msg', `✅ ${ids.join(' + ')} თავისუფალია`, 'ok');
+    await pending;
+  } catch (err) {
+    console.warn('table_operations free sync failed', err);
+    adminMsg('map-msg', '❌ განახლება ონლაინ ვერ შეინახა: ' + (err.message || ''), 'err');
+  }
+  void loadMapTables();
 }
 function startWalkInTable(tableId) {
   mapTableClick(tableId);
 }
-function moveTableToCleaning(tableId, source) {
+async function moveTableToCleaning(tableId, source) {
   if (!confirm(`${tableId} სტუმრებმა დატოვეს? მაგიდა გადავიდეს დასუფთავებაზე.`)) return;
-  setTableOperationalState(tableId, 'cleaning');
-  auditLog('table_cleaning', `${tableId}${source ? ` · ${source}` : ''}`);
-  adminMsg('map-msg', `🧽 ${tableId} გადავიდა დასუფთავებაზე.`, 'warn');
-  loadMapTables();
+  try {
+    await setTableOperationalState(tableId, 'cleaning');
+    auditLog('table_cleaning', `${tableId}${source ? ` · ${source}` : ''}`);
+    adminMsg('map-msg', `🧽 ${tableId} გადავიდა დასუფთავებაზე.`, 'warn');
+  } catch (err) {
+    console.warn('table_operations cleaning sync failed', err);
+    adminMsg('map-msg', '❌ დასუფთავება ონლაინ ვერ შეინახა: ' + (err.message || ''), 'err');
+  }
+  await loadMapTables();
 }
 function renderBanquetPicks() {
   const composer = g('banquet-composer');
@@ -10773,7 +10926,7 @@ function populateMapGroupTableSelect() {
   const labels = { H: 'ჰოლი', A: 'ანტრესოლი', V: 'ვერანდა' };
   sel.innerHTML = Object.entries(groups).map(([zone, ids]) => `<optgroup label="${labels[zone]}">${ids.map(id => `<option value="${id}" ${used.has(id) ? 'disabled' : ''}>${id}${used.has(id) ? ' · ჯგუფშია' : ''}</option>`).join('')}</optgroup>`).join('');
 }
-function renderTableGroups(rows = [], groups = getTableGroups()) {
+function renderTableGroups(rows = [], groups = getTableGroups().filter(gp => !isReservationLinkGroup(gp))) {
   const el = g('map-group-list');
   if (!el) return;
   if (!groups.length) { el.innerHTML = '<div class="admin-compact-hint">აქტიური გაერთიანებული ჯგუფი ჯერ არ არის.</div>'; populateMapGroupTableSelect(); return; }
@@ -10792,7 +10945,7 @@ async function createTableGroup() {
   const tableIds = banquetPickIds.slice();
   if (tableIds.length < 2) { adminMsg('map-msg', '❌ აირჩიეთ მინიმუმ ორი თავისუფალი მაგიდა', 'err'); return; }
   const groups = getTableGroups();
-  const used = new Set(groups.flatMap(gp => gp.tableIds || []));
+  const used = new Set(groups.filter(gp => gp.status !== 'released' && (!isReservationLinkGroup(gp) || isLiveLinkGroup(gp))).flatMap(gp => gp.tableIds || []));
   if (tableIds.some(id => used.has(id))) { adminMsg('map-msg', '❌ ერთ-ერთი მაგიდა უკვე სხვა ჯგუფშია', 'err'); return; }
   try {
     const today = todayGeorgia();
@@ -10831,27 +10984,66 @@ async function releaseTableGroup(groupId) {
 function syncReservationGroupOptions() {
   const sel = g('r-table'); if (!sel) return;
   sel.querySelector('[data-table-group-options]')?.remove();
-  const groups = getTableGroups(); if (!groups.length) return;
+  const groups = getTableGroups().filter(gp => !isReservationLinkGroup(gp) && gp.status !== 'released');
+  if (!groups.length) return;
   const og = document.createElement('optgroup'); og.label = '🎉 ბანკეტის ჯგუფები'; og.setAttribute('data-table-group-options','true');
   groups.forEach(gp => { const opt = document.createElement('option'); opt.value = gp.id; opt.textContent = `${gp.id} · ${gp.name || 'ბანკეტი'} (${gp.tableIds.join(' + ')})`; opt.setAttribute('data-table-group','true'); og.appendChild(opt); });
   sel.appendChild(og);
 }
+let mapLoadGen = 0;
+function mapRowsSignature(rows) {
+  return (rows || []).map(r => [r.id, r.table_id, r.status, r.time, r.name, r.guests, r.phone].join(':')).sort().join('|');
+}
 async function loadMapTables() {
+  const gen = ++mapLoadGen;
   try {
     const filterEl = document.getElementById('map-date-filter');
     const today2 = filterEl && filterEl.value ? filterEl.value : todayGeorgia();
     if (filterEl && !filterEl.value) filterEl.value = today2;
-    const reservationsPromise = supaFetch(`/rest/v1/reservations?date=eq.${today2}&status=neq.cancelled&select=id,name,phone,guests,time,table_id,status`);
-    await hydrateSharedTableState();
-    const rsvData = await reservationsPromise;
+    const [rsvData] = await Promise.all([
+      supaFetch(`/rest/v1/reservations?date=eq.${today2}&status=neq.cancelled&select=id,name,phone,guests,time,table_id,status`),
+      hydrateSharedTableState(true)
+    ]);
+    if (gen !== mapLoadGen) return;
     void clearOldReservationsFromTables();
     mapFloorRows = Array.isArray(rsvData) ? rsvData : [];
+    mapLiveSig = mapRowsSignature(mapFloorRows) + '#' + JSON.stringify(getTableOps()) + '#' + JSON.stringify(getTableGroups());
     mapSelectedSlot = pickMapSlotForDate(today2, mapFloorRows);
     renderMapSlots();
     renderMapFloor();
+    if (mapSelectedTableId) renderMapSeatPanel();
+    ensureMapLiveRefresh();
   } catch (e) {
+    if (gen !== mapLoadGen) return;
     adminMsg('map-msg', '❌ Supabase კავშირი ვერ მოხერხდა', 'err');
   }
+}
+
+let mapLiveTimer = null;
+let mapLiveSig = '';
+function ensureMapLiveRefresh() {
+  if (mapLiveTimer) return;
+  mapLiveTimer = setInterval(() => { refreshMapLive(); }, 4000);
+}
+async function refreshMapLive() {
+  const pane = document.getElementById('at-map');
+  if (!pane || !pane.classList.contains('on') || document.hidden) return;
+  const genAtStart = mapLoadGen;
+  const date = (typeof mapBoardDate === 'function' && mapBoardDate()) || todayGeorgia();
+  try {
+    const [rsvData] = await Promise.all([
+      supaFetch(`/rest/v1/reservations?date=eq.${date}&status=neq.cancelled&select=id,name,phone,guests,time,table_id,status`),
+      hydrateSharedTableState(true)
+    ]);
+    if (genAtStart !== mapLoadGen) return;
+    const next = Array.isArray(rsvData) ? rsvData : [];
+    const sig = mapRowsSignature(next) + '#' + JSON.stringify(getTableOps()) + '#' + JSON.stringify(getTableGroups());
+    if (sig === mapLiveSig) return;
+    mapLiveSig = sig;
+    mapFloorRows = next;
+    renderMapFloor();
+    if (mapSelectedTableId) renderMapSeatPanel();
+  } catch (_) {}
 }
 
 function renderMapFloor() {
@@ -10995,8 +11187,18 @@ async function transferTableReservation() {
     adminMsg('map-msg', count > 0 ? `✅ ჯავშანი გადატანილია ${fromId} → ${toId} (${String(moving.time || '').slice(0, 5)})` : `⚠️ ჯავშანი ვერ განახლდა`, count > 0 ? 'ok' : 'warn');
     if (count > 0) {
       auditLog('res_transfer', `${fromId} → ${toId} · ${String(moving.time || '').slice(0, 5)} (${date})`);
+      const moved = (mapFloorRows || []).find(r => String(r.id) === String(moving.id));
+      const oldPrimary = String(moving.table_id || fromId);
+      if (moved) moved.table_id = toId;
+      try {
+        await rematerializeReservationLinks({ ...moving, table_id: toId, name: moving.name }, toId, oldPrimary);
+      } catch (linkErr) {
+        console.warn('transfer link rematerialize', linkErr);
+      }
       mapSelectedTableId = toId;
-      await loadMapTables();
+      renderMapFloor();
+      renderMapSeatPanel();
+      void loadMapTables();
     }
   } catch (e) {
     adminMsg('map-msg', '❌ ტრანსფერი ვერ შესრულდა: ' + (e.message || ''), 'err');
@@ -11009,6 +11211,7 @@ async function refreshReservationTableSelectState() {
   const dateEl = g('r-date');
   const timeEl = g('r-time');
   if (!sel || !dateEl) return;
+  try { await hydrateTableGroups(true); } catch (_) {}
   syncReservationGroupOptions();
   const date = dateEl.value || todayGeorgia();
   const time = String(timeEl?.value || '').slice(0, 5);
@@ -11023,11 +11226,11 @@ async function refreshReservationTableSelectState() {
     MAP_ALL_TABLE_IDS.forEach(id => {
       if (findOverlappingReservation(dayRows, id, time)) busyAtTime.add(id);
     });
-    getTableGroups().forEach(gp => {
+    getTableGroups().filter(gp => !isReservationLinkGroup(gp)).forEach(gp => {
       if ((gp.tableIds || []).some(id => busyAtTime.has(String(id)))) busyAtTime.add(String(gp.id));
     });
   }
-  const groupedIds = new Set(getTableGroups().flatMap(gp => gp.tableIds || []).map(String));
+  const groupedIds = new Set(getTableGroups().filter(gp => !isReservationLinkGroup(gp) && gp.status !== 'released').flatMap(gp => gp.tableIds || []).map(String));
   const prev = sel.value;
   sel.querySelectorAll('option').forEach(opt => {
     const v = (opt.value || opt.textContent || '').trim();
@@ -11320,6 +11523,8 @@ async function resolveReservationRowForAdmin(id) {
   row = filteredReservations.find(r => String(r.id) === sid);
   if (row) return row;
   row = lastResChecksRows.find(r => String(r.id) === sid);
+  if (row) return row;
+  row = (resChecksClientFilterCache.trash || []).find(r => String(r.id) === sid);
   return row || null;
 }
 
@@ -11381,7 +11586,7 @@ function formatPrecheckCellHtml(r) {
   }
   if (!hasCheckLines) {
     if (advBadgeHtml) return advBadgeHtml;
-    return '<span style="color:rgba(245,240,232,.22)">—</span>';
+    return '<span style="color:#8A8680">—</span>';
   }
   const lines = o.items.map(it => {
     const nm = escapeHtml(it.ka || it.en || it.ru || '—');
@@ -11392,16 +11597,16 @@ function formatPrecheckCellHtml(r) {
     const sum = Number.isFinite(lt) ? lt.toFixed(2) : '—';
     const unit = precheckItemUnitPrice(it);
     const unitStr = Number.isFinite(unit) ? unit.toFixed(2) : '—';
-    return `<div style="font-size:.64rem;line-height:1.35;color:rgba(245,240,232,.75)">${nm} <span style="color:rgba(245,240,232,.48)">₾${unitStr}</span> <span style="color:rgba(245,240,232,.4)">×${escapeHtml(String(it.qty))}</span> · <span style="color:rgba(245,240,232,.88)">₾${sum}</span></div>`;
+    return `<div style="font-size:.72rem;line-height:1.4;color:#292929">${nm} <span style="color:#6B6860">₾${unitStr}</span> <span style="color:#8A8680">×${escapeHtml(String(it.qty))}</span> · <span style="color:#1D7F7A">₾${sum}</span></div>`;
   }).join('');
   const tot = o.total != null && Number.isFinite(Number(o.total)) ? Number(o.total).toFixed(2) : null;
   const sub = o.subtotal != null && Number.isFinite(Number(o.subtotal)) ? Number(o.subtotal).toFixed(2) : null;
   let meta = '';
   if (Number(o.disc_pct) > 0 || Number(o.svc_pct) > 0 || Number(o.advance) > 0) {
-    meta = `<div style="font-size:.58rem;color:rgba(245,240,232,.35);margin-top:.2rem">ფასდაკლ. ${o.disc_pct || 0}% · სერვ. ${o.svc_pct || 0}% · ავანს ₾${Number(o.advance || 0).toFixed(2)}</div>`;
+    meta = `<div style="font-size:.64rem;color:#6B6860;margin-top:.2rem">ფასდაკლ. ${o.disc_pct || 0}% · სერვ. ${o.svc_pct || 0}% · ავანს ₾${Number(o.advance || 0).toFixed(2)}</div>`;
   }
   const totalLine = tot != null ? `<div style="margin-top:.35rem;font-weight:600;color:var(--teal);font-size:.7rem">სულ: ₾${tot}</div>` : '';
-  const subLine = sub != null && sub !== tot ? `<div style="font-size:.58rem;color:rgba(245,240,232,.4)">ქვეჯამი: ₾${sub}</div>` : '';
+  const subLine = sub != null && sub !== tot ? `<div style="font-size:.64rem;color:#6B6860">ქვეჯამი: ₾${sub}</div>` : '';
   return `<div>${lines}${meta}${subLine}${totalLine}${advBadgeHtml}</div>`;
 }
 
@@ -11905,8 +12110,8 @@ function ensureResChecksTableDelegation() {
       }
     });
   };
-  bind(g('res-checks-table'));
-  bind(g('res-checks-trash-table'));
+  bind(g('res-checks-grid'));
+  bind(g('res-checks-trash-grid'));
 }
 
 function reservationsQueryUrl(orderParam) {
@@ -11962,6 +12167,7 @@ async function loadReservations() {
         useClientSort = true;
       }
     }
+    try { await hydrateTableGroups(true); } catch (_) {}
     allReservations = useClientSort ? sortReservationsNewestFirst(data || []) : (data || []);
     applyReservationsClientFilter();
   } catch(e) {
@@ -11969,88 +12175,79 @@ async function loadReservations() {
   }
 }
 
+function renderResCheckCard(r, kind) {
+  const idStr = String(r.id);
+  const idAttr = escapeAttr(idStr);
+  const st = r.status || '';
+  const note = r.note || '';
+  const phone = String(r.phone || '').trim();
+  const phoneHref = phone ? 'tel:' + phone.replace(/[^\d+]/g, '') : '';
+  const actions = kind === 'trash'
+    ? `<button type="button" class="admin-btn admin-btn-ghost admin-btn-sm res-wa-resend-btn" data-res-id="${idAttr}" data-wa-pane="checks" title="WhatsApp სტუმართან">WhatsApp</button>
+       <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm res-check-status-btn" data-res-id="${idAttr}" data-res-status="pending" title="აღდგენა (მომლოდინე)">აღდგენა</button>
+       <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm res-check-status-btn" data-res-id="${idAttr}" data-res-status="confirmed" title="დადასტურება">დადასტურება</button>`
+    : `<button type="button" class="admin-btn admin-btn-ghost admin-btn-sm res-wa-resend-btn" data-res-id="${idAttr}" data-wa-pane="checks" title="WhatsApp სტუმართან">WhatsApp</button>
+       <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm res-check-edit-btn" data-res-id="${idAttr}" title="ჩეკის რედაქტირება">რედაქტირება</button>
+       <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm res-check-status-btn" data-res-id="${idAttr}" data-res-status="confirmed" title="დადასტურება">დადასტურება</button>
+       <button type="button" class="admin-btn admin-btn-ghost admin-btn-danger admin-btn-sm res-check-status-btn" data-res-id="${idAttr}" data-res-status="cancelled" title="გაუქმება">გაუქმება</button>`;
+  return `
+    <article class="check-card check-card--${kind}" role="listitem">
+      <header class="check-card-head">
+        <div class="check-card-guest">
+          <h3 class="check-card-name">${escapeHtml(r.name || '—')}</h3>
+          ${phoneHref
+            ? `<a class="check-card-phone" href="${escapeAttr(phoneHref)}">${escapeHtml(phone)}</a>`
+            : `<span class="check-card-phone">${escapeHtml(phone || '—')}</span>`}
+        </div>
+        ${adminStatusBadge(st)}
+      </header>
+      <div class="check-card-meta">
+        <div><span>თარიღი</span><strong>${escapeHtml(r.date || '—')}</strong></div>
+        <div><span>დრო</span><strong>${escapeHtml(r.time || '—')}</strong></div>
+        <div><span>მაგიდა</span><strong>${escapeHtml(r.table_id || '—')}</strong></div>
+        <div><span>სტუმრები</span><strong>${escapeHtml(String(r.guests != null && r.guests !== '' ? r.guests : '—'))}</strong></div>
+      </div>
+      <div class="check-card-adv"><span>ავანსი</span>${formatResChecksAdvanceReadonlyHtml(r)}</div>
+      ${note ? `<p class="check-card-note" title="${escapeAttr(note)}"><strong>შენიშვნა:</strong> ${escapeHtml(note)}</p>` : ''}
+      <div class="check-card-order">${formatPrecheckCellHtml(r)}</div>
+      <div class="check-card-actions">${actions}</div>
+    </article>`;
+}
+
 function renderResChecksTable(data) {
-  const tbody = g('res-checks-tbody');
-  if (!tbody) return;
+  const grid = g('res-checks-grid');
+  if (!grid) return;
   if (!data.length) {
-    tbody.innerHTML =
-      '<tr><td colspan="11" class="checks-empty-cell">ჩანაწერები არ მოიძებნა (ჩეკიანი ჯავშნები ან ცარიელი ფილტრი)</td></tr>';
+    grid.innerHTML = '<div class="checks-grid-empty">ჩანაწერები არ მოიძებნა (ჩეკიანი ჯავშნები ან ცარიელი ფილტრი)</div>';
     const rc = g('res-checks-count');
     if (rc) rc.textContent = '0 აქტიური ჩეკი';
     return;
   }
-  tbody.innerHTML = data.map(r => {
-    const idStr = String(r.id);
-    const idAttr = escapeAttr(idStr);
-    const st = r.status || '';
-    return `
-    <tr class="checks-row checks-row--active">
-      <td class="td-name">${escapeHtml(r.name || '—')}</td>
-      <td class="checks-cell-muted">${escapeHtml(r.phone || '—')}</td>
-      <td style="white-space:nowrap">${escapeHtml(r.date || '—')}</td>
-      <td>${escapeHtml(r.time || '—')}</td>
-      <td style="text-align:center">${escapeHtml(String(r.guests != null && r.guests !== '' ? r.guests : '—'))}</td>
-      <td style="color:var(--gold)">${escapeHtml(r.table_id || '—')}</td>
-      <td style="min-width:6.5rem;vertical-align:middle">${formatResChecksAdvanceReadonlyHtml(r)}</td>
-      <td class="checks-cell-note" title="${escapeAttr(r.note || '')}">${escapeHtml(r.note || '—')}</td>
-      <td style="vertical-align:top;max-width:18rem">${formatPrecheckCellHtml(r)}</td>
-      <td>${adminStatusBadge(st)}</td>
-      <td class="adm-row-actions">
-          <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm res-wa-resend-btn" data-res-id="${idAttr}" data-wa-pane="checks" title="WhatsApp სტუმართან">WhatsApp</button>
-          <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm res-check-edit-btn" data-res-id="${idAttr}" title="ჩეკის რედაქტირება">რედაქტირება</button>
-          <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm res-check-status-btn" data-res-id="${idAttr}" data-res-status="confirmed" title="დადასტურება">დადასტურება</button>
-          <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm res-check-status-btn" data-res-id="${idAttr}" data-res-status="cancelled" title="გაუქმება">გაუქმება</button>
-      </td>
-    </tr>`;
-  }).join('');
+  grid.innerHTML = data.map(r => renderResCheckCard(r, 'active')).join('');
   const rc2 = g('res-checks-count');
   if (rc2) rc2.textContent = `${data.length} აქტიური ჩეკი · გაუქმებული იხ. ურნაში`;
 }
 
 function renderResChecksTrashTable(data) {
-  const tbody = g('res-checks-trash-tbody');
-  if (!tbody) return;
+  const grid = g('res-checks-trash-grid');
+  if (!grid) return;
   if (!data.length) {
-    tbody.innerHTML =
-      '<tr><td colspan="11" class="checks-empty-cell">ურნა ცარიელია (ამ პერიოდში გაუქმებული ჩეკიანი არ არის)</td></tr>';
+    grid.innerHTML = '<div class="checks-grid-empty">ურნა ცარიელია (ამ პერიოდში გაუქმებული ჩეკიანი არ არის)</div>';
     const rc = g('res-checks-trash-count');
     if (rc) rc.textContent = '0 ჩანაწერი ურნაში';
     return;
   }
-  tbody.innerHTML = data.map(r => {
-    const idStr = String(r.id);
-    const idAttr = escapeAttr(idStr);
-    const st = r.status || '';
-    return `
-    <tr class="checks-row checks-row--trash">
-      <td class="td-name">${escapeHtml(r.name || '—')}</td>
-      <td class="checks-cell-muted">${escapeHtml(r.phone || '—')}</td>
-      <td style="white-space:nowrap">${escapeHtml(r.date || '—')}</td>
-      <td>${escapeHtml(r.time || '—')}</td>
-      <td style="text-align:center">${escapeHtml(String(r.guests != null && r.guests !== '' ? r.guests : '—'))}</td>
-      <td style="color:var(--gold)">${escapeHtml(r.table_id || '—')}</td>
-      <td style="min-width:6.5rem;vertical-align:middle">${formatResChecksAdvanceReadonlyHtml(r)}</td>
-      <td class="checks-cell-note" title="${escapeAttr(r.note || '')}">${escapeHtml(r.note || '—')}</td>
-      <td style="vertical-align:top;max-width:18rem">${formatPrecheckCellHtml(r)}</td>
-      <td>${adminStatusBadge(st)}</td>
-      <td class="adm-row-actions">
-          <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm res-wa-resend-btn" data-res-id="${idAttr}" data-wa-pane="checks" title="WhatsApp სტუმართან">WhatsApp</button>
-          <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm res-check-status-btn" data-res-id="${idAttr}" data-res-status="pending" title="აღდგენა (მომლოდინე)">აღდგენა</button>
-          <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm res-check-status-btn" data-res-id="${idAttr}" data-res-status="confirmed" title="დადასტურება">დადასტურება</button>
-      </td>
-    </tr>`;
-  }).join('');
+  grid.innerHTML = data.map(r => renderResCheckCard(r, 'trash')).join('');
   const rc2 = g('res-checks-trash-count');
   if (rc2) rc2.textContent = `${data.length} ჩეკიანი გაუქმებული (ურნა)`;
 }
 
 async function loadReservationsWithChecks() {
-  const tbody = g('res-checks-tbody');
+  const grid = g('res-checks-grid');
   const msgEl = g('res-checks-msg');
-  if (!tbody) return;
+  if (!grid) return;
   resChecksClientFilterCache = { active: null, trash: null };
-  tbody.innerHTML =
-    '<tr><td colspan="11" class="checks-empty-cell">ჩატვირთვა...</td></tr>';
+  grid.innerHTML = '<div class="checks-grid-empty">ჩატვირთვა...</div>';
   if (msgEl) {
     msgEl.textContent = '';
     msgEl.className = 'admin-msg';
@@ -12105,10 +12302,10 @@ async function loadReservationsWithChecks() {
         console.warn('res checks trash fallback', e2);
         resChecksClientFilterCache = { active: withCheck, trash: [] };
         applyResChecksClientFilter();
-        const tt = g('res-checks-trash-tbody');
+        const tt = g('res-checks-trash-grid');
         if (tt) {
           tt.innerHTML =
-            '<tr><td colspan="11" style="text-align:center;color:#e74c3c;padding:1.25rem;font-size:.75rem">❌ ურნა ვერ ჩაიტვირთა — შექმენით ცხრილი <code style="font-size:.65rem">res_checks_trash</code> (იხ. public/sql/res_checks_trash.sql) ან RLS SELECT</td></tr>';
+            '<div class="checks-grid-empty" style="color:#AD4939;font-style:normal">❌ ურნა ვერ ჩაიტვირთა — შექმენით ცხრილი <code style="font-size:.65rem">res_checks_trash</code> (იხ. public/sql/res_checks_trash.sql) ან RLS SELECT</div>';
         }
         const trc = g('res-checks-trash-count');
         if (trc) trc.textContent = '';
@@ -12118,8 +12315,8 @@ async function loadReservationsWithChecks() {
     lastResChecksRows = [];
     resChecksClientFilterCache = { active: null, trash: null };
     renderResChecksTrashTable([]);
-    tbody.innerHTML =
-      '<tr><td colspan="11" style="text-align:center;color:#e74c3c;padding:2rem">❌ Supabase კავშირი ვერ მოხერხდა</td></tr>';
+    grid.innerHTML =
+      '<div class="checks-grid-empty" style="color:#AD4939;font-style:normal">❌ Supabase კავშირი ვერ მოხერხდა</div>';
     if (msgEl) {
       msgEl.textContent = String((e && e.message) || e || '');
       msgEl.className = 'admin-msg err';
@@ -12388,6 +12585,11 @@ function renderResTable(data) {
           <div class="res-card-meta-item res-card-meta-item--table"><span>მაგიდა</span><strong>${escapeHtml(r.table_id || '—')}</strong></div>
           <div class="res-card-meta-item"><span>სტუმრები</span><strong>${escapeHtml(String(r.guests != null && r.guests !== '' ? r.guests : '—'))}</strong></div>
         </div>
+        ${(() => {
+          const extras = (typeof linkedTablesForReservation === 'function') ? linkedTablesForReservation(r) : [];
+          if (!extras.length) return '';
+          return `<p class="res-card-note"><strong>მიერთებული:</strong> ${escapeHtml(extras.join(' · '))}</p>`;
+        })()}
         ${note ? `<p class="res-card-note"><strong>შენიშვნა:</strong> ${escapeHtml(note)}</p>` : ''}
         <div class="res-card-adv res-adv-cell" data-res-adv-row="${idAttr}">
           <span class="res-card-adv-label">ავანსი / გადახდა</span>
@@ -12422,9 +12624,11 @@ function renderResTable(data) {
   if (rc2) rc2.textContent = `${data.length} ჩანაწერი`;
 }
 
-async function changeResStatus(id, status) {
+async function changeResStatus(id, status, opts) {
   try {
-    const row = await resolveReservationRowForAdmin(id);
+    let row = await resolveReservationRowForAdmin(id);
+    const trashSnap = (resChecksClientFilterCache.trash || []).find(r => String(r.id) === String(id)) || null;
+    if (!row && trashSnap) row = trashSnap;
     if (status === 'cancelled') {
       if (row && reservationHasPrecheck(row)) {
         const archived = await tryUpsertResCheckTrashArchive(row);
@@ -12437,21 +12641,45 @@ async function changeResStatus(id, status) {
         }
       }
     }
-    await supaFetch(`/rest/v1/reservations?id=eq.${encodeURIComponent(String(id))}`, 'PATCH', { status });
+    const patch = { status };
+    if (status !== 'cancelled') {
+      const liveMissingCheck = !row || !reservationHasPrecheck(row);
+      if (liveMissingCheck && trashSnap && reservationHasPrecheck(trashSnap)) {
+        patch.precheck_json = trashSnap.precheck_json;
+      }
+    }
+    await supaFetch(`/rest/v1/reservations?id=eq.${encodeURIComponent(String(id))}`, 'PATCH', patch);
     if (status !== 'cancelled') {
       await deleteResCheckTrashByReservationId(id);
+      const tableId = row && row.table_id != null ? String(row.table_id).trim() : '';
+      if (tableId && tableId !== '—') {
+        try {
+          await supaFetch(`/rest/v1/tables?id=eq.${encodeURIComponent(tableId)}`, 'PATCH', { status: 'reserved' });
+        } catch (tableErr) {
+          console.warn('restore table reserved (non-fatal)', tableErr);
+        }
+      }
+    } else {
+      try { await releaseReservationLinks(id); } catch (linkErr) { console.warn('reservation link release', linkErr); }
     }
+    auditLog('res_status', id + ' → ' + status);
+    if (opts && opts.quiet) return;
     await loadReservations();
     await loadReservationsWithChecks();
+    try {
+      if (typeof loadMapTables === 'function') await loadMapTables();
+    } catch (mapErr) {
+      console.warn('map refresh', mapErr);
+    }
     try {
       if (g('dash-today-res-tbody')) await loadDashboardData();
     } catch (dashErr) {
       console.warn('dashboard refresh', dashErr);
     }
-    auditLog('res_status', id + ' → ' + status);
   } catch (e) {
     adminMsg('res-list-msg', '❌ სტატუსი ვერ განახლდა: ' + (e.message || ''), 'err');
     adminMsg('res-checks-msg', '❌ სტატუსი ვერ განახლდა: ' + (e.message || ''), 'err');
+    if (opts && opts.quiet) throw e;
   }
 }
 
