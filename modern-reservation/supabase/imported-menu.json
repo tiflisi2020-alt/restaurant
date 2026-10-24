@@ -1,0 +1,1862 @@
+{
+  "menu": [
+    {
+      "p": 14,
+      "en": "Traditional Georgian Salad",
+      "id": 1,
+      "ka": "ტრადიციული ქართული სალათი",
+      "ru": "Традиционный грузинский салат",
+      "cat": 5,
+      "active": true
+    },
+    {
+      "p": 16,
+      "en": "Traditional Georgian Salad with Walnuts",
+      "id": 2,
+      "ka": "ტრადიციული ქართული სალათი ნიგვზით",
+      "ru": "Традиционный грузинский салат с грецкими орехами",
+      "cat": 5,
+      "active": true
+    },
+    {
+      "p": 17.5,
+      "en": "Chicken Salad",
+      "id": 3,
+      "ka": "ქათმის სალათი",
+      "ru": "Куриный салат",
+      "cat": 5,
+      "active": true
+    },
+    {
+      "p": 20,
+      "en": "Arugula Salad with Honey Dressing",
+      "id": 4,
+      "ka": "რუკოლა სალათი თაფლის სოუსით",
+      "ru": "Салат из рукколы с медовым соусом",
+      "cat": 5,
+      "active": true
+    },
+    {
+      "p": 20,
+      "en": "Tender Veal Tongue Salad",
+      "id": 5,
+      "ka": "ენის სალათი",
+      "ru": "Салат из языка",
+      "cat": 5,
+      "active": true
+    },
+    {
+      "p": 20,
+      "en": "Greek Salad",
+      "id": 6,
+      "ka": "ბერძნული სალათი",
+      "ru": "Греческий салат",
+      "cat": 5,
+      "active": true
+    },
+    {
+      "p": 12,
+      "en": "Assorted Pickled Vegetables",
+      "id": 7,
+      "ka": "მწნილის ასორტი",
+      "ru": "Различные овощные соленья",
+      "cat": 5,
+      "active": true
+    },
+    {
+      "p": 25,
+      "en": "Salad with Buffalo Cheese and Pesto",
+      "id": 8,
+      "ka": "სალათი კამეჩის ყველით და პესტო",
+      "ru": "Салат с сыром «Буффало» и песто",
+      "cat": 5,
+      "active": true
+    },
+    {
+      "p": 24.5,
+      "en": "Caesar Salad with Chicken",
+      "id": 9,
+      "ka": "ცეზარი ქათმით",
+      "ru": "Салат Цезарь с курицей",
+      "cat": 5,
+      "active": true
+    },
+    {
+      "p": 28,
+      "en": "Caramelized Pear Salad with Blue Cheese and Honey Dressing",
+      "id": 10,
+      "ka": "კარამელიზირებული მსხლის სალათი ლურჯი ყველით და თაფლის სოუსით",
+      "ru": "Салат из карамелизованной груши с голубым сыром и медовым соусом",
+      "cat": 5,
+      "active": true
+    },
+    {
+      "p": 37,
+      "en": "Mango and Avocado Salad with Tiger Prawns and Sweet-and-Sour Sauce",
+      "id": 11,
+      "ka": "მანგო ავოკადოს სალათი ვეფხისებრი კრევეტებით და ტკბილ ცხარე სოუსით",
+      "ru": "Салат из манго и авокадо с тигровыми креветками и кисло-сладким соусом",
+      "cat": 5,
+      "active": true
+    },
+    {
+      "p": 39.5,
+      "en": "Caesar Salad with Prawns",
+      "id": 12,
+      "ka": "ცეზარი კრევეტებით",
+      "ru": "Салат Цезарь с креветками",
+      "cat": 5,
+      "active": true
+    },
+    {
+      "p": 4.5,
+      "en": "",
+      "id": 206,
+      "ka": "ზეთისხილი",
+      "ru": "",
+      "cat": 5,
+      "active": true
+    },
+    {
+      "p": 32.5,
+      "en": "Cheese Assortment",
+      "id": 14,
+      "ka": "შერეული ყველის ასორტი",
+      "ru": "Ассорти из сыров",
+      "cat": 13,
+      "active": true
+    },
+    {
+      "p": 22,
+      "en": "Assorted Georgian Phkali on a Board",
+      "id": 15,
+      "ka": "ფხალის დაფა",
+      "ru": "Разнообразные грузинские пхали на доске",
+      "cat": 13,
+      "active": true
+    },
+    {
+      "p": 20,
+      "en": "Crispy Bread with Tomatoes and Garlic",
+      "id": 16,
+      "ka": "ხრაშუნა პური პომიდვრით და ნივრით",
+      "ru": "Хрустящий хлеб с помидорами и чесноком",
+      "cat": 13,
+      "active": true
+    },
+    {
+      "p": 42,
+      "en": "Salted Salmon with Cream Cheese",
+      "id": 17,
+      "ka": "მარილში გამოყვანილი ორაგული კრემ-ყველით",
+      "ru": "Соленый лосось со сливочным сыром",
+      "cat": 13,
+      "active": true
+    },
+    {
+      "p": 16,
+      "en": "Marinated Red Cabbage with Walnuts",
+      "id": 18,
+      "ka": "კომბოსტო ნიგვზით",
+      "ru": "Маринованная красная капуста с грецкими орехами",
+      "cat": 13,
+      "active": true
+    },
+    {
+      "p": 12,
+      "en": "Assorted Fresh Herbs",
+      "id": 19,
+      "ka": "მწვანილის ასორტი",
+      "ru": "Различные травы",
+      "cat": 13,
+      "active": true
+    },
+    {
+      "p": 14,
+      "en": "Imeretian Cheese",
+      "id": 20,
+      "ka": "იმერული ყველი",
+      "ru": "Имеретинский сыр",
+      "cat": 13,
+      "active": true
+    },
+    {
+      "p": 16,
+      "en": "Sulguni Cheese",
+      "id": 21,
+      "ka": "სულგუნი ყველი",
+      "ru": "Сыр Сулугуни",
+      "cat": 13,
+      "active": true
+    },
+    {
+      "p": 13,
+      "en": "Eggplant Rolls with Walnut Paste",
+      "id": 22,
+      "ka": "ბადრიჯანი ნიგვზით",
+      "ru": "Рулетики из баклажанов с ореховой пастой",
+      "cat": 13,
+      "active": true
+    },
+    {
+      "p": 15,
+      "en": "Pickled green tomatoes",
+      "id": 181,
+      "ka": "მწვანე პომიდვრის მწნილი",
+      "ru": "Маринованные зеленые помидоры",
+      "cat": 13,
+      "active": true
+    },
+    {
+      "p": 4.5,
+      "en": "Olives",
+      "id": 199,
+      "ka": "ზეთისხილი",
+      "ru": "Оливки",
+      "cat": 13,
+      "active": true
+    },
+    {
+      "p": 22,
+      "en": "Crispy Greek Tiropita",
+      "id": 24,
+      "ka": "ხრაშუნა ბერძნული ტიროპიტა",
+      "ru": "Хрустящая греческая тиропита",
+      "cat": 23,
+      "active": true
+    },
+    {
+      "p": 18.5,
+      "en": "Crispy Chicken Rolls (Pancakes)",
+      "id": 25,
+      "ka": "ქათმის ხრაშუნა ხვეულა (ბლინები)",
+      "ru": "Хрустящие куриные рулетики (блинчики)",
+      "cat": 23,
+      "active": true
+    },
+    {
+      "p": 17.5,
+      "en": "Pancakes with Meat Roll (4 pieces)",
+      "id": 26,
+      "ka": "ხორციანი ბლინები (4ცალი)",
+      "ru": "Блинчики с мясным рулетом (4 штуки)",
+      "cat": 23,
+      "active": true
+    },
+    {
+      "p": 22,
+      "en": "Pan-Fried Sulguni",
+      "id": 27,
+      "ka": "შემწვარი სულგუნი",
+      "ru": "Жареные на сковороде Сулугуни",
+      "cat": 23,
+      "active": true
+    },
+    {
+      "p": 17,
+      "en": "Vegetable Stew \"Ajapsandali\"",
+      "id": 28,
+      "ka": "აჯაფსანდალი",
+      "ru": "Овощное рагу \"Аджапсандали\"",
+      "cat": 23,
+      "active": true
+    },
+    {
+      "p": 16.5,
+      "en": "Mini Cheburek",
+      "id": 29,
+      "ka": "მინი ჩებურეკი",
+      "ru": "Мини чебурек",
+      "cat": 23,
+      "active": true
+    },
+    {
+      "p": 18,
+      "en": "Cream Soup with Mushrooms",
+      "id": 31,
+      "ka": "სოკოს კრემ სუპი",
+      "ru": "крем-суп с шампиньонами",
+      "cat": 30,
+      "active": true
+    },
+    {
+      "p": 18,
+      "en": "Pumpkin Cream Soup",
+      "id": 32,
+      "ka": "გოგრის კრემ სუპი",
+      "ru": "Тыквенный крем-суп",
+      "cat": 30,
+      "active": true
+    },
+    {
+      "p": 19,
+      "en": "Traditional Chicken Soup \"Chikhirtma\"",
+      "id": 33,
+      "ka": "ტრადიციული ჩიხირთმა",
+      "ru": "Традиционный куриный суп «Чихиртма»",
+      "cat": 30,
+      "active": true
+    },
+    {
+      "p": 19,
+      "en": "Traditional Veal Soup \"Tatarakhni\"",
+      "id": 34,
+      "ka": "თათარიახნი",
+      "ru": "Традиционный суп из телятины «Татариахни»",
+      "cat": 30,
+      "active": true
+    },
+    {
+      "p": 20,
+      "en": "Kharcho Soup",
+      "id": 35,
+      "ka": "სუპ-ხარჩო",
+      "ru": "Суп-Харчо",
+      "cat": 30,
+      "active": true
+    },
+    {
+      "p": 30.5,
+      "en": "Traditional Chakapuli with Veal",
+      "id": 36,
+      "ka": "ჩაქაფული ხბოს ხორცით",
+      "ru": "Традиционный \"Чакапули\" с телятиной",
+      "cat": 30,
+      "active": true
+    },
+    {
+      "p": 37,
+      "en": "Traditional Chakapuli with Lamb",
+      "id": 37,
+      "ka": "ჩაქაფული ბატკნის ხორცით",
+      "ru": "Традиционный \"Чакапули\" с бараниной",
+      "cat": 30,
+      "active": true
+    },
+    {
+      "p": 19.5,
+      "en": "Dumpling Soup",
+      "id": 38,
+      "ka": "პელმენის წვნიანი",
+      "ru": "Суп с пельменями",
+      "cat": 30,
+      "active": true
+    },
+    {
+      "p": 22,
+      "en": "Margherita Pizza",
+      "id": 40,
+      "ka": "პიცა მარგარიტა",
+      "ru": "Пицца Маргарита",
+      "cat": 39,
+      "active": true
+    },
+    {
+      "p": 25,
+      "en": "Pepperoni Pizza",
+      "id": 41,
+      "ka": "პიცა პეპერონი",
+      "ru": "Пицца пепперони",
+      "cat": 39,
+      "active": true
+    },
+    {
+      "p": 20,
+      "en": "Vegetable Pizza",
+      "id": 42,
+      "ka": "პიცა ბოსტნეულის",
+      "ru": "Пицца с овощами",
+      "cat": 39,
+      "active": true
+    },
+    {
+      "p": 28,
+      "en": "Mixed Pizza",
+      "id": 43,
+      "ka": "პიცა მიქსი",
+      "ru": "Пицца Микс",
+      "cat": 39,
+      "active": true
+    },
+    {
+      "p": 28,
+      "en": "Lazuri Khachapuri",
+      "id": 44,
+      "ka": "ლაზური ხაჭაპური",
+      "ru": "Лазури Хачапури",
+      "cat": 39,
+      "active": true
+    },
+    {
+      "p": 27,
+      "en": "Khachapuri on a Skewer",
+      "id": 45,
+      "ka": "ხაჭაპური შამფურზე",
+      "ru": "Хачапури на шампуре",
+      "cat": 39,
+      "active": true
+    },
+    {
+      "p": 16,
+      "en": "Lobiani Khachapuri with Beans",
+      "id": 46,
+      "ka": "ლობიანი",
+      "ru": "«Лобиани» Хачапури с фасолью",
+      "cat": 39,
+      "active": true
+    },
+    {
+      "p": 26,
+      "en": "Lobiani Khachapuri with Beans and Rachian Ham",
+      "id": 47,
+      "ka": "ლობიანი რაჭული ლორით",
+      "ru": "«Лобиани» Хачапури с фасолью, с рачианской ветчиной",
+      "cat": 39,
+      "active": true
+    },
+    {
+      "p": 19,
+      "en": "Adjarian Khachapuri",
+      "id": 48,
+      "ka": "აჭარული ხაჭაპური",
+      "ru": "Аджарский хачапури",
+      "cat": 39,
+      "active": true
+    },
+    {
+      "p": 19.5,
+      "en": "Imeretian Khachapuri",
+      "id": 49,
+      "ka": "ხაჭაპური იმერული",
+      "ru": "Хачапури Имеретинский",
+      "cat": 39,
+      "active": true
+    },
+    {
+      "p": 25,
+      "en": "Mingrelian Khachapuri",
+      "id": 50,
+      "ka": "ხაჭაპური მეგრული",
+      "ru": "Хачапури Мингрельский",
+      "cat": 39,
+      "active": true
+    },
+    {
+      "p": 19,
+      "en": "Gurian Pie with Egg and Cheese Filling",
+      "id": 51,
+      "ka": "გურული ღვეზელი",
+      "ru": "Гурийский пирог с начинкой из яиц и сыра",
+      "cat": 39,
+      "active": true
+    },
+    {
+      "p": 33,
+      "en": "Kubdari from Svaneti with Meat Filling",
+      "id": 52,
+      "ka": "კუბდარი",
+      "ru": "«Кубдари» Хачапури с мясной начинкой",
+      "cat": 39,
+      "active": true
+    },
+    {
+      "p": 2.5,
+      "en": "Corn Flatbreads \"Mchadi\", 1 pc.",
+      "id": 53,
+      "ka": "მჭადი 1ც",
+      "ru": "кукурузные лепешки \"Мчади\", 1 шт.",
+      "cat": 39,
+      "active": true
+    },
+    {
+      "p": 10.5,
+      "en": "Chvishtari — Corn Flatbreads with Cheese Filling",
+      "id": 54,
+      "ka": "ჭვიშტარი",
+      "ru": "«Чвиштари» — кукурузные лепешки с сырной начинкой",
+      "cat": 39,
+      "active": true
+    },
+    {
+      "p": 4,
+      "en": "Bread Assortment",
+      "id": 55,
+      "ka": "პურის ასორტი",
+      "ru": "Ассортимент хлеба",
+      "cat": 39,
+      "active": true
+    },
+    {
+      "p": 4,
+      "en": "Mchadi — Corn Flatbreads Baked in Clay Pan",
+      "id": 56,
+      "ka": "კეცზე მჭადი",
+      "ru": "«Мчади» — кукурузные лепешки, испеченный в глиняной сковороде",
+      "cat": 39,
+      "active": true
+    },
+    {
+      "p": 7,
+      "en": "Ghomi Corn porridge",
+      "id": 196,
+      "ka": "ღომი",
+      "ru": "Мамалыга",
+      "cat": 39,
+      "active": true
+    },
+    {
+      "p": 16.5,
+      "en": "Elarji",
+      "id": 198,
+      "ka": "ელარჯი",
+      "ru": "",
+      "cat": 39,
+      "active": true
+    },
+    {
+      "p": 20,
+      "en": "",
+      "id": 200,
+      "ka": "ტაფის ხაჭაპური",
+      "ru": "",
+      "cat": 39,
+      "active": true
+    },
+    {
+      "p": 4.2,
+      "en": "Tkemali Plum Sauce",
+      "id": 58,
+      "ka": "ტყემალი",
+      "ru": "\"Ткемали\"",
+      "cat": 57,
+      "active": true
+    },
+    {
+      "p": 4.2,
+      "en": "Tomato Sauce",
+      "id": 59,
+      "ka": "საწებელი",
+      "ru": "Томатный соус",
+      "cat": 57,
+      "active": true
+    },
+    {
+      "p": 15,
+      "en": "Walnut Sauce \"Bazhe\" with Spices",
+      "id": 60,
+      "ka": "ბაჟე",
+      "ru": "Соус из грецких орехов «Баже» со специями",
+      "cat": 57,
+      "active": true
+    },
+    {
+      "p": 2.3,
+      "en": "Kalakuri Khinkali with Herbs",
+      "id": 62,
+      "ka": "ხინკალი ქალაქური",
+      "ru": "Хинкали «калакури» с зеленью",
+      "cat": 61,
+      "active": true
+    },
+    {
+      "p": 2.3,
+      "en": "Mtiuluri Khinkali",
+      "id": 63,
+      "ka": "ხინკალი მთიულური",
+      "ru": "Хинкали Мтиулури",
+      "cat": 61,
+      "active": true
+    },
+    {
+      "p": 2.5,
+      "en": "Beef Khinkali",
+      "id": 64,
+      "ka": "ხინკალი საქონლის ხორცით",
+      "ru": "Хинкали с говядиной",
+      "cat": 61,
+      "active": true
+    },
+    {
+      "p": 2.5,
+      "en": "Mushroom Khinkali",
+      "id": 65,
+      "ka": "ხინკალი სოკოთი",
+      "ru": "Хинкали с грибами",
+      "cat": 61,
+      "active": true
+    },
+    {
+      "p": 3,
+      "en": "Cheese Khinkali",
+      "id": 66,
+      "ka": "ხინკალი ყველით",
+      "ru": "Хинкали с сыром",
+      "cat": 61,
+      "active": true
+    },
+    {
+      "p": 2,
+      "en": "Potato Khinkali",
+      "id": 67,
+      "ka": "ხინკალი კარტოფილით",
+      "ru": "Хинкали с картофелем",
+      "cat": 61,
+      "active": true
+    },
+    {
+      "p": 15,
+      "en": "Small Khinkali (15 pieces)",
+      "id": 68,
+      "ka": "ხინკლუკა (15 ცალი)",
+      "ru": "Хинклука (15 штук)",
+      "cat": 61,
+      "active": true
+    },
+    {
+      "p": 22,
+      "en": "Small Khinkali in Creamy Sauce (15 pieces)",
+      "id": 69,
+      "ka": "ხინკლუკა ნაღების სოუსში (15 ცალი)",
+      "ru": "Небольшие хинклуки в сливочном соусе (15 штук)",
+      "cat": 61,
+      "active": true
+    },
+    {
+      "p": 18.5,
+      "en": "Fried Khinkali with Sauce (5 pieces)",
+      "id": 70,
+      "ka": "შემწვარი ხინკალი სოუსით (5ცალი)",
+      "ru": "Жареные хинкали с соусом (5 штук)",
+      "cat": 61,
+      "active": true
+    },
+    {
+      "p": 3.2,
+      "en": "Home-Style Khinkali",
+      "id": 71,
+      "ka": "ხინკალი სახლური",
+      "ru": "Хинкали в домашнем в стиле",
+      "cat": 61,
+      "active": true
+    },
+    {
+      "p": 120,
+      "en": "Lamb Ribs with Ratatouille and Saperavi Sauce",
+      "id": 73,
+      "ka": "ბატკნის ნეკნები რატატუით საფერავის სოუსით",
+      "ru": "Бараньи ребрышки с рататуем и соусом саперави",
+      "cat": 72,
+      "active": true
+    },
+    {
+      "p": 42,
+      "en": "Large Chef Burger",
+      "id": 74,
+      "ka": "შეფ ბურგერი დიდი",
+      "ru": "Большой \"Шеф\" бургер",
+      "cat": 72,
+      "active": true
+    },
+    {
+      "p": 28,
+      "en": "Small Chef Burger",
+      "id": 75,
+      "ka": "შეფ ბურგერი პატარა",
+      "ru": "Маленький \"Шеф\" бургер",
+      "cat": 72,
+      "active": true
+    },
+    {
+      "p": 28,
+      "en": "Mingrelian Homemade Sausage \"Kupati\"",
+      "id": 76,
+      "ka": "მეგრული კუპატი",
+      "ru": "Мингрельская домашняя колбаса «Купати»",
+      "cat": 72,
+      "active": true
+    },
+    {
+      "p": 28,
+      "en": "Open Mingrelian Kupati",
+      "id": 77,
+      "ka": "გახსნილი მეგრული კუპატი",
+      "ru": "Открытое мингрельское «Купати»",
+      "cat": 72,
+      "active": true
+    },
+    {
+      "p": 35,
+      "en": "Veal Shashlik",
+      "id": 78,
+      "ka": "ხბოს მწვადი",
+      "ru": "Шашлык из телятины",
+      "cat": 72,
+      "active": true
+    },
+    {
+      "p": 37,
+      "en": "Veal Ribs with Adjika",
+      "id": 79,
+      "ka": "ხბოს ნეკნი აჯიკით",
+      "ru": "Телячьи ребрышки с аджикой",
+      "cat": 72,
+      "active": true
+    },
+    {
+      "p": 22,
+      "en": "Pork Shashlik",
+      "id": 80,
+      "ka": "ღორის მწვადი",
+      "ru": "Шашлык из свинины",
+      "cat": 72,
+      "active": true
+    },
+    {
+      "p": 24.5,
+      "en": "Pork Rib Shashlik",
+      "id": 81,
+      "ka": "ღორის ნეკნის მწვადი",
+      "ru": "Шашлык из свиных ребрышек",
+      "cat": 72,
+      "active": true
+    },
+    {
+      "p": 37.5,
+      "en": "Pork Loin",
+      "id": 82,
+      "ka": "ღორის ჩალაღაჯი",
+      "ru": "Свиная корейка",
+      "cat": 72,
+      "active": true
+    },
+    {
+      "p": 47.5,
+      "en": "Pork Fillet Mignon Shashlik",
+      "id": 83,
+      "ka": "ღორის სუკის მწვადი",
+      "ru": "Шашлык из свинины Филе миньон",
+      "cat": 72,
+      "active": true
+    },
+    {
+      "p": 19.5,
+      "en": "Chicken Shashlik",
+      "id": 84,
+      "ka": "ქათმის მწვადი",
+      "ru": "Куриный шашлык",
+      "cat": 72,
+      "active": true
+    },
+    {
+      "p": 24,
+      "en": "Grilled Vegetables in Josper",
+      "id": 85,
+      "ka": "ჯოსპერში მომზადებული ბოსტნეული",
+      "ru": "Овощи гриль приготовленные в джоспер",
+      "cat": 72,
+      "active": true
+    },
+    {
+      "p": 18.5,
+      "en": "Kebab",
+      "id": 86,
+      "ka": "ქაბაბი",
+      "ru": "Кебаб",
+      "cat": 72,
+      "active": true
+    },
+    {
+      "p": 18.5,
+      "en": "Chicken Kebab",
+      "id": 87,
+      "ka": "ქათმის ქაბაბი",
+      "ru": "Куриный кебаб",
+      "cat": 72,
+      "active": true
+    },
+    {
+      "p": 25,
+      "en": "Lamb Kebab",
+      "id": 88,
+      "ka": "ცხვრის ქაბაბი",
+      "ru": "Кебаб из баранины",
+      "cat": 72,
+      "active": true
+    },
+    {
+      "p": 300,
+      "en": "Meat BBQ PLATTER",
+      "id": 205,
+      "ka": "ხორცის დაფა",
+      "ru": "Ассорти из шашлыков",
+      "cat": 72,
+      "active": true
+    },
+    {
+      "p": 28,
+      "en": "Carbonara",
+      "id": 90,
+      "ka": "კარბონარა",
+      "ru": "Карбонара",
+      "cat": 89,
+      "active": true
+    },
+    {
+      "p": 18.5,
+      "en": "Arrabbiata",
+      "id": 91,
+      "ka": "ალ არაბიატა",
+      "ru": "Аль Арабиата",
+      "cat": 89,
+      "active": true
+    },
+    {
+      "p": 28,
+      "en": "Risotto with Chicken and Parmesan",
+      "id": 92,
+      "ka": "რიზოტო ქათმით და პარმეზანით",
+      "ru": "Ризотто с курицей и пармезаном",
+      "cat": 89,
+      "active": true
+    },
+    {
+      "p": 47,
+      "en": "Risotto with Prawns and Parmesan",
+      "id": 93,
+      "ka": "რიზოტო კრევეტებით და პარმეზანით",
+      "ru": "Ризотто с креветками и пармезаном",
+      "cat": 89,
+      "active": true
+    },
+    {
+      "p": 18,
+      "en": "Traditional Dolma with Garlic-Sour Cream Sauce",
+      "id": 95,
+      "ka": "ტრადიციული ტოლმა ნივრით და მაწვნით",
+      "ru": "Традиционная долма с чесночно-сметанным соусом",
+      "cat": 94,
+      "active": true
+    },
+    {
+      "p": 15,
+      "en": "Dolma with Vegetables and Rice",
+      "id": 96,
+      "ka": "ტოლმა სამარხვო",
+      "ru": "Долма с овощами и рисом",
+      "cat": 94,
+      "active": true
+    },
+    {
+      "p": 46,
+      "en": "Shkmeruli Chicken in Garlic-Cream Sauce",
+      "id": 97,
+      "ka": "ტრადიციული წიწილა (შქმერული)",
+      "ru": "Цыпленок Шкмерули в чесночно-сливочном соусе",
+      "cat": 94,
+      "active": true
+    },
+    {
+      "p": 30,
+      "en": "Ostri / Braised Veal with Tomatoes",
+      "id": 98,
+      "ka": "ოსტრი / მოთუშული ხბოს ხორცი პომიდვრით",
+      "ru": "«Остри» Рагу / Тушеная телятина с помидорами",
+      "cat": 94,
+      "active": true
+    },
+    {
+      "p": 26.5,
+      "en": "Kaurma of Veal Heart and Liver in Kakhetian Style",
+      "id": 99,
+      "ka": "ხბოს გულ-ღვიძლის ყაურმა კახურად",
+      "ru": "Каурма из телячьего сердца и печени по-кахетински",
+      "cat": 94,
+      "active": true
+    },
+    {
+      "p": 31,
+      "en": "Traditional Khashlama with Garlic Sauce",
+      "id": 100,
+      "ka": "ტრადიციული ხაშლამა ნივრის სოუსით",
+      "ru": "Традиционная хашлама с чесночным соусом",
+      "cat": 94,
+      "active": true
+    },
+    {
+      "p": 15,
+      "en": "Lobio Beans in Pot with Pickles and Mchadi",
+      "id": 101,
+      "ka": "ლობიო ქოთანში",
+      "ru": "«Лобио» Фасоль в горшочке с соленьями, с мчади",
+      "cat": 94,
+      "active": true
+    },
+    {
+      "p": 19.5,
+      "en": "Beans in Pot with Ham",
+      "id": 102,
+      "ka": "ლობიო ქოთანში ლორით",
+      "ru": "Фасоль в горшочке с ветчиной",
+      "cat": 94,
+      "active": true
+    },
+    {
+      "p": 29,
+      "en": "Odjakuri with Pork",
+      "id": 103,
+      "ka": "ოჯახური ღორის ხორცით",
+      "ru": "«Оджакхури» со свининой",
+      "cat": 94,
+      "active": true
+    },
+    {
+      "p": 31,
+      "en": "Odjakuri with Veal",
+      "id": 104,
+      "ka": "ოჯახური ხბოს ხორცით",
+      "ru": "«Оджакхури» с телятиной",
+      "cat": 94,
+      "active": true
+    },
+    {
+      "p": 18.5,
+      "en": "Odjakuri with Mushrooms",
+      "id": 105,
+      "ka": "ოჯახური სოკოთი სამარხვო",
+      "ru": "«Оджакхури» с грибами",
+      "cat": 94,
+      "active": true
+    },
+    {
+      "p": 37,
+      "en": "Fried Veal with Pomegranate",
+      "id": 106,
+      "ka": "ხბოს ხორცო ბროწეულში",
+      "ru": "Жареная телятина с гранатом",
+      "cat": 94,
+      "active": true
+    },
+    {
+      "p": 25,
+      "en": "Chicken Liver with Onion and Spices",
+      "id": 107,
+      "ka": "ქათმის გულ-ღვიძლი",
+      "ru": "Куриная печень с луком и специями",
+      "cat": 94,
+      "active": true
+    },
+    {
+      "p": 125,
+      "en": "Pork Knuckle with Baked Potatoes in Josper",
+      "id": 108,
+      "ka": "კანჭი გამომცხვარი კარტოფილით ჯოსპერში",
+      "ru": "Свиная рулька Запеченным картофелем в хоспере",
+      "cat": 94,
+      "active": true
+    },
+    {
+      "p": 18,
+      "en": "Mushrooms on Clay Pan (Ketsi)",
+      "id": 109,
+      "ka": "ქამა სოკო კეცზე",
+      "ru": "Шампиньоны на глиняной сковороде (кеци)",
+      "cat": 94,
+      "active": true
+    },
+    {
+      "p": 19.5,
+      "en": "Mushroom Ragout",
+      "id": 110,
+      "ka": "სოკოს ჩაშუშული",
+      "ru": "Грибное рагу",
+      "cat": 94,
+      "active": true
+    },
+    {
+      "p": 22,
+      "en": "Mushrooms Stuffed with Cheese and Garlic",
+      "id": 111,
+      "ka": "ქამა სოკო ყველის და ნივრის შიგთავსით",
+      "ru": "Шампиньоны, фаршированные сыром и чесноком",
+      "cat": 94,
+      "active": true
+    },
+    {
+      "p": 35,
+      "en": "Megrelian Kharcho – Meat in Walnut Sauce",
+      "id": 112,
+      "ka": "მეგრული ხარჩო",
+      "ru": "Харчо по-мегрельски-Мясо в ореховом соусе",
+      "cat": 94,
+      "active": true
+    },
+    {
+      "p": 30,
+      "en": "Megrelian Kharcho with Mushrooms",
+      "id": 113,
+      "ka": "მეგრული ხარჩო სოკოთი სამარხვო",
+      "ru": "Харчо по-мегрельски с грибами",
+      "cat": 94,
+      "active": true
+    },
+    {
+      "p": 35,
+      "en": "Chakondrili – Beef Stewed with Onion and Spices",
+      "id": 114,
+      "ka": "ჩაქონდრილი",
+      "ru": "Чакондрили: говядина, тушенная с луком и специями",
+      "cat": 94,
+      "active": true
+    },
+    {
+      "p": 30,
+      "en": "Julienne",
+      "id": 115,
+      "ka": "ჟულიენი",
+      "ru": "Жюльен",
+      "cat": 94,
+      "active": true
+    },
+    {
+      "p": 30,
+      "en": "Traditional Adjarian Sinori Dish",
+      "id": 116,
+      "ka": "სინორი",
+      "ru": "Традиционное блюдо Синори по-аджарски",
+      "cat": 94,
+      "active": true
+    },
+    {
+      "p": 110,
+      "en": "Boiled Range Chicken",
+      "id": 182,
+      "ka": "დედალი მოხარშული",
+      "ru": "Отварная домашняя курица",
+      "cat": 94,
+      "active": true
+    },
+    {
+      "p": 48,
+      "en": "Pan-Fried Village Spring Chicken",
+      "id": 183,
+      "ka": "სოფლის წიწილა ტაბაკა",
+      "ru": "Цыпленок табака (домашний)",
+      "cat": 94,
+      "active": true
+    },
+    {
+      "p": 19.5,
+      "en": "Mushroom Stew",
+      "id": 184,
+      "ka": "სოკოს ჩაშუშული",
+      "ru": "Грибной Чашушули",
+      "cat": 94,
+      "active": true
+    },
+    {
+      "p": 28,
+      "en": "Ostri beef stew with tomato",
+      "id": 191,
+      "ka": "ოსტრი",
+      "ru": "Остри Рагу из говядины с томатами",
+      "cat": 94,
+      "active": true
+    },
+    {
+      "p": 48,
+      "en": "",
+      "id": 202,
+      "ka": "წიწილა ტაბაკა",
+      "ru": "",
+      "cat": 94,
+      "active": true
+    },
+    {
+      "p": 48,
+      "en": "Цепленок в Ореховом соусе",
+      "id": 208,
+      "ka": "წიწილა ბაჟეში",
+      "ru": "Chicken in a walnut sauce",
+      "cat": 94,
+      "active": true
+    },
+    {
+      "p": 23.5,
+      "en": "Trout",
+      "id": 118,
+      "ka": "კალმახი",
+      "ru": "Форель",
+      "cat": 117,
+      "active": true
+    },
+    {
+      "p": 46,
+      "en": "Panko-Crusted Prawns",
+      "id": 119,
+      "ka": "პანკოში შემწვარი კრევეტები",
+      "ru": "Креветки в панировке из сухарей панко",
+      "cat": 117,
+      "active": true
+    },
+    {
+      "p": 45,
+      "en": "Sea Bass with Vegetables in Josper Oven",
+      "id": 120,
+      "ka": "სიბასი ჯოსპერში მომზადებული ბოსტნეულით",
+      "ru": "Морской Сибас с овощами, приготовленный в печи Josper",
+      "cat": 117,
+      "active": true
+    },
+    {
+      "p": 45,
+      "en": "Dorado with Vegetables in Josper Oven",
+      "id": 121,
+      "ka": "დორადო ჯოსპერში მომზადებული ბოსტნეულით",
+      "ru": "Дорадо с овощами, приготовленными в печи Josper",
+      "cat": 117,
+      "active": true
+    },
+    {
+      "p": 67.5,
+      "en": "Salmon Fillet with Asparagus and Hollandaise Sauce",
+      "id": 122,
+      "ka": "ორაგულის ფილე ასპარაგუსით და ჰოლანდიური სოუსით",
+      "ru": "Филе лосося со спаржей и голландским соусом",
+      "cat": 117,
+      "active": true
+    },
+    {
+      "p": 65.5,
+      "en": "Georgian Sturgeon Stuffed with Forest Mushrooms and Creamy Sauce",
+      "id": 123,
+      "ka": "ქართული ზუთხი ფარშირებული ტყის სოკოთი და ნაღების სოუსით",
+      "ru": "Грузинский осетр, фаршированный лесными грибами и сливочным соусом",
+      "cat": 117,
+      "active": true
+    },
+    {
+      "p": 65,
+      "en": "Fried Tiger Prawns with Tomato Salsa and Wine Sauce",
+      "id": 124,
+      "ka": "შემწვარი ვეფხისებრი კრევეტები პომიდვრის სალსით და ღვინის სოუსით",
+      "ru": "Жареные тигровые креветки с томатной сальсой и винным соусом",
+      "cat": 117,
+      "active": true
+    },
+    {
+      "p": 70,
+      "en": "Mussels Steamed in Wine Sauce",
+      "id": 125,
+      "ka": "მოთუშული მიდიები ღვინის სოუსში",
+      "ru": "Мидии, приготовленные на пару в винном соусе",
+      "cat": 117,
+      "active": true
+    },
+    {
+      "p": 10,
+      "en": "French Fries",
+      "id": 127,
+      "ka": "კარტოფილი ფრი",
+      "ru": "Картофель фри",
+      "cat": 126,
+      "active": true
+    },
+    {
+      "p": 15,
+      "en": "Rice with Vegetables",
+      "id": 128,
+      "ka": "ბრინჯი ბოსტნეულით",
+      "ru": "Рис с овощами",
+      "cat": 126,
+      "active": true
+    },
+    {
+      "p": 15,
+      "en": "Mexican-Style Potatoes",
+      "id": 129,
+      "ka": "კარტოფილი მექსიკურად",
+      "ru": "Картофель по-мексикански",
+      "cat": 126,
+      "active": true
+    },
+    {
+      "p": 14,
+      "en": "Country-Style Fried Potatoes",
+      "id": 130,
+      "ka": "კარტოფილი ოჯახურად",
+      "ru": "Жареный картофель по-деревенски",
+      "cat": 126,
+      "active": true
+    },
+    {
+      "p": 18,
+      "en": "Baked Potatoes",
+      "id": 131,
+      "ka": "გამომცხვარი კარტოფილი",
+      "ru": "Запеченный картофель",
+      "cat": 126,
+      "active": true
+    },
+    {
+      "p": 10,
+      "en": "Ice Cream Assortment",
+      "id": 133,
+      "ka": "ნაყინის ასორტიმენტი",
+      "ru": "Ассортимент мороженого",
+      "cat": 132,
+      "active": true
+    },
+    {
+      "p": 32,
+      "en": "Assorted Georgian Dried Fruits and Nuts",
+      "id": 134,
+      "ka": "ქართული ჩირის და თხილის ასორტი",
+      "ru": "Разнообразные грузинские сухофрукты и орехи",
+      "cat": 132,
+      "active": true
+    },
+    {
+      "p": 20,
+      "en": "Fruit Salad",
+      "id": 135,
+      "ka": "ხილის სალათი",
+      "ru": "Фруктовый салат",
+      "cat": 132,
+      "active": true
+    },
+    {
+      "p": 23.5,
+      "en": "Ice Cream with Orange Inside an Orange",
+      "id": 136,
+      "ka": "ნაყინი ფორთოხლით ფორთოხალში",
+      "ru": "Мороженое с апельсином внутри апельсина",
+      "cat": 132,
+      "active": true
+    },
+    {
+      "p": 19.5,
+      "en": "Chocolate Fondant",
+      "id": 137,
+      "ka": "ფონდანტე",
+      "ru": "Шоколадный фондан",
+      "cat": 132,
+      "active": true
+    },
+    {
+      "p": 13.5,
+      "en": "Buffalo Milk Matsoni with Walnut Jam",
+      "id": 138,
+      "ka": "კამეჩის მაწონი კაკლის მურაბით",
+      "ru": "Мацони из буйволиного молока с вареньем из грецких орехов",
+      "cat": 132,
+      "active": true
+    },
+    {
+      "p": 19.5,
+      "en": "French Crepe",
+      "id": 139,
+      "ka": "ფრანგული კრეპი",
+      "ru": "Французский креп",
+      "cat": 132,
+      "active": true
+    },
+    {
+      "p": 35,
+      "en": "Seasonal Fruit Assortment",
+      "id": 140,
+      "ka": "ხილის ასორტი",
+      "ru": "Сезонное фруктовое ассорти",
+      "cat": 132,
+      "active": true
+    },
+    {
+      "p": 4,
+      "en": "Walnut Cake",
+      "id": 141,
+      "ka": "ნამცხვარი ნიგვზით",
+      "ru": "Торт с грецкими орехами",
+      "cat": 132,
+      "active": true
+    },
+    {
+      "p": 13,
+      "en": "Medovik Cake",
+      "id": 142,
+      "ka": "მედოკი",
+      "ru": "Торт «Медок»",
+      "cat": 132,
+      "active": true
+    },
+    {
+      "p": 8,
+      "en": "Czech Baklava",
+      "id": 197,
+      "ka": "ჩეხური ბაქლავა",
+      "ru": "Чешская баклава",
+      "cat": 132,
+      "active": true
+    },
+    {
+      "p": 16.5,
+      "en": "",
+      "id": 204,
+      "ka": "საზამთრო-ნესვი",
+      "ru": "",
+      "cat": 132,
+      "active": true
+    },
+    {
+      "p": 4,
+      "en": "Kazbegi Lemonade",
+      "id": 144,
+      "ka": "ლიმონათი",
+      "ru": "Лимонад Казбеги",
+      "cat": 143,
+      "active": true
+    },
+    {
+      "p": 4,
+      "en": "Nabeglavi Sparkling Water",
+      "id": 145,
+      "ka": "ნაბეღლავი",
+      "ru": "Газированная вода Набеглави",
+      "cat": 143,
+      "active": true
+    },
+    {
+      "p": 4,
+      "en": "Bakhmaro Still Water",
+      "id": 146,
+      "ka": "წყალი ბახმარო",
+      "ru": "Вода «Бахмаро»",
+      "cat": 143,
+      "active": true
+    },
+    {
+      "p": 4,
+      "en": "Borjomi",
+      "id": 147,
+      "ka": "ბორჯომი",
+      "ru": "Боржоми",
+      "cat": 143,
+      "active": true
+    },
+    {
+      "p": 4,
+      "en": "Coca-Cola, Fanta, Sprite",
+      "id": 148,
+      "ka": "კოკა კოლა, ფანტა სპრაიტი",
+      "ru": "Кока-кола, Фанта, Спрайт",
+      "cat": 143,
+      "active": true
+    },
+    {
+      "p": 15,
+      "en": "Natural Juice 1 l",
+      "id": 149,
+      "ka": "წვენი 1ლ",
+      "ru": "Натуральный сок 1 л",
+      "cat": 143,
+      "active": true
+    },
+    {
+      "p": 25,
+      "en": "Hommade Lemonade 1L",
+      "id": 179,
+      "ka": "სახლის ლიმონათი 1ლ",
+      "ru": "Домашний Лимонад 1Л",
+      "cat": 143,
+      "active": true
+    },
+    {
+      "p": 53,
+      "en": "Stolichnaya Vodka 500 ml",
+      "id": 151,
+      "ka": "სტოლიჩნაია 500მლ",
+      "ru": "Водка «Столичная» 500 мл",
+      "cat": 150,
+      "active": true
+    },
+    {
+      "p": 64,
+      "en": "Stolichnaya Vodka 700 ml",
+      "id": 152,
+      "ka": "სტოლიჩნაია 700მლ",
+      "ru": "Водка «Столичная» 700 мл",
+      "cat": 150,
+      "active": true
+    },
+    {
+      "p": 91,
+      "en": "Stolichnaya Vodka 1000 ml",
+      "id": 153,
+      "ka": "სტოლიჩნაია 1000მლ",
+      "ru": "Водка «Столичная» 1000 мл",
+      "cat": 150,
+      "active": true
+    },
+    {
+      "p": 180,
+      "en": "Grey Goose Vodka 500 ml",
+      "id": 154,
+      "ka": "გრეი გუსი 500მლ",
+      "ru": "Водка Grey Goose 500 мл",
+      "cat": 150,
+      "active": true
+    },
+    {
+      "p": 290,
+      "en": "Grey Goose Vodka 1000 ml",
+      "id": 155,
+      "ka": "გრეი გუსი 1000მლ",
+      "ru": "Водка Grey Goose 1000 мл",
+      "cat": 150,
+      "active": true
+    },
+    {
+      "p": 180,
+      "en": "Beluga Noble Vodka 500 ml",
+      "id": 156,
+      "ka": "ბელუგა ნობლი 500მლ",
+      "ru": "Водка Beluga Noble 500 мл",
+      "cat": 150,
+      "active": true
+    },
+    {
+      "p": 290,
+      "en": "Beluga Noble Vodka 1000 ml",
+      "id": 157,
+      "ka": "ბელუგა ნობლი 1000მლ",
+      "ru": "Водка Beluga Noble 1000 мл",
+      "cat": 150,
+      "active": true
+    },
+    {
+      "p": 68,
+      "en": "Absolut Vodka 500 ml",
+      "id": 158,
+      "ka": "აბსოლუტი 500მლ",
+      "ru": "Водка Absolut 500 мл",
+      "cat": 150,
+      "active": true
+    },
+    {
+      "p": 110,
+      "en": "Absolut Vodka 1000 ml",
+      "id": 159,
+      "ka": "აბსოლუტი 1000მლ",
+      "ru": "Водка Absolut 1000 мл",
+      "cat": 150,
+      "active": true
+    },
+    {
+      "p": 55,
+      "en": "Finlandia Vodka 500 ml",
+      "id": 160,
+      "ka": "ფინლანდია 500მლ",
+      "ru": "Водка Финляндия 500 мл",
+      "cat": 150,
+      "active": true
+    },
+    {
+      "p": 110,
+      "en": "Finlandia Vodka 1000 ml",
+      "id": 161,
+      "ka": "ფინლანდია 1000მლ",
+      "ru": "Водка Финляндия 1000 мл",
+      "cat": 150,
+      "active": true
+    },
+    {
+      "p": 62,
+      "en": "Danska Vodka 500 ml",
+      "id": 162,
+      "ka": "დანსკა 500მლ",
+      "ru": "Водка Danska 500 мл",
+      "cat": 150,
+      "active": true
+    },
+    {
+      "p": 100,
+      "en": "Danska Vodka 1000 ml",
+      "id": 163,
+      "ka": "დანსკა 1000მლ",
+      "ru": "Водка Danska 1000 мл",
+      "cat": 150,
+      "active": true
+    },
+    {
+      "p": 63,
+      "en": "Mendeleev Vodka 500 ml",
+      "id": 164,
+      "ka": "მენდელეევი 500მლ",
+      "ru": "Водка Менделеев 500 мл",
+      "cat": 150,
+      "active": true
+    },
+    {
+      "p": 95,
+      "en": "Mendeleev Vodka 1000 ml",
+      "id": 165,
+      "ka": "მენდელეევი 1000მლ",
+      "ru": "Водка Менделеев 1000 мл",
+      "cat": 150,
+      "active": true
+    },
+    {
+      "p": 60,
+      "en": "Petrovskaya Vodka 500 ml",
+      "id": 166,
+      "ka": "პეტროვსკაია 500მლ",
+      "ru": "Водка Петровская 500 мл",
+      "cat": 150,
+      "active": true
+    },
+    {
+      "p": 93,
+      "en": "Petrovskaya Vodka 1000 ml",
+      "id": 167,
+      "ka": "პეტროვსკაია 1000მლ",
+      "ru": "Водка Петровская 1000 мл",
+      "cat": 150,
+      "active": true
+    },
+    {
+      "p": 15,
+      "en": "Dry White Wine Rkatsiteli",
+      "id": 169,
+      "ka": "რქაწითელი",
+      "ru": "Сухое белое вино Ркацители",
+      "cat": 168,
+      "active": true
+    },
+    {
+      "p": 16,
+      "en": "Dry White Wine Manavis Mtsvane",
+      "id": 170,
+      "ka": "მანავის მწვანე",
+      "ru": "Белое сухое вино Манавис Мцване",
+      "cat": 168,
+      "active": true
+    },
+    {
+      "p": 19,
+      "en": "Dry White Wine Kisi",
+      "id": 171,
+      "ka": "ქისი",
+      "ru": "Сухое белое вино Киси",
+      "cat": 168,
+      "active": true
+    },
+    {
+      "p": 30,
+      "en": "Dry White Wine from Tvishi",
+      "id": 172,
+      "ka": "ტვიში",
+      "ru": "Сухое белое вино Твიshi",
+      "cat": 168,
+      "active": true
+    },
+    {
+      "p": 80,
+      "en": "Dry Rosé Wine Chkhaveri",
+      "id": 173,
+      "ka": "ჩხავერი",
+      "ru": "Сухое розовое вино Чхавери",
+      "cat": 168,
+      "active": true
+    },
+    {
+      "p": 35,
+      "en": "Dry Red Wine Saperavi",
+      "id": 174,
+      "ka": "საფერავი",
+      "ru": "Красное сухое вино Саперави",
+      "cat": 168,
+      "active": true
+    },
+    {
+      "p": 40,
+      "en": "Semi-Sweet Red Wine Kindzmarauli",
+      "id": 175,
+      "ka": "ქინძმარაული",
+      "ru": "Полусладкое красное вино Киндзмараули",
+      "cat": 168,
+      "active": true
+    },
+    {
+      "p": 65,
+      "en": "Red Semi-Sweet Wine \"Odzhaleshi\"",
+      "id": 176,
+      "ka": "ოჯალეში",
+      "ru": "Вино красное полусладкое \"Оджалеши\"",
+      "cat": 168,
+      "active": true
+    },
+    {
+      "p": 80,
+      "en": "Semi-Sweet Red Wine \"Khvanchkara\"",
+      "id": 177,
+      "ka": "ხვანჭკარა",
+      "ru": "Полусладкое красное вино «Хванчкара»",
+      "cat": 168,
+      "active": true
+    },
+    {
+      "p": 7,
+      "en": "Saperavi 1glass",
+      "id": 185,
+      "ka": "საფერავი 1ჭიქა",
+      "ru": "Саперави 1СТ",
+      "cat": 168,
+      "active": true
+    },
+    {
+      "p": 30,
+      "en": "",
+      "id": 201,
+      "ka": "საფერავი როზე",
+      "ru": "",
+      "cat": 168,
+      "active": true
+    },
+    {
+      "p": 1.5,
+      "en": "Pizza box",
+      "id": 180,
+      "ka": "პიცის ყუთი",
+      "ru": "Коробка для пиццы",
+      "cat": 178,
+      "active": true
+    },
+    {
+      "p": 4,
+      "en": "Wine service 1L",
+      "id": 186,
+      "ka": "ღვინის შემოტანა 1ლ",
+      "ru": "Винный сервис 1Л",
+      "cat": 178,
+      "active": true
+    },
+    {
+      "p": 1.5,
+      "en": "Salad container",
+      "id": 187,
+      "ka": "კონტეინერი სალათისთვის",
+      "ru": "Контейнер для салатов",
+      "cat": 178,
+      "active": true
+    },
+    {
+      "p": 1.5,
+      "en": "Hot food container",
+      "id": 188,
+      "ka": "კონტეინერი ცხელი კერძებისთვის",
+      "ru": "Контейнер для горячих блюд",
+      "cat": 178,
+      "active": true
+    },
+    {
+      "p": 2,
+      "en": "Khinkali box / container",
+      "id": 189,
+      "ka": "კონტეინერი ხინკლისთვის",
+      "ru": "Контейнер для хинкали",
+      "cat": 178,
+      "active": true
+    },
+    {
+      "p": 1.5,
+      "en": "BBQ / Shashlik container",
+      "id": 190,
+      "ka": "კონტეინერი მწვადისთვის",
+      "ru": "Контейнер для шашлыка",
+      "cat": 178,
+      "active": true
+    },
+    {
+      "p": 3,
+      "en": "Delivery Service 1",
+      "id": 207,
+      "ka": "მიტანის სერვისი 1",
+      "ru": "Сервис доставки",
+      "cat": 178,
+      "active": true
+    },
+    {
+      "p": 4,
+      "en": "Turkish coffee",
+      "id": 192,
+      "ka": "ნალექიანი ყავა",
+      "ru": "Турецкое Кофе",
+      "cat": 179,
+      "active": true
+    },
+    {
+      "p": 6.5,
+      "en": "Americano",
+      "id": 193,
+      "ka": "ამერიკანო",
+      "ru": "Американо",
+      "cat": 179,
+      "active": true
+    },
+    {
+      "p": 7.5,
+      "en": "Cappucino",
+      "id": 194,
+      "ka": "კაპუჩინო",
+      "ru": "Каппучино",
+      "cat": 179,
+      "active": true
+    },
+    {
+      "p": 6.5,
+      "en": "Espresso",
+      "id": 195,
+      "ka": "ესპრესსო",
+      "ru": "Эспрессо",
+      "cat": 179,
+      "active": true
+    },
+    {
+      "p": 12,
+      "en": "",
+      "id": 203,
+      "ka": "ცივი ყავა ნაყინით",
+      "ru": "",
+      "cat": 179,
+      "active": true
+    }
+  ],
+  "source": "supabase",
+  "categories": [
+    {
+      "en": "Salads",
+      "id": 5,
+      "ka": "სალათი",
+      "ru": "Салаты",
+      "sort_order": 0
+    },
+    {
+      "en": "Cold Appetizers",
+      "id": 13,
+      "ka": "ცივი წასახემსებელი",
+      "ru": "Холодная закуска",
+      "sort_order": 1
+    },
+    {
+      "en": "Hot Snacks",
+      "id": 23,
+      "ka": "ცხელი წასახემსებელი",
+      "ru": "Горячий снек",
+      "sort_order": 2
+    },
+    {
+      "en": "Soups",
+      "id": 30,
+      "ka": "წვნიანი",
+      "ru": "Суп",
+      "sort_order": 3
+    },
+    {
+      "en": "Baked Goods",
+      "id": 39,
+      "ka": "ცომეული",
+      "ru": "Выпечка",
+      "sort_order": 4
+    },
+    {
+      "en": "Sauces",
+      "id": 57,
+      "ka": "სოუსი",
+      "ru": "Соус",
+      "sort_order": 5
+    },
+    {
+      "en": "Khinkali",
+      "id": 61,
+      "ka": "ხინკალი",
+      "ru": "Хинкали",
+      "sort_order": 6
+    },
+    {
+      "en": "Grilled Dishes and Josper Oven",
+      "id": 72,
+      "ka": "მაყალზე და ჯოსპერში მომზადებული კერძები",
+      "ru": "Блюда, приготовленные на гриле и в Josper",
+      "sort_order": 7
+    },
+    {
+      "en": "Pasta / Risotto",
+      "id": 89,
+      "ka": "პასტა / რიზოტო",
+      "ru": "Паста / ризотто",
+      "sort_order": 8
+    },
+    {
+      "en": "Hot Dishes",
+      "id": 94,
+      "ka": "ცხელი კერძები",
+      "ru": "Горячие блюда",
+      "sort_order": 9
+    },
+    {
+      "en": "Fish",
+      "id": 117,
+      "ka": "თევზეული",
+      "ru": "Рыба",
+      "sort_order": 10
+    },
+    {
+      "en": "Sides",
+      "id": 126,
+      "ka": "გარნირი",
+      "ru": "Гарнир",
+      "sort_order": 11
+    },
+    {
+      "en": "Dessert",
+      "id": 132,
+      "ka": "დესერტი",
+      "ru": "Десерт",
+      "sort_order": 12
+    },
+    {
+      "en": "Non-Alcoholic Drinks",
+      "id": 143,
+      "ka": "გამაგრილებელი სასმელი",
+      "ru": "Безалкогольный напиток",
+      "sort_order": 13
+    },
+    {
+      "en": "Vodka",
+      "id": 150,
+      "ka": "არაყი",
+      "ru": "Водка",
+      "sort_order": 14
+    },
+    {
+      "en": "House Wine",
+      "id": 168,
+      "ka": "სახლის ღვინო",
+      "ru": "Домашнее вино",
+      "sort_order": 15
+    },
+    {
+      "en": "Lunch Box",
+      "id": 178,
+      "ka": "კონტეინერი",
+      "ru": "Контейнер для еды",
+      "sort_order": 16
+    },
+    {
+      "en": "Coffee/Tea",
+      "id": 179,
+      "ka": "ყავა/ჩაი",
+      "ru": "Кофе/Чай",
+      "sort_order": 17
+    }
+  ],
+  "exported_at": "2026-10-17T18:22:05"
+}
