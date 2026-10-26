@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta http-equiv="Cache-Control" content="max-age=300">
 <link rel="icon" href="favicon.ico" type="image/x-icon" sizes="any">
-<link rel="apple-touch-icon" href="logo.png">
-<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png?v=20261026a">
+<link rel="manifest" href="manifest.webmanifest?v=20261026a">
 <meta name="theme-color" content="#3a948c">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -2049,7 +2049,9 @@ footer {
   width: 3.25rem;
   height: 3.25rem;
   border-radius: var(--ui-radius);
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
+  background: #2a2218;
   flex-shrink: 0;
   box-shadow: 0 6px 18px rgba(42, 34, 24, 0.12);
   border: 1px solid rgba(58, 148, 140, 0.15);
@@ -5977,7 +5979,7 @@ html.admin-panel-route #admin-modal .admin-btn { font-weight:700; letter-spacing
 <div id="pwa-install-banner" class="pwa-install-banner" hidden aria-hidden="true" role="dialog" aria-labelledby="pwa-install-title" aria-modal="false">
   <div class="pwa-install-card">
     <div class="pwa-install-row">
-      <img class="pwa-install-logo" src="logo.png" width="52" height="52" alt="" decoding="async">
+      <img class="pwa-install-logo" src="icon-192.png?v=20261026a" width="52" height="52" alt="" decoding="async">
       <div>
         <div id="pwa-install-title" class="pwa-install-name">TIFLISI RESERVATION</div>
         <p class="pwa-install-sub" data-i18n="pwa_banner_sub">სწრაფი წვდომა მენიუსა და ჯავშანზე — დაამატე მთავარ ეკრანზე</p>
@@ -7591,52 +7593,48 @@ function initPwaInstallBanner() {
     banner.setAttribute('aria-hidden', 'false');
   }
 
-  if (isIOS) {
-    iosSteps.hidden = false;
-    if (btnInstall) btnInstall.style.display = 'none';
-  } else {
-    iosSteps.hidden = true;
-    if (btnInstall) btnInstall.style.display = '';
+  function hideBanner() {
+    sessionStorage.setItem('tiflis_pwa_banner_v1', '1');
+    banner.hidden = true;
+    banner.setAttribute('aria-hidden', 'true');
   }
 
-  window.__tiflisTryShowPwaBanner = function () {
-    if (sessionStorage.getItem('tiflis_pwa_banner_v1')) return;
-    if (!tiflisPwaDeferredPrompt || isIOS) return;
-    reveal();
-  };
-
-  if (tiflisPwaDeferredPrompt && !isIOS) reveal();
-  else {
+  if (isIOS) {
+    /* iOS has no beforeinstallprompt — show Share → Add to Home Screen steps. */
+    if (iosSteps) iosSteps.hidden = false;
+    if (btnInstall) btnInstall.hidden = true;
     setTimeout(function () {
       if (sessionStorage.getItem('tiflis_pwa_banner_v1')) return;
       reveal();
-    }, isIOS ? 1400 : 2600);
-  }
+    }, 1400);
+  } else {
+    /* Android/Chrome: only show when the browser can actually install. */
+    if (iosSteps) iosSteps.hidden = true;
+    if (btnInstall) btnInstall.hidden = false;
 
-  if (!isIOS && btnInstall) {
-    setTimeout(function () {
-      if (!tiflisPwaDeferredPrompt && btnInstall.style.display !== 'none') btnInstall.style.display = 'none';
-    }, 4500);
+    window.__tiflisTryShowPwaBanner = function () {
+      if (sessionStorage.getItem('tiflis_pwa_banner_v1')) return;
+      if (!tiflisPwaDeferredPrompt) return;
+      if (btnInstall) btnInstall.hidden = false;
+      reveal();
+    };
+
+    if (tiflisPwaDeferredPrompt) reveal();
   }
 
   var dismiss = document.getElementById('pwa-install-dismiss');
   if (dismiss) {
-    dismiss.addEventListener('click', function () {
-      sessionStorage.setItem('tiflis_pwa_banner_v1', '1');
-      banner.hidden = true;
-      banner.setAttribute('aria-hidden', 'true');
-    });
+    dismiss.addEventListener('click', hideBanner);
   }
 
   if (btnInstall) {
     btnInstall.addEventListener('click', function () {
       if (!tiflisPwaDeferredPrompt) return;
-      tiflisPwaDeferredPrompt.prompt();
-      tiflisPwaDeferredPrompt.userChoice.catch(function () {});
+      var promptEvent = tiflisPwaDeferredPrompt;
       tiflisPwaDeferredPrompt = null;
-      sessionStorage.setItem('tiflis_pwa_banner_v1', '1');
-      banner.hidden = true;
-      banner.setAttribute('aria-hidden', 'true');
+      promptEvent.prompt();
+      Promise.resolve(promptEvent.userChoice).catch(function () {});
+      hideBanner();
     });
   }
 }
