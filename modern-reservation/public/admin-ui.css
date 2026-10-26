@@ -93,36 +93,74 @@ html.admin-panel-route #admin-modal.adm-app .admin-box {
   justify-content: center;
   padding: 28px 16px;
   background:
-    linear-gradient(180deg, rgba(166, 75, 60, 0.05), transparent 180px),
-    var(--a-canvas) !important;
+    radial-gradient(ellipse 90% 70% at 12% 8%, rgba(58, 148, 140, 0.22), transparent 55%),
+    radial-gradient(ellipse 70% 55% at 92% 88%, rgba(201, 160, 61, 0.1), transparent 50%),
+    linear-gradient(155deg, #1c1712 0%, #2a2218 48%, #151210 100%) !important;
 }
 #admin-modal.adm-app .admin-login {
   position: relative;
   width: min(420px, 100%);
   margin: 0 auto;
-  padding: 32px 28px 26px !important;
-  background: var(--a-card) !important;
-  color: var(--a-ink) !important;
-  border: 1px solid var(--a-line) !important;
-  border-radius: 8px !important;
-  box-shadow: var(--a-shadow) !important;
+  padding: 28px 24px 24px !important;
+  background: #fffdf8 !important;
+  color: #2a2218 !important;
+  border: 1px solid rgba(255, 253, 248, 0.12) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 28px 64px rgba(0, 0, 0, 0.42) !important;
+  text-align: center;
 }
-#admin-modal.adm-app .admin-login .admin-side-mark { margin-bottom: 14px; }
+#admin-modal.adm-app .admin-login-logo {
+  width: 4.5rem;
+  height: 4.5rem;
+  margin: 0 auto 0.75rem;
+  border-radius: 0.85rem;
+  object-fit: contain;
+  background: #2a2218;
+  border: 1px solid rgba(42, 34, 24, 0.1);
+  display: block;
+}
+#admin-modal.adm-app .admin-login-brand {
+  font-family: var(--a-display), 'Cormorant', Georgia, serif !important;
+  font-size: 1.35rem !important;
+  font-weight: 600 !important;
+  color: #2a2218 !important;
+  margin: 0 0 0.35rem !important;
+  letter-spacing: 0.02em;
+}
+#admin-modal.adm-app .admin-login-brand em {
+  font-style: italic;
+  color: #c9a03d;
+  font-weight: 500;
+}
 #admin-modal.adm-app .admin-login h3 {
   margin: 0 0 6px !important;
-  color: var(--a-ink) !important;
+  color: #2a2218 !important;
   font-family: var(--a-display) !important;
-  font-size: 1.55rem !important;
+  font-size: 1.35rem !important;
   font-weight: 650 !important;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
 }
-#admin-modal.adm-app .admin-login p,
+#admin-modal.adm-app .admin-login > p,
 #admin-modal.adm-app .admin-login-divider {
-  color: var(--a-muted) !important;
+  color: #8a7d6e !important;
 }
 #admin-modal.adm-app .admin-login-divider::before,
 #admin-modal.adm-app .admin-login-divider::after {
-  background: var(--a-line) !important;
+  background: rgba(42, 34, 24, 0.12) !important;
+}
+#admin-modal.adm-app .admin-login .admin-btn {
+  background: linear-gradient(135deg, #3a948c 0%, #2a726b 100%) !important;
+  border: none !important;
+  box-shadow: 0 10px 28px rgba(58, 148, 140, 0.32) !important;
+  min-height: 48px;
+}
+#admin-modal.adm-app .admin-login .admin-input {
+  background: #f3eee6 !important;
+  border: 1px solid rgba(42, 34, 24, 0.12) !important;
+  color: #2a2218 !important;
+  border-radius: 0.7rem !important;
+  min-height: 48px;
+  font-size: 16px !important;
 }
 #admin-modal.adm-app .admin-login-close {
   position: absolute;
@@ -130,14 +168,14 @@ html.admin-panel-route #admin-modal.adm-app .admin-box {
   right: 10px;
   width: 34px;
   height: 34px;
-  border: 1px solid var(--a-line);
+  border: 1px solid rgba(42, 34, 24, 0.12);
   border-radius: 6px;
   background: transparent;
-  color: var(--a-ink);
+  color: #2a2218;
   font-size: 1.2rem;
   cursor: pointer;
 }
-#admin-modal.adm-app .admin-login-close:hover { background: var(--a-card-2); }
+#admin-modal.adm-app .admin-login-close:hover { background: #f3eee6; }
 
 /* Shell */
 #admin-modal.adm-app #admin-panel-wrap.admin-shell {

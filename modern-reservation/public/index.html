@@ -4839,7 +4839,7 @@ html.admin-panel-route #admin-modal .admin-btn { font-weight:700; letter-spacing
   .footer-grid { grid-template-columns: 1.4fr 1fr 1fr; gap: 1.5rem; }
 }
 </style>
-<link rel="stylesheet" href="/admin-ui.css?v=20261026crumb1">
+<link rel="stylesheet" href="/admin-ui.css?v=20261026login1">
 </head>
 <body>
 
@@ -5167,8 +5167,9 @@ html.admin-panel-route #admin-modal .admin-btn { font-weight:700; letter-spacing
     <div id="admin-login-wrap">
       <div class="admin-login">
         <button type="button" class="admin-login-close" onclick="closeAdmin()" aria-label="დახურვა">×</button>
-        <div class="admin-side-mark" aria-hidden="true">T</div>
-        <h3>შესვლა</h3>
+        <img class="admin-login-logo" src="icon-192.png" width="72" height="72" alt="" decoding="async" />
+        <p class="admin-login-brand">რესტორანი <em>ტიფლისი</em></p>
+        <h3>ადმინ შესვლა</h3>
         <p>შეიყვანეთ პაროლი. თუ სერვერზე ჩართულია, შეგიძლიათ Google-ითაც შეხვიდეთ.</p>
         <input class="admin-input" type="password" id="admin-pw" placeholder="პაროლი" autocomplete="current-password" onkeydown="if(event.key==='Enter')adminLogin()">
         <button type="button" class="admin-btn" onclick="adminLogin()">შესვლა</button>
