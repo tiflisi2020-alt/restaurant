@@ -828,9 +828,28 @@ section { padding: 6rem 0; }
   box-shadow: 0 0 0 1px rgba(255, 253, 248, 0.6);
 }
 
+#menu .menu-item.selected {
+  background: linear-gradient(135deg, rgba(58, 148, 140, 0.22) 0%, rgba(42, 114, 107, 0.14) 100%);
+  border-color: rgba(58, 148, 140, 0.55);
+  border-left: 3px solid var(--teal);
+  box-shadow: 0 10px 28px rgba(58, 148, 140, 0.14), inset 0 0 0 1px rgba(58, 148, 140, 0.12);
+}
 #menu .menu-item.selected::before {
   opacity: 1;
-  box-shadow: 0 0 0 2px rgba(58, 148, 140, 0.35);
+  box-shadow: 0 0 0 2px rgba(58, 148, 140, 0.45);
+}
+#menu .menu-item.selected .menu-item-name {
+  color: var(--teal-dark);
+}
+#menu .menu-item.selected .qty-btn {
+  border-color: rgba(58, 148, 140, 0.4);
+  color: var(--teal-dark);
+  background: rgba(255, 253, 248, 0.75);
+}
+#menu .menu-item.selected .qty-input {
+  border-color: rgba(58, 148, 140, 0.4);
+  color: var(--teal-dark);
+  background: rgba(255, 253, 248, 0.9);
 }
 
 #menu .menu-item-name {
@@ -1067,8 +1086,10 @@ section { padding: 6rem 0; }
 .menu-item:first-child { border-top: 1px solid var(--border); }
 
 .menu-item.selected {
-  background: rgba(255, 253, 248, 0.92);
+  background: linear-gradient(135deg, rgba(58, 148, 140, 0.2) 0%, rgba(42, 114, 107, 0.12) 100%);
   border-left-color: var(--teal);
+  border-color: rgba(58, 148, 140, 0.45);
+  box-shadow: 0 8px 24px rgba(58, 148, 140, 0.12);
 }
 
 .menu-item:hover {
@@ -4628,6 +4649,13 @@ body { letter-spacing:.005em; }
 .cat-tab { border-radius:999px; padding:.72rem .9rem; }
 .menu-item { border-radius:var(--ui-radius); background:rgba(255,253,249,.72); border:1px solid rgba(223,214,200,.9); box-shadow:0 10px 28px rgba(42,34,24,.045); }
 .menu-item:hover { border-color:rgba(58,148,140,.4); box-shadow:0 16px 32px rgba(42,34,24,.09); }
+.menu-item.selected,
+#menu .menu-item.selected {
+  background: linear-gradient(135deg, rgba(58, 148, 140, 0.24) 0%, rgba(39, 125, 118, 0.14) 100%) !important;
+  border-color: rgba(58, 148, 140, 0.58) !important;
+  border-left: 3px solid var(--teal) !important;
+  box-shadow: 0 12px 30px rgba(58, 148, 140, 0.16) !important;
+}
 .order-panel { border-radius:var(--ui-radius-lg); overflow-x:hidden; overflow-y:auto; max-height:calc(100vh - 6.5rem); -webkit-overflow-scrolling:touch; overscroll-behavior:contain; touch-action:pan-y; scrollbar-width:thin; }
 .order-header { padding-bottom:.85rem; border-bottom:1px solid rgba(223,214,200,.85); }
 .order-btn-main,.form-submit { min-height:50px; border-radius:12px; font-weight:600; box-shadow:0 10px 24px rgba(58,148,140,.16); }
