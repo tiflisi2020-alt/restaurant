@@ -4837,7 +4837,7 @@ html.admin-panel-route #admin-modal .admin-btn { font-weight:700; letter-spacing
   .footer-grid { grid-template-columns: 1.4fr 1fr 1fr; gap: 1.5rem; }
 }
 </style>
-<link rel="stylesheet" href="/admin-ui.css?v=20261018cats2">
+<link rel="stylesheet" href="/admin-ui.css?v=20261026mobile1">
 </head>
 <body>
 
@@ -5584,15 +5584,15 @@ html.admin-panel-route #admin-modal .admin-btn { font-weight:700; letter-spacing
         <div class="admin-filter-row res-board-filters">
           <div class="admin-filter-field">
             <span class="admin-filter-label">დან</span>
-            <input type="date" id="res-filter-from" class="admin-input" style="width:auto;margin:0;padding:.35rem .55rem;font-size:.74rem">
+            <input type="date" id="res-filter-from" class="admin-input" style="width:auto;margin:0">
           </div>
           <div class="admin-filter-field">
             <span class="admin-filter-label">მდე</span>
-            <input type="date" id="res-filter-to" class="admin-input" style="width:auto;margin:0;padding:.35rem .55rem;font-size:.74rem">
+            <input type="date" id="res-filter-to" class="admin-input" style="width:auto;margin:0">
           </div>
           <div class="admin-filter-field">
             <span class="admin-filter-label">სტატუსი</span>
-            <select id="res-filter-status" class="admin-input" style="width:auto;margin:0;padding:.35rem .55rem;font-size:.74rem" onchange="applyResFilter()">
+            <select id="res-filter-status" class="admin-input" style="width:auto;margin:0" onchange="applyResFilter()">
               <option value="">ყველა</option>
               <option value="pending">მომლოდინე</option>
               <option value="confirmed">დადასტურებული</option>
@@ -5601,7 +5601,7 @@ html.admin-panel-route #admin-modal .admin-btn { font-weight:700; letter-spacing
           </div>
           <div class="admin-filter-field admin-reservation-search-field">
             <span class="admin-filter-label">ძებნა</span>
-            <input type="search" id="res-filter-search" class="admin-input" placeholder="სახელი ან ტელეფონი" style="width:13rem;margin:0;padding:.35rem .55rem;font-size:.74rem" oninput="applyReservationsClientFilter()">
+            <input type="search" id="res-filter-search" class="admin-input" placeholder="სახელი ან ტელეფონი" style="width:13rem;margin:0" oninput="applyReservationsClientFilter()">
           </div>
           <button type="button" class="admin-btn admin-btn-sm" style="width:auto" onclick="loadReservations()">ჩვენება</button>
           <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" style="width:auto" onclick="exportResPDF()">PDF</button>
@@ -5636,15 +5636,15 @@ html.admin-panel-route #admin-modal .admin-btn { font-weight:700; letter-spacing
           <div class="admin-filter-row checks-board-filters">
             <div class="admin-filter-field">
               <span class="admin-filter-label">დან</span>
-              <input type="date" id="res-checks-filter-from" class="admin-input" style="width:auto;margin:0;padding:.35rem .55rem;font-size:.74rem">
+              <input type="date" id="res-checks-filter-from" class="admin-input" style="width:auto;margin:0">
             </div>
             <div class="admin-filter-field">
               <span class="admin-filter-label">მდე</span>
-              <input type="date" id="res-checks-filter-to" class="admin-input" style="width:auto;margin:0;padding:.35rem .55rem;font-size:.74rem">
+              <input type="date" id="res-checks-filter-to" class="admin-input" style="width:auto;margin:0">
             </div>
             <div class="admin-filter-field">
               <span class="admin-filter-label">სტატუსი</span>
-              <select id="res-checks-filter-status" class="admin-input" style="width:auto;margin:0;padding:.35rem .55rem;font-size:.74rem" onchange="loadReservationsWithChecks()">
+              <select id="res-checks-filter-status" class="admin-input" style="width:auto;margin:0" onchange="loadReservationsWithChecks()">
                 <option value="">ყველა (აქტიური ჩეკი)</option>
                 <option value="pending">მომლოდინე</option>
                 <option value="confirmed">დადასტურებული</option>
@@ -5652,7 +5652,7 @@ html.admin-panel-route #admin-modal .admin-btn { font-weight:700; letter-spacing
             </div>
             <div class="admin-filter-field checks-search-field">
               <span class="admin-filter-label">ძებნა</span>
-              <input type="search" id="res-checks-filter-search" class="admin-input" placeholder="სახელი, ტელეფონი, მაგიდა, ჩეკის ტექსტი…" style="width:100%;min-width:8rem;margin:0;padding:.35rem .55rem;font-size:.74rem" oninput="applyResChecksClientFilter()">
+              <input type="search" id="res-checks-filter-search" class="admin-input" placeholder="სახელი, ტელეფონი, მაგიდა, ჩეკის ტექსტი…" style="width:100%;min-width:8rem;margin:0" oninput="applyResChecksClientFilter()">
             </div>
             <button type="button" class="admin-btn admin-btn-sm" style="width:auto" onclick="loadReservationsWithChecks()">ჩვენება</button>
             <button type="button" class="admin-btn admin-btn-sm admin-btn-ghost" style="width:auto" onclick="printResChecksReport()">🖨 ბეჭდვა</button>

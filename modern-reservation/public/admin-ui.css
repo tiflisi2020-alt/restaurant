@@ -1646,6 +1646,7 @@ html.admin-panel-route #admin-modal.adm-app .admin-box {
   }
 }
 @media (max-width: 640px) {
+  #admin-modal.adm-app { --a-control: 44px; }
   #admin-modal.adm-app .admin-brand-tagline { display: none; }
   #admin-modal.adm-app .admin-top h2 { font-size: 1.2rem !important; }
   #admin-modal.adm-app .admin-form-grid { grid-template-columns: 1fr !important; }
@@ -1660,23 +1661,62 @@ html.admin-panel-route #admin-modal.adm-app .admin-box {
   #admin-modal.adm-app .admin-filter-row select,
   #admin-modal.adm-app .admin-search,
   #admin-modal.adm-app .admin-cat-filter { width: 100% !important; min-width: 0 !important; }
+  /* 16px+ — iOS Safari არ იზუმავს ფოკუსზე (inline font-size-საც ამარცხებს) */
   #admin-modal.adm-app .admin-input,
   #admin-modal.adm-app .admin-search,
+  #admin-modal.adm-app .admin-cat-filter,
   #admin-modal.adm-app .admin-field input,
   #admin-modal.adm-app .admin-field select,
   #admin-modal.adm-app .admin-field textarea,
   #admin-modal.adm-app .admin-filter-row input,
-  #admin-modal.adm-app .admin-filter-row select {
+  #admin-modal.adm-app .admin-filter-row select,
+  #admin-modal.adm-app .admin-login input,
+  #admin-modal.adm-app #admin-pw {
     min-height: 44px !important;
     font-size: 16px !important;
+    font: 450 16px/1.35 var(--a-font) !important;
   }
-  #admin-modal.adm-app .dashboard-grid { grid-template-columns: 1fr 1fr !important; }
-  #admin-modal.adm-app .admin-logout { padding: 0 10px !important; }
-  #admin-modal.adm-app .dashboard-grid,
+  #admin-modal.adm-app .admin-logout,
+  #admin-modal.adm-app .admin-close,
+  #admin-modal.adm-app .admin-nav-toggle,
+  #admin-modal.adm-app .admin-sidebar-collapse,
+  #admin-modal.adm-app .map-panel-close {
+    min-width: 44px !important;
+    min-height: 44px !important;
+    width: 44px !important;
+    height: 44px !important;
+  }
+  #admin-modal.adm-app .admin-logout {
+    width: auto !important;
+    padding: 0 12px !important;
+  }
+  #admin-modal.adm-app .admin-sidebar .admin-tab {
+    min-height: 44px !important;
+  }
+  #admin-modal.adm-app .admin-btn,
+  #admin-modal.adm-app .admin-btn-sm,
+  #admin-modal.adm-app .check-card-actions .admin-btn,
+  #admin-modal.adm-app .dashboard-quicklinks .admin-btn {
+    min-height: 44px !important;
+  }
+  #admin-modal.adm-app .dashboard-quicklinks {
+    justify-content: stretch !important;
+    width: 100%;
+  }
+  #admin-modal.adm-app .dashboard-quicklinks .admin-btn {
+    flex: 1 1 calc(50% - 6px);
+  }
+  /* დაშბორდი 2 სვეტი; მხოლოდ adm-split იკეცება ერთ სვეტად */
+  #admin-modal.adm-app .dashboard-grid { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
   #admin-modal.adm-app .adm-split { grid-template-columns: 1fr !important; }
   #admin-modal.adm-app .admin-sidebar { width: min(86vw, 300px) !important; }
   #admin-modal.adm-app .admin-table { min-width: 720px; }
+  #admin-modal.adm-app .admin-table-wrap {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+  }
   #admin-modal.adm-app .adm-legend { margin-left: 0; }
+  #admin-modal.adm-app .floor-layout { gap: 10px; }
 }
 /* Phone and small-tablet landscape: keep the sidebar and multi-column workspace. */
 @media (orientation: landscape) and (min-width: 700px) and (max-height: 560px) {
