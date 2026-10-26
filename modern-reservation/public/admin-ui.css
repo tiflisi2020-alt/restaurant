@@ -1636,8 +1636,19 @@ html.admin-panel-route #admin-modal.adm-app .admin-box {
   #admin-modal.adm-app .admin-top-clock { display: none; }
   #admin-modal.adm-app .admin-pane { padding: 4px 16px 28px !important; width: 100% !important; }
   #admin-modal.adm-app .dashboard-grid { grid-template-columns: 1fr 1fr !important; }
-  #admin-modal.adm-app .admin-crumb-sep,
-  #admin-modal.adm-app #admin-crumb-page { display: none; }
+  /* მობილური: სათაური უკვე აჩვენებს სექციას — crumb/კიქერი აღარ ედება h2-ს */
+  #admin-modal.adm-app .admin-crumb { display: none !important; }
+  #admin-modal.adm-app .admin-top-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+  }
+  #admin-modal.adm-app .admin-top h2,
+  #admin-modal.adm-app #admin-modal-title {
+    margin: 0 !important;
+    line-height: 1.2 !important;
+  }
   #admin-modal.adm-app .dashboard-header { align-items: stretch; flex-direction: column; }
   #admin-modal.adm-app .admin-shell.nav-open .admin-nav-toggle {
     background: var(--a-teal-deep) !important;
@@ -1648,6 +1659,11 @@ html.admin-panel-route #admin-modal.adm-app .admin-box {
 @media (max-width: 640px) {
   #admin-modal.adm-app { --a-control: 44px; }
   #admin-modal.adm-app .admin-brand-tagline { display: none; }
+  #admin-modal.adm-app .admin-stay-hint {
+    margin-top: 0.15rem !important;
+    font-size: 0.72rem !important;
+    line-height: 1.35 !important;
+  }
   #admin-modal.adm-app .admin-top h2 { font-size: 1.2rem !important; }
   #admin-modal.adm-app .admin-form-grid { grid-template-columns: 1fr !important; }
   #admin-modal.adm-app .admin-field.span2,
