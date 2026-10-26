@@ -115,7 +115,7 @@ html.admin-panel-route #admin-modal.adm-app .admin-box {
   margin: 0 auto 0.75rem;
   border-radius: 0.85rem;
   object-fit: contain;
-  background: #2a2218;
+  background: #fffdf8;
   border: 1px solid rgba(42, 34, 24, 0.1);
   display: block;
 }
