@@ -2142,7 +2142,8 @@ footer {
   outline: 2px solid var(--teal);
   outline-offset: 2px;
 }
-@media (min-width: 768px) {
+/* Desktop only — tablets (iPad / Android) should still see the install banner */
+@media (min-width: 1101px) and (hover: hover) and (pointer: fine) {
   .pwa-install-banner { display: none !important; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -2238,25 +2239,95 @@ footer {
 
 .menu-top-bar .lang-toggle { margin-bottom: 0; }
 
-/* ===== MOBILE ===== */
+/* ===== iPad / large Android tablets (incl. 1024 portrait) — hero + iOS zoom ===== */
+@media (max-width: 1100px) {
+  .hero {
+    height: auto;
+    min-height: 100svh;
+    overflow: hidden;
+  }
+  .hero-content {
+    width: 100%;
+    max-width: min(720px, 100%);
+    box-sizing: border-box;
+    padding: 1.5rem 1.5rem;
+    padding-top: calc(6.25rem + env(safe-area-inset-top, 0px));
+  }
+  .hero-title {
+    font-size: clamp(2.4rem, 7.2vw, 3.85rem) !important;
+    line-height: 1.08;
+    max-width: 100%;
+  }
+  .hero-eyebrow {
+    max-width: 100%;
+    box-sizing: border-box;
+    letter-spacing: 0.14em;
+    font-size: 0.72rem;
+  }
+  .hero-subtitle {
+    max-width: 36rem;
+    margin-inline: auto;
+    letter-spacing: 0.12em;
+    font-size: 0.7rem;
+    padding: 0 0.35rem;
+  }
+  .hero-cta {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 34rem;
+    margin-inline: auto;
+  }
+  .form-field input, .form-field select, .form-field textarea {
+    font-size: 16px;
+  }
+  .order-panel input[type="number"],
+  .adj-field input, .adj-field select {
+    font-size: 16px;
+  }
+}
+
+/* ===== TABLET + PHONE (≤900: stacked menu / single-column form) ===== */
 @media (max-width: 900px) {
   nav { padding: 0.75rem 1.25rem; }
-  .nav-links { display: none; }
   .about-strip .container { grid-template-columns: 1fr; }
-  .menu-layout {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-    gap: 0;
+
+  .hero-cta {
+    flex-direction: column;
+    align-items: stretch;
+    width: min(100%, 300px);
+    margin-inline: auto;
+    gap: 0.75rem;
   }
-  .menu-nav-col {
+  .hero-cta a { width: 100%; text-align: center; box-sizing: border-box; }
+
+  #menu { overflow-x: hidden; }
+  #menu .container { overflow-x: hidden; }
+  .menu-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    grid-template-columns: none;
+    grid-template-rows: none;
+    width: 100% !important;
+    min-width: 0 !important;
+    gap: 1.25rem !important;
+  }
+  .menu-layout > .menu-nav-col,
+  .menu-layout > .menu-dishes-col,
+  .menu-layout > .order-panel {
+    width: 100% !important;
+    min-width: 0 !important;
     grid-column: auto;
     grid-row: auto;
+    overflow-x: hidden;
+  }
+  .menu-nav-col {
+    position: static;
     border-bottom: none;
     margin-bottom: 0;
     padding-bottom: 0;
   }
-  .menu-dishes-col { grid-column: auto; grid-row: auto; }
-  .menu-layout > .order-panel { grid-column: auto; grid-row: auto; }
   .menu-nav-col .cat-tabs {
     flex-direction: row;
     flex-wrap: nowrap;
@@ -2283,6 +2354,9 @@ footer {
   .reservation-info::after { width: 70%; }
   .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
   .form-grid { grid-template-columns: 1fr; }
+  .form-field input, .form-field select, .form-field textarea {
+    padding: 0.7rem 0.85rem; width: 100%; box-sizing: border-box;
+  }
 }
 @media (max-width: 600px) {
   html, body { overflow-x: hidden; max-width: 100vw; }
@@ -4978,7 +5052,7 @@ html.admin-panel-route #admin-modal .admin-btn { font-weight:700; letter-spacing
   .footer-grid { grid-template-columns: 1.4fr 1fr 1fr; gap: 1.5rem; }
 }
 </style>
-<link rel="stylesheet" href="/admin-ui.css?v=20261026logoW">
+<link rel="stylesheet" href="/admin-ui.css?v=20261027tablet">
 </head>
 <body>
 
@@ -7707,6 +7781,39 @@ function registerTiflisiServiceWorker() {
   });
 }
 
+function tiflisIsAppleTouchDevice() {
+  var ua = navigator.userAgent || '';
+  if (/iPhone|iPod|iPad/i.test(ua)) return true;
+  /* iPadOS 13+ often reports as Macintosh desktop Safari */
+  if (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) return true;
+  if (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1) return true;
+  try {
+    var platform = (navigator.userAgentData && navigator.userAgentData.platform) || '';
+    if (/iOS|iPadOS/i.test(platform)) return true;
+  } catch (e1) {}
+  return false;
+}
+
+function tiflisIsAndroidDevice() {
+  var ua = navigator.userAgent || '';
+  if (/Android/i.test(ua)) return true;
+  try {
+    var platform = (navigator.userAgentData && navigator.userAgentData.platform) || '';
+    if (/Android/i.test(platform)) return true;
+  } catch (e2) {}
+  return false;
+}
+
+function tiflisIsInstallTargetDevice() {
+  /* Phones + tablets (not desktop mice). Android tablets omit "Mobile" in UA. */
+  if (tiflisIsAppleTouchDevice() || tiflisIsAndroidDevice()) return true;
+  if (window.matchMedia('(max-width: 1024px)').matches &&
+      (navigator.maxTouchPoints > 0 || window.matchMedia('(pointer: coarse)').matches)) {
+    return true;
+  }
+  return /webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent || '');
+}
+
 function initPwaInstallBanner() {
   if (document.documentElement.classList.contains('admin-panel-route')) return;
   if (/admin/i.test(location.pathname || '')) return;
@@ -7714,15 +7821,13 @@ function initPwaInstallBanner() {
   try { if (navigator.standalone === true) return; } catch (e0) {}
   if (sessionStorage.getItem('tiflis_pwa_banner_v1')) return;
 
-  var mobile = window.matchMedia('(max-width: 767px)').matches ||
-    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent || '');
-  if (!mobile) return;
+  if (!tiflisIsInstallTargetDevice()) return;
 
   var banner = document.getElementById('pwa-install-banner');
   if (!banner) return;
 
-  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent || '') ||
-    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var isIOS = tiflisIsAppleTouchDevice();
+  var isAndroid = tiflisIsAndroidDevice();
 
   var btnInstall = document.getElementById('pwa-install-btn');
   var iosSteps = document.getElementById('pwa-ios-steps');
@@ -7739,8 +7844,8 @@ function initPwaInstallBanner() {
     banner.setAttribute('aria-hidden', 'true');
   }
 
-  if (isIOS) {
-    /* iOS has no beforeinstallprompt — show Share → Add to Home Screen steps. */
+  if (isIOS && !isAndroid) {
+    /* iPhone / iPad — no beforeinstallprompt; show Share → Add to Home Screen. */
     if (iosSteps) iosSteps.hidden = false;
     if (btnInstall) btnInstall.hidden = true;
     setTimeout(function () {
@@ -7748,7 +7853,7 @@ function initPwaInstallBanner() {
       reveal();
     }, 1400);
   } else {
-    /* Android/Chrome: only show when the browser can actually install. */
+    /* Android phone/tablet (and other Chromium): only when install is available. */
     if (iosSteps) iosSteps.hidden = true;
     if (btnInstall) btnInstall.hidden = false;
 

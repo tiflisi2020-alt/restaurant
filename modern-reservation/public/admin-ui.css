@@ -1694,6 +1694,23 @@ html.admin-panel-route #admin-modal.adm-app .admin-box {
     color: #fff !important;
   }
 }
+/* iPad / Android tablets: prevent Safari zoom; keep usable tap targets */
+@media (max-width: 1024px) {
+  #admin-modal.adm-app .admin-input,
+  #admin-modal.adm-app .admin-search,
+  #admin-modal.adm-app .admin-cat-filter,
+  #admin-modal.adm-app .admin-field input,
+  #admin-modal.adm-app .admin-field select,
+  #admin-modal.adm-app .admin-field textarea,
+  #admin-modal.adm-app .admin-filter-row input,
+  #admin-modal.adm-app .admin-filter-row select,
+  #admin-modal.adm-app .admin-login input,
+  #admin-modal.adm-app #admin-pw {
+    min-height: 44px !important;
+    font-size: 16px !important;
+    font: 450 16px/1.35 var(--a-font) !important;
+  }
+}
 @media (max-width: 640px) {
   #admin-modal.adm-app { --a-control: 44px; }
   #admin-modal.adm-app .admin-brand-tagline { display: none; }
@@ -1715,21 +1732,6 @@ html.admin-panel-route #admin-modal.adm-app .admin-box {
   #admin-modal.adm-app .admin-filter-row select,
   #admin-modal.adm-app .admin-search,
   #admin-modal.adm-app .admin-cat-filter { width: 100% !important; min-width: 0 !important; }
-  /* 16px+ — iOS Safari არ იზუმავს ფოკუსზე (inline font-size-საც ამარცხებს) */
-  #admin-modal.adm-app .admin-input,
-  #admin-modal.adm-app .admin-search,
-  #admin-modal.adm-app .admin-cat-filter,
-  #admin-modal.adm-app .admin-field input,
-  #admin-modal.adm-app .admin-field select,
-  #admin-modal.adm-app .admin-field textarea,
-  #admin-modal.adm-app .admin-filter-row input,
-  #admin-modal.adm-app .admin-filter-row select,
-  #admin-modal.adm-app .admin-login input,
-  #admin-modal.adm-app #admin-pw {
-    min-height: 44px !important;
-    font-size: 16px !important;
-    font: 450 16px/1.35 var(--a-font) !important;
-  }
   #admin-modal.adm-app .admin-logout,
   #admin-modal.adm-app .admin-close,
   #admin-modal.adm-app .admin-nav-toggle,
